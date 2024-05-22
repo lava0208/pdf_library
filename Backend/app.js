@@ -288,9 +288,9 @@ mongoose.connect(mongoURI).then(() => {
 })
 
 // Start the server
-// app.listen(8081, () => {
-//   console.log('Server is running on port 8081');
-// });
-https.createServer(options, app).listen(8081, "127.0.0.1", () => {
-  console.log(`Server running at https://127.0.0.1/`);
+app.listen(8081, () => {
+  console.log('Server is running on port 8081');
 });
+// https.createServer(options, app).listen(8081, "127.0.0.1", () => {
+//   console.log(`Server running at https://127.0.0.1/`);
+// });

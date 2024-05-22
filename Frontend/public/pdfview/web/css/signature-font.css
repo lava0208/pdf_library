@@ -1,0 +1,15 @@
+@font-face {
+    font-family: 'SCRIPTIN';
+    src: url('../fonts/signature/SCRIPTIN.woff') format('woff');
+    font-display: swap;
+}
+@font-face {
+    font-family: 'DrSugiyama';
+    src: url('../fonts/signature/DrSugiyama.woff') format('woff');
+    font-display: swap;
+}
+@font-face {
+    font-family: 'MrDafoe';
+    src: url('../fonts/signature/MrDafoe.woff') format('woff');
+    font-display: swap;
+}

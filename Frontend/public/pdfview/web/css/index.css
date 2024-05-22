@@ -1,0 +1,262 @@
+:root {
+  --body-bg: #ffffff;
+  --border: #d4d4d4;
+  --action-bar-bg: #f4f4f4;
+  --active-bg: #00b7ff;
+  --action-btn-bg: #0075ff;
+  --action-btn-bg-hover: #0066db;
+}
+
+/* #drawing-board-container {
+  width: 100%;
+  height: 100%;
+  display: none;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0,0,0,0.4);
+  z-index: 200;
+}
+
+#drawing-board-pad {
+  position: relative;
+  display: flex;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  flex-direction: column;
+  gap: 8px;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  width: 100%;
+  height: 100%;
+  max-width: 800px;
+  max-height: 600px;
+  border: 1px solid #e8e8e8;
+  background-color: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27), 0 0 40px rgba(0, 0, 0, 0.08) inset;
+  border-radius: 4px;
+  padding: 12px;
+}
+
+#drawing-board-pad::before,
+#drawing-board-pad::after {
+  position: absolute;
+  z-index: -1;
+  content: "";
+  width: 40%;
+  height: 10px;
+  bottom: 10px;
+  background: transparent;
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4);
+}
+
+#drawing-board-pad::before {
+  left: 20px;
+  -webkit-transform: skew(-3deg) rotate(-3deg);
+  transform: skew(-3deg) rotate(-3deg);
+}
+
+#drawing-board-pad::after {
+  right: 20px;
+  -webkit-transform: skew(3deg) rotate(3deg);
+  transform: skew(3deg) rotate(3deg);
+}
+
+#drawing-board {
+  position: relative;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  border: 1px solid #f4f4f4;
+  z-index: 201;
+}
+
+#drawing-board canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+} */
+
+* {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+/* action bar */
+
+#action-bar {
+  width: 100%;
+  display: flex;
+  gap: 0.5rem;
+  background: var(--action-bar-bg);
+  white-space: nowrap;
+  overflow-x: auto;
+  user-select: none;
+}
+
+.action-group {
+  display: flex;
+  flex-direction: column;
+  border: 0.1px solid var(--border);
+  padding: 0.4rem;
+  gap: 0.25rem;
+}
+
+.action-group .title {
+  margin-top: auto;
+  border-top: 0.1px solid var(--border);
+  text-align: center;
+  font-weight: 600;
+  text-transform: capitalize;
+  font-size: 0.8rem;
+}
+
+#actions {
+  display: flex;
+  gap: 0.5rem;
+  height: 100%;
+}
+
+#actions .action {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 0.5rem;
+}
+
+#actions .action button {
+  flex: 1;
+  border: 0;
+  outline: 0;
+  padding: 0.5rem;
+  background: var(--action-btn-bg);
+  color: #fff;
+  text-transform: capitalize;
+  height: 100%;
+  cursor: pointer;
+  transition: all 200ms ease-in-out;
+}
+
+#actions .action button:hover {
+  background: var(--action-btn-bg-hover);
+}
+
+#actions .action select {
+  padding: 0.125rem;
+  outline: none;
+  border: 0;
+}
+
+.drawing-tools {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.drawing-tools .drawing-tool {
+  height: 1.7rem;
+  width: 1.75rem;
+  padding: 0.125rem;
+  /* background: red; */
+}
+
+.drawing-tools .drawing-tool.active {
+  background: var(--active-bg);
+}
+
+.drawing-tools .drawing-tool img {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+}
+
+/* colors */
+#colors {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-column-gap: 0.25rem;
+}
+
+#colors .drawing-color.selected {
+  border: 1px solid var(--active-bg);
+}
+
+#colors-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#colors .drawing-color {
+  height: 20px;
+  width: 20px;
+  background: #ededed;
+  border: var(--border);
+  position: relative;
+}
+
+#color-picker-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+#color-picker-wrapper label {
+  font-size: 0.8rem;
+  text-align: center;
+  padding: 0.25rem;
+}
+
+#colors .drawing-color {
+  border: 1px solid var(--border);
+}
+
+#colors .drawing-color:nth-child(1) {
+  background-color: #fff;
+}
+
+#colors .drawing-color:nth-child(2) {
+  background-color: #000;
+}
+
+#colors .drawing-color:nth-child(3) {
+  background-color: rgb(254, 2, 2);
+}
+
+#colors .drawing-color:nth-child(4) {
+  background-color: rgb(5, 254, 1);
+}
+
+#colors .drawing-color:nth-child(5) {
+  background-color: rgb(0, 144, 254);
+}
+
+canvas {
+  cursor: url("../images/pencil.png"), auto;
+}
+
+canvas#pencil {
+  cursor: url("../images/pencil.png"), auto;
+}
+
+canvas#brush {
+  cursor: url("../images/brush.png"), auto;
+}
+
+canvas#eraser {
+  cursor: url("../images/eraser.png"), auto;
+}
+
+canvas#bucket {
+  cursor: url("../images/bucket.png"), auto;
+}
+
+canvas#straight,
+canvas#rectangle,
+canvas#triangle,
+canvas#circle {
+  cursor: crosshair;
+}

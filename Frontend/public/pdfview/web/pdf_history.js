@@ -391,11 +391,11 @@ class PDFHistory {
         newUrl = `${baseUrl}#${destination.hash}`;
       }
     }
-    // if (shouldReplace) {
-    //   window.history.replaceState(newState, "", newUrl);
-    // } else {
-    //   window.history.pushState(newState, "", newUrl);
-    // }
+    if (shouldReplace) {
+      window.history.replaceState(newState, "", newUrl);
+    } else {
+      window.history.pushState(newState, "", newUrl);
+    }
 
     if (
       typeof PDFJSDev !== "undefined" &&

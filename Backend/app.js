@@ -215,7 +215,7 @@ app.post('/sendlink',upload.single('pdfFile'), (req, res) => {
 
   formDataMap.set(uniqueId, newDataSet);
 
-  const uniqueLink = `http://127.0.0.1/pdfviewer/?id=${uniqueId}`;
+  const uniqueLink = `http://154.38.178.246/pdfviewer/?id=${uniqueId}`;
 
   console.log(uniqueLink)
   // Send email to client with the unique link
@@ -286,6 +286,6 @@ mongoose.connect(mongoURI).then(() => {
 app.listen(8081, () => {
   console.log('Server is running on port 8081');
 });
-// https.createServer(options, app).listen(8081, "127.0.0.1", () => {
-//   console.log(`Server running at https://127.0.0.1/`);
+// https.createServer(options, app).listen(8081, "154.38.178.246", () => {
+//   console.log(`Server running at https://154.38.178.246/`);
 // });

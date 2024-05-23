@@ -34,8 +34,8 @@ app.prepare()
       console.log('Server is running on port 5000');
     });
 
-    // https.createServer(options, server).listen(443, "127.0.0.1", () => {
-    //   console.log(`Server running at https://127.0.0.1/`);
+    // https.createServer(options, server).listen(443, "154.38.178.246", () => {
+    //   console.log(`Server running at https://154.38.178.246/`);
     // });
   })
   .catch((ex) => {

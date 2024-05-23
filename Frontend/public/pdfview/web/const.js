@@ -1,7 +1,7 @@
 /* Basic Config */
 
-const BASE_SERVER_URL = "http://127.0.0.1:8081";
-const BASE_URL = "http://127.0.0.1:8081";
+const BASE_SERVER_URL = "http://154.38.178.246:8081";
+const BASE_URL = "http://154.38.178.246:8081";
 const USERNAME = localStorage.getItem('username');
 
 /*

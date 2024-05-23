@@ -30,9 +30,13 @@ app.prepare()
       }
     });
 
-    https.createServer(options, server).listen(443, "127.0.0.1", () => {
-      console.log(`Server running at https://127.0.0.1/`);
+    server.listen(5000, () => {
+      console.log('Server is running on port 5000');
     });
+
+    // https.createServer(options, server).listen(443, "127.0.0.1", () => {
+    //   console.log(`Server running at https://127.0.0.1/`);
+    // });
   })
   .catch((ex) => {
     console.error(ex.stack);

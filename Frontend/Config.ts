@@ -1,1 +1,1 @@
-export const BASE_URL = "https://pdf-vision.com:8081";
+export const BASE_URL = "http://127.0.0.1:8081";

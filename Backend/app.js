@@ -215,7 +215,7 @@ app.post('/sendlink',upload.single('pdfFile'), (req, res) => {
 
   formDataMap.set(uniqueId, newDataSet);
 
-  const uniqueLink = `https://pdf-vision.com/pdfviewer/?id=${uniqueId}`;
+  const uniqueLink = `http://127.0.0.1/pdfviewer/?id=${uniqueId}`;
 
   console.log(uniqueLink)
   // Send email to client with the unique link

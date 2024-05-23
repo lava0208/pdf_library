@@ -19,14 +19,14 @@ let font_storage = [];
 let form_storage = [];
 let history_storage = [];
 
-fetch('http://154.38.178.246:8081/history')
-    .then(response => response.json())
-    .then(data => {
-        history_storage = data;
-    })
-    .catch(error => {
-        console.error('Error fetching history:', error);
-    });
+// fetch('http://154.38.178.246:8081/history')
+//     .then(response => response.json())
+//     .then(data => {
+//         history_storage = data;
+//     })
+//     .catch(error => {
+//         console.error('Error fetching history:', error);
+//     });
 
 /* All Constants for form elements to identify each item */
 

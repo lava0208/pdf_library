@@ -35,18 +35,18 @@ const saveHistory = function (username, date, page, reply, currentid) {
         };
         history_storage.push(history);
 
-        fetch(`http://154.38.178.246:8081/history`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                username: username,
-                date: date,
-                page: page,
-                reply: reply
-            }),
-        })
+        // fetch(`http://154.38.178.246:8081/history`, {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json"
+        //     },
+        //     body: JSON.stringify({
+        //         username: username,
+        //         date: date,
+        //         page: page,
+        //         reply: reply
+        //     }),
+        // })
     }
     console.log(history_storage);
 }

@@ -10,7 +10,26 @@ export default function Landing() {
   useEffect(() => {
     // Save the original destination in localStorage
     localStorage.setItem('originalDestination', router.asPath);
+
+    // Load scripts in order
+    const loadScripts = async () => {
+      await loadScript("/jquery-3.2.1.min.js");
+      await loadScript("/all-plugins.js");
+      await loadScript("/plugins-activate.js");
+    };
+
+    loadScripts();
   }, [router.asPath]);
+
+  const loadScript = (src: string) => {
+    return new Promise<void>((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error(`Script load error for ${src}`));
+      document.head.appendChild(script);
+    });
+  };
 
   const handleClick = function (url: any) {
 
@@ -22,9 +41,9 @@ export default function Landing() {
       <Head>
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
       </Head>
-      <Script src="./jquery-3.2.1.min.js" />
-      <Script src="./all-plugins.js" />
-      <Script src="./plugins-activate.js" />
+      <Script src="./jquery-3.2.1.min.js" strategy="beforeInteractive" />
+      <Script src="./all-plugins.js" strategy="beforeInteractive" />
+      <Script src="./plugins-activate.js" strategy="beforeInteractive" />
       {/* <!-- Navigation --> */}
       <div className="logo">
         <Image src="/images/logo.png" alt="logo" width={200} height={200} />

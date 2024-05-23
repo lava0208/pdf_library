@@ -159,7 +159,7 @@ function isRuntimeAvailable() {
 
 function reloadIfRuntimeIsUnavailable() {
   if (!isRuntimeAvailable()) {
-    location.reload();
+    // location.reload();
   }
 }
 

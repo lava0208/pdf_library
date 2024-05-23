@@ -634,7 +634,7 @@ const drawFormElement = function () {
                         deleteSpan.innerHTML = '<i class="fa fa-xmark"></i>';
                         deleteSpan.addEventListener("click", function () {
                           // Remove the corresponding div when the delete span is clicked
-                          element = element.filter(function (item) {
+                          element.optionArray = element.optionArray.filter(function (item) {
                             return item !== elementItem;
                           });
                           optionContent.remove();
@@ -1324,7 +1324,9 @@ const convertStandardDateType = function (date) {
 
 const handleCheckbox = function (e) {
   isOptionPane = false;
-  document.getElementById(CHECKBOX_OPTION).style.display = "none";
+  if(document.getElementById(CHECKBOX_OPTION)){
+    document.getElementById(CHECKBOX_OPTION).style.display = "none";
+  }
   if (e) e.stopPropagation();
 
   const { count, formFieldName } = checkFormField("checkbox-field-input-name");
@@ -2230,7 +2232,7 @@ const removeAllResizeBar = function () {
   if (form_storage !== null) {
     form_storage.forEach((item) => {
       let currentItem;
-      if (item.form_type === DATE) currentItem = document.getElementById(item.containerId).parentElement;
+      if (item.form_type === DATE) currentItem = document.getElementById(item.containerId) && document.getElementById(item.containerId).parentElement;
       else currentItem = document.getElementById(item.containerId);
       if (currentItem && currentItem.querySelector("#topLeft")) {
         removeResizebar(currentItem.id);
@@ -3202,7 +3204,7 @@ const eventHandler = async function (e) {
                     deleteSpan.innerHTML = '<i class="fa fa-xmark"></i>';
                     deleteSpan.addEventListener("click", function () {
                       // Remove the corresponding div when the delete span is clicked
-                      element = element.filter(function (item) {
+                      element.optionArray = element.optionArray.filter(function (item) {
                         return item !== elementItem;
                       });
                       optionContent.remove();

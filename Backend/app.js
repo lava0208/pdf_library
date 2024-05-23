@@ -16,7 +16,9 @@ const nodemailer = require('nodemailer');
 const uuid = require('uuid');
 const mongoose = require("mongoose");
 const mongoURI = require('./config').mongoURI;
-const router = require('./routes/userRoute');
+
+const userRouter = require('./routes/userRoute');
+const historyRouter = require('./routes/historyRoute');
 
 const app = express();
 const { setCurrentFile, getCurrentFile } = require('./utils/currentFile');
@@ -275,7 +277,9 @@ app.post('/savedocument', upload.single('pdfFile'), (req, res) => {
   });
 })
 
-app.use(router);
+app.use(userRouter);
+app.use(historyRouter);
+
 mongoose.connect(mongoURI).then(() => {
   console.log("Mongodb connected!");
 }).catch((error) => {

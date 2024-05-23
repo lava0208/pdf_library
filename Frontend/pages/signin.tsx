@@ -1,5 +1,6 @@
 import { BASE_URL } from "@/Config";
 import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState ,useEffect } from "react";
 import {ToastContainer, toast} from "react-toastify";
@@ -127,7 +128,7 @@ export default function SignIn() {
                     </form>
 
                     <div className="auth auth-form-link">
-                        <span className="auth">Don't have an account? <a href="/signup" className="auth auth-link">Signup</a></span>
+                        <span className="auth">Don&apost have an account? <Link href="/signup" className="auth auth-link">Signup</Link></span>
                     </div>
                 </div>
 

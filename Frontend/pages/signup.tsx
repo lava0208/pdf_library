@@ -1,5 +1,6 @@
 import { BASE_URL } from "@/Config";
 import Head from "next/head";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import {ToastContainer, toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -109,7 +110,7 @@ export default function SignUp() {
                     </form>
 
                     <div className="auth auth-form-link">
-                        <span>Already have an account? <a href="/signin" className="auth auth-link">Login</a></span>
+                        <span>Already have an account? <Link href="/signin" className="auth auth-link">Login</Link></span>
                     </div>
                 </div>
 

@@ -1,5 +1,5 @@
 // controllers/historyController.js
-const History = require('../models/History');
+const History = require('../models/history');
 
 const getHistory = async function (req, res) {
     try {

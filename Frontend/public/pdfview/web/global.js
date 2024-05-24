@@ -3,6 +3,12 @@ const openToolbar = () => {
     PDFViewerApplication.pdfViewer.currentScaleValue = "auto";
     rightSidebarButton.classList.toggle("rotate");
     sidebar.classList.toggle("active");
+
+    $("#add_comment_mode").removeClass("active_menu");
+    $("#comment_control_panel").hide();
+    if($("#editorFreeText").hasClass("toggled")){
+        $("#editorFreeText").trigger("click");
+    }
 };
 
 function extractNumbersAsString(str) {

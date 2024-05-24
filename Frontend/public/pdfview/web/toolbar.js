@@ -324,6 +324,7 @@ class Toolbar {
           scale: Math.round(pageScale * 10000) / 100,
         })
       );
+      opts.customScaleOption.text = `${Math.round(pageScale * 10000) / 100}` + "%";
     }
   }
 

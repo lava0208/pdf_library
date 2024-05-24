@@ -642,21 +642,9 @@ $(document).on("click", "#add_comment_mode", function(){
   }
 })
 
-$(document).on("click", "#add_text", function(){
-  isAddCommentModeOn = false;
-  isTextModeOn = !isTextModeOn;
-  handleChange();
-});
 
 const handleChange = () => {
-  let addText = document.getElementById("add_text");
   let addComment = document.getElementById("add_comment_mode");
-  // Handle TextMode
-  if (!isTextModeOn) {
-    addText.classList.remove("active_menu");
-  } else {
-    addText.classList.add("active_menu");
-  }
   //Handle AddCommentMode
   if (!isAddCommentModeOn) {
     addComment.classList.remove("active_menu");

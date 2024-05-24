@@ -614,12 +614,35 @@ document.getElementById("viewer").addEventListener("click", (evt) => {
   }
 });
 
-document.getElementById("add_comment_mode").addEventListener("click", (e) => {
-  isTextModeOn = false;
-  isAddCommentModeOn = !isAddCommentModeOn;
-  handleChange();
-});
-document.getElementById("add_text").addEventListener("click", (e) => {
+$(document).on("click", "#editorFreeText", function(){
+  $("#add_comment_mode").removeClass("active_menu")
+  comment_control.style.display = "none";
+  isAddCommentModeOn = false;
+
+  if($("#add_comment_mode").hasClass("active_menu")){
+    $(this).trigger("click");
+  }
+})
+
+$(document).on("click", "#add_comment_mode", function(){
+  if($("#editorFreeText").hasClass("toggled")){
+    $("#editorFreeText").trigger("click");
+    $(this).removeClass("active_menu");
+    comment_control.style.display = "none";
+    isAddCommentModeOn = false;
+  }
+  
+  if(!isAddCommentModeOn){
+    $(this).addClass("active_menu");
+    isAddCommentModeOn = true;
+  }else{
+    $(this).removeClass("active_menu");
+    comment_control.style.display = "none";
+    isAddCommentModeOn = false;
+  }
+})
+
+$(document).on("click", "#add_text", function(){
   isAddCommentModeOn = false;
   isTextModeOn = !isTextModeOn;
   handleChange();

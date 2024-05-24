@@ -466,6 +466,11 @@ body {
   right: 225px;
 }
 
+#editorFreeTextParamsToolbar{
+  top: 42px;
+  right: 140px;
+}
+
 .findbar {
   inset-inline-start: 64px;
   min-width: 300px;
@@ -715,6 +720,7 @@ body {
 
 .splitToolbarButton>.toolbarButton {
   float: var(--inline-start);
+  cursor: pointer;;
 }
 
 .toolbarButton,
@@ -1687,19 +1693,19 @@ dialog :link {
   width: 28px;
   height: 28px;
   border: none;
-  border-radius: 10px;
+  border-radius: 4px;
   display: flex;
   background: none;
   align-items: center;
   justify-content: center;
   outline: none;
-  margin: 2px 0px;
+  margin: 2px;
   color: #000000;
   cursor: pointer;
 }
 
 .second_toolbar_button:hover {
-  background-color: #ebebeb;
+  background-color: var(--button-hover-color);;
 }
 
 .submit-document {
@@ -2073,10 +2079,10 @@ dialog :link {
   display: flex;
   flex-direction: row;
   border-radius: 20px;
-  padding-left: 5px;
+  padding-left: 0;
   padding-right: 10px;
   margin-right: 10px;
-  margin-left: 10px;
+  margin-left: 0;
   width: fit-content;
 }
 

@@ -548,7 +548,7 @@ class FreeTextEditor extends AnnotationEditor {
 
     AnnotationEditor._l10nPromise
       .get("pdfjs-free-text-default-content")
-      .then(msg => this.editorDiv?.setAttribute("default-content", msg));
+      .then(msg => this.editorDiv?.setAttribute("default-content", "Your text is here!"));
     this.editorDiv.contentEditable = true;
 
     const { style } = this.editorDiv;

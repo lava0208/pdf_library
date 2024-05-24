@@ -482,13 +482,16 @@ See https://github.com/adobe-type-tools/cmap-resources
                       >Highlight</span
                     >
                   </button> -->
-                <button id="editorFreeText" class="toolbarButton" style="display: none" disabled="disabled" title="Text"
+                <button id="editorFreeText" class="toolbarButton" disabled="disabled" title="Add Text"
                   role="radio" aria-checked="false" aria-controls="editorFreeTextParamsToolbar" tabindex="32"
                   data-l10n-id="pdfjs-editor-free-text-button">
                   <span data-l10n-id="pdfjs-editor-free-text-button-label">Text</span>
-                </button>
+                </button>                
               </div>
               <div id="toolbarViewerRight" class="formToolsContainer">
+                <button class="second_toolbar_button" id="add_comment_mode" title="Add Comment">
+                  <i class="fa-solid fa-comment" style="font-size: 20px; color: #535353"></i>
+                </button>
                 <button class="second_toolbar_button" title="Share Link" onclick="shareLink()" id="shareDocument">
                   <i class="fa-solid fa-share-nodes" style="font-size: 20px; color: #535353"></i>
                 </button>
@@ -1242,16 +1245,6 @@ See https://github.com/adobe-type-tools/cmap-resources
     <button class="menu-button" id="add_shape" title="Add Shapes">
       <i class="fa-solid fa-shapes" style="width: 17px"></i>
       <p class="menu-button-item">Add Shapes</p>
-    </button>
-    <div class="horizontalToolbarSeparator"></div>
-    <p class="toolbarTitle">Comments:</p>
-    <button class="menu-button" id="add_text" title="Add Text">
-      <i class="far fa-i" style="width: 17px"></i>
-      <p class="menu-button-item">Add Text</p>
-    </button>
-    <button class="menu-button" id="add_comment_mode" title="Add Comment">
-      <i class="far fa-comment"></i>
-      <p class="menu-button-item">Add Comment</p>
     </button>
     <div class="horizontalToolbarSeparator"></div>
     <p class="toolbarTitle">Form Fields:</p>

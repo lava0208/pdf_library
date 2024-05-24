@@ -254,7 +254,7 @@ body {
 
 #outerContainer {
   width: 100%;
-  height: 100%;
+  height: calc(100% - 21px);
   position: relative;
 }
 
@@ -315,7 +315,8 @@ body {
 }
 
 .toolbar {
-  position: relative;
+  position: fixed;
+  top: 0;
   inset-inline: 0;
   z-index: 9999;
   cursor: default;
@@ -2209,6 +2210,7 @@ dialog :link {
   padding: 10px;
   opacity: 0.9;
   transition: left 0.3s;
+  overflow: auto;
 }
 .show-history.active {
   left: var(--sidebar-width);

@@ -1,7 +1,7 @@
 /* Basic Config */
 
-const BASE_SERVER_URL = "http://154.38.178.246:8081";
-const BASE_URL = "http://154.38.178.246:8081";
+const BASE_SERVER_URL = "https://pdf-vision.com:8081";
+const BASE_URL = "https://pdf-vision.com:8081";
 const USERNAME = localStorage.getItem('username');
 
 /*
@@ -19,7 +19,7 @@ let font_storage = [];
 let form_storage = [];
 let history_storage = [];
 
-// fetch('http://154.38.178.246:8081/history')
+// fetch(`${BASE_URL}/history`)
 //     .then(response => response.json())
 //     .then(data => {
 //         history_storage = data;

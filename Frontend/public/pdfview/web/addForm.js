@@ -13,8 +13,8 @@ let checkboxCount = 1,
 
 let comboboxOptionCount = 0;
 let listboxOptionCount = 0;
-let comboboxOptionArray = ["Option 1"];
-let listboxOptionArray = ["List 1"];
+let comboboxOptionArray = [];
+let listboxOptionArray = [];
 
 let pos_x_pdf = 0,
   pos_y_pdf = 0;

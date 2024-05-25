@@ -1231,7 +1231,9 @@ $(document).on("DOMSubtreeModified", ".freeTextEditor.selectedEditor", function 
 //... Change Font Size Event
 $(document).on("change", "#text-font-size", function () {
   if($(".freeTextEditor").hasClass("selectedEditor")){
+    let size = $(this).val() + "px";
     let fontSize = `calc(${$(this).val() + "px"} * var(--scale-factor))`;
+    $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").attr("size", size);
     $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").css("font-size", fontSize);
   }
 })
@@ -1246,14 +1248,14 @@ $(document).on("change", "#text-content-font-style", function () {
 
 //... Get Font Detail of Selected Text
 $(document).on("click", ".freeTextEditor", function () {  
-    let fontSize = $(this).find(".internal[role='textbox']").attr("size");
+    let size = $(this).find(".internal[role='textbox']").attr("size");
     let fontFamily = $(this).find(".internal[role='textbox']").css("font-family");
     let fontWeight = $(this).find(".internal[role='textbox']").css("font-weight");
     let fontStyle = $(this).find(".internal[role='textbox']").css("font-style");
 
     // var calcSize = fontSize / var(--scale-factor);
 
-    toolbar.find(`#text-font-size option[pixel="${fontSize}"]`).prop("selected", true);
+    toolbar.find(`#text-font-size option[pixel="${size}"]`).prop("selected", true);
     toolbar.find(`#text-content-font-style option[value="${fontFamily}"]`).prop("selected", true);
 
     if(fontWeight == 700){

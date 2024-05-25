@@ -66,7 +66,7 @@ const fontStyleArr = [
 ];
 
 const fontSizeArr = [
-  "auto",
+  "Auto",
   4,
   6,
   8,
@@ -1197,8 +1197,102 @@ const drawFormElement = function () {
   generalUserMode();
 }
 
+//... Draw font family
+const drawFontFamily = function () {
+  toolbar.find("#text-content-font-style").empty();
+  fontStyleArr.forEach(function (item) {
+    let option = `<option value="${item}" style="font-family: ${item}">${item}</option>`;
+    toolbar.find("#text-content-font-style").append(option);
+  })
+}
+
+//... Draw font size
+const drawFontSize = function () {
+  toolbar.find("#text-font-size").empty();
+  fontSizeArr.forEach(function (item) {
+    let val = item == "auto" ? 16 : item;
+    let option = `<option value="${val}" style="font-size: ${val}">${item}</option>`;
+    toolbar.find("#text-font-size").append(option);
+  })
+}
+
+//... Focus Toolbox Event
+$(document).on("focus", "#editorFreeTextParamsToolbar", function () {
+  isOnToolbar = true;
+})
+
+//... Write Text Event
+$(document).on("DOMSubtreeModified", ".freeTextEditor.selectedEditor", function () {
+  isOnToolbar = false;
+  let fontSize = toolbar.find("#text-font-size").val() + "px";
+  let fontFamily = toolbar.find("#text-content-font-style").val();
+  let fontWeight = toolbar.find("#text-bold").hasClass("active") ? "bold" : "";
+  let fontStyle = toolbar.find("#text-italic").hasClass("active") ? "italic" : "";
+  $(this).find(".internal[role='textbox']").css({"font-size": fontSize, "font-family": fontFamily, "font-weight": fontWeight, "font-style": fontStyle});
+})
+
+//... Change Font Size Event
+$(document).on("change", "#text-font-size", function () {
+  if($(".freeTextEditor").hasClass("selectedEditor")){
+    let fontSize = $(this).val() + "px";
+    $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").css("font-size", fontSize);
+  }
+})
+
+//... Change Font Family Event
+$(document).on("change", "#text-content-font-style", function () {
+  if($(".freeTextEditor").hasClass("selectedEditor")){
+    let fontFamily = $(this).val();
+    $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").css("font-family", fontFamily);
+  }
+})
+
+//... Get Font Detail of Selected Text
+$(document).on("dblclick", ".freeTextEditor", function () {  
+  if($(this).hasClass("selectedEditor") && !isOnToolbar){
+    let fontSize = $(this).find(".internal[role='textbox']").css("font-size");
+    let fontFamily = $(this).find(".internal[role='textbox']").css("font-family");
+    let fontWeight = $(this).find(".internal[role='textbox']").css("font-weight");
+    let fontStyle = $(this).find(".internal[role='textbox']").css("font-style");
+    
+    toolbar.find("#text-font-size option").filter(function () {
+      return $(this).val() == fontSize;
+    }).prop("selected", true);
+    toolbar.find("#text-content-font-style option").filter(function () {
+      return $(this).val() == fontFamily;
+    }).prop("selected", true);
+    if(fontWeight == "bold"){
+      toolbar.find("#text-bold").addClass("active")
+    }else{
+      toolbar.find("#text-bold").removeClass("active")
+    }
+    if(fontStyle == "italic"){
+      toolbar.find("#text-italic").addClass("active")
+    }else{
+      toolbar.find("#text-italic").removeClass("active")
+    }
+  }
+  isOnToolbar = false;
+})
+
+//... Change Font Style Event
+$(document).on("click", ".text-weight-button", function () {
+  if($(this).hasClass("active")){
+    $(this).removeClass("active");
+  }else{
+    $(this).addClass("active");
+  }
+  if($(".freeTextEditor").hasClass("selectedEditor")){
+    let fontWeight = toolbar.find("#text-bold").hasClass("active") ? "bold" : "";
+    let fontStyle = toolbar.find("#text-italic").hasClass("active") ? "italic" : "";
+    $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").css({"font-weight": fontWeight, "font-style": fontStyle});
+  }
+})
+
 document.addEventListener("DOMContentLoaded", function () {
   loadFontFiles();
+  drawFontFamily();
+  drawFontSize();
   requestId = getIdFromUrl();
   if (requestId) {
     fetch(`${BASE_URL}/getpdfdata?uniqueId=${requestId}`)
@@ -2433,6 +2527,7 @@ const showOptionAndResizebar = function (
     }
   }
 };
+
 // Add Delete button and define action.
 const addDeleteButton = function (currentId, container, object, type) {
   const left = object.offsetWidth;
@@ -2523,6 +2618,7 @@ const addFormElementStyle = function (object, top, left, width, height) {
   object.style.borderRadius = "3px";
   object.classList.add("form-fields");
 };
+
 const removeFormElementStyle = function (id) {
   document.getElementById(id)
 }
@@ -4317,6 +4413,7 @@ function toggleCheckbox(id) {
     checkbox.classList.toggle("checked");
   }
 }
+
 function selectRadioButton(element, id) {
   if (isEditing && !isSubmit) {
     // Find the radio input within the clicked div

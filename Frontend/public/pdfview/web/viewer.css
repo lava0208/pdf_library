@@ -556,6 +556,7 @@ body {
   align-items: center;
   justify-content: space-between;
   padding-inline: 10px;
+  margin: 8px 0;
 }
 
 .editorParamsToolbarContainer .editorParamsLabel {
@@ -1918,6 +1919,7 @@ dialog :link {
 .align-container {
   display: flex;
   gap: 20px;
+  font-size: 16px;
 }
 
 /* Resize Point */
@@ -2061,6 +2063,12 @@ dialog :link {
   line-height: 24px;
   text-align: center;
   z-index: 102;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.text-weight-button.active{
+  background-color: var(--button-hover-color);
 }
 
 .text-weight-button-focused {

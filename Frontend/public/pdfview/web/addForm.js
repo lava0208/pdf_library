@@ -1210,31 +1210,28 @@ const drawFontFamily = function () {
 const drawFontSize = function () {
   toolbar.find("#text-font-size").empty();
   fontSizeArr.forEach(function (item) {
-    let val = item == "auto" ? 16 : item;
-    let option = `<option value="${val}" style="font-size: ${val}">${item}</option>`;
+    let val = item == "Auto" ? 16 : item;
+    let option = `<option value="${val}" pixel="${val}px">${item}</option>`;
     toolbar.find("#text-font-size").append(option);
   })
 }
 
-//... Focus Toolbox Event
-$(document).on("focus", "#editorFreeTextParamsToolbar", function () {
-  isOnToolbar = true;
-})
-
 //... Write Text Event
 $(document).on("DOMSubtreeModified", ".freeTextEditor.selectedEditor", function () {
-  isOnToolbar = false;
-  let fontSize = toolbar.find("#text-font-size").val() + "px";
+  let size = toolbar.find("#text-font-size").val() + "px";
+  let fontSize = `calc(${size} * var(--scale-factor))`;
   let fontFamily = toolbar.find("#text-content-font-style").val();
-  let fontWeight = toolbar.find("#text-bold").hasClass("active") ? "bold" : "";
+  let fontWeight = toolbar.find("#text-bold").hasClass("active") ? 700 : 500;
   let fontStyle = toolbar.find("#text-italic").hasClass("active") ? "italic" : "";
+
+  $(this).find(".internal[role='textbox']").attr('size', size);
   $(this).find(".internal[role='textbox']").css({"font-size": fontSize, "font-family": fontFamily, "font-weight": fontWeight, "font-style": fontStyle});
 })
 
 //... Change Font Size Event
 $(document).on("change", "#text-font-size", function () {
   if($(".freeTextEditor").hasClass("selectedEditor")){
-    let fontSize = $(this).val() + "px";
+    let fontSize = `calc(${$(this).val() + "px"} * var(--scale-factor))`;
     $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").css("font-size", fontSize);
   }
 })
@@ -1248,20 +1245,18 @@ $(document).on("change", "#text-content-font-style", function () {
 })
 
 //... Get Font Detail of Selected Text
-$(document).on("dblclick", ".freeTextEditor", function () {  
-  if($(this).hasClass("selectedEditor") && !isOnToolbar){
-    let fontSize = $(this).find(".internal[role='textbox']").css("font-size");
+$(document).on("click", ".freeTextEditor", function () {  
+    let fontSize = $(this).find(".internal[role='textbox']").attr("size");
     let fontFamily = $(this).find(".internal[role='textbox']").css("font-family");
     let fontWeight = $(this).find(".internal[role='textbox']").css("font-weight");
     let fontStyle = $(this).find(".internal[role='textbox']").css("font-style");
-    
-    toolbar.find("#text-font-size option").filter(function () {
-      return $(this).val() == fontSize;
-    }).prop("selected", true);
-    toolbar.find("#text-content-font-style option").filter(function () {
-      return $(this).val() == fontFamily;
-    }).prop("selected", true);
-    if(fontWeight == "bold"){
+
+    // var calcSize = fontSize / var(--scale-factor);
+
+    toolbar.find(`#text-font-size option[pixel="${fontSize}"]`).prop("selected", true);
+    toolbar.find(`#text-content-font-style option[value="${fontFamily}"]`).prop("selected", true);
+
+    if(fontWeight == 700){
       toolbar.find("#text-bold").addClass("active")
     }else{
       toolbar.find("#text-bold").removeClass("active")
@@ -1271,8 +1266,6 @@ $(document).on("dblclick", ".freeTextEditor", function () {
     }else{
       toolbar.find("#text-italic").removeClass("active")
     }
-  }
-  isOnToolbar = false;
 })
 
 //... Change Font Style Event
@@ -1283,7 +1276,7 @@ $(document).on("click", ".text-weight-button", function () {
     $(this).addClass("active");
   }
   if($(".freeTextEditor").hasClass("selectedEditor")){
-    let fontWeight = toolbar.find("#text-bold").hasClass("active") ? "bold" : "";
+    let fontWeight = toolbar.find("#text-bold").hasClass("active") ? 700 : 500;
     let fontStyle = toolbar.find("#text-italic").hasClass("active") ? "italic" : "";
     $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").css({"font-weight": fontWeight, "font-style": fontStyle});
   }
@@ -1450,7 +1443,6 @@ const handleCheckbox = function (e) {
     const date = new Date(Date.now());
     addHistory(baseId, CHECKBOX, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, 'checkbox');
   }
-  console.log(form_storage);
   document
     .getElementById("checkbox-save-button")
     .removeEventListener("click", handleCheckbox);
@@ -2367,8 +2359,6 @@ document.getElementById("viewer").addEventListener("mousedown", function (event)
   let optionCount = 0;
   let currentFormType, currentObject;
   currentObject = event.target;
-  // console.log("========= currentObject ===========");
-  // console.log(currentObject);
   let deleteButton = document.querySelector(".fa-trash-can");
   let currentObjectParentId = '';
   if (currentObject) {
@@ -3870,7 +3860,6 @@ const flatten = async function () {
 };
 
 async function addFormElements() {
-  console.log(form_storage);
   const fontStyles = {
     Courier: PDFLib.StandardFonts.Courier,
     CourierBold: PDFLib.StandardFonts.CourierBold,

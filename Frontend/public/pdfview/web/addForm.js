@@ -1365,10 +1365,10 @@ const handleCheckbox = function (e) {
 
 const handleRadio = function (e) {
   isOptionPane = false;
-  const label = document.getElementById("radio-label").value;
-  const value = document.getElementById("radio-value").value;
-  document.getElementById(RADIO_OPTION).style.display = "none";
-  const formFieldName = document.getElementById("radio-field-input-name").value;
+  const label = document.getElementById("radio-label") && document.getElementById("radio-label").value;
+  const value = document.getElementById("radio-value") && document.getElementById("radio-value").value;
+  if(document.getElementById(RADIO_OPTION)) document.getElementById(RADIO_OPTION).style.display = "none";
+  const formFieldName = document.getElementById("radio-field-input-name") && document.getElementById("radio-field-input-name").value;
   const currentRadio = document.getElementById(`radio${current_radio_id}`);
   if (currentRadio) currentRadio.querySelector('input[type="radio"]').name = formFieldName;
   if (e) e.stopPropagation();
@@ -1424,13 +1424,13 @@ const handleRadio = function (e) {
 
 const handleText = function (e) {
   isOptionPane = false;
-  document.getElementById(TEXTFIELD_OPTION).style.display = "none";
+  if(document.getElementById(TEXTFIELD_OPTION)) document.getElementById(TEXTFIELD_OPTION).style.display = "none";
   if (e) e.stopPropagation();
-  const formFieldName = document.getElementById("text-field-input-name").value;
+  const formFieldName = document.getElementById("text-field-input-name") && document.getElementById("text-field-input-name").value;
   fontStyle = generateFontName("text-font-style");
-  fontSize = parseInt(document.getElementById("text-font-size").value);
-  const regularFont = document.getElementById("text-font-style").value;
-  textColor = document.getElementById("text-font-color").value;
+  fontSize = document.getElementById("text-font-size") && parseInt(document.getElementById("text-font-size").value);
+  const regularFont = document.getElementById("text-font-style") && document.getElementById("text-font-style").value;
+  textColor = document.getElementById("text-font-color") && document.getElementById("text-font-color").value;
   let initialValue = "";
   const currentFormText = document.getElementById(`text${current_form_id}`);
   if (currentFormText) {
@@ -1511,14 +1511,14 @@ const handleText = function (e) {
 
 const handleCombo = function (e) {
   isOptionPane = false;
-  document.getElementById(COMBOBOX_OPTION).style.display = "none";
+  if(document.getElementById(COMBOBOX_OPTION)) document.getElementById(COMBOBOX_OPTION).style.display = "none";
   if (e) e.stopPropagation();
 
-  const formFieldName = document.getElementById("combo-input-name").value;
+  const formFieldName = document.getElementById("combo-input-name") && document.getElementById("combo-input-name").value;
   fontStyle = generateFontName("combo-font-style");
-  fontSize = parseInt(document.getElementById("combo-font-size").value);
-  const regularFont = document.getElementById("combo-font-style").value;
-  textColor = document.getElementById("combo-font-color").value;
+  fontSize = document.getElementById("combo-font-size") && parseInt(document.getElementById("combo-font-size").value);
+  const regularFont = document.getElementById("combo-font-style") && document.getElementById("combo-font-style").value;
+  textColor = document.getElementById("combo-font-color") && document.getElementById("combo-font-color").value;
   let initialValue = comboboxOptionArray[0];
   const currentFormText = document.getElementById(`combo${current_form_id}`);
   if (currentFormText) {
@@ -1601,13 +1601,13 @@ const handleCombo = function (e) {
 // When click "Save" button, save the information of Listbox element.
 
 const handleList = function (e) {
-  document.getElementById(LIST_OPTION).style.display = "none";
+  if(document.getElementById(LIST_OPTION)) document.getElementById(LIST_OPTION).style.display = "none";
   if (e) e.stopPropagation();
-  const formFieldName = document.getElementById("list-input-name").value;
-  fontStyle = document.getElementById("list-font-style").value;
-  fontSize = parseInt(document.getElementById("list-font-size").value);
-  const regularFont = document.getElementById("list-font-style").value;
-  textColor = document.getElementById("list-font-color").value;
+  const formFieldName = document.getElementById("list-input-name") && document.getElementById("list-input-name").value;
+  fontStyle = document.getElementById("list-font-style") && document.getElementById("list-font-style").value;
+  fontSize = document.getElementById("list-font-size") && parseInt(document.getElementById("list-font-size").value);
+  const regularFont = document.getElementById("list-font-style") && document.getElementById("list-font-style").value;
+  textColor = document.getElementById("list-font-color") && document.getElementById("list-font-color").value;
   let initialValue = "";
   const currentFormText = document.getElementById(`list${current_form_id}`);
   if (currentFormText) {
@@ -1795,7 +1795,7 @@ const showOption = function (id, x, y) {
 // When click "Save" button, save the information of Button element.
 const handleButton = function (e) {
   isOptionPane = false;
-  document.getElementById(BUTTON_OPTION).style.display = "none";
+  if(document.getElementById(BUTTON_OPTION)) document.getElementById(BUTTON_OPTION).style.display = "none";
   let form_action = 0;
   const selectedValue = document.getElementById(
     "button-field-input-action"
@@ -1892,11 +1892,11 @@ const handleDate = function (e) {
   if (currentText) text = currentText.value;
   isOptionPane = false;
   if (e) e.stopPropagation();
-  const formFieldName = document.getElementById("date-input-name").value;
+  const formFieldName = document.getElementById("date-input-name") && document.getElementById("date-input-name").value;
   fontStyle = generateFontName("date-font-style");
-  fontSize = parseInt(document.getElementById("date-font-size").value);
-  textColor = document.getElementById("date-font-color").value;
-  const regularFont = document.getElementById("date-font-style").value;
+  fontSize = document.getElementById("date-font-size") && parseInt(document.getElementById("date-font-size").value);
+  textColor = document.getElementById("date-font-color") && document.getElementById("date-font-color").value;
+  const regularFont = document.getElementById("date-font-style") && document.getElementById("date-font-style").value;
 
   if (window.getComputedStyle(document.getElementById(DATE_OPTION)).getPropertyValue('display') !== "none") {
     document.getElementById(DATE_OPTION).style.display = "none";

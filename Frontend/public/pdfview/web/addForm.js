@@ -13,8 +13,8 @@ let checkboxCount = 1,
 
 let comboboxOptionCount = 0;
 let listboxOptionCount = 0;
-let comboboxOptionArray = [];
-let listboxOptionArray = [];
+let comboboxOptionArray = ["Option 1"];
+let listboxOptionArray = ["List 1"];
 
 let pos_x_pdf = 0,
   pos_y_pdf = 0;
@@ -66,7 +66,7 @@ const fontStyleArr = [
 ];
 
 const fontSizeArr = [
-  "Auto",
+  "auto",
   4,
   6,
   8,
@@ -634,7 +634,7 @@ const drawFormElement = function () {
                         deleteSpan.innerHTML = '<i class="fa fa-xmark"></i>';
                         deleteSpan.addEventListener("click", function () {
                           // Remove the corresponding div when the delete span is clicked
-                          element.optionArray = element.optionArray.filter(function (item) {
+                          element = element.filter(function (item) {
                             return item !== elementItem;
                           });
                           optionContent.remove();
@@ -1197,97 +1197,8 @@ const drawFormElement = function () {
   generalUserMode();
 }
 
-//... Draw font family
-const drawFontFamily = function () {
-  toolbar.find("#text-content-font-style").empty();
-  fontStyleArr.forEach(function (item) {
-    let option = `<option value="${item}" style="font-family: ${item}">${item}</option>`;
-    toolbar.find("#text-content-font-style").append(option);
-  })
-}
-
-//... Draw font size
-const drawFontSize = function () {
-  toolbar.find("#text-font-size").empty();
-  fontSizeArr.forEach(function (item) {
-    let val = item == "Auto" ? 16 : item;
-    let option = `<option value="${val}" pixel="${val}px">${item}</option>`;
-    toolbar.find("#text-font-size").append(option);
-  })
-}
-
-//... Write Text Event
-$(document).on("DOMSubtreeModified", ".freeTextEditor.selectedEditor", function () {
-  let size = toolbar.find("#text-font-size").val() + "px";
-  let fontSize = `calc(${size} * var(--scale-factor))`;
-  let fontFamily = toolbar.find("#text-content-font-style").val();
-  let fontWeight = toolbar.find("#text-bold").hasClass("active") ? 700 : 500;
-  let fontStyle = toolbar.find("#text-italic").hasClass("active") ? "italic" : "";
-
-  $(this).find(".internal[role='textbox']").attr('size', size);
-  $(this).find(".internal[role='textbox']").css({"font-size": fontSize, "font-family": fontFamily, "font-weight": fontWeight, "font-style": fontStyle});
-})
-
-//... Change Font Size Event
-$(document).on("change", "#text-font-size", function () {
-  if($(".freeTextEditor").hasClass("selectedEditor")){
-    let size = $(this).val() + "px";
-    let fontSize = `calc(${$(this).val() + "px"} * var(--scale-factor))`;
-    $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").attr("size", size);
-    $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").css("font-size", fontSize);
-  }
-})
-
-//... Change Font Family Event
-$(document).on("change", "#text-content-font-style", function () {
-  if($(".freeTextEditor").hasClass("selectedEditor")){
-    let fontFamily = $(this).val();
-    $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").css("font-family", fontFamily);
-  }
-})
-
-//... Get Font Detail of Selected Text
-$(document).on("click", ".freeTextEditor", function () {  
-    let size = $(this).find(".internal[role='textbox']").attr("size");
-    let fontFamily = $(this).find(".internal[role='textbox']").css("font-family");
-    let fontWeight = $(this).find(".internal[role='textbox']").css("font-weight");
-    let fontStyle = $(this).find(".internal[role='textbox']").css("font-style");
-
-    // var calcSize = fontSize / var(--scale-factor);
-
-    toolbar.find(`#text-font-size option[pixel="${size}"]`).prop("selected", true);
-    toolbar.find(`#text-content-font-style option[value="${fontFamily}"]`).prop("selected", true);
-
-    if(fontWeight == 700){
-      toolbar.find("#text-bold").addClass("active")
-    }else{
-      toolbar.find("#text-bold").removeClass("active")
-    }
-    if(fontStyle == "italic"){
-      toolbar.find("#text-italic").addClass("active")
-    }else{
-      toolbar.find("#text-italic").removeClass("active")
-    }
-})
-
-//... Change Font Style Event
-$(document).on("click", ".text-weight-button", function () {
-  if($(this).hasClass("active")){
-    $(this).removeClass("active");
-  }else{
-    $(this).addClass("active");
-  }
-  if($(".freeTextEditor").hasClass("selectedEditor")){
-    let fontWeight = toolbar.find("#text-bold").hasClass("active") ? 700 : 500;
-    let fontStyle = toolbar.find("#text-italic").hasClass("active") ? "italic" : "";
-    $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").css({"font-weight": fontWeight, "font-style": fontStyle});
-  }
-})
-
 document.addEventListener("DOMContentLoaded", function () {
   loadFontFiles();
-  drawFontFamily();
-  drawFontSize();
   requestId = getIdFromUrl();
   if (requestId) {
     fetch(`${BASE_URL}/getpdfdata?uniqueId=${requestId}`)
@@ -1374,11 +1285,9 @@ const checkFormField = function (id) {
 
 // Remove the parent event.
 const removeParentEvent = function (id) {
-  if(document.getElementById(id)){
-    document.getElementById(id).addEventListener("click", function (e) {
-      e.stopPropagation();
-    });
-  }
+  document.getElementById(id).addEventListener("click", function (e) {
+    e.stopPropagation();
+  });
   interact(`#${id}`).draggable({
     listeners: {
       move(event) {
@@ -1413,9 +1322,7 @@ const convertStandardDateType = function (date) {
 
 const handleCheckbox = function (e) {
   isOptionPane = false;
-  if(document.getElementById(CHECKBOX_OPTION)){
-    document.getElementById(CHECKBOX_OPTION).style.display = "none";
-  }
+  document.getElementById(CHECKBOX_OPTION).style.display = "none";
   if (e) e.stopPropagation();
 
   const { count, formFieldName } = checkFormField("checkbox-field-input-name");
@@ -1445,6 +1352,7 @@ const handleCheckbox = function (e) {
     const date = new Date(Date.now());
     addHistory(baseId, CHECKBOX, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, 'checkbox');
   }
+  console.log(form_storage);
   document
     .getElementById("checkbox-save-button")
     .removeEventListener("click", handleCheckbox);
@@ -1453,10 +1361,10 @@ const handleCheckbox = function (e) {
 
 const handleRadio = function (e) {
   isOptionPane = false;
-  const label = document.getElementById("radio-label") && document.getElementById("radio-label").value;
-  const value = document.getElementById("radio-value") && document.getElementById("radio-value").value;
-  if(document.getElementById(RADIO_OPTION)) document.getElementById(RADIO_OPTION).style.display = "none";
-  const formFieldName = document.getElementById("radio-field-input-name") && document.getElementById("radio-field-input-name").value;
+  const label = document.getElementById("radio-label").value;
+  const value = document.getElementById("radio-value").value;
+  document.getElementById(RADIO_OPTION).style.display = "none";
+  const formFieldName = document.getElementById("radio-field-input-name").value;
   const currentRadio = document.getElementById(`radio${current_radio_id}`);
   if (currentRadio) currentRadio.querySelector('input[type="radio"]').name = formFieldName;
   if (e) e.stopPropagation();
@@ -1512,14 +1420,13 @@ const handleRadio = function (e) {
 
 const handleText = function (e) {
   isOptionPane = false;
-  if(document.getElementById(TEXTFIELD_OPTION)) document.getElementById(TEXTFIELD_OPTION).style.display = "none";
+  document.getElementById(TEXTFIELD_OPTION).style.display = "none";
   if (e) e.stopPropagation();
-  const formFieldName = document.getElementById("text-field-input-name") && document.getElementById("text-field-input-name").value;
+  const formFieldName = document.getElementById("text-field-input-name").value;
   fontStyle = generateFontName("text-font-style");
-  // fontSize = document.getElementById("text-font-size") && parseInt(document.getElementById("text-font-size").value);
-  fontSize = toolbar.find("#text-font-size").val();
-  const regularFont = document.getElementById("text-font-style") && document.getElementById("text-font-style").value;
-  textColor = document.getElementById("text-font-color") && document.getElementById("text-font-color").value;
+  fontSize = parseInt(document.getElementById("text-font-size").value);
+  const regularFont = document.getElementById("text-font-style").value;
+  textColor = document.getElementById("text-font-color").value;
   let initialValue = "";
   const currentFormText = document.getElementById(`text${current_form_id}`);
   if (currentFormText) {
@@ -1600,14 +1507,14 @@ const handleText = function (e) {
 
 const handleCombo = function (e) {
   isOptionPane = false;
-  if(document.getElementById(COMBOBOX_OPTION)) document.getElementById(COMBOBOX_OPTION).style.display = "none";
+  document.getElementById(COMBOBOX_OPTION).style.display = "none";
   if (e) e.stopPropagation();
 
-  const formFieldName = document.getElementById("combo-input-name") && document.getElementById("combo-input-name").value;
+  const formFieldName = document.getElementById("combo-input-name").value;
   fontStyle = generateFontName("combo-font-style");
-  fontSize = document.getElementById("combo-font-size") && parseInt(document.getElementById("combo-font-size").value);
-  const regularFont = document.getElementById("combo-font-style") && document.getElementById("combo-font-style").value;
-  textColor = document.getElementById("combo-font-color") && document.getElementById("combo-font-color").value;
+  fontSize = parseInt(document.getElementById("combo-font-size").value);
+  const regularFont = document.getElementById("combo-font-style").value;
+  textColor = document.getElementById("combo-font-color").value;
   let initialValue = comboboxOptionArray[0];
   const currentFormText = document.getElementById(`combo${current_form_id}`);
   if (currentFormText) {
@@ -1690,13 +1597,13 @@ const handleCombo = function (e) {
 // When click "Save" button, save the information of Listbox element.
 
 const handleList = function (e) {
-  if(document.getElementById(LIST_OPTION)) document.getElementById(LIST_OPTION).style.display = "none";
+  document.getElementById(LIST_OPTION).style.display = "none";
   if (e) e.stopPropagation();
-  const formFieldName = document.getElementById("list-input-name") && document.getElementById("list-input-name").value;
-  fontStyle = document.getElementById("list-font-style") && document.getElementById("list-font-style").value;
-  fontSize = document.getElementById("list-font-size") && parseInt(document.getElementById("list-font-size").value);
-  const regularFont = document.getElementById("list-font-style") && document.getElementById("list-font-style").value;
-  textColor = document.getElementById("list-font-color") && document.getElementById("list-font-color").value;
+  const formFieldName = document.getElementById("list-input-name").value;
+  fontStyle = document.getElementById("list-font-style").value;
+  fontSize = parseInt(document.getElementById("list-font-size").value);
+  const regularFont = document.getElementById("list-font-style").value;
+  textColor = document.getElementById("list-font-color").value;
   let initialValue = "";
   const currentFormText = document.getElementById(`list${current_form_id}`);
   if (currentFormText) {
@@ -1884,7 +1791,7 @@ const showOption = function (id, x, y) {
 // When click "Save" button, save the information of Button element.
 const handleButton = function (e) {
   isOptionPane = false;
-  if(document.getElementById(BUTTON_OPTION)) document.getElementById(BUTTON_OPTION).style.display = "none";
+  document.getElementById(BUTTON_OPTION).style.display = "none";
   let form_action = 0;
   const selectedValue = document.getElementById(
     "button-field-input-action"
@@ -1981,11 +1888,11 @@ const handleDate = function (e) {
   if (currentText) text = currentText.value;
   isOptionPane = false;
   if (e) e.stopPropagation();
-  const formFieldName = document.getElementById("date-input-name") && document.getElementById("date-input-name").value;
+  const formFieldName = document.getElementById("date-input-name").value;
   fontStyle = generateFontName("date-font-style");
-  fontSize = document.getElementById("date-font-size") && parseInt(document.getElementById("date-font-size").value);
-  textColor = document.getElementById("date-font-color") && document.getElementById("date-font-color").value;
-  const regularFont = document.getElementById("date-font-style") && document.getElementById("date-font-style").value;
+  fontSize = parseInt(document.getElementById("date-font-size").value);
+  textColor = document.getElementById("date-font-color").value;
+  const regularFont = document.getElementById("date-font-style").value;
 
   if (window.getComputedStyle(document.getElementById(DATE_OPTION)).getPropertyValue('display') !== "none") {
     document.getElementById(DATE_OPTION).style.display = "none";
@@ -2309,7 +2216,7 @@ const saveFormElementByClick = function () {
     text_storage.forEach((item) => {
       let currentItem = document.getElementById(item.containerId);
       if (currentItem) {
-        // currentItem.style.zIndex = standardZIndex;
+        currentItem.style.zIndex = standardZIndex;
         if (currentItem.classList.contains("textfield-content"))
           currentItem.classList.remove("textfield-content");
       }
@@ -2321,7 +2228,7 @@ const removeAllResizeBar = function () {
   if (form_storage !== null) {
     form_storage.forEach((item) => {
       let currentItem;
-      if (item.form_type === DATE) currentItem = document.getElementById(item.containerId) && document.getElementById(item.containerId).parentElement;
+      if (item.form_type === DATE) currentItem = document.getElementById(item.containerId).parentElement;
       else currentItem = document.getElementById(item.containerId);
       if (currentItem && currentItem.querySelector("#topLeft")) {
         removeResizebar(currentItem.id);
@@ -2388,7 +2295,6 @@ document.getElementById("viewer").addEventListener("mousedown", function (event)
       }
     })
   }
-
   if (isExisting) {
     if (!isEditing) {
       event.preventDefault();
@@ -2422,10 +2328,8 @@ document.getElementById("viewer").addEventListener("mousedown", function (event)
     } else {
       removeAllResizeBar();
       optionIdArray.forEach((item) => {
-        if(document.getElementById(item)){
-          if (document.getElementById(item).contains(currentObject)) {
-            optionCount++;
-          }
+        if (document.getElementById(item).contains(currentObject)) {
+          optionCount++;
         }
       })
       if (optionCount == 0) saveFormElementByClick();
@@ -2512,15 +2416,10 @@ const showOptionAndResizebar = function (
         selectSizeContent += `<option value='16'}>Default</option>`;
       else selectSizeContent += `<option value=${item}>${item}</option>`;
     });
-    if(document.getElementById(`${id}-font-style`)){
-      document.getElementById(`${id}-font-style`).innerHTML = selectStyleContent;
-    }
-    if(document.getElementById(`${id}-font-size`)){
-      document.getElementById(`${id}-font-size`).innerHTML = selectSizeContent;
-    }
+    document.getElementById(`${id}-font-style`).innerHTML = selectStyleContent;
+    document.getElementById(`${id}-font-size`).innerHTML = selectSizeContent;
   }
 };
-
 // Add Delete button and define action.
 const addDeleteButton = function (currentId, container, object, type) {
   const left = object.offsetWidth;
@@ -2611,7 +2510,6 @@ const addFormElementStyle = function (object, top, left, width, height) {
   object.style.borderRadius = "3px";
   object.classList.add("form-fields");
 };
-
 const removeFormElementStyle = function (id) {
   document.getElementById(id)
 }
@@ -2994,9 +2892,8 @@ const eventHandler = async function (e) {
                   );
                   document.getElementById("text-font-style").value =
                     element.fontStyle;
-                  // document.getElementById("text-font-size").value =
-                  //   element.fontSize;
-                  toolbar.find("#text-font-size").val(element.fontSize);
+                  document.getElementById("text-font-size").value =
+                    element.fontSize;
                   document.getElementById("text-font-color").value =
                     element.textColor;
                   let selected = element.align;
@@ -3294,7 +3191,7 @@ const eventHandler = async function (e) {
                     deleteSpan.innerHTML = '<i class="fa fa-xmark"></i>';
                     deleteSpan.addEventListener("click", function () {
                       // Remove the corresponding div when the delete span is clicked
-                      element.optionArray = element.optionArray.filter(function (item) {
+                      element = element.filter(function (item) {
                         return item !== elementItem;
                       });
                       optionContent.remove();
@@ -3864,6 +3761,7 @@ const flatten = async function () {
 };
 
 async function addFormElements() {
+  console.log(form_storage);
   const fontStyles = {
     Courier: PDFLib.StandardFonts.Courier,
     CourierBold: PDFLib.StandardFonts.CourierBold,
@@ -4406,7 +4304,6 @@ function toggleCheckbox(id) {
     checkbox.classList.toggle("checked");
   }
 }
-
 function selectRadioButton(element, id) {
   if (isEditing && !isSubmit) {
     // Find the radio input within the clicked div

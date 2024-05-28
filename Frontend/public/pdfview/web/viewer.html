@@ -48,7 +48,6 @@ See https://github.com/adobe-type-tools/cmap-resources
   <link rel="stylesheet" href="css/signature-pad.css" />
   <link rel="stylesheet" href="css/signature-font.css" />
   <link rel="stylesheet" href="css/share-document.css" />
-  <link rel="stylesheet" href="css/index.css" />
 
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script> -->
   <!--#endif-->
@@ -217,23 +216,7 @@ See https://github.com/adobe-type-tools/cmap-resources
             <label for="editorFreeTextFontSize" class="editorParamsLabel"
               data-l10n-id="pdfjs-editor-free-text-size-input">Size</label>
             <input type="range" id="editorFreeTextFontSize" class="editorParamsSlider" value="10" min="5" max="100"
-              step="1" tabindex="103" style="display: none;" />
-            <select id="text-font-size" class="form-field-input" style="width: 50%; font-size: 12px;"></select>
-          </div>
-          <div class="editorParamsSetter">
-            <label for="text-content-font-style" class="editorParamsLabel">Font Family</label>
-            <select id="text-content-font-style" class="form-field-input" style="width: 50%; font-size: 12px;"></select>
-          </div>
-          <div class="editorParamsSetter">
-            <label class="editorParamsLabel">Font Style</label>
-            <div class="align-container">
-              <div id="text-bold" class="text-weight-button">
-                <i class="fa-solid fa-bold"></i>
-              </div>
-              <div id="text-italic" class="text-weight-button">
-                <i class="fa-solid fa-italic"></i>
-              </div>
-            </div>
+              step="1" tabindex="103" />
           </div>
         </div>
       </div>
@@ -499,14 +482,13 @@ See https://github.com/adobe-type-tools/cmap-resources
                       >Highlight</span
                     >
                   </button> -->
+                <button id="editorFreeText" class="toolbarButton" style="display: none" disabled="disabled" title="Text"
+                  role="radio" aria-checked="false" aria-controls="editorFreeTextParamsToolbar" tabindex="32"
+                  data-l10n-id="pdfjs-editor-free-text-button">
+                  <span data-l10n-id="pdfjs-editor-free-text-button-label">Text</span>
+                </button>
               </div>
               <div id="toolbarViewerRight" class="formToolsContainer">
-                <button class="second_toolbar_button" id="editorFreeText" title="Add Text">
-                  <i class="fa-solid far fa-i" style="font-size: 18px; color: #535353"></i>
-                </button>
-                <button class="second_toolbar_button" id="add_comment_mode" title="Add Comment">
-                  <i class="fa-solid fa-comment" style="font-size: 20px; color: #535353"></i>
-                </button>
                 <button class="second_toolbar_button" title="Share Link" onclick="shareLink()" id="shareDocument">
                   <i class="fa-solid fa-share-nodes" style="font-size: 20px; color: #535353"></i>
                 </button>
@@ -1262,6 +1244,16 @@ See https://github.com/adobe-type-tools/cmap-resources
       <p class="menu-button-item">Add Shapes</p>
     </button>
     <div class="horizontalToolbarSeparator"></div>
+    <p class="toolbarTitle">Comments:</p>
+    <button class="menu-button" id="add_text" title="Add Text">
+      <i class="far fa-i" style="width: 17px"></i>
+      <p class="menu-button-item">Add Text</p>
+    </button>
+    <button class="menu-button" id="add_comment_mode" title="Add Comment">
+      <i class="far fa-comment"></i>
+      <p class="menu-button-item">Add Comment</p>
+    </button>
+    <div class="horizontalToolbarSeparator"></div>
     <p class="toolbarTitle">Form Fields:</p>
     <button class="menu-button" id="add_form_check" title="Add checkbox" onclick="addForm(CHECKBOX)">
       <i class="fa-sharp fa-regular fa-square-check" style="width: 17px"></i>
@@ -1519,59 +1511,6 @@ See https://github.com/adobe-type-tools/cmap-resources
     </div>
   </div>
 
-  <!-- Text Content -->
-  <div id="text-content-option" class="checkbox-option" style="height: auto">
-    <div class="checkbox-option-header">
-      <div class="checkbox-option-header-text">
-        <h4>Text Properties</h4>
-      </div>
-    </div>
-    <div class="checkbox-option-content">
-      <div class="form-input">
-        <div class="form-field-input-container">
-          <div class="form-style-container">
-            <div class="form-style-name">
-              <i class="fa fa-font"></i>
-              <span>Font</span>
-            </div>
-            <select id="text-content-font-style" class="form-field-input" style="width: 50%"></select>
-          </div>
-          <div class="form-style-container">
-            <div class="form-style-name">
-              <i class="fa fa-text-height"></i>
-              <span>Font Size</span>
-            </div>
-            <div style="
-                  display: flex;
-                  justify-content: space-between;
-                  width: 50%;
-                ">
-              <div class="form-style-weight">
-                <div id="text-bold" class="text-weight-button">
-                  <i class="fa-solid fa-bold"></i>
-                </div>
-                <div id="text-italic" class="text-weight-button">
-                  <i class="fa-solid fa-italic"></i>
-                </div>
-              </div>
-              <select id="text-content-font-size" class="form-field-input"></select>
-            </div>
-          </div>
-          <div class="form-style-container">
-            <div class="form-style-name">
-              <i class="fa fa-fill"></i>
-              <span>Color</span>
-            </div>
-            <input type="color" id="text-content-color" name="colorPicker" class="form-field-input" />
-          </div>
-        </div>
-      </div>
-    </div>
-    <div id="text-content-save-button" class="checkbox-option-footer">
-      <div class="form-save-button">Save</div>
-    </div>
-  </div>
-  
   <script>
     localStorage.setItem(
       "modifiedContent",
@@ -1586,8 +1525,8 @@ See https://github.com/adobe-type-tools/cmap-resources
   <script src="pdfAnnotate.js"></script>
   <!--#if GENERIC-->
   <input type="file" id="fileInput" class="hidden" />
-  <script src="js/jquery-3.6.0.min.js"></script>
-  <script src="js/pdf.min.js" defer></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js" defer></script>
   <script src="jQuery.print.js"></script>
   <script src="font.js"></script>
   <script src="const.js"></script>
@@ -1600,12 +1539,13 @@ See https://github.com/adobe-type-tools/cmap-resources
   <script src="annotationHistory.js"></script>
   <script src="js/signature_pad.umd.js"></script>
   <script src="js/signature_app.js"></script>
-  <script src="js/utils.js" defer></script>
-  <script src="js/app.js" defer></script>
-  <script src="js/index.js" defer></script>
-  <script src="js/custom.js" defer></script>  
-  <script src="js/pdf-lib.js"></script>
-  <script src="js/interact.min.js"></script>
-  <script src="js/fontkit.umd.min.js"></script>
+  <script src="./js/utils.js" defer></script>
+  <script src="./js/app.js" defer></script>
+  <script src="./js/index.js" defer></script>
+  <script src="./js/custom.js" defer></script>
+  <link rel="stylesheet" href="./css/index.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@pdf-lib/fontkit@1.1.1/dist/fontkit.umd.min.js"></script>
   <!--#endif-->
-</body>
+</body>>

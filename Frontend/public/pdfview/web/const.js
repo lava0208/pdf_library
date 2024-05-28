@@ -82,6 +82,10 @@ const sidebar = document.querySelector(".right-sidebar");
 /* Elements for submitting document by link */
 const shareDocumentButton = document.getElementById("shareDocument");
 const submitDocumentButton = document.getElementById("submitDocument");
+const showHistoryButton = document.getElementById("showHistory");
+const addTextButton = document.getElementById("editorFreeText");
+const addCommentButton = document.getElementById("add_comment_mode");
+
 let clientName = '';
 let clientEmail = '';
 let isSubmit = false;

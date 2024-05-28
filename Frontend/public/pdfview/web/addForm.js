@@ -105,6 +105,9 @@ function getIdFromUrl() {
 const generalUserMode = function () {
   rightSidebarButton.style.display = "none";
   shareDocumentButton.style.display = "none";
+  addTextButton.style.display = "none";
+  addCommentButton.style.display = "none";
+  showHistoryButton.style.display = "none";
   submitDocumentButton.style.display = "flex";
   changeMode();
 }

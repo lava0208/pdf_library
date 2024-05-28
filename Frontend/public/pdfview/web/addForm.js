@@ -1516,7 +1516,8 @@ const handleText = function (e) {
   if (e) e.stopPropagation();
   const formFieldName = document.getElementById("text-field-input-name") && document.getElementById("text-field-input-name").value;
   fontStyle = generateFontName("text-font-style");
-  fontSize = document.getElementById("text-font-size") && parseInt(document.getElementById("text-font-size").value);
+  // fontSize = document.getElementById("text-font-size") && parseInt(document.getElementById("text-font-size").value);
+  fontSize = toolbar.find("#text-font-size").val();
   const regularFont = document.getElementById("text-font-style") && document.getElementById("text-font-style").value;
   textColor = document.getElementById("text-font-color") && document.getElementById("text-font-color").value;
   let initialValue = "";
@@ -2993,8 +2994,9 @@ const eventHandler = async function (e) {
                   );
                   document.getElementById("text-font-style").value =
                     element.fontStyle;
-                  document.getElementById("text-font-size").value =
-                    element.fontSize;
+                  // document.getElementById("text-font-size").value =
+                  //   element.fontSize;
+                  toolbar.find("#text-font-size").val(element.fontSize);
                   document.getElementById("text-font-color").value =
                     element.textColor;
                   let selected = element.align;

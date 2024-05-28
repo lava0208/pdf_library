@@ -376,7 +376,9 @@ const drawFormElement = function () {
                       );
                       document.getElementById("text-font-style").value =
                         element.fontStyle;
-                      document.getElementById("text-font-size").value =
+                      // document.getElementById("text-font-size").value =
+                      //   element.fontSize;
+                      document.getElementById("toolbar-font-size").value =
                         element.fontSize;
                       document.getElementById("text-font-color").value =
                         element.textColor;
@@ -1212,17 +1214,17 @@ const drawFontFamily = function () {
 
 //... Draw font size
 const drawFontSize = function () {
-  toolbar.find("#text-font-size").empty();
+  toolbar.find("#toolbar-font-size").empty();
   fontSizeArr.forEach(function (item) {
     let val = item == "Auto" ? 16 : item;
     let option = `<option value="${val}" pixel="${val}px">${item}</option>`;
-    toolbar.find("#text-font-size").append(option);
+    toolbar.find("#toolbar-font-size").append(option);
   })
 }
 
 //... Write Text Event
 $(document).on("DOMSubtreeModified", ".freeTextEditor.selectedEditor", function () {
-  let size = toolbar.find("#text-font-size").val() + "px";
+  let size = toolbar.find("#toolbar-font-size").val() + "px";
   let fontSize = `calc(${size} * var(--scale-factor))`;
   let fontFamily = toolbar.find("#text-content-font-style").val();
   let fontWeight = toolbar.find("#text-bold").hasClass("active") ? 700 : 500;
@@ -1233,7 +1235,7 @@ $(document).on("DOMSubtreeModified", ".freeTextEditor.selectedEditor", function 
 })
 
 //... Change Font Size Event
-$(document).on("change", "#text-font-size", function () {
+$(document).on("change", "#toolbar-font-size", function () {
   if($(".freeTextEditor").hasClass("selectedEditor")){
     let size = $(this).val() + "px";
     let fontSize = `calc(${$(this).val() + "px"} * var(--scale-factor))`;
@@ -1259,7 +1261,7 @@ $(document).on("click", ".freeTextEditor", function () {
 
     // var calcSize = fontSize / var(--scale-factor);
 
-    toolbar.find(`#text-font-size option[pixel="${size}"]`).prop("selected", true);
+    toolbar.find(`#toolbar-font-size option[pixel="${size}"]`).prop("selected", true);
     toolbar.find(`#text-content-font-style option[value="${fontFamily}"]`).prop("selected", true);
 
     if(fontWeight == 700){
@@ -1521,7 +1523,7 @@ const handleText = function (e) {
   const formFieldName = document.getElementById("text-field-input-name") && document.getElementById("text-field-input-name").value;
   fontStyle = generateFontName("text-font-style");
   // fontSize = document.getElementById("text-font-size") && parseInt(document.getElementById("text-font-size").value);
-  fontSize = toolbar.find("#text-font-size").val();
+  fontSize = toolbar.find("#toolbar-font-size").val();
   const regularFont = document.getElementById("text-font-style") && document.getElementById("text-font-style").value;
   textColor = document.getElementById("text-font-color") && document.getElementById("text-font-color").value;
   let initialValue = "";
@@ -2998,9 +3000,9 @@ const eventHandler = async function (e) {
                   );
                   document.getElementById("text-font-style").value =
                     element.fontStyle;
-                  document.getElementById("text-font-size").value =
-                    element.fontSize;
-                  // toolbar.find("#text-font-size").val(element.fontSize);
+                  // document.getElementById("text-font-size").value =
+                  //   element.fontSize;
+                  toolbar.find("#toolbar-font-size").val(element.fontSize);
                   document.getElementById("text-font-color").value =
                     element.textColor;
                   let selected = element.align;

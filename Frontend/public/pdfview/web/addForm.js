@@ -103,6 +103,7 @@ function getIdFromUrl() {
 }
 
 const generalUserMode = function () {
+  console.log("==== this is share document mode ====")
   rightSidebarButton.style.display = "none";
   shareDocumentButton.style.display = "none";
   addTextButton.style.display = "none";
@@ -2997,9 +2998,9 @@ const eventHandler = async function (e) {
                   );
                   document.getElementById("text-font-style").value =
                     element.fontStyle;
-                  // document.getElementById("text-font-size").value =
-                  //   element.fontSize;
-                  toolbar.find("#text-font-size").val(element.fontSize);
+                  document.getElementById("text-font-size").value =
+                    element.fontSize;
+                  // toolbar.find("#text-font-size").val(element.fontSize);
                   document.getElementById("text-font-color").value =
                     element.textColor;
                   let selected = element.align;

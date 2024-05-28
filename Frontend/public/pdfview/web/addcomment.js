@@ -154,7 +154,8 @@ const removeBoldItalicEvent = function () {
 
 const saveTextContent = function () {
   fontStyle = generateFontName("text-content-font-style");
-  fontSize = document.getElementById("text-content-font-size") && parseInt(document.getElementById("text-content-font-size").value);
+  // fontSize = document.getElementById("text-content-font-size") && parseInt(document.getElementById("text-content-font-size").value);
+  fontSize = document.getElementById("text-font-size") && parseInt(document.getElementById("text-font-size").value);
   textColor = document.getElementById("text-content-color") && document.getElementById("text-content-color").value;
   const regularFont = document.getElementById("text-content-font-style") && document.getElementById("text-content-font-style").value;
   let text, lines;
@@ -465,7 +466,8 @@ document.getElementById("viewer").addEventListener("click", (evt) => {
     addBoldItalicEvent();
 
     newText.style.fontFamily = document.getElementById("text-content-font-style") && document.getElementById("text-content-font-style").value;
-    newText.style.fontSize = document.getElementById("text-content-font-size") && document.getElementById("text-content-font-size").value + "px";
+    // newText.style.fontSize = document.getElementById("text-content-font-size") && document.getElementById("text-content-font-size").value + "px";
+    newText.style.fontSize = document.getElementById("text-font-size") && document.getElementById("text-font-size").value + "px";
     newText.style.color = document.getElementById("text-content-color") && document.getElementById("text-content-color").value;
 
     $(document).on('change', '#text-content-font-style', function() {
@@ -571,8 +573,11 @@ document.getElementById("viewer").addEventListener("click", (evt) => {
                 if(document.getElementById("text-content-font-style")){
                   document.getElementById("text-content-font-style").value = element.regularFontStyle;
                 }
-                if(document.getElementById("text-content-font-size")){
-                  document.getElementById("text-content-font-size").value = element.baseFontSize;
+                // if(document.getElementById("text-content-font-size")){
+                //   document.getElementById("text-content-font-size").value = element.baseFontSize;
+                // }
+                if(document.getElementById("text-font-size")){
+                  document.getElementById("text-font-size").value = element.baseFontSize;
                 }
                 if(document.getElementById("text-content-color")){
                   document.getElementById("text-content-color").value = element.textColor;

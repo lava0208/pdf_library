@@ -54,7 +54,7 @@ const loadFontFiles = function () {
 };
 
 const generateFontName = function (id) {
-  let fontName = document.getElementById(id).value;
+  let fontName = document.getElementById(id) && document.getElementById(id).value;
   const fontStyles = {
     Bold: "Bold",
     Oblique: "Oblique",
@@ -116,8 +116,12 @@ const handleItalic = function () {
 const addBoldItalicEvent = function () {
   const boldBtn = document.getElementById("text-bold");
   const italicBtn = document.getElementById("text-italic");
-  boldBtn.addEventListener("click", handleBold);
-  italicBtn.addEventListener("click", handleItalic);
+  if(boldBtn){
+    boldBtn.addEventListener("click", handleBold);
+  }
+  if(italicBtn){
+    italicBtn.addEventListener("click", handleItalic);
+  }  
 };
 
 document.addEventListener("keydown", function (event) {
@@ -133,8 +137,12 @@ document.addEventListener("keydown", function (event) {
 const removeBoldItalicEvent = function () {
   const boldBtn = document.getElementById("text-bold");
   const italicBtn = document.getElementById("text-italic");
-  boldBtn.removeEventListener("click", handleBold);
-  italicBtn.removeEventListener("click", handleItalic);
+  if(boldBtn){
+    boldBtn.removeEventListener("click", handleBold);
+  }
+  if(italicBtn){
+    italicBtn.removeEventListener("click", handleItalic);
+  }
   if (isBold) {
     boldBtn.classList.remove("text-weight-button-focused");
   }
@@ -146,9 +154,9 @@ const removeBoldItalicEvent = function () {
 
 const saveTextContent = function () {
   fontStyle = generateFontName("text-content-font-style");
-  fontSize = parseInt(document.getElementById("text-content-font-size").value);
-  textColor = document.getElementById("text-content-color").value;
-  const regularFont = document.getElementById("text-content-font-style").value;
+  fontSize = document.getElementById("text-content-font-size") && parseInt(document.getElementById("text-content-font-size").value);
+  textColor = document.getElementById("text-content-color") && document.getElementById("text-content-color").value;
+  const regularFont = document.getElementById("text-content-font-style") && document.getElementById("text-content-font-style").value;
   let text, lines;
   const resultArray = [];
   let prevElement = null;
@@ -217,13 +225,21 @@ const saveTextContent = function () {
 }
 
 const handleTextContent = (e) => {
+  // console.log("******* TEXT_CONTENT_OPTION ********");
+  // console.log(TEXT_CONTENT_OPTION);
   isOptionPane = false;
-  document.getElementById(TEXT_CONTENT_OPTION).style.display = "none";
+  if(document.getElementById(TEXT_CONTENT_OPTION)){
+    document.getElementById(TEXT_CONTENT_OPTION).style.display = "none";
+  }
+  
   if (e) e.stopPropagation();
   saveTextContent();
-  document
+  if(document.getElementById("text-content-save-button")){
+    document
     .getElementById("text-content-save-button")
     .removeEventListener("click", handleTextContent);
+  }
+  
   removeBoldItalicEvent();
 };
 
@@ -274,7 +290,7 @@ document.getElementById("add_comment").addEventListener("click", (e) => {
   comment_icon.style.width = "30px";
   comment_icon.id = "comment" + commentId;
   comment_icon.style.position = "absolute";
-  comment_icon.style.zIndex = 100;
+  // comment_icon.style.zIndex = 100;
   comment_icon.style.top = mouse_y + "px";
   comment_icon.style.left = mouse_x + "px";
   comment_icon.style.backgroundSize = "100% 100%";
@@ -371,7 +387,8 @@ document.getElementById("viewer").addEventListener("click", (evt) => {
 
   document.querySelectorAll('.textfield-content').forEach(div => {
     div.addEventListener('click', function() {
-      this.classList.remove("clicked");
+      this.classList.remove("dblclicked");
+      this.style.zIndex = 1;
     });
   });
 
@@ -415,7 +432,7 @@ document.getElementById("viewer").addEventListener("click", (evt) => {
     container.style.left = mouse_x + "px";
     container.style.width = "fit-content";
     container.style.height = "fit-content";
-    container.style.zIndex = 101;
+    container.style.zIndex = 1;
     container.tabIndex = 0;
     container.classList.add("textfield-content");
     container.append(newText);
@@ -447,71 +464,83 @@ document.getElementById("viewer").addEventListener("click", (evt) => {
 
     addBoldItalicEvent();
 
-    newText.style.fontFamily = document.getElementById(
-      "text-content-font-style"
-    ).value;
-    newText.style.fontSize = document.getElementById("text-content-font-size").value + "px";
-    newText.style.color = document.getElementById("text-content-color").value;
+    newText.style.fontFamily = document.getElementById("text-content-font-style") && document.getElementById("text-content-font-style").value;
+    newText.style.fontSize = document.getElementById("text-content-font-size") && document.getElementById("text-content-font-size").value + "px";
+    newText.style.color = document.getElementById("text-content-color") && document.getElementById("text-content-color").value;
 
-    document
-      .getElementById("text-content-font-style")
-      .addEventListener("change", () => {
-        document.getElementById(current_text_content_id).style.fontFamily =
-          document.getElementById("text-content-font-style").value;
-      });
-    document
-      .getElementById("text-content-font-size")
-      .addEventListener("change", () => {
-        document.getElementById(current_text_content_id).style.fontSize =
-          document.getElementById("text-content-font-size").value + "px";
-      });
-    document
-      .getElementById("text-content-color")
-      .addEventListener("change", () => {
-        document.getElementById(current_text_content_id).style.color =
-          document.getElementById("text-content-color").value;
-      });
+    $(document).on('change', '#text-content-font-style', function() {
+      $('#' + current_text_content_id).css('font-family', $(this).val());
+      adjustZIndex($(this));
+    })
 
-    document.querySelectorAll('.textcontent').forEach(div => {
-      div.addEventListener('dblclick', function() {
-        const text = this.innerText;
-        const input = document.createElement('input');
+    $(document).on('change', '#text-content-font-size', function() {
+      $('#' + current_text_content_id).css('font-size', $(this).val() + 'px');
+      adjustZIndex($(this));
+    })
 
-        input.type = 'text';
-        input.value = text;
-        input.className = 'inputcontent';
+    $(document).on('change', '#text-content-color', function() {
+      $('#' + current_text_content_id).css('color', $(this).val());
+      adjustZIndex($(this));
+    })
 
-        input.style.width = '100%';
-        input.style.height = this.offsetHeight + 'px';
-        input.style.fontFamily = this.style.fontFamily;
-        input.style.fontSize = this.style.fontSize;
-        input.style.color = this.style.color;
+    $(document).on('focus', '#text-content-font-style', function() {
+      adjustZIndex($(this));
+    })
 
-        input.addEventListener('blur', function() {
-          div.innerText = this.value;
-          div.style.display = 'block';
-          input.remove();
-        });
+    $(document).on('focus', '#text-content-font-size', function() {
+      adjustZIndex($(this));
+    })
 
-        this.style.display = 'none';
-        this.parentNode.insertBefore(input, this);
-        input.focus();
-      });
-    });
+    $(document).on('focus', '#text-content-color', function() {
+      adjustZIndex($(this));
+    })
 
-    document.querySelectorAll('.textfield-content').forEach(div => {
-      div.addEventListener('dblclick', function() {
-        if (!this.classList.contains("clicked")){
-          this.classList.add("clicked");
+    $(document).on('dblclick', '.textcontent', function() {
+      const $this = $(this);
+      const text = $this.text();
+      const classes = $(this).attr('class').replace('textcontent', '').trim();
+      const $input = $('<input>', {
+        type: 'text',
+        value: text,
+        class: 'inputcontent ' + classes,
+        css: {
+          width: '100%',
+          height: 'fit-content',
+          fontFamily: $this.css('font-family'),
+          fontSize: $this.css('font-size'),
+          color: $this.css('color'),
+          cursor: 'move'
         }
       });
+    
+      $this.parent().addClass("dblclicked");
+      $('.textcontent').css('z-index', 1);
+      $('.textfield-content').css('z-index', standardZIndex);
+      $this.parent().css("z-index", standardZIndex);
+    
+      $input.on('blur', function() {
+        const newText = $input.val();
+        $this.text(newText).css('display', 'block');
+        $input.replaceWith($this);
+        $this.parent().removeClass("dblclicked");
+        $('.textfield-content').css('z-index', 1);
+        $this.parent().css("z-index", 1);
+      });
+    
+      $this.replaceWith($input);
+
+      // Focus on the last character
+      const inputLength = $input.val().length;
+      $input.focus().get(0).setSelectionRange(inputLength, inputLength);
     });
+    
+    
 
     const textEventHandler = function () {
       if (!isEditing) {
         current_text_content_id = newText.id;
         current_text_num_id = textContentId;
-          
+  
         let istooltipshow = false;
         if (
           document.getElementById("text-content_tooltipbar" + current_text_num_id)
@@ -527,7 +556,7 @@ document.getElementById("viewer").addEventListener("click", (evt) => {
             addDeleteButton(current_text_num_id, tooltipbar, container, "text-content");
             text_storage.map((element) => {
               if (element.id == textContentId) {
-                isOptionPane = true;  //... Show "Add Text" option with double click
+                isOptionPane = true;
                 if (element.xPage <= 360) {
                   option = showOption(TEXT_CONTENT_OPTION, 0, 15);
                 } else {
@@ -539,15 +568,25 @@ document.getElementById("viewer").addEventListener("click", (evt) => {
                   document.getElementById("text-bold").classList.add("text-weight-button-focused");
                 if (isItalic)
                   document.getElementById("text-italic").classList.add("text-weight-button-focused");
-                document.getElementById("text-content-font-style").value = element.regularFontStyle;
-                document.getElementById("text-content-font-size").value = element.baseFontSize;
-                document.getElementById("text-content-color").value = element.textColor;
+                if(document.getElementById("text-content-font-style")){
+                  document.getElementById("text-content-font-style").value = element.regularFontStyle;
+                }
+                if(document.getElementById("text-content-font-size")){
+                  document.getElementById("text-content-font-size").value = element.baseFontSize;
+                }
+                if(document.getElementById("text-content-color")){
+                  document.getElementById("text-content-color").value = element.textColor;
+                }
+                
                 container.append(option);
               }
             });
-            document
+
+            if(document.getElementById("text-content-save-button")){
+              document
               .getElementById("text-content-save-button")
               .addEventListener("click", handleTextContent);
+            }
           } else {
             document.getElementById("text-content_tooltipbar" + current_text_num_id).remove();
           }
@@ -567,32 +606,45 @@ document.getElementById("viewer").addEventListener("click", (evt) => {
     handleChange();
     handleTextContent();
 
-    document
+    if(document.getElementById("text-content-save-button")){
+      document
       .getElementById("text-content-save-button")
       .addEventListener("click", handleTextContent);
+    }
   }
 });
 
-document.getElementById("add_comment_mode").addEventListener("click", (e) => {
-  isTextModeOn = false;
-  isAddCommentModeOn = !isAddCommentModeOn;
-  handleChange();
-});
-document.getElementById("add_text").addEventListener("click", (e) => {
+$(document).on("click", "#editorFreeText", function(){
+  $("#add_comment_mode").removeClass("active_menu")
+  comment_control.style.display = "none";
   isAddCommentModeOn = false;
-  isTextModeOn = !isTextModeOn;
-  handleChange();
-});
+
+  if($("#add_comment_mode").hasClass("active_menu")){
+    $(this).trigger("click");
+  }
+})
+
+$(document).on("click", "#add_comment_mode", function(){
+  if($("#editorFreeText").hasClass("toggled")){
+    $("#editorFreeText").trigger("click");
+    $(this).removeClass("active_menu");
+    comment_control.style.display = "none";
+    isAddCommentModeOn = false;
+  }
+  
+  if(!isAddCommentModeOn){
+    $(this).addClass("active_menu");
+    isAddCommentModeOn = true;
+  }else{
+    $(this).removeClass("active_menu");
+    comment_control.style.display = "none";
+    isAddCommentModeOn = false;
+  }
+})
+
 
 const handleChange = () => {
-  let addText = document.getElementById("add_text");
   let addComment = document.getElementById("add_comment_mode");
-  // Handle TextMode
-  if (!isTextModeOn) {
-    addText.classList.remove("active_menu");
-  } else {
-    addText.classList.add("active_menu");
-  }
   //Handle AddCommentMode
   if (!isAddCommentModeOn) {
     addComment.classList.remove("active_menu");
@@ -601,6 +653,11 @@ const handleChange = () => {
     addComment.classList.add("active_menu");
   }
 };
+
+function adjustZIndex(that){
+  $(".textfield-content").css('z-index', 1);
+  $(that).parents(".textfield-content").css("z-index", standardZIndex);
+}
 
 function add_txt_comment() {
   pdfFactory = new pdfAnnotate.AnnotationFactory(pdfBytes);

@@ -1205,10 +1205,10 @@ const drawFormElement = function () {
 
 //... Draw font family
 const drawFontFamily = function () {
-  toolbar.find("#text-content-font-style").empty();
+  toolbar.find("#toolbar-font-style").empty();
   fontStyleArr.forEach(function (item) {
     let option = `<option value="${item}" style="font-family: ${item}">${item}</option>`;
-    toolbar.find("#text-content-font-style").append(option);
+    toolbar.find("#toolbar-font-style").append(option);
   })
 }
 
@@ -1226,7 +1226,7 @@ const drawFontSize = function () {
 $(document).on("DOMSubtreeModified", ".freeTextEditor.selectedEditor", function () {
   let size = toolbar.find("#toolbar-font-size").val() + "px";
   let fontSize = `calc(${size} * var(--scale-factor))`;
-  let fontFamily = toolbar.find("#text-content-font-style").val();
+  let fontFamily = toolbar.find("#toolbar-font-style").val();
   let fontWeight = toolbar.find("#text-bold").hasClass("active") ? 700 : 500;
   let fontStyle = toolbar.find("#text-italic").hasClass("active") ? "italic" : "";
 
@@ -1245,7 +1245,7 @@ $(document).on("change", "#toolbar-font-size", function () {
 })
 
 //... Change Font Family Event
-$(document).on("change", "#text-content-font-style", function () {
+$(document).on("change", "#toolbar-font-style", function () {
   if($(".freeTextEditor").hasClass("selectedEditor")){
     let fontFamily = $(this).val();
     $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").css("font-family", fontFamily);
@@ -1262,7 +1262,7 @@ $(document).on("click", ".freeTextEditor", function () {
     // var calcSize = fontSize / var(--scale-factor);
 
     toolbar.find(`#toolbar-font-size option[pixel="${size}"]`).prop("selected", true);
-    toolbar.find(`#text-content-font-style option[value="${fontFamily}"]`).prop("selected", true);
+    toolbar.find(`#toolbar-font-style option[value="${fontFamily}"]`).prop("selected", true);
 
     if(fontWeight == 700){
       toolbar.find("#text-bold").addClass("active")
@@ -1521,8 +1521,9 @@ const handleText = function (e) {
   if(document.getElementById(TEXTFIELD_OPTION)) document.getElementById(TEXTFIELD_OPTION).style.display = "none";
   if (e) e.stopPropagation();
   const formFieldName = document.getElementById("text-field-input-name") && document.getElementById("text-field-input-name").value;
-  fontStyle = generateFontName("text-font-style");
+  // fontStyle = generateFontName("text-font-style");
   // fontSize = document.getElementById("text-font-size") && parseInt(document.getElementById("text-font-size").value);
+  fontStyle = generateFontName("toolbar-font-style");
   fontSize = toolbar.find("#toolbar-font-size").val();
   const regularFont = document.getElementById("text-font-style") && document.getElementById("text-font-style").value;
   textColor = document.getElementById("text-font-color") && document.getElementById("text-font-color").value;

@@ -153,11 +153,13 @@ const removeBoldItalicEvent = function () {
 };
 
 const saveTextContent = function () {
-  fontStyle = generateFontName("text-content-font-style");
+  // fontStyle = generateFontName("text-content-font-style");
   // fontSize = document.getElementById("text-content-font-size") && parseInt(document.getElementById("text-content-font-size").value);
+  fontStyle = generateFontName("toolbar-font-style");
   fontSize = document.getElementById("toolbar-font-size") && parseInt(document.getElementById("toolbar-font-size").value);
   textColor = document.getElementById("text-content-color") && document.getElementById("text-content-color").value;
-  const regularFont = document.getElementById("text-content-font-style") && document.getElementById("text-content-font-style").value;
+  // const regularFont = document.getElementById("text-content-font-style") && document.getElementById("text-content-font-style").value;
+  const regularFont = document.getElementById("toolbar-font-style") && document.getElementById("toolbar-font-style").value;
   let text, lines;
   const resultArray = [];
   let prevElement = null;
@@ -465,8 +467,9 @@ document.getElementById("viewer").addEventListener("click", (evt) => {
 
     addBoldItalicEvent();
 
-    newText.style.fontFamily = document.getElementById("text-content-font-style") && document.getElementById("text-content-font-style").value;
+    // newText.style.fontFamily = document.getElementById("text-content-font-style") && document.getElementById("text-content-font-style").value;
     // newText.style.fontSize = document.getElementById("text-content-font-size") && document.getElementById("text-content-font-size").value + "px";
+    newText.style.fontFamily = document.getElementById("toolbar-font-style") && document.getElementById("toolbar-font-style").value;
     newText.style.fontSize = document.getElementById("toolbar-font-size") && document.getElementById("toolbar-font-size").value + "px";
     newText.style.color = document.getElementById("text-content-color") && document.getElementById("text-content-color").value;
 
@@ -570,12 +573,15 @@ document.getElementById("viewer").addEventListener("click", (evt) => {
                   document.getElementById("text-bold").classList.add("text-weight-button-focused");
                 if (isItalic)
                   document.getElementById("text-italic").classList.add("text-weight-button-focused");
-                if(document.getElementById("text-content-font-style")){
-                  document.getElementById("text-content-font-style").value = element.regularFontStyle;
-                }
+                // if(document.getElementById("text-content-font-style")){
+                //   document.getElementById("text-content-font-style").value = element.regularFontStyle;
+                // }
                 // if(document.getElementById("text-content-font-size")){
                 //   document.getElementById("text-content-font-size").value = element.baseFontSize;
                 // }
+                if(document.getElementById("toolbar-font-style")){
+                  document.getElementById("toolbar-font-style").value = element.regularFontStyle;
+                }
                 if(document.getElementById("toolbar-font-size")){
                   document.getElementById("toolbar-font-size").value = element.baseFontSize;
                 }

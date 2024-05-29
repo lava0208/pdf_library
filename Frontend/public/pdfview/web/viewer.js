@@ -158,6 +158,7 @@ function getViewerConfiguration() {
 
       //... custom toolbar text
       editorSelectTextFontSize: document.getElementById("toolbar-font-size"),
+      editorSelectTextFontFamily: document.getElementById("toolbar-font-style"),
     },
     
     printContainer: document.getElementById("printContainer"),

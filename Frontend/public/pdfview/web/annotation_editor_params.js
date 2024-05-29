@@ -32,6 +32,9 @@ class AnnotationEditorParams {
     editorInkThickness,
     editorInkOpacity,
     editorStampAddImage,
+
+    //... custom toolbar text
+    editorSelectTextFontSize
   }) {
     const dispatchEvent = (typeStr, value) => {
       this.eventBus.dispatch("switchannotationeditorparams", {
@@ -59,6 +62,11 @@ class AnnotationEditorParams {
       dispatchEvent("CREATE");
     });
 
+    //... custom toolbar text
+    editorSelectTextFontSize.addEventListener("change", function () {
+      dispatchEvent("SELECTTEXT_SIZE", this.value);
+    });
+
     this.eventBus._on("annotationeditorparamschanged", evt => {
       for (const [type, value] of evt.details) {
         switch (type) {
@@ -76,6 +84,9 @@ class AnnotationEditorParams {
             break;
           case AnnotationEditorParamsType.INK_OPACITY:
             editorInkOpacity.value = value;
+            break;
+          case AnnotationEditorParamsType.SELECTTEXT_SIZE:
+            editorSelectTextFontSize.value = value;
             break;
         }
       }

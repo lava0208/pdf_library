@@ -174,6 +174,9 @@ class FreeTextEditor extends AnnotationEditor {
       case AnnotationEditorParamsType.FREETEXT_COLOR:
         FreeTextEditor._defaultColor = value;
         break;
+      case AnnotationEditorParamsType.SELECTTEXT_SIZE:
+        FreeTextEditor._defaultFontSize = value;
+        break;
     }
   }
 
@@ -185,6 +188,9 @@ class FreeTextEditor extends AnnotationEditor {
         break;
       case AnnotationEditorParamsType.FREETEXT_COLOR:
         this.#updateColor(value);
+        break;
+      case AnnotationEditorParamsType.SELECTTEXT_SIZE:
+        this.#updateFontSize(value);
         break;
     }
   }
@@ -208,6 +214,7 @@ class FreeTextEditor extends AnnotationEditor {
     return [
       [AnnotationEditorParamsType.FREETEXT_SIZE, this.#fontSize],
       [AnnotationEditorParamsType.FREETEXT_COLOR, this.#color],
+      [AnnotationEditorParamsType.SELECTTEXT_COLOR, this.#fontSize],
     ];
   }
 
@@ -231,7 +238,8 @@ class FreeTextEditor extends AnnotationEditor {
         setFontsize(savedFontsize);
       },
       mustExec: true,
-      type: AnnotationEditorParamsType.FREETEXT_SIZE,
+      // type: AnnotationEditorParamsType.FREETEXT_SIZE,
+      type: AnnotationEditorParamsType.SELECTTEXT_SIZE,
       overwriteIfSameType: true,
       keepUndo: true,
     });
@@ -549,6 +557,10 @@ class FreeTextEditor extends AnnotationEditor {
     AnnotationEditor._l10nPromise
       .get("pdfjs-free-text-default-content")
       .then(msg => this.editorDiv?.setAttribute("default-content", "Your text is here!"));
+
+    const date = new Date(Date.now());
+    addHistory(1, TEXT_CONTENT, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "text-content");
+
     this.editorDiv.contentEditable = true;
 
     const { style } = this.editorDiv;

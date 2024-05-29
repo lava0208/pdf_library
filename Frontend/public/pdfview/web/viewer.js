@@ -155,6 +155,9 @@ function getViewerConfiguration() {
       editorInkThickness: document.getElementById("editorInkThickness"),
       editorInkOpacity: document.getElementById("editorInkOpacity"),
       editorStampAddImage: document.getElementById("editorStampAddImage"),
+
+      //... custom toolbar text
+      editorSelectTextFontSize: document.getElementById("toolbar-font-size"),
     },
     
     printContainer: document.getElementById("printContainer"),

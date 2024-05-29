@@ -1,6 +1,6 @@
 const openToolbar = () => {
     document.getElementById("scaleSelect").value = "auto";
-    PDFViewerApplication.pdfViewer.currentScaleValue = "auto";
+    // PDFViewerApplication.pdfViewer.currentScaleValue = "auto";
     rightSidebarButton.classList.toggle("rotate");
     sidebar.classList.toggle("active");
 

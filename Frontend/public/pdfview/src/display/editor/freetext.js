@@ -52,6 +52,10 @@ class FreeTextEditor extends AnnotationEditor {
 
   #fontSize;
 
+  //... custom toolbar text
+  #fontFamily;
+  static _defaultFontFamily = 'Courier';
+
   #initialData = null;
 
   static _freeTextDefaultContent = "";
@@ -140,7 +144,10 @@ class FreeTextEditor extends AnnotationEditor {
       params.color ||
       FreeTextEditor._defaultColor ||
       AnnotationEditor._defaultLineColor;
+
+    //... custom toolbar text
     this.#fontSize = params.fontSize || FreeTextEditor._defaultFontSize;
+    this.#fontFamily = params.fontFamily || FreeTextEditor._defaultFontFamily;
   }
 
   /** @inheritdoc */
@@ -174,8 +181,13 @@ class FreeTextEditor extends AnnotationEditor {
       case AnnotationEditorParamsType.FREETEXT_COLOR:
         FreeTextEditor._defaultColor = value;
         break;
+
+      //... custom toolbar text
       case AnnotationEditorParamsType.SELECTTEXT_SIZE:
-        FreeTextEditor._defaultFontSize = value;
+        // FreeTextEditor._defaultFontSize = value;
+        break;
+      case AnnotationEditorParamsType.SELECTTEXT_FAMILY:
+        FreeTextEditor._defaultFontFamily = value;
         break;
     }
   }
@@ -189,8 +201,13 @@ class FreeTextEditor extends AnnotationEditor {
       case AnnotationEditorParamsType.FREETEXT_COLOR:
         this.#updateColor(value);
         break;
+
+      //... custom toolbar text
       case AnnotationEditorParamsType.SELECTTEXT_SIZE:
         this.#updateFontSize(value);
+        break;
+      case AnnotationEditorParamsType.SELECTTEXT_FAMILY:
+        this.#updateFontFamily(value);
         break;
     }
   }
@@ -206,6 +223,16 @@ class FreeTextEditor extends AnnotationEditor {
         AnnotationEditorParamsType.FREETEXT_COLOR,
         FreeTextEditor._defaultColor || AnnotationEditor._defaultLineColor,
       ],
+
+      //... custom toolbar text
+      [
+        AnnotationEditorParamsType.SELECTTEXT_SIZE,
+        FreeTextEditor._defaultFontSize,
+      ],
+      [
+        AnnotationEditorParamsType.SELECTTEXT_FAMILY,
+        FreeTextEditor._defaultFontFamily,
+      ],
     ];
   }
 
@@ -214,7 +241,10 @@ class FreeTextEditor extends AnnotationEditor {
     return [
       [AnnotationEditorParamsType.FREETEXT_SIZE, this.#fontSize],
       [AnnotationEditorParamsType.FREETEXT_COLOR, this.#color],
-      [AnnotationEditorParamsType.SELECTTEXT_COLOR, this.#fontSize],
+
+      //... custom toolbar text
+      [AnnotationEditorParamsType.SELECTTEXT_SIZE, this.#fontSize],
+      [AnnotationEditorParamsType.SELECTTEXT_FAMILY, this.#fontFamily],
     ];
   }
 
@@ -238,6 +268,8 @@ class FreeTextEditor extends AnnotationEditor {
         setFontsize(savedFontsize);
       },
       mustExec: true,
+
+      //... custom toolbar text
       // type: AnnotationEditorParamsType.FREETEXT_SIZE,
       type: AnnotationEditorParamsType.SELECTTEXT_SIZE,
       overwriteIfSameType: true,
@@ -264,6 +296,24 @@ class FreeTextEditor extends AnnotationEditor {
       keepUndo: true,
     });
   }
+
+  //... custom toolbar text
+  #updateFontFamily(style) {
+    const savedStyle = this.#fontFamily;
+    this.addCommands({
+      cmd: () => {
+        this.#fontFamily = this.editorDiv.style.fontFamily = style;
+      },
+      undo: () => {
+        this.#fontFamily = this.editorDiv.style.fontFamily = savedStyle;
+      },
+      mustExec: true,
+      type: AnnotationEditorParamsType.SELECTTEXT_FAMILY,
+      overwriteIfSameType: true,
+      keepUndo: true,
+    });
+  }
+
 
   /**
    * Helper to translate the editor with the keyboard when it's empty.
@@ -559,6 +609,8 @@ class FreeTextEditor extends AnnotationEditor {
       .then(msg => this.editorDiv?.setAttribute("default-content", "Your text is here!"));
 
     const date = new Date(Date.now());
+
+    //... save history
     addHistory(1, TEXT_CONTENT, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "text-content");
 
     this.editorDiv.contentEditable = true;
@@ -566,6 +618,9 @@ class FreeTextEditor extends AnnotationEditor {
     const { style } = this.editorDiv;
     style.fontSize = `calc(${this.#fontSize}px * var(--scale-factor))`;
     style.color = this.#color;
+
+    //... custom toolbar text
+    style.fontFamily = this.#fontFamily;
 
     this.div.append(this.editorDiv);
 
@@ -680,7 +735,9 @@ class FreeTextEditor extends AnnotationEditor {
     if (data instanceof FreeTextAnnotationElement) {
       const {
         data: {
-          defaultAppearanceData: { fontSize, fontColor },
+
+          //... custom toolbar text
+          defaultAppearanceData: { fontSize, fontColor, fontFamily },
           rect,
           rotation,
           id,
@@ -701,6 +758,10 @@ class FreeTextEditor extends AnnotationEditor {
         annotationType: AnnotationEditorType.FREETEXT,
         color: Array.from(fontColor),
         fontSize,
+
+        //... custom toolbar text
+        fontFamily,
+
         value: textContent.join("\n"),
         position: textPosition,
         pageIndex: pageNumber - 1,
@@ -713,6 +774,10 @@ class FreeTextEditor extends AnnotationEditor {
     const editor = super.deserialize(data, parent, uiManager);
     editor.#fontSize = data.fontSize;
     editor.#color = Util.makeHexColor(...data.color);
+
+    //... custom toolbar text
+    editor.#fontFamily = data.fontFamily;
+
     editor.#content = FreeTextEditor.#deserializeContent(data.value);
     editor.annotationElementId = data.id || null;
     editor.#initialData = initialData;
@@ -746,12 +811,18 @@ class FreeTextEditor extends AnnotationEditor {
       annotationType: AnnotationEditorType.FREETEXT,
       color,
       fontSize: this.#fontSize,
+      //... custom toolbar text
+      fontFamily: this.#fontFamily,
+
       value: this.#serializeContent(),
       pageIndex: this.pageIndex,
       rect,
       rotation: this.rotation,
       structTreeParentId: this._structTreeParentId,
     };
+
+    console.log("======== serialized ========");
+    console.log(serialized);
 
     if (isForCopying) {
       // Don't add the id when copying because the pasted editor mustn't be
@@ -769,13 +840,18 @@ class FreeTextEditor extends AnnotationEditor {
   }
 
   #hasElementChanged(serialized) {
-    const { value, fontSize, color, rect, pageIndex } = this.#initialData;
+    //... custom toolbar text
+    const { value, fontSize, color, rect, pageIndex, fontFamily } = this.#initialData;
 
     return (
       serialized.value !== value ||
       serialized.fontSize !== fontSize ||
       serialized.rect.some((x, i) => Math.abs(x - rect[i]) >= 1) ||
       serialized.color.some((c, i) => c !== color[i]) ||
+
+      //... custom toolbar text
+      serialized.fontFamily !== fontFamily ||
+
       serialized.pageIndex !== pageIndex
     );
   }

@@ -374,10 +374,12 @@ const drawFormElement = function () {
                         element.xPage / 2 - 180,
                         element.yPage + 15
                       );
-                      document.getElementById("text-font-style").value =
-                        element.fontStyle;
+                      // document.getElementById("text-font-style").value =
+                      //   element.fontStyle;
                       // document.getElementById("text-font-size").value =
                       //   element.fontSize;
+                      document.getElementById("toolbar-font-style").value =
+                        element.fontStyle;
                       document.getElementById("toolbar-font-size").value =
                         element.fontSize;
                       document.getElementById("text-font-color").value =
@@ -1253,27 +1255,31 @@ $(document).on("change", "#toolbar-font-style", function () {
 })
 
 //... Get Font Detail of Selected Text
-$(document).on("click", ".freeTextEditor", function () {  
-    let size = $(this).find(".internal[role='textbox']").attr("size");
-    let fontFamily = $(this).find(".internal[role='textbox']").css("font-family");
-    let fontWeight = $(this).find(".internal[role='textbox']").css("font-weight");
-    let fontStyle = $(this).find(".internal[role='textbox']").css("font-style");
+$(document).on("click", ".freeTextEditor", function () {
+  if(isOpenSubmitDocument){
+    return false
+  }
+  
+  let size = $(this).find(".internal[role='textbox']").attr("size");
+  let fontFamily = $(this).find(".internal[role='textbox']").css("font-family");
+  let fontWeight = $(this).find(".internal[role='textbox']").css("font-weight");
+  let fontStyle = $(this).find(".internal[role='textbox']").css("font-style");
 
-    // var calcSize = fontSize / var(--scale-factor);
+  // var calcSize = fontSize / var(--scale-factor);
 
-    toolbar.find(`#toolbar-font-size option[pixel="${size}"]`).prop("selected", true);
-    toolbar.find(`#toolbar-font-style option[value="${fontFamily}"]`).prop("selected", true);
+  toolbar.find(`#toolbar-font-size option[pixel="${size}"]`).prop("selected", true);
+  toolbar.find(`#toolbar-font-style option[value="${fontFamily}"]`).prop("selected", true);
 
-    if(fontWeight == 700){
-      toolbar.find("#text-bold").addClass("active")
-    }else{
-      toolbar.find("#text-bold").removeClass("active")
-    }
-    if(fontStyle == "italic"){
-      toolbar.find("#text-italic").addClass("active")
-    }else{
-      toolbar.find("#text-italic").removeClass("active")
-    }
+  if(fontWeight == 700){
+    toolbar.find("#text-bold").addClass("active")
+  }else{
+    toolbar.find("#text-bold").removeClass("active")
+  }
+  if(fontStyle == "italic"){
+    toolbar.find("#text-italic").addClass("active")
+  }else{
+    toolbar.find("#text-italic").removeClass("active")
+  }
 })
 
 //... Change Font Style Event
@@ -1336,6 +1342,9 @@ document.addEventListener("DOMContentLoaded", function () {
             // If the document is loaded, call the drawFormElement function
             clearInterval(checkViewerInterval); // Clear the interval
             drawFormElement();
+
+            //...
+            isOpenSubmitDocument = true;
           }
         }, 100);
       })
@@ -2999,11 +3008,14 @@ const eventHandler = async function (e) {
                     element.xPage / 2 - 180,
                     element.yPage + 15
                   );
-                  document.getElementById("text-font-style").value =
-                    element.fontStyle;
+                  // document.getElementById("text-font-style").value =
+                  //   element.fontStyle;
                   // document.getElementById("text-font-size").value =
                   //   element.fontSize;
-                  toolbar.find("#toolbar-font-size").val(element.fontSize);
+                  document.getElementById("toolbar-font-style").value =
+                    element.fontStyle;
+                  document.getElementById("toolbar-font-size").value =
+                    element.fontSize;
                   document.getElementById("text-font-color").value =
                     element.textColor;
                   let selected = element.align;

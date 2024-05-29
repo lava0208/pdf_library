@@ -34,7 +34,8 @@ class AnnotationEditorParams {
     editorStampAddImage,
 
     //... custom toolbar text
-    editorSelectTextFontSize
+    editorSelectTextFontSize,
+    editorSelectTextFontFamily
   }) {
     const dispatchEvent = (typeStr, value) => {
       this.eventBus.dispatch("switchannotationeditorparams", {
@@ -66,6 +67,9 @@ class AnnotationEditorParams {
     editorSelectTextFontSize.addEventListener("change", function () {
       dispatchEvent("SELECTTEXT_SIZE", this.value);
     });
+    editorSelectTextFontFamily.addEventListener("change", function () {
+      dispatchEvent("SELECTTEXT_FAMILY", this.value);
+    });
 
     this.eventBus._on("annotationeditorparamschanged", evt => {
       for (const [type, value] of evt.details) {
@@ -85,8 +89,13 @@ class AnnotationEditorParams {
           case AnnotationEditorParamsType.INK_OPACITY:
             editorInkOpacity.value = value;
             break;
+
+          //... custom toolbar text
           case AnnotationEditorParamsType.SELECTTEXT_SIZE:
             editorSelectTextFontSize.value = value;
+            break;
+          case AnnotationEditorParamsType.SELECTTEXT_FAMILY:
+            editorSelectTextFontFamily.value = value;
             break;
         }
       }

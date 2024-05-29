@@ -54,6 +54,7 @@ class FreeTextEditor extends AnnotationEditor {
 
   //... custom toolbar text
   #fontFamily;
+  static _defaultSelectSize = 16;
   static _defaultFontFamily = 'Courier';
 
   #initialData = null;
@@ -146,7 +147,7 @@ class FreeTextEditor extends AnnotationEditor {
       AnnotationEditor._defaultLineColor;
 
     //... custom toolbar text
-    this.#fontSize = params.fontSize || FreeTextEditor._defaultFontSize;
+    this.#fontSize = params.fontSize || FreeTextEditor._defaultSelectSize;
     this.#fontFamily = params.fontFamily || FreeTextEditor._defaultFontFamily;
   }
 
@@ -184,7 +185,7 @@ class FreeTextEditor extends AnnotationEditor {
 
       //... custom toolbar text
       case AnnotationEditorParamsType.SELECTTEXT_SIZE:
-        // FreeTextEditor._defaultFontSize = value;
+        // FreeTextEditor._defaultSelectSize = value;
         break;
       case AnnotationEditorParamsType.SELECTTEXT_FAMILY:
         FreeTextEditor._defaultFontFamily = value;
@@ -227,7 +228,7 @@ class FreeTextEditor extends AnnotationEditor {
       //... custom toolbar text
       [
         AnnotationEditorParamsType.SELECTTEXT_SIZE,
-        FreeTextEditor._defaultFontSize,
+        FreeTextEditor._defaultSelectSize,
       ],
       [
         AnnotationEditorParamsType.SELECTTEXT_FAMILY,

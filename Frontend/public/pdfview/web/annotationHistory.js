@@ -266,6 +266,7 @@ const addHistory = function (id, type, username, date, page, typeString) {
                     replyInput.value = '';
                     historyComment.style.display = "flex";
                     const commentReplyContainer = document.createElement("div");
+                    commentReplyContainer.className = "commentReplyContainer";
                     commentReplyContainer.style.marginLeft = "10px";
 
                     const commentReply = document.createElement("div");
@@ -278,8 +279,10 @@ const addHistory = function (id, type, username, date, page, typeString) {
                     replyUserDiv.style.width = "75%";
                     // child
                     const replyusernameDiv = document.createElement("span");
+                    replyusernameDiv.className = "replyusernameDiv";
                     replyusernameDiv.style.fontSize = "xx-small";
                     const replydateDiv = document.createElement("span");
+                    replydateDiv.className = "replydateDiv";
                     replydateDiv.style.fontSize = "xx-small";
                     replyusernameDiv.innerHTML = `@${username}`;
                     const replyTime = new Date(Date.now());
@@ -450,7 +453,7 @@ const saveDoc = async function () {
     $(".pageDiv").each(function () {
         let number = $(this).index() + 1;
 
-        $(".historyDiv").each(function () {
+        $(this).find(".historyDiv").each(function () {
             let index = $(this).index();
 
             let payload = {};
@@ -459,6 +462,18 @@ const saveDoc = async function () {
             payload.username = $(this).find(".usernameDiv").text();
             payload.date = $(this).find(".dateDiv").text();
             payload.page = number;
+
+            var replyArr = [];
+            $(this).find(".commentReplyContainer").each(function () {
+                var replyItem = {};
+                replyItem.username = $(this).find(".replyusernameDiv").text();
+                replyItem.date = $(this).find(".replydateDiv").text();
+                replyItem.reply = $(this).find(".replyText").text();
+
+                replyArr.push(replyItem);
+            })
+
+            payload.reply = JSON.stringify(replyArr);
     
             historyArr.push(payload);
         })
@@ -474,7 +489,7 @@ const saveDoc = async function () {
     })
         .then(response => response.json())
         .then(data => {
-            console.log('Success:', data);
+            alert("It is saved successfully");
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -493,25 +508,28 @@ const getDocList = async function () {
         .then(data => {
             data.forEach(function(element){
                 let pageDiv;
-                if (showHistoryBar.querySelector(`#page${element.page}`)) {
-                    pageDiv = showHistoryBar.querySelector(`#page${element.page}`);
+                let page = element.page;
+
+                if (showHistoryBar.querySelector(`#page${page}`)) {
+                    pageDiv = showHistoryBar.querySelector(`#page${page}`);
                 } else {
                     pageDiv = document.createElement("div");
                     pageDiv.className = "pageDiv";
-                    pageDiv.id = `page${element.page}`;
+                    pageDiv.id = `page${page}`;
                     pageDiv.style.display = "flex";
                     pageDiv.style.flexDirection = "column";
                     pageDiv.style.gap = "5px";
                     const pageNum = document.createElement("span");
                     pageNum.style.fontSize = "small";
-                    pageNum.innerHTML = `Page ${element.page}`;
+                    pageNum.innerHTML = `Page ${page}`;
                     pageDiv.appendChild(pageNum)
                 }
 
-                element.list.forEach(function(item, i){                    
+                element.list.forEach(function(item, i){
                     let type = item.actiontype;
                     let username = item.username;
                     let date = convertStandardDateType(new Date(item.date));
+                    let replies = JSON.parse(item.reply);
                     
                     // historyDiv: Child Element of PageDiv
                     const historyDiv = document.createElement("div");
@@ -626,25 +644,6 @@ const getDocList = async function () {
                         e.stopPropagation();
                         e.preventDefault();
                         pageDiv.removeChild(historyDiv);
-                        const target = document.getElementById(`${typeString}${i}`);
-                        console.log(target, document.querySelector("#topLeft"));
-                        if (target && target.querySelector("#topLeft")) {
-                            removeResizebar(target.id);
-                        }
-                        if (target) target.style.display = "none";
-                        if (typeString == "text-content") {
-                            text_storage = text_storage.filter(function (item) {
-                                return item.id !== parseInt(id);
-                            });
-                        } else if (typeString == "comment") {
-                            comment_storage = comment_storage.filter(function (comment) {
-                                return comment.id !== parseInt(id);
-                            });
-                        } else {
-                            form_storage = form_storage.filter(function (item) {
-                                return item.id !== parseInt(id);
-                            });
-                        }
                     })
                     optionPan.append(DeleteBtn);
                     optionDiv.addEventListener("click", () => {
@@ -706,6 +705,145 @@ const getDocList = async function () {
                     const replySave = document.createElement("div");
                     replySave.innerHTML = `<i class="fa-regular fa-paper-plane"></i>`;
                     replySave.style.cursor = "pointer";
+
+                    replies.forEach(function (replyItem) {
+                        let replyusername = replyItem.username;
+                        let replydate = convertStandardDateType(new Date(replyItem.date));
+                        let replyDetail = replyItem.reply;
+
+                        historyComment.style.display = "flex";
+                        const commentReplyContainer = document.createElement("div");
+                        commentReplyContainer.className = "commentReplyContainer";
+                        commentReplyContainer.style.marginLeft = "10px";
+
+                        const commentReply = document.createElement("div");
+                        commentReply.style.display = "flex";
+                        commentReply.style.alignItems = "center";
+                        const replyUserDiv = document.createElement("div");
+                        // style
+                        replyUserDiv.style.display = 'flex';
+                        replyUserDiv.style.flexDirection = "column";
+                        replyUserDiv.style.width = "75%";
+                        // child
+                        const replyusernameDiv = document.createElement("span");
+                        replyusernameDiv.className = "replyusernameDiv";
+                        replyusernameDiv.style.fontSize = "xx-small";
+                        const replydateDiv = document.createElement("span");
+                        replydateDiv.className = "replydateDiv";
+                        replydateDiv.style.fontSize = "xx-small";
+                        replyusernameDiv.innerHTML = `${replyusername}`;
+                        replydateDiv.innerHTML = replydate;
+                        replyUserDiv.append(replyusernameDiv, replydateDiv);
+                        const replyoptionDiv = document.createElement("div");
+                        replyoptionDiv.style.display = "flex";
+                        replyoptionDiv.style.justifyContent = "center";
+                        replyoptionDiv.style.width = "25%";
+                        replyoptionDiv.style.padding = "0px 3px";
+                        replyoptionDiv.style.position = "relative";
+                        replyoptionDiv.style.borderRadius = "3px";
+                        const replyoptionSpan = document.createElement("span");
+                        replyoptionSpan.style.color = "#5d5656";
+                        replyoptionSpan.style.cursor = "pointer";
+                        replyoptionSpan.innerHTML = `<i class="fa-solid fa-ellipsis"></i>`;
+
+                        const optionPan = document.createElement("div");
+                        optionPan.style.display = "none";
+                        optionPan.style.position = "absolute";
+                        optionPan.style.top = "21px";
+                        optionPan.style.right = "0";
+                        optionPan.style.zIndex = "100";
+                        optionPan.style.backgroundColor = "white";
+                        optionPan.style.borderRadius = '5px';
+                        optionPan.style.boxShadow = "#868e96 0px 0px 3px 0px";
+                        const EditBtn = document.createElement("div");
+                        EditBtn.textContent = "Edit";
+                        EditBtn.style.cursor = "pointer";
+                        EditBtn.style.fontSize = "small";
+                        EditBtn.style.padding = "3px 8px";
+                        EditBtn.addEventListener("click", (e) => {
+                            e.stopPropagation();
+                            let textValue = replyText.textContent;
+                            replyText.style.display = "none";
+                            editReplyText.style.display = "flex";
+                            editReplyTextInput.value = textValue;
+                            editReplyTextInput.focus();
+                            optionPan.style.display = "none";
+                            replyoptionDiv.style.backgroundColor = "white";
+                        })
+                        const DeleteBtn = document.createElement("div");
+                        DeleteBtn.textContent = "Delete";
+                        DeleteBtn.style.cursor = "pointer";
+                        DeleteBtn.style.fontSize = "small";
+                        DeleteBtn.style.padding = "3px 8px";
+                        DeleteBtn.addEventListener("click", () => {
+                            historyMainPart.removeChild(commentReplyContainer);
+                        })
+                        optionPan.append(EditBtn, DeleteBtn);
+                        replyoptionDiv.addEventListener("click", () => {
+                            if (window.getComputedStyle(optionPan).getPropertyValue('display') !== "none") {
+                                optionPan.style.display = "none";
+                                replyoptionDiv.style.backgroundColor = "white";
+                            } else {
+                                optionPan.style.display = "block";
+                                replyoptionDiv.style.backgroundColor = "#dde6ee";
+                            }
+                        })
+                        replyoptionDiv.append(replyoptionSpan, optionPan);
+                        commentReply.append(replyUserDiv, replyoptionDiv);
+
+                        const replyText = document.createElement("div");
+                        replyText.classList = "replyText";
+                        replyText.style.marginTop = "8px";
+                        replyText.style.fontSize = "small";
+                        replyText.textContent = replyDetail;
+
+                        const editReplyText = document.createElement("div");
+                        editReplyText.style.display = "none";
+                        editReplyText.style.flexDirection = "column";
+                        editReplyText.style.marginRight = "10px";
+                        editReplyText.style.marginTop = "10px";
+                        editReplyText.style.gap = "3px";
+                        const editReplyTextInput = document.createElement("input");
+                        editReplyTextInput.style.borderRadius = "3px";
+                        editReplyTextInput.addEventListener("focus", () => {
+                            editReplyTextInput.style.outline = "none";
+                            editReplyTextInput.style.border = "1px solid #3c97fe";
+                        });
+                        editReplyTextInput.style.padding = '2px';
+                        editReplyTextInput.fontSize = '13px';
+                        const editReplyBtnGroup = document.createElement("div");
+                        editReplyBtnGroup.style.display = "flex";
+                        editReplyBtnGroup.style.justifyContent = "end";
+                        editReplyBtnGroup.style.fontSize = "small";
+                        editReplyBtnGroup.style.gap = "6px";
+                        const editReplySaveBtn = document.createElement("div");
+                        editReplySaveBtn.textContent = "Save";
+                        editReplySaveBtn.style.padding = "1px 7px";
+                        editReplySaveBtn.style.borderRadius = "3px";
+                        editReplySaveBtn.style.backgroundColor = "#3c97fe";
+                        editReplySaveBtn.style.color = "white";
+                        const editReplyCancelBtn = document.createElement("div");
+                        editReplyCancelBtn.textContent = "Cancel";
+                        editReplyBtnGroup.append(editReplyCancelBtn, editReplySaveBtn);
+                        editReplyCancelBtn.addEventListener("click", () => {
+                            editReplyText.style.display = "none";
+                            replyText.style.display = "block";
+                        });
+                        editReplySaveBtn.addEventListener("click", () => {
+                            const textValue = editReplyTextInput.value;
+                            editReplyText.style.display = "none";
+                            replyText.style.display = "block";
+                            replyText.textContent = textValue;
+                        });
+                        editReplyText.append(editReplyTextInput, editReplyBtnGroup);
+
+                        commentReplyContainer.append(commentReply, replyText, editReplyText);
+
+                        historyMainPart.append(commentReplyContainer);
+                    })
+
+
+
                     const addHistoryElement = function () {
                         const reply = replyInput.value;
                         if (reply !== "") {
@@ -714,6 +852,7 @@ const getDocList = async function () {
                             replyInput.value = '';
                             historyComment.style.display = "flex";
                             const commentReplyContainer = document.createElement("div");
+                            commentReplyContainer.className = "commentReplyContainer";
                             commentReplyContainer.style.marginLeft = "10px";
 
                             const commentReply = document.createElement("div");
@@ -726,10 +865,12 @@ const getDocList = async function () {
                             replyUserDiv.style.width = "75%";
                             // child
                             const replyusernameDiv = document.createElement("span");
+                            replyusernameDiv.className = "replyusernameDiv";
                             replyusernameDiv.style.fontSize = "xx-small";
                             const replydateDiv = document.createElement("span");
+                            replydateDiv.className = "replydateDiv";
                             replydateDiv.style.fontSize = "xx-small";
-                            replyusernameDiv.innerHTML = `@${username}`;
+                            replyusernameDiv.innerHTML = `${username}`;
                             const replyTime = new Date(Date.now());
                             replydateDiv.innerHTML = `${convertStandardDateType(replyTime)}`;
                             replyUserDiv.append(replyusernameDiv, replydateDiv);
@@ -791,6 +932,7 @@ const getDocList = async function () {
                             commentReply.append(replyUserDiv, replyoptionDiv);
 
                             const replyText = document.createElement("div");
+                            replyText.className = "replyText";
                             replyText.style.marginTop = "8px";
                             replyText.style.fontSize = "small";
                             replyText.textContent = reply;
@@ -874,8 +1016,6 @@ const getDocList = async function () {
                         if (historyMainPart.hasChildNodes()) historyComment.style.display = "flex";
                         if (type !== TEXTFIELD && type !== TEXT_CONTENT) replyInput.focus();
                         removeAllResizeBar();
-                        const focusItem = document.getElementById(`${typeString}${i}`);
-                        if (focusItem && !focusItem.querySelector("#topLeft")) addResizebar(focusItem.id);
                     });
                     pageDiv.appendChild(historyDiv);
                     showHistoryBar.appendChild(pageDiv);

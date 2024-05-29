@@ -222,7 +222,7 @@ app.post('/sendlink',upload.single('pdfFile'), (req, res) => {
 
   formDataMap.set(uniqueId, newDataSet);
 
-  const uniqueLink = `https://pdf-vision.com/pdfviewer/?id=${uniqueId}`;
+  const uniqueLink = `https://127.0.0.1/pdfviewer/?id=${uniqueId}`;
 
   console.log(uniqueLink)
   // Send email to client with the unique link
@@ -295,6 +295,6 @@ mongoose.connect(mongoURI).then(() => {
 // app.listen(8081, () => {
 //   console.log('Server is running on port 8081');
 // });
-https.createServer(options, app).listen(8081, "94.72.120.252", () => {
-  console.log(`Server running at https://94.72.120.252/`);
+https.createServer(options, app).listen(8081, "127.0.0.1", () => {
+  console.log(`Server running at https://127.0.0.1/`);
 });

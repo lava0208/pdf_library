@@ -4,7 +4,20 @@ const History = require('../models/history');
 const getHistory = async function (req, res) {
     try {
         const historyRecords = await History.find();
-        res.status(200).json(historyRecords);
+
+        // Group histories by page
+        const groupedHistories = historyRecords.reduce((acc, history) => {
+            const page = history.page;
+            if (!acc[page]) {
+                acc[page] = { page: page, list: [] };
+            }
+            acc[page].list.push(history);
+            return acc;
+        }, {});
+
+        const result = Object.values(groupedHistories);
+
+        res.status(200).json(result);
     } catch (error) {
         res.status(500).send('Error occurred: ' + error.message);
     }
@@ -20,7 +33,19 @@ const createHistory = async function (req, res) {
 
         const savedHistories = await History.insertMany(histories);
 
-        res.status(201).json(savedHistories);
+        // Group histories by page
+        const groupedHistories = savedHistories.reduce((acc, history) => {
+            const page = history.page;
+            if (!acc[page]) {
+                acc[page] = { page: page, list: [] };
+            }
+            acc[page].list.push(history);
+            return acc;
+        }, {});
+
+        const result = Object.values(groupedHistories);
+
+        res.status(201).json(result);
     } catch (error) {
         res.status(500).send('Error occurred: ' + error.message);
     }

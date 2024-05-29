@@ -612,7 +612,8 @@ class FreeTextEditor extends AnnotationEditor {
     const date = new Date(Date.now());
 
     //... save history
-    addHistory(1, TEXT_CONTENT, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "text-content");
+    baseId++;
+    addHistory(baseId, TEXT_CONTENT, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "text-content");
 
     this.editorDiv.contentEditable = true;
 

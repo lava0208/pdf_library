@@ -17,7 +17,8 @@ document.getElementById("sidebarToggle").addEventListener("click", function () {
     }
 })
 
-const saveHistory = function (username, date, page, reply, currentid) {
+//... save reply
+const saveHistory = function (username, date, page, reply, type, currentid) {
     if (currentid) {
         for (let i = 0; history_storage.length; i++) {
             if (history_storage[i].id === currentid) {
@@ -26,8 +27,10 @@ const saveHistory = function (username, date, page, reply, currentid) {
             }
         }
     } else {
+        const uniqueId = generateUniqueId(); // Generate a unique ID for the new entry
         const history = {
-            id: historyId,
+            id: uniqueId,
+            actiontype: type,
             username: username,
             date: date,
             page: page,
@@ -35,23 +38,55 @@ const saveHistory = function (username, date, page, reply, currentid) {
         };
         history_storage.push(history);
 
-        // fetch(`https://pdf-vision.com:8081/history`, {
+        console.log("======= history_storage ========");
+        console.log(history_storage);
+
+        // fetch(`${BASE_URL}/history`, {
         //     method: "POST",
         //     headers: {
         //         "Content-Type": "application/json"
         //     },
-        //     body: JSON.stringify({
-        //         username: username,
-        //         date: date,
-        //         page: page,
-        //         reply: reply
-        //     }),
+        //     body: JSON.stringify(history),
         // })
+        // .then(response => response.json())
+        // .then(data => {
+        //     // console.log('Success:', data);
+        // })
+        // .catch((error) => {
+        //     console.error('Error:', error);
+        // });
     }
-    console.log(history_storage);
 }
 
+//... save adding components
 const addHistory = function (id, type, username, date, page, typeString) {
+    console.log("=== id ===");
+    console.log(id);
+    // const uniqueId = generateUniqueId();
+    const history = {
+        id: "history" + id,
+        actiontype: type,
+        username: username,
+        date: date,
+        page: page,
+    };
+
+    // fetch(`${BASE_URL}/history`, {
+    //     method: "POST",
+    //     headers: {
+    //         "Content-Type": "application/json"
+    //     },
+    //     body: JSON.stringify(history),
+    // })
+    // .then(response => response.json())
+    // .then(data => {
+    //     // console.log('Success:', data);
+    // })
+    // .catch((error) => {
+    //     console.error('Error:', error);
+    // });
+
+
     if (id !== 0) {
         if (!showHistoryBar.querySelector(`#history${id}`)) {
             // Upper Parent Element
@@ -72,7 +107,8 @@ const addHistory = function (id, type, username, date, page, typeString) {
             }
             // historyDiv: Child Element of PageDiv
             const historyDiv = document.createElement("div");
-            historyDiv.id =  `historyDiv${id}`;
+            historyDiv.className = "historyDiv";
+            historyDiv.id = `historyDiv${id}`;
             // style
             historyDiv.style.display = "flex";
             historyDiv.style.flexDirection = "column";
@@ -96,6 +132,8 @@ const addHistory = function (id, type, username, date, page, typeString) {
             // AnnotationType: Child Element of history Element
 
             const annotationType = document.createElement("span");
+            annotationType.className = "annotationTypeDiv";
+            annotationType.setAttribute("type", type);
             annotationType.style.fontSize = "x-large";
             switch (type) {
                 case CHECKBOX:
@@ -143,8 +181,10 @@ const addHistory = function (id, type, username, date, page, typeString) {
             userDiv.style.width = "60%";
             // child
             const usernameDiv = document.createElement("span");
+            usernameDiv.className = "usernameDiv";
             usernameDiv.style.fontWeight = "700";
             const dateDiv = document.createElement("span");
+            dateDiv.className = "dateDiv";
             dateDiv.style.fontSize = "xx-small";
             usernameDiv.innerHTML = `@${username}`;
             dateDiv.innerHTML = `${date}`;
@@ -180,11 +220,9 @@ const addHistory = function (id, type, username, date, page, typeString) {
                 pageDiv.removeChild(historyDiv);
                 const target = document.getElementById(`${typeString}${id}`);
                 console.log(target, document.querySelector("#topLeft"));
-                if (target && target.querySelector("#topLeft"))
-                    {
-                        console.log('first')
-                        removeResizebar(target.id);
-                    }
+                if (target && target.querySelector("#topLeft")) {
+                    removeResizebar(target.id);
+                }
                 if (target) target.style.display = "none";
                 if (typeString == "text-content") {
                     text_storage = text_storage.filter(function (item) {
@@ -264,7 +302,7 @@ const addHistory = function (id, type, username, date, page, typeString) {
                 const reply = replyInput.value;
                 if (reply !== "") {
                     historyId++;
-                    saveHistory(username, date, page, reply);
+                    saveHistory(username, date, page, reply, type);
                     replyInput.value = '';
                     historyComment.style.display = "flex";
                     const commentReplyContainer = document.createElement("div");
@@ -442,3 +480,38 @@ const showHistory = function () {
     else showHistoryBar.classList.toggle("active0");
     showHistoryBarOpened = !showHistoryBarOpened;
 }
+
+const generateUniqueId = function () {
+    return '_' + Math.random().toString(36).substr(2, 9);
+}
+
+const saveDoc = async function () {
+    var historyArr = [];
+    $(".historyDiv").each(function () {
+        let index = $(this).index() + 1;
+
+        let payload = {};
+        payload.id = "history" + index;
+        payload.actiontype = $(this).find(".annotationTypeDiv").attr("type");
+        payload.username = $(this).find(".usernameDiv").text();
+        payload.date = $(this).find(".dateDiv").text();
+
+        historyArr.push(payload);
+    })
+
+    //... custom api
+    fetch(`${BASE_URL}/history`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(historyArr),
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+};

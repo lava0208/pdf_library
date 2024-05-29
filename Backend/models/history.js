@@ -7,17 +7,18 @@ const historySchema = new mongoose.Schema({
         unique: true,
         required: true
     },
+    actiontype: {
+        type: String
+    },
     username: {
         type: String,
         required: true
     },
     date: {
         type: Date,
-        required: true
     },
     page: {
         type: String,
-        required: true
     },
     reply: {
         type: String,

@@ -1,4 +1,4 @@
-let baseId = 0;
+// let baseId = 0;
 let draw_form_storage;
 let current_form_id = 0;
 let currentMode = null;

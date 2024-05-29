@@ -12,18 +12,15 @@ const getHistory = async function (req, res) {
 
 const createHistory = async function (req, res) {
     try {
-        const {id, username, date, page, reply } = req.body;
+        const histories = req.body;
 
-        const newHistory = new History({
-            id,
-            username,
-            date,
-            page,
-            reply
-        });
+        if (!Array.isArray(histories)) {
+            return res.status(400).send('Request body should be an array of history objects');
+        }
 
-        const savedHistory = await newHistory.save();
-        res.status(201).json(savedHistory);
+        const savedHistories = await History.insertMany(histories);
+
+        res.status(201).json(savedHistories);
     } catch (error) {
         res.status(500).send('Error occurred: ' + error.message);
     }

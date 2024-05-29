@@ -12,9 +12,10 @@ const getHistory = async function (req, res) {
 
 const createHistory = async function (req, res) {
     try {
-        const { username, date, page, reply } = req.body;
+        const {id, username, date, page, reply } = req.body;
 
         const newHistory = new History({
+            id,
             username,
             date,
             page,

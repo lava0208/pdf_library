@@ -1,7 +1,12 @@
 // models/History.js
 const mongoose = require("mongoose");
 
-const HistorySchema = new mongoose.Schema({
+const historySchema = new mongoose.Schema({
+    id: {
+        type: String,
+        unique: true,
+        required: true
+    },
     username: {
         type: String,
         required: true
@@ -19,6 +24,6 @@ const HistorySchema = new mongoose.Schema({
     },
 });
 
-const History = mongoose.model("History", HistorySchema);
+const History = mongoose.model("History", historySchema);
 
 module.exports = History;

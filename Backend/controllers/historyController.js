@@ -1,23 +1,10 @@
 // controllers/historyController.js
-const History = require('../models/history');
+const Doc = require('../models/history');
 
 const getHistory = async function (req, res) {
     try {
-        const historyRecords = await History.find();
-
-        // Group histories by page
-        const groupedHistories = historyRecords.reduce((acc, history) => {
-            const page = history.page;
-            if (!acc[page]) {
-                acc[page] = { page: page, list: [] };
-            }
-            acc[page].list.push(history);
-            return acc;
-        }, {});
-
-        const result = Object.values(groupedHistories);
-
-        res.status(200).json(result);
+        const documents = await Doc.find();
+        res.status(200).json(documents);
     } catch (error) {
         res.status(500).send('Error occurred: ' + error.message);
     }
@@ -70,5 +57,5 @@ const createHistory = async function (req, res) {
 
 module.exports = {
     getHistory,
-    createHistory,
+    // createHistory,
 }

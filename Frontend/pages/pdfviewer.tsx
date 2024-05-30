@@ -14,6 +14,7 @@ const PDFViewer = () => {
   const [showProfile, setShowProfile] = useState(false);
 
   const [id, setId] = useState('');
+  const [docid, setDocId] = useState('');
 
   useEffect(() => {
     setColor(localStorage.getItem('color') || '');
@@ -60,6 +61,50 @@ const PDFViewer = () => {
   }, [setId]);
 
   useEffect(() => {
+    setColor(localStorage.getItem('color') || '');
+    setUsername(localStorage.getItem('username') || '');
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialDocId = urlParams.get('docid');
+    if (initialDocId) {
+      fetch(`${BASE_URL}/getdraftpdf?uniqueId=${initialDocId}`)
+        .then((response) => {
+          if (response.ok) {
+            setDocId(initialDocId);
+          }
+          else {
+            router.push("/signin");
+          }
+        })
+        .catch((error) => { console.error(error) })
+    } else {
+      let token = localStorage.getItem("login-token");
+      if (token) {
+        fetch(`${BASE_URL}/signin`, {
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `${token}`
+          }
+        }).then(response => {
+          if (response.ok) {
+            // Handle successful response
+          } else {
+            localStorage.setItem("originDestination", router.asPath);
+            // Assuming router is defined elsewhere in your code
+            router.push("/signin");
+          }
+        }).catch(error => {
+          console.error("Error fetching data:", error);
+        });
+      } else {
+        localStorage.setItem("originDestination", router.asPath);
+        // Assuming router is defined elsewhere in your code
+        router.push("/signin");
+      }
+    }
+  }, [setDocId]);
+
+  useEffect(() => {
     if (id) {
       const iframe = document.getElementById('pdfIframe') as HTMLIFrameElement | null;
       if (iframe) {
@@ -67,6 +112,15 @@ const PDFViewer = () => {
       }
     }
   }, [id]);
+
+  useEffect(() => {
+    if (docid) {
+      const iframe = document.getElementById('pdfIframe') as HTMLIFrameElement | null;
+      if (iframe) {
+        iframe.src = `./pdfview/web/viewer.html?id=${docid}`;
+      }
+    }
+  }, [docid]);
 
   return (
     <>

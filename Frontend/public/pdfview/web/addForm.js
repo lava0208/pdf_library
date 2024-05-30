@@ -1354,6 +1354,62 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
+//...
+document.addEventListener("DOMContentLoaded", function () {
+  loadFontFiles();
+  drawFontFamily();
+  drawFontSize();
+  requestId = getIdFromUrl();
+  if (requestId) {
+    fetch(`${BASE_URL}/getdraftpdf?uniqueId=${requestId}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        form_storage = [];
+        clientName = data[0].name;
+        clientEmail = data[0].email;
+        // Handle the retrieved data from the backend
+        const dataURI = data[0].pdfData;
+        const base64Data = dataURI.split(',')[1];
+        // Decode base64 data to binary
+        const binaryData = atob(base64Data);
+
+        // Convert binary data to Uint8Array
+        const array = new Uint8Array(binaryData.length);
+        for (let i = 0; i < binaryData.length; i++) {
+          array[i] = binaryData.charCodeAt(i);
+        }
+        // Create Blob from Uint8Array
+        const blob = new Blob([array], { type: 'application/pdf' });
+
+        // Create File from Blob
+        const fileName = 'downloaded.pdf';
+        const pdfFile = new File([blob], fileName, { type: 'application/pdf' });
+
+        draw_form_storage = JSON.parse(data[0].formData);
+        text_storage = JSON.parse(data[0].textData);
+        PDFViewerApplication.open({
+          url: URL.createObjectURL(pdfFile),
+          originalUrl: pdfFile.name,
+        });
+        const checkViewerInterval = setInterval(() => {
+          if (PDFViewerApplication.pdfDocument && PDFViewerApplication.pdfDocument.numPages > 0) {
+            // If the document is loaded, call the drawFormElement function
+            clearInterval(checkViewerInterval); // Clear the interval
+            drawFormElement();
+          }
+        }, 100);
+      })
+      .catch(error => {
+        console.error('Error fetching data from the backend:', error);
+      });
+  }
+});
+
 // Check the same form field name and modify field name
 const checkFormField = function (id) {
   const formFieldName = document.getElementById(id).value;

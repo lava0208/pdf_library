@@ -1,10 +1,16 @@
 // models/History.js
 const mongoose = require("mongoose");
+const { Schema } = mongoose;
+
+const replySchema = new Schema({
+    username: String,
+    date: String,
+    reply: String,
+});
 
 const historySchema = new mongoose.Schema({
     id: {
         type: String,
-        unique: true,
         required: true
     },
     actiontype: {
@@ -21,10 +27,31 @@ const historySchema = new mongoose.Schema({
         type: String,
     },
     reply: {
-        type: String,
+        type: [replySchema],
     },
 });
 
-const History = mongoose.model("History", historySchema);
+const documentSchema = new Schema({
+    uniqueId: {
+        type: String,
+        unique: true,
+        required: true
+    },
+    pdfData: {
+        type: String
+    },
+    formData: {
+        type: String
+    },
+    textData: {
+        type: String
+    },
+    uniqueLink: {
+        type: String
+    },
+    history: [historySchema],
+});
 
-module.exports = History;
+const Doc = mongoose.model("Document", documentSchema);
+
+module.exports = Doc;

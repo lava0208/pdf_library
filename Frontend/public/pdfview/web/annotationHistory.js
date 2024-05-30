@@ -473,19 +473,31 @@ const saveDoc = async function () {
                 replyArr.push(replyItem);
             })
 
-            payload.reply = JSON.stringify(replyArr);
+            payload.reply = replyArr;
     
             historyArr.push(payload);
         })
     })
 
+    pdfBytes = await PDFViewerApplication.pdfDocument.saveDocument();
+  
+    const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
+  
+    const formData = new FormData();
+    formData.append('pdfFile', pdfBlob, "uploaded.pdf");
+    formData.append('pdfFormData', JSON.stringify(form_storage));
+    formData.append('pdfTextData', JSON.stringify(text_storage));
+    formData.append("history", JSON.stringify(historyArr));
+
+    console.log(formData)
+
     //... custom api
     fetch(`${BASE_URL}/history`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(historyArr),
+        // headers: {
+        //     "Content-Type": "application/json"
+        // },
+        body: formData
     })
         .then(response => response.json())
         .then(data => {
@@ -506,30 +518,30 @@ const getDocList = async function () {
     })
     .then(response => response.json())
         .then(data => {
-            data.forEach(function(element){
-                let pageDiv;
-                let page = element.page;
-
-                if (showHistoryBar.querySelector(`#page${page}`)) {
-                    pageDiv = showHistoryBar.querySelector(`#page${page}`);
-                } else {
-                    pageDiv = document.createElement("div");
-                    pageDiv.className = "pageDiv";
-                    pageDiv.id = `page${page}`;
-                    pageDiv.style.display = "flex";
-                    pageDiv.style.flexDirection = "column";
-                    pageDiv.style.gap = "5px";
-                    const pageNum = document.createElement("span");
-                    pageNum.style.fontSize = "small";
-                    pageNum.innerHTML = `Page ${page}`;
-                    pageDiv.appendChild(pageNum)
-                }
-
-                element.list.forEach(function(item, i){
+            data.forEach(function(docitem){
+                docitem.history.forEach(function(item, i){
+                    let pageDiv;
+                    let page = item.page;
+    
+                    if (showHistoryBar.querySelector(`#page${page}`)) {
+                        pageDiv = showHistoryBar.querySelector(`#page${page}`);
+                    } else {
+                        pageDiv = document.createElement("div");
+                        pageDiv.className = "pageDiv";
+                        pageDiv.id = `page${page}`;
+                        pageDiv.style.display = "flex";
+                        pageDiv.style.flexDirection = "column";
+                        pageDiv.style.gap = "5px";
+                        const pageNum = document.createElement("span");
+                        pageNum.style.fontSize = "small";
+                        pageNum.innerHTML = `Page ${page}`;
+                        pageDiv.appendChild(pageNum)
+                    }
+    
                     let type = item.actiontype;
                     let username = item.username;
                     let date = convertStandardDateType(new Date(item.date));
-                    let replies = JSON.parse(item.reply);
+                    let replies = item.reply;
                     
                     // historyDiv: Child Element of PageDiv
                     const historyDiv = document.createElement("div");
@@ -1020,6 +1032,7 @@ const getDocList = async function () {
                     pageDiv.appendChild(historyDiv);
                     showHistoryBar.appendChild(pageDiv);
                 })
+                
             })
         })
         .catch((error) => {

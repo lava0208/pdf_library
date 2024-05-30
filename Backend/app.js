@@ -17,8 +17,11 @@ const uuid = require('uuid');
 const mongoose = require("mongoose");
 const mongoURI = require('./config').mongoURI;
 
+//...
+const Doc = require('./models/history')
 const userRouter = require('./routes/userRoute');
 const historyRouter = require('./routes/historyRoute');
+const { getHistory } = require('./controllers/historyController'); 
 
 const app = express();
 const { setCurrentFile, getCurrentFile } = require('./utils/currentFile');
@@ -59,6 +62,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+app.use(express.json());
 
 // Handle POST requests to /upload_word
 app.post('/upload_word', [upload.single('file')], async (req, res) => {
@@ -256,6 +260,17 @@ app.get('/getpdfdata', (req, res) => {
   }
 });
 
+app.get('/getdraftpdf', (req, res) => {
+  const uniqueId = req.query.uniqueId;
+  const formData = formDataMap.get(uniqueId);
+
+  if (formData) {
+    res.json(formData);
+  } else {
+    res.status(404).send('Form data not found');
+  }
+});
+
 app.post('/savedocument', upload.single('pdfFile'), (req, res) => {
   const pdfFilePath = getCurrentFile();
   const mailOptions = {
@@ -282,6 +297,46 @@ app.post('/savedocument', upload.single('pdfFile'), (req, res) => {
   });
 })
 
+app.post('/history', upload.single('pdfFile'), async (req, res) => {
+  try {
+    if (!req.file) {
+        return res.status(400).send('No PDF file uploaded.');
+    }
+
+    const pdfFilePath = getCurrentFile(); // This function should return the path to the PDF file
+    const pdfFileData = fs.readFileSync(pdfFilePath);
+    const base64Data = pdfFileData.toString('base64');
+    const dataUri = `data:application/pdf;base64,${base64Data}`;
+
+    const uniqueId = uuid.v4();
+    const formData = req.body.pdfFormData;
+    const textData = req.body.pdfTextData;
+    const history = JSON.parse(req.body.history); // Parse the history JSON string
+
+    const uniqueLink = `https://127.0.0.1/pdfviewer?docid=${uniqueId}`;
+
+    // Create and save the new document
+    const newDocument = new Doc({
+        uniqueId,
+        pdfData: dataUri,
+        formData,
+        textData,
+        history,
+        uniqueLink
+    });
+
+    await newDocument.save();
+
+    res.status(201).json({ message: 'Document saved successfully', uniqueLink });
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send('Error occurred: ' + error.message);
+  }
+});
+
+app.get('/history', getHistory); // Route to get all history records
+
+app.use(Doc);
 app.use(userRouter);
 app.use(historyRouter);
 

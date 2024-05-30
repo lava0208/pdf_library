@@ -260,17 +260,6 @@ app.get('/getpdfdata', (req, res) => {
   }
 });
 
-app.get('/getdraftpdf', (req, res) => {
-  const uniqueId = req.query.uniqueId;
-  const formData = formDataMap.get(uniqueId);
-
-  if (formData) {
-    res.json(formData);
-  } else {
-    res.status(404).send('Form data not found');
-  }
-});
-
 app.post('/savedocument', upload.single('pdfFile'), (req, res) => {
   const pdfFilePath = getCurrentFile();
   const mailOptions = {
@@ -309,20 +298,32 @@ app.post('/history', upload.single('pdfFile'), async (req, res) => {
     const dataUri = `data:application/pdf;base64,${base64Data}`;
 
     const uniqueId = uuid.v4();
+    let newDataSet = [];
+
     const formData = req.body.pdfFormData;
     const textData = req.body.pdfTextData;
+
+    newDataSet.push({
+      pdfData: dataUri,
+      formData: formData,
+      textData: textData,
+    })
+
+    formDataMap.set(uniqueId, newDataSet);
+
     const history = JSON.parse(req.body.history); // Parse the history JSON string
 
-    const uniqueLink = `https://127.0.0.1/pdfviewer?docid=${uniqueId}`;
+    // const uniqueLink = `https://127.0.0.1/pdfviewer/?id=${uniqueId}&draft=true`;
+    const uniqueLink = `https://127.0.0.1/pdfviewer/?id=${uniqueId}&draft=true`;
 
     // Create and save the new document
     const newDocument = new Doc({
-        uniqueId,
-        pdfData: dataUri,
-        formData,
-        textData,
-        history,
-        uniqueLink
+      uniqueId,
+      pdfData: dataUri,
+      formData,
+      textData,
+      history,
+      uniqueLink
     });
 
     await newDocument.save();

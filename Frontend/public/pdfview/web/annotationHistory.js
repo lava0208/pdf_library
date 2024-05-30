@@ -457,7 +457,7 @@ const saveDoc = async function () {
             let index = $(this).index();
 
             let payload = {};
-            payload.id = "history" + index;
+            // payload.id = "history" + index;
             payload.actiontype = $(this).find(".annotationTypeDiv").attr("type");
             payload.username = $(this).find(".usernameDiv").text();
             payload.date = $(this).find(".dateDiv").text();

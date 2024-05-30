@@ -92,25 +92,28 @@ let selectedAlign = "",
   groupNameAlign = "";
 
 function getIdFromUrl() {
-  // Get the URL parameters
   const urlParams = new URLSearchParams(window.location.search);
-
-  // Get the value of the "id" parameter
   const id = urlParams.get('id');
-
-  // Return the value of the "id" parameter
   return id;
 }
 
 const generalUserMode = function () {
-  console.log("==== this is share document mode ====")
-  rightSidebarButton.style.display = "none";
-  shareDocumentButton.style.display = "none";
-  addTextButton.style.display = "none";
-  addCommentButton.style.display = "none";
-  showHistoryButton.style.display = "none";
-  submitDocumentButton.style.display = "flex";
-  changeMode();
+  const urlParams = new URLSearchParams(window.location.search);
+  const initialId = urlParams.get('id');
+  const isDraft = urlParams.get('draft');
+
+  if (initialId) {
+    if(isDraft){
+    }else{
+      rightSidebarButton.style.display = "none";
+      shareDocumentButton.style.display = "none";
+      addTextButton.style.display = "none";
+      addCommentButton.style.display = "none";
+      showHistoryButton.style.display = "none";
+      submitDocumentButton.style.display = "flex";
+      changeMode();
+    }
+  }
 }
 
 const drawFormElement = function () {
@@ -1345,62 +1348,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             //...
             isOpenSubmitDocument = true;
-          }
-        }, 100);
-      })
-      .catch(error => {
-        console.error('Error fetching data from the backend:', error);
-      });
-  }
-});
-
-//...
-document.addEventListener("DOMContentLoaded", function () {
-  loadFontFiles();
-  drawFontFamily();
-  drawFontSize();
-  requestId = getIdFromUrl();
-  if (requestId) {
-    fetch(`${BASE_URL}/getdraftpdf?uniqueId=${requestId}`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        form_storage = [];
-        clientName = data[0].name;
-        clientEmail = data[0].email;
-        // Handle the retrieved data from the backend
-        const dataURI = data[0].pdfData;
-        const base64Data = dataURI.split(',')[1];
-        // Decode base64 data to binary
-        const binaryData = atob(base64Data);
-
-        // Convert binary data to Uint8Array
-        const array = new Uint8Array(binaryData.length);
-        for (let i = 0; i < binaryData.length; i++) {
-          array[i] = binaryData.charCodeAt(i);
-        }
-        // Create Blob from Uint8Array
-        const blob = new Blob([array], { type: 'application/pdf' });
-
-        // Create File from Blob
-        const fileName = 'downloaded.pdf';
-        const pdfFile = new File([blob], fileName, { type: 'application/pdf' });
-
-        draw_form_storage = JSON.parse(data[0].formData);
-        text_storage = JSON.parse(data[0].textData);
-        PDFViewerApplication.open({
-          url: URL.createObjectURL(pdfFile),
-          originalUrl: pdfFile.name,
-        });
-        const checkViewerInterval = setInterval(() => {
-          if (PDFViewerApplication.pdfDocument && PDFViewerApplication.pdfDocument.numPages > 0) {
-            // If the document is loaded, call the drawFormElement function
-            clearInterval(checkViewerInterval); // Clear the interval
-            drawFormElement();
           }
         }, 100);
       })

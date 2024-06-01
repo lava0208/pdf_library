@@ -336,7 +336,6 @@ app.post('/history', upload.single('pdfFile'), async (req, res) => {
 
 app.get('/history', getHistory); // Route to get all history records
 
-app.use(Doc);
 app.use(userRouter);
 app.use(historyRouter);
 

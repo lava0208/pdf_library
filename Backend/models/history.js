@@ -9,9 +9,6 @@ const replySchema = new Schema({
 });
 
 const historySchema = new mongoose.Schema({
-    // id: {
-    //     type: String,
-    // },
     actiontype: {
         type: String
     },

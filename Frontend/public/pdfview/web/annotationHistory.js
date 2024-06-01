@@ -467,7 +467,7 @@ const saveDoc = async function () {
             let index = $(this).index();
 
             let payload = {};
-            // payload.id = "history" + index;
+            payload.id = generateUniqueId();
             payload.actiontype = $(this).find(".annotationTypeDiv").attr("type");
             payload.username = $(this).find(".usernameDiv").text();
             payload.date = $(this).find(".dateDiv").text();
@@ -504,9 +504,6 @@ const saveDoc = async function () {
     //... custom api
     fetch(`${BASE_URL}/history`, {
         method: "POST",
-        // headers: {
-        //     "Content-Type": "application/json"
-        // },
         body: formData
     })
         .then(response => response.json())

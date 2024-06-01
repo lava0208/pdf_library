@@ -226,7 +226,7 @@ app.post('/sendlink',upload.single('pdfFile'), (req, res) => {
 
   formDataMap.set(uniqueId, newDataSet);
 
-  const uniqueLink = `https://127.0.0.1/pdfviewer/?id=${uniqueId}`;
+  const uniqueLink = `https://pdf-vision.com/pdfviewer/?id=${uniqueId}`;
 
   console.log(uniqueLink)
   // Send email to client with the unique link
@@ -313,8 +313,7 @@ app.post('/history', upload.single('pdfFile'), async (req, res) => {
 
     const history = JSON.parse(req.body.history); // Parse the history JSON string
 
-    // const uniqueLink = `https://127.0.0.1/pdfviewer/?id=${uniqueId}&draft=true`;
-    const uniqueLink = `https://127.0.0.1/pdfviewer/?id=${uniqueId}&draft=true`;
+    const uniqueLink = `https://pdf-vision.com/pdfviewer/?id=${uniqueId}&draft=true`;
 
     // Create and save the new document
     const newDocument = new Doc({
@@ -351,6 +350,6 @@ mongoose.connect(mongoURI).then(() => {
 // app.listen(8081, () => {
 //   console.log('Server is running on port 8081');
 // });
-https.createServer(options, app).listen(8081, "127.0.0.1", () => {
-  console.log(`Server running at https://127.0.0.1/`);
+https.createServer(options, app).listen(8081, "94.72.120.252", () => {
+  console.log(`Server running`);
 });

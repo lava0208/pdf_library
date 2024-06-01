@@ -1,5 +1,15 @@
 document.addEventListener("DOMContentLoaded", function () {
-    getDocList();
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialId = urlParams.get('id');
+    const isDraft = urlParams.get('draft');
+
+    if (initialId) {
+        //... open draft document
+        if(isDraft){
+            getDocList();
+        }
+        
+    }
 })
 
 document.getElementById("sidebarToggle").addEventListener("click", function () {

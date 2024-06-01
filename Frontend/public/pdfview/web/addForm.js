@@ -103,8 +103,10 @@ const generalUserMode = function () {
   const isDraft = urlParams.get('draft');
 
   if (initialId) {
+    //... open draft document
     if(isDraft){
     }else{
+      //... open submitted document
       rightSidebarButton.style.display = "none";
       shareDocumentButton.style.display = "none";
       addTextButton.style.display = "none";

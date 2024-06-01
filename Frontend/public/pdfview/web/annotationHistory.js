@@ -356,6 +356,7 @@ const addHistory = function (id, type, username, date, page, typeString) {
                     commentReply.append(replyUserDiv, replyoptionDiv);
 
                     const replyText = document.createElement("div");
+                    replyText.className = "replyText";
                     replyText.style.marginTop = "8px";
                     replyText.style.fontSize = "small";
                     replyText.textContent = reply;
@@ -811,7 +812,7 @@ const getDocList = async function () {
                         commentReply.append(replyUserDiv, replyoptionDiv);
 
                         const replyText = document.createElement("div");
-                        replyText.classList = "replyText";
+                        replyText.className = "replyText";
                         replyText.style.marginTop = "8px";
                         replyText.style.fontSize = "small";
                         replyText.textContent = replyDetail;

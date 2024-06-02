@@ -23,7 +23,7 @@ const PDFViewer = () => {
     const initialId = urlParams.get('id');
     const isOpenSavedPdf = urlParams.get('draft');
     if (initialId) {
-      var url = isOpenSavedPdf ? `${BASE_URL}/getpdfdata?uniqueId=${initialId}&draft=true` : `${BASE_URL}/getpdfdata?uniqueId=${initialId}`;
+      var url = isOpenSavedPdf ? `${BASE_URL}/history/${initialId}` : `${BASE_URL}/getpdfdata?uniqueId=${initialId}`;
       
       fetch(url)
         .then((response) => {

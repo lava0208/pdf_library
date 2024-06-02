@@ -1306,8 +1306,14 @@ document.addEventListener("DOMContentLoaded", function () {
   drawFontFamily();
   drawFontSize();
   requestId = getIdFromUrl();
-  if (requestId) {
-    fetch(`${BASE_URL}/getpdfdata?uniqueId=${requestId}`)
+  const urlParams = new URLSearchParams(window.location.search);
+  const initialId = urlParams.get('id');
+  const isDraft = urlParams.get('draft');
+
+  var url = initialId && isDraft ? `${BASE_URL}/history/${initialId}` : `${BASE_URL}/getpdfdata?uniqueId=${requestId}`;
+
+  if (initialId) {
+    fetch(`${url}`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -1315,11 +1321,12 @@ document.addEventListener("DOMContentLoaded", function () {
         return response.json();
       })
       .then(data => {
+        console.log(data);
         form_storage = [];
-        clientName = data[0].name;
-        clientEmail = data[0].email;
+        // clientName = data.name;
+        // clientEmail = data.email;
         // Handle the retrieved data from the backend
-        const dataURI = data[0].pdfData;
+        const dataURI = data.pdfData;
         const base64Data = dataURI.split(',')[1];
         // Decode base64 data to binary
         const binaryData = atob(base64Data);
@@ -1336,8 +1343,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const fileName = 'downloaded.pdf';
         const pdfFile = new File([blob], fileName, { type: 'application/pdf' });
 
-        draw_form_storage = JSON.parse(data[0].formData);
-        text_storage = JSON.parse(data[0].textData);
+        draw_form_storage = JSON.parse(data.formData);
+        text_storage = JSON.parse(data.textData);
         PDFViewerApplication.open({
           url: URL.createObjectURL(pdfFile),
           originalUrl: pdfFile.name,

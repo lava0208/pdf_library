@@ -375,6 +375,10 @@ See https://github.com/adobe-type-tools/cmap-resources
           <i class="far fa-file-pdf"></i>
           <p class="menu-button-item">Save As Draft</p>
         </button>
+        <button class="menu-button" title="Document List" onclick="openDoc()">
+          <i class="far fa-solid fa-list"></i>
+          <p class="menu-button-item">Document List</p>
+        </button>
       </div>
 
       <div class="toolbar">
@@ -1522,6 +1526,19 @@ See https://github.com/adobe-type-tools/cmap-resources
       </div>
     </div>
   </div>
+
+  <div id="saved-documents-container" class="share-document-container">
+    <div class="share-document-pad">
+      <div class="share-document-heading">
+        <h3>My documents</h3>
+        <span class="share-document-close" onclick="closeDoc()">&times;</span>
+      </div>
+      <div class="saved-document-content"></div>
+      <div class="saved-document-footer">
+        <div class="share-document-send" onclick="closeDoc()">Close</div>
+      </div>
+    </div>
+  </div>
   
   <script>
     localStorage.setItem(
@@ -1549,6 +1566,7 @@ See https://github.com/adobe-type-tools/cmap-resources
   <script src="addShape.js"></script>
   <script src="shareDocument.js"></script>
   <script src="annotationHistory.js"></script>
+  <script src="manageDocument.js"></script>
   <script src="js/signature_pad.umd.js"></script>
   <script src="js/signature_app.js"></script>
   <script src="js/utils.js" defer></script>

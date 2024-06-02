@@ -334,7 +334,31 @@ app.post('/history', upload.single('pdfFile'), async (req, res) => {
   }
 });
 
-app.get('/history', getHistory); // Route to get all history records
+app.get('/history/:uniqueId', async (req, res) => {
+  try {
+    const { uniqueId } = req.params;
+    const document = await Doc.findOne({ uniqueId });
+
+    if (!document) {
+        return res.status(404).json({ message: 'Document not found' });
+    }
+
+    res.status(200).json(document);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send('Error occurred: ' + error.message);
+  }
+});
+
+app.get('/history', async (req, res) => {
+  try {
+      const documents = await Doc.find({});
+      res.status(200).json(documents);
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send('Error occurred: ' + error.message);
+  }
+});
 
 app.use(userRouter);
 app.use(historyRouter);

@@ -526,6 +526,7 @@ const getDocList = async function (id) {
     })
     .then(response => response.json())
         .then(data => {
+            $("#saveDraftButton p").text("Update Draft")
             data.history.forEach(function(item, i){
                 let pageDiv;
                 let page = item.page;

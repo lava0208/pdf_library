@@ -21,7 +21,6 @@ const mongoURI = require('./config').mongoURI;
 const Doc = require('./models/history')
 const userRouter = require('./routes/userRoute');
 const historyRouter = require('./routes/historyRoute');
-const { getHistory } = require('./controllers/historyController'); 
 
 const app = express();
 const { setCurrentFile, getCurrentFile } = require('./utils/currentFile');
@@ -197,9 +196,9 @@ app.get('/download_image', function (req, res) {
   readStream.pipe(res);
 });
 
-app.post('/sendlink',upload.single('pdfFile'), (req, res) => {
+app.post('/sendlink', upload.single('pdfFile'), (req, res) => {
 
-  
+
   const pdfFilePath = getCurrentFile();
   const pdfFileData = fs.readFileSync(pdfFilePath);
   const base64Data = pdfFileData.toString('base64');
@@ -236,8 +235,8 @@ app.post('/sendlink',upload.single('pdfFile'), (req, res) => {
     subject: 'Please sign here',
     text: `Dear ${req.body.name}! Here is the link to access the PDF form: ${uniqueLink}`
   };
-  
-  transporter.sendMail(mailOptions, function(error, info) {
+
+  transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
       console.log(error);
       res.status(500).send('Failed to send email');
@@ -275,7 +274,7 @@ app.post('/savedocument', upload.single('pdfFile'), (req, res) => {
     ]
   };
   // formDataMap.set(req.body.currentId, getCurrentFile());
-  transporter.sendMail(mailOptions, function(error, info) {
+  transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
       console.log(error);
       res.status(500).send('Failed to send email');
@@ -289,7 +288,7 @@ app.post('/savedocument', upload.single('pdfFile'), (req, res) => {
 app.post('/history', upload.single('pdfFile'), async (req, res) => {
   try {
     if (!req.file) {
-        return res.status(400).send('No PDF file uploaded.');
+      return res.status(400).send('No PDF file uploaded.');
     }
 
     const pdfFilePath = getCurrentFile(); // This function should return the path to the PDF file
@@ -329,8 +328,49 @@ app.post('/history', upload.single('pdfFile'), async (req, res) => {
 
     res.status(201).json({ message: 'Document saved successfully', uniqueLink });
   } catch (error) {
-      console.error('Error:', error);
-      res.status(500).send('Error occurred: ' + error.message);
+    console.error('Error:', error);
+    res.status(500).send('Error occurred: ' + error.message);
+  }
+});
+
+app.put('/history/:uniqueId', upload.single('pdfFile'), async (req, res) => {
+  try {
+    const { uniqueId } = req.params;
+
+    const updateData = {};
+    if (req.file) {
+      const pdfFilePath = req.file.path;
+      const pdfFileData = fs.readFileSync(pdfFilePath);
+      const base64Data = pdfFileData.toString('base64');
+      const dataUri = `data:application/pdf;base64,${base64Data}`;
+      updateData.pdfData = dataUri;
+    }
+    if (req.body.pdfFormData) {
+      updateData.formData = req.body.pdfFormData;
+    }
+    if (req.body.pdfTextData) {
+      updateData.textData = req.body.pdfTextData;
+    }
+    if (req.body.history) {
+      const history = JSON.parse(req.body.history);
+      // Remove 'id' fields from history entries and replies
+      history.forEach(entry => {
+        delete entry.id;
+        entry.reply.forEach(reply => delete reply.id);
+      });
+      updateData.history = history;
+    }
+
+    const updatedDocument = await Doc.findOneAndUpdate({ uniqueId }, updateData, { new: true });
+
+    if (!updatedDocument) {
+      return res.status(404).json({ message: 'Document not found' });
+    }
+
+    res.status(200).json({ message: 'Document updated successfully', document: updatedDocument });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send('Error occurred: ' + error.message);
   }
 });
 
@@ -340,7 +380,7 @@ app.get('/history/:uniqueId', async (req, res) => {
     const document = await Doc.findOne({ uniqueId });
 
     if (!document) {
-        return res.status(404).json({ message: 'Document not found' });
+      return res.status(404).json({ message: 'Document not found' });
     }
 
     res.status(200).json(document);
@@ -352,11 +392,11 @@ app.get('/history/:uniqueId', async (req, res) => {
 
 app.get('/history', async (req, res) => {
   try {
-      const documents = await Doc.find({});
-      res.status(200).json(documents);
+    const documents = await Doc.find({});
+    res.status(200).json(documents);
   } catch (error) {
-      console.error('Error:', error);
-      res.status(500).send('Error occurred: ' + error.message);
+    console.error('Error:', error);
+    res.status(500).send('Error occurred: ' + error.message);
   }
 });
 

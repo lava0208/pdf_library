@@ -15,7 +15,7 @@ shareDocumentSenderEmail.oninput = function () {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (emailRegex.test(email)) {
     shareDocumentSenderEmailChecker.textContent = "Valid email format";
-    shareDocumentSenderEmailChecker.style.color = "green"
+    shareDocumentSenderEmailChecker.style.color = "green";
     // You can perform further actions for a valid email format here
   } else {
     shareDocumentSenderEmailChecker.textContent = "Invalid email format";

@@ -502,11 +502,29 @@ const saveDoc = async function () {
 
     console.log(formData)
 
-    //... custom api
-    fetch(`${BASE_URL}/history`, {
-        method: "POST",
-        body: formData
-    })
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialId = urlParams.get('id');
+    const isDraft = urlParams.get('draft');
+
+    if(initialId && isDraft){
+        //... custom api
+        fetch(`${BASE_URL}/history`, {
+            method: "PUT",
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert("It is saved successfully");
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }else{
+        //... custom api
+        fetch(`${BASE_URL}/history`, {
+            method: "POST",
+            body: formData
+        })
         .then(response => response.json())
         .then(data => {
             alert("It is saved successfully");
@@ -514,6 +532,9 @@ const saveDoc = async function () {
         .catch((error) => {
             console.error('Error:', error);
         });
+    }
+
+    
 };
 
 const getDocList = async function (id) {

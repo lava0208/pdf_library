@@ -2421,3 +2421,26 @@ dialog :link {
   padding: 6px 0px;
   color: white;
 }
+
+.email-box {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+#email-feedback {
+  font-size: 12px;
+}
+
+.select2-container--open .select2-dropdown--below{
+  display: none!important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__rendered{
+  font-size: 16px;
+}
+
+.select2-container--default.select2-container--open.select2-container--below .select2-selection--single, .select2-container--default.select2-container--open.select2-container--below .select2-selection--multiple{
+  border-bottom-left-radius: 4px!important;
+  border-bottom-right-radius: 4px!important;
+}

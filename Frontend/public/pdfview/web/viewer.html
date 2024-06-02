@@ -49,6 +49,7 @@ See https://github.com/adobe-type-tools/cmap-resources
   <link rel="stylesheet" href="css/signature-font.css" />
   <link rel="stylesheet" href="css/share-document.css" />
   <link rel="stylesheet" href="css/index.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />  
 
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script> -->
   <!--#endif-->
@@ -1512,6 +1513,13 @@ See https://github.com/adobe-type-tools/cmap-resources
         <div class="share-document-sender">
           <p>Email *:</p>
           <div>
+            <select id="email-input" multiple="multiple" style="width: 100%"></select>
+            <small id="email-feedback"></small>
+          </div>
+        </div>
+        <div class="share-document-sender">
+          <p>Email *:</p>
+          <div>
             <input id="share-document-sender-email" type="email">
             <span id="share-document-sender-email-check"></span>
           </div>
@@ -1550,11 +1558,13 @@ See https://github.com/adobe-type-tools/cmap-resources
       document.getElementById("drawing-board-container").innerHTML
     );
   </script>
+  
   <script src="viewer.js" type="module"></script>
   <script src="pdfAnnotate.js"></script>
   <!--#if GENERIC-->
   <input type="file" id="fileInput" class="hidden" />
   <script src="js/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="js/pdf.min.js" defer></script>
   <script src="jQuery.print.js"></script>
   <script src="font.js"></script>

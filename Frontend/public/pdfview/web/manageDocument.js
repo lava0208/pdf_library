@@ -63,7 +63,7 @@ function getDocs() {
                 $("#saved-documents-container").css("display", "flex");
                 $(".saved-document-content").empty();
                 data.forEach(function (item, i) {
-                    var item = `<a class="saved-document" href="${item.uniqueLink}" target="_blank">
+                    var item = `<a class="saved-document" href="${item.uniqueLink}">
                     <i class="fa fa-solid fa-file-lines"></i>
                     <span>Document ${i + 1}</span>
                 </a>`;

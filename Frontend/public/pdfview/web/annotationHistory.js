@@ -508,7 +508,7 @@ const saveDoc = async function () {
 
     if(initialId && isDraft){
         //... custom api
-        fetch(`${BASE_URL}/history`, {
+        fetch(`${BASE_URL}/history/` + initialId, {
             method: "PUT",
             body: formData
         })

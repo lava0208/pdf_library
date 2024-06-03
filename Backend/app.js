@@ -197,16 +197,10 @@ app.get('/download_image', function (req, res) {
 });
 
 app.post('/sendlink', upload.single('pdfFile'), (req, res) => {
-
-
   const pdfFilePath = getCurrentFile();
   const pdfFileData = fs.readFileSync(pdfFilePath);
   const base64Data = pdfFileData.toString('base64');
-  const str = String(base64Data)
-  const dataUri = `data:application/pdf; base64, ${str}`;
-
-  const uniqueId = uuid.v4();
-  let newDataSet = [];
+  const dataUri = `data:application/pdf;base64,${base64Data}`;
 
   if (!req.file) {
     return res.status(400).send('No PDF file uploaded.');
@@ -214,38 +208,39 @@ app.post('/sendlink', upload.single('pdfFile'), (req, res) => {
 
   const formData = req.body.pdfFormData;
   const textData = req.body.pdfTextData;
-  newDataSet.push({
-    pdfData: dataUri,
-    formData: formData,
-    textData: textData,
-    name: req.body.name,
-    email: req.body.email,
-    description: req.body.description
-  })
+  const name = req.body.name;
+  const description = req.body.description;
 
-  formDataMap.set(uniqueId, newDataSet);
+  // Get the array of selected emails from the request body
+  const selectedEmails = req.body.emails.split(",");
 
-  const uniqueLink = `https://pdf-vision.com/pdfviewer/?id=${uniqueId}`;
+  if (!selectedEmails || selectedEmails.length === 0) {
+    return res.status(400).send('No recipient email addresses provided.');
+  }
 
-  console.log(uniqueLink)
-  // Send email to client with the unique link
-  const mailOptions = {
-    from: 'Stephan Hapi <codevisiondeveloper@gmail.com>',
-    to: `${req.body.email}`,
-    subject: 'Please sign here',
-    text: `Dear ${req.body.name}! Here is the link to access the PDF form: ${uniqueLink}`
-  };
+  // Iterate over each selected email and send an email
+  selectedEmails.forEach(email => {
+    const uniqueId = uuid.v4();
+    const uniqueLink = `https://pdf-vision.com/pdfviewer/?id=${uniqueId}`;
 
-  transporter.sendMail(mailOptions, function (error, info) {
-    if (error) {
-      console.log(error);
-      res.status(500).send('Failed to send email');
-    } else {
-      console.log('Email sent: ' + info.response);
-      res.send('Email sent with the PDF form link');
-    }
+    // Send email to client with the unique link
+    const mailOptions = {
+      from: 'Stephan Hapi <codevisiondeveloper@gmail.com>',
+      to: email,
+      subject: 'Please sign here',
+      text: `Dear ${name}, Here is the link to access the PDF form: ${uniqueLink}`
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    });
   });
 
+  res.send('Emails sent with the PDF form link');
 });
 
 app.get('/getpdfdata', (req, res) => {

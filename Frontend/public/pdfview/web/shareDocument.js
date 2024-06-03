@@ -36,10 +36,21 @@ shareDocumentSendButton.onclick = async function () {
   formData.append('pdfFile', pdfBlob, "uploaded.pdf");
   formData.append('pdfFormData', JSON.stringify(form_storage));
   formData.append("name", shareDocumentSenderName.value);
-  formData.append("email", shareDocumentSenderEmail.value);
+  // formData.append("email", shareDocumentSenderEmail.value);
   if (shareDocumentSenderDescription.value) descriptionData = shareDocumentSenderDescription.value;
   formData.append('pdfTextData', JSON.stringify(text_storage));
   formData.append("description", descriptionData);
+
+  // Get an array of selected email addresses
+  const selectedEmails = $('#email-input').val();
+
+  if (!selectedEmails || selectedEmails.length === 0) {
+    console.error('No recipient email addresses provided');
+    return;
+  }
+
+  // Append the selected email addresses to the form data
+  formData.append('emails', selectedEmails);
 
   fetch(`${BASE_URL}/sendlink`, {
     method: 'POST',

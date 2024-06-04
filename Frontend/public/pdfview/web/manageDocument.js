@@ -39,6 +39,10 @@ $(document).ready(function () {
             emailFeedback.show();
         }
     });
+
+    $(document).on("click", ".saved-document", function () {
+        $("#saved-documents-container").css("display", "none");
+    })
 })
 
 function openDoc() {
@@ -63,7 +67,7 @@ function getDocs() {
                 $("#saved-documents-container").css("display", "flex");
                 $(".saved-document-content").empty();
                 data.forEach(function (item, i) {
-                    var item = `<a class="saved-document" href="${item.uniqueLink}">
+                    var item = `<a class="saved-document" href="${item.uniqueLink}" target="_blank">
                     <i class="fa fa-solid fa-file-lines"></i>
                     <span>Document ${i + 1}</span>
                 </a>`;

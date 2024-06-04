@@ -104,7 +104,7 @@ export default function Landing() {
           </div>
           <div className="row">
             <div className="col-md-3 col-sm-6">
-              <div className="service-box" onClick={() => { handleClick('/pdfviewer') }}>
+              <div className="service-box" onClick={() => { handleClick('/documents') }}>
                 <div className="service-icon yellow">
                   <div className="front-content">
                     <i className="fa fa-book" aria-hidden="true"></i>

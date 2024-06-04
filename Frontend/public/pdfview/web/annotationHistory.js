@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (initialId) {
         //... open draft document
-        if(isDraft){
+        if(isDraft != null){
             getDocList(initialId);
         }
         

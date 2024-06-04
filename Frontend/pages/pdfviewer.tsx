@@ -22,15 +22,24 @@ const PDFViewer = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const initialId = urlParams.get('id');
     const isOpenSavedPdf = urlParams.get('draft');
+
+    console.log("=== isOpenSavedPdf ===");
+    console.log(isOpenSavedPdf);
+    
+    
     if (initialId) {
-      var url = isOpenSavedPdf ? `${BASE_URL}/history/${initialId}` : `${BASE_URL}/getpdfdata?uniqueId=${initialId}`;
+      var url = isOpenSavedPdf != null ? `${BASE_URL}/history/${initialId}` : `${BASE_URL}/getpdfdata?uniqueId=${initialId}`;
       
       fetch(url)
         .then((response) => {
           if (response.ok) {
             setId(initialId);
-            if(isOpenSavedPdf){
-              setIsDraft("true")
+            if(isOpenSavedPdf != null){
+              if(isOpenSavedPdf == "true"){
+                setIsDraft("true")
+              }else{
+                setIsDraft("false")
+              }
             }
           }
           else {
@@ -70,8 +79,8 @@ const PDFViewer = () => {
     if (id) {
       const iframe = document.getElementById('pdfIframe') as HTMLIFrameElement | null;
       if (iframe) {
-        if(isDraft){
-          iframe.src = `./pdfview/web/viewer.html?id=${id}&draft=true`;
+        if(isDraft != null){
+          iframe.src = `./pdfview/web/viewer.html?id=${id}&draft=${isDraft}`;
         }else{
           iframe.src = `./pdfview/web/viewer.html?id=${id}`;
         }

@@ -74,7 +74,7 @@ const Documents = () => {
                                         <div className="service-content">
                                             <h3>Manage Document</h3>
                                             <div className="service-flex">
-                                                <h3 onClick={() => { handleClick('/pdfviewer') }}>
+                                                <h3 onClick={() => { handleClick('/pdfviewer/?id=' + document.uniqueId + '&draft=false') }}>
                                                     <i className="fa fa-eye" aria-hidden="true"></i> View
                                                 </h3>
                                                 <h3 onClick={() => { handleClick(document.uniqueLink) }}>

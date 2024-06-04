@@ -104,9 +104,7 @@ const generalUserMode = function () {
 
   if (initialId) {
     //... open draft document
-    if(isDraft){
-    }else{
-      //... open submitted document
+    if(isDraft == null){
       rightSidebarButton.style.display = "none";
       shareDocumentButton.style.display = "none";
       addTextButton.style.display = "none";
@@ -114,6 +112,19 @@ const generalUserMode = function () {
       showHistoryButton.style.display = "none";
       submitDocumentButton.style.display = "flex";
       changeMode();
+    }else{
+      if(isDraft == "true"){
+
+      }else{
+        //... open submitted document
+        rightSidebarButton.style.display = "none";
+        shareDocumentButton.style.display = "none";
+        addTextButton.style.display = "none";
+        addCommentButton.style.display = "none";
+        showHistoryButton.style.display = "none";
+        submitDocumentButton.style.display = "none";
+        changeMode();
+      }
     }
   }
 }

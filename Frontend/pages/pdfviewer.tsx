@@ -22,10 +22,6 @@ const PDFViewer = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const initialId = urlParams.get('id');
     const isOpenSavedPdf = urlParams.get('draft');
-
-    console.log("=== isOpenSavedPdf ===");
-    console.log(isOpenSavedPdf);
-    
     
     if (initialId) {
       var url = isOpenSavedPdf != null ? `${BASE_URL}/history/${initialId}` : `${BASE_URL}/getpdfdata?uniqueId=${initialId}`;

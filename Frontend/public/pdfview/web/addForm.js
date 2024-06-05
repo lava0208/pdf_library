@@ -114,7 +114,7 @@ const generalUserMode = function () {
       changeMode();
     }else{
       if(isDraft == "true"){
-
+        addTextButton.style.display = "block";
       }else{
         //... open submitted document
         rightSidebarButton.style.display = "none";
@@ -1332,7 +1332,6 @@ document.addEventListener("DOMContentLoaded", function () {
         return response.json();
       })
       .then(data => {
-        console.log(data);
         form_storage = [];
         // clientName = data.name;
         // clientEmail = data.email;

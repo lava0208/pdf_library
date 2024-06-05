@@ -331,7 +331,6 @@ app.post('/history', upload.single('pdfFile'), async (req, res) => {
 app.put('/history/:uniqueId', upload.single('pdfFile'), async (req, res) => {
   try {
     const { uniqueId } = req.params;
-
     const updateData = {};
     if (req.file) {
       const pdfFilePath = req.file.path;
@@ -347,16 +346,11 @@ app.put('/history/:uniqueId', upload.single('pdfFile'), async (req, res) => {
       updateData.textData = req.body.pdfTextData;
     }
     if (req.body.history) {
-      const history = JSON.parse(req.body.history);
-      // Remove 'id' fields from history entries and replies
-      history.forEach(entry => {
-        delete entry.id;
-        entry.reply.forEach(reply => delete reply.id);
-      });
+      let history = typeof req.body.history === 'string' ? JSON.parse(req.body.history) : req.body.history;
       updateData.history = history;
     }
 
-    const updatedDocument = await Doc.findOneAndUpdate({ uniqueId }, updateData, { new: true });
+    const updatedDocument = await Doc.findOneAndUpdate({ uniqueId }, { $set: updateData }, { new: true });
 
     if (!updatedDocument) {
       return res.status(404).json({ message: 'Document not found' });

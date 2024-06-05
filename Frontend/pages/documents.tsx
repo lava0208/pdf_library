@@ -1,7 +1,6 @@
-import { useState, ChangeEvent, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios, { AxiosResponse } from 'axios';
 import Head from "next/head";
-import Button from "../components/button";
 import { BASE_URL } from "@/Config";
 import { useRouter } from "next/router";
 import Header from "@/components/Header";

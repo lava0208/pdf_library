@@ -112,7 +112,7 @@ const generalUserMode = function () {
       showHistoryButton.style.display = "none";
       saveDraftButton.style.display = "none";
       submitDocumentButton.style.display = "flex";
-      changeMode();
+      // changeMode();
     }else{
       if(isDraft == "true"){
         addTextButton.style.display = "block";

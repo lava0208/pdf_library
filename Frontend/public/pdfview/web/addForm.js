@@ -1338,7 +1338,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // clientName = data.name;
         // clientEmail = data.email;
         // Handle the retrieved data from the backend
-        const dataURI = data.pdfData;
+        const dataURI = isDraft ? data.pdfData : data[0].pdfData;
         const base64Data = dataURI.split(',')[1];
         // Decode base64 data to binary
         const binaryData = atob(base64Data);
@@ -1355,8 +1355,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const fileName = 'downloaded.pdf';
         const pdfFile = new File([blob], fileName, { type: 'application/pdf' });
 
-        draw_form_storage = JSON.parse(data.formData);
-        text_storage = JSON.parse(data.textData);
+        draw_form_storage = isDraft ? JSON.parse(data.formData) : JSON.parse(data[0].formData);
+        text_storage = isDraft ? JSON.parse(data.textData) : JSON.parse(data[0].textData);
         PDFViewerApplication.open({
           url: URL.createObjectURL(pdfFile),
           originalUrl: pdfFile.name,

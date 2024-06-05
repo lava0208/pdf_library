@@ -5,10 +5,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (initialId) {
         //... open draft document
-        if(isDraft != null){
+        if(isDraft != null && isDraft !== ""){
             getDocList(initialId);
         }
-        
     }
 })
 
@@ -499,8 +498,6 @@ const saveDoc = async function () {
     formData.append('pdfFormData', JSON.stringify(form_storage));
     formData.append('pdfTextData', JSON.stringify(text_storage));
     formData.append("history", JSON.stringify(historyArr));
-
-    console.log(formData)
 
     const urlParams = new URLSearchParams(window.location.search);
     const initialId = urlParams.get('id');

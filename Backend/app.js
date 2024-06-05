@@ -220,8 +220,20 @@ app.post('/sendlink', upload.single('pdfFile'), (req, res) => {
 
   // Iterate over each selected email and send an email
   selectedEmails.forEach(email => {
+    let newDataSet = [];
     const uniqueId = uuid.v4();
     const uniqueLink = `https://pdf-vision.com/pdfviewer/?id=${uniqueId}`;
+
+    newDataSet.push({
+      pdfData: dataUri,
+      formData: formData,
+      textData: textData,
+      name: name,
+      email: email,
+      description: description
+    })
+  
+    formDataMap.set(uniqueId, newDataSet);
 
     // Send email to client with the unique link
     const mailOptions = {

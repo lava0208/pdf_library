@@ -50,7 +50,7 @@ const Documents = () => {
                         <p>You can choose any document.</p>
                     </div>
 
-                    <div className="text-right">
+                    <div className="text-right mb-5">
                         <button
                             className="btn btn-info"
                             onClick={() => { handleClick('/pdfviewer') }}

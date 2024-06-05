@@ -9,8 +9,8 @@ export default function UserProfile(props: any) {
     const [signature, setSignature] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    useEffect(() => {        
-        fetchSignature();        
+    useEffect(() => {
+        fetchSignature();
     }, []);
 
     const handleLogout = () => {
@@ -21,7 +21,7 @@ export default function UserProfile(props: any) {
     const fetchSignature = async () => {
         try {
             const username = localStorage.getItem('username');
-        
+
             await fetch(`${BASE_URL}/api/users/signature/${username}`, {
                 method: "GET",
                 headers: {
@@ -32,8 +32,11 @@ export default function UserProfile(props: any) {
                 return res.json();
             })
             .then(function (json) {
-                var data = json.signature !== "" ? json.signature : "";
-                setSignature(`${BASE_URL + "/uploads/" + data}`)
+                if (json.signature !== "") {
+                    setSignature(`${BASE_URL + "/uploads/" + json.signature}`)
+                } else {
+                    setSignature("")
+                }
             })
         } catch (error) {
             console.error("Error fetching signature:", error);
@@ -52,13 +55,13 @@ export default function UserProfile(props: any) {
                     method: "POST",
                     body: formData
                 })
-                .then(function (res) {
-                    return res.json();
-                })
-                .then(function (json) {
-                    var data = json.signature !== "" ? json.signature : "";
-                    setSignature(`${BASE_URL + "/uploads/" + data}`)
-                })
+                    .then(function (res) {
+                        return res.json();
+                    })
+                    .then(function (json) {
+                        var data = json.signature !== "" ? json.signature : "";
+                        setSignature(`${BASE_URL + "/uploads/" + data}`)
+                    })
             } catch (error) {
                 // Handle error
             }
@@ -76,29 +79,32 @@ export default function UserProfile(props: any) {
     return (
         <div className={`bg-white flex flex-col justify-between shadow-md w-[240px] fixed rounded-[10px] border-slate-200 z-50`} style={{ top: props.top, right: props.right }}>
             <div className="bg-orange-300 w-full rounded-t-[10px] flex flex-col items-center justify-center font-sans pt-3">
-                <RxAvatar className="text-[70px] text-white"/>
+                <RxAvatar className="text-[70px] text-white" />
                 <span>{props.username}</span>
-                {
-                    signature != "" && (
-                        <button className="my-3 btn btn-info rounded" onClick={handlePreviewClick}>
-                            My Signature
-                        </button>
-                    )
-                }
-            </div>            
+                <button className="my-3 btn btn-info rounded" onClick={handlePreviewClick}>
+                    My Signature
+                </button>
+            </div>
             <div className="cursor-pointer h-[60px] flex gap-2 bg-[#3C97FE] rounded-b-[10px] justify-center items-center hover:text-white" onClick={handleLogout}>
                 <CiLogout />
 
                 Log out
             </div>
-            
+
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                    <div className="bg-white p-4 rounded shadow-lg flex flex-col items-center" style={{width: '500px'}}>
-                        <span className="self-end close" onClick={closeModal} style={{fontSize: 24}}>
+                    <div className="bg-white p-4 rounded shadow-lg flex flex-col items-center" style={{ width: '500px' }}>
+                        <span className="self-end close" onClick={closeModal} style={{ fontSize: 24 }}>
                             &times;
                         </span>
-                        <img src={signature} alt="Signature Preview" className="w-full h-auto object-contain my-3"/>
+                        {
+                            signature != "" ? (
+                                <img src={signature} alt="Signature Preview" className="w-full h-auto object-contain my-3" />
+                            ) : (
+                                <p>No signature</p>
+                            )
+                        }
+
                         <input type="file" accept="image/*" className="form-control" onChange={handleSignChange} />
                     </div>
                 </div>

@@ -389,6 +389,9 @@ app.get('/history', async (req, res) => {
   }
 });
 
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+
 app.use(userRouter);
 app.use(historyRouter);
 

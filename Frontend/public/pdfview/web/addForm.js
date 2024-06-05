@@ -110,6 +110,7 @@ const generalUserMode = function () {
       addTextButton.style.display = "none";
       addCommentButton.style.display = "none";
       showHistoryButton.style.display = "none";
+      saveDraftButton.style.display = "none";
       submitDocumentButton.style.display = "flex";
       changeMode();
     }else{
@@ -122,6 +123,7 @@ const generalUserMode = function () {
         addTextButton.style.display = "none";
         addCommentButton.style.display = "none";
         showHistoryButton.style.display = "none";
+        saveDraftButton.style.display = "none";
         submitDocumentButton.style.display = "none";
         changeMode();
       }

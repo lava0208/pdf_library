@@ -22,6 +22,9 @@ const UserSchema = new mongoose.Schema({
     },
     salt: {
         type: String,
+    },
+    signature: {
+        type: String,
     }
 });
 

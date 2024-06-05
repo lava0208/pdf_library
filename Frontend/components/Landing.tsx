@@ -10,15 +10,6 @@ export default function Landing() {
   useEffect(() => {
     // Save the original destination in localStorage
     localStorage.setItem('originalDestination', router.asPath);
-
-    // Load scripts in order
-    const loadScripts = async () => {
-      await loadScript("/jquery-3.2.1.min.js");
-      await loadScript("/all-plugins.js");
-      await loadScript("/plugins-activate.js");
-    };
-
-    loadScripts();
   }, [router.asPath]);
 
   const loadScript = (src: string) => {

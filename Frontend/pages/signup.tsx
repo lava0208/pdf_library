@@ -11,7 +11,8 @@ export default function SignUp() {
         'username': '',
         'email': '',
         'password': '',
-        'confirmPassword': ''
+        'confirmPassword': '',
+        'signature': '',
     })
     useEffect(() => {
         const pwShowHide = document.querySelectorAll(".eye-icon");

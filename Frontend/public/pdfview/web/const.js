@@ -19,15 +19,6 @@ let font_storage = [];
 let form_storage = [];
 let history_storage = [];
 
-// fetch(`${BASE_URL}/history`)
-//     .then(response => response.json())
-//     .then(data => {
-//         history_storage = data;
-//     })
-//     .catch(error => {
-//         console.error('Error fetching history:', error);
-//     });
-
 /* All Constants for form elements to identify each item */
 
 const CHECKBOX = 1,
@@ -115,3 +106,5 @@ let toolbar = $("#editorFreeTextParamsToolbar");
 let isOnToolbar = false;
 let isOpenSubmitDocument = false;
 let baseId = 0;
+
+const saveDraftButton = document.getElementById("saveDraftButton");

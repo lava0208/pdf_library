@@ -96,7 +96,6 @@ export default function SignIn() {
                     localStorage.setItem("username", username);
                     localStorage.setItem("login-token", token);
                     const originPath = localStorage.getItem("originDestination");
-                    console.log(originPath)
                     if (originPath) router.push(originPath);
                 })
                 .catch((error) => {

@@ -112,10 +112,13 @@ const generalUserMode = function () {
       showHistoryButton.style.display = "none";
       saveDraftButton.style.display = "none";
       submitDocumentButton.style.display = "flex";
-      // changeMode();
+      changeMode();
     }else{
       if(isDraft == "true"){
         addTextButton.style.display = "block";
+        const viewer = document.getElementById('viewer');  
+        viewer.addEventListener('click', e => {});  
+        viewer.dispatchEvent(new Event('click'));  
       }else{
         //... open submitted document
         rightSidebarButton.style.display = "none";

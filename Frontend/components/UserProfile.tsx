@@ -8,6 +8,7 @@ export default function UserProfile(props: any) {
     const router = useRouter();
     const [signature, setSignature] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
     useEffect(() => {
         fetchSignature();
@@ -43,11 +44,22 @@ export default function UserProfile(props: any) {
         }
     };
 
-    const handleSignChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleSignChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setSignature(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+            setSelectedFile(file);
+        }
+    };
+
+    const handleFileUpload = async () => {
+        if (selectedFile) {
             const formData = new FormData();
-            formData.append('signature', file);
+            formData.append('signature', selectedFile);
             try {
                 const username = localStorage.getItem('username');
 
@@ -55,17 +67,24 @@ export default function UserProfile(props: any) {
                     method: "POST",
                     body: formData
                 })
-                    .then(function (res) {
-                        return res.json();
-                    })
-                    .then(function (json) {
-                        var data = json.signature !== "" ? json.signature : "";
-                        setSignature(`${BASE_URL + "/uploads/" + data}`);
+                .then(res => res.json())
+                .then(json => {
+                    if (json.signature) {
+                        setSignature(`${BASE_URL}/uploads/${json.signature}`);
                         alert(json.message);
-                    })
+                        setIsModalOpen(false);
+                    } else {
+                        alert("Failed to upload signature.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error uploading signature:', error);
+                });
             } catch (error) {
-                // Handle error
+                console.error('Error:', error);
             }
+        } else {
+            alert("Please select a file first.");
         }
     };
 
@@ -107,6 +126,7 @@ export default function UserProfile(props: any) {
                         }
 
                         <input type="file" accept="image/*" className="form-control" onChange={handleSignChange} />
+                        <button className="btn btn-info px-5 mt-4" onClick={handleFileUpload}>Submit</button>
                     </div>
                 </div>
             )}

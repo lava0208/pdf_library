@@ -108,3 +108,6 @@ let isOpenSubmitDocument = false;
 let baseId = 0;
 
 const saveDraftButton = document.getElementById("saveDraftButton");
+const urlParams = new URLSearchParams(window.location.search);
+const initialId = urlParams.get('id');
+const isDraft = urlParams.get('draft');

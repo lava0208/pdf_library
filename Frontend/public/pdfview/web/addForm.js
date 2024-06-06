@@ -1252,7 +1252,8 @@ $(document).on("DOMSubtreeModified", ".freeTextEditor.selectedEditor", function 
   let fontStyle = toolbar.find("#text-italic").hasClass("active") ? "italic" : "";
 
   $(this).find(".internal[role='textbox']").attr('size', size);
-  $(this).find(".internal[role='textbox']").css({"font-size": fontSize, "font-family": fontFamily, "font-weight": fontWeight, "font-style": fontStyle});
+  // $(this).find(".internal[role='textbox']").css({"font-size": fontSize, "font-family": fontFamily, "font-weight": fontWeight, "font-style": fontStyle});
+  $(this).find(".internal[role='textbox']").css({"font-size": fontSize, "font-family": fontFamily, "font-style": fontStyle});
 })
 
 //... Change Font Size Event
@@ -1312,7 +1313,8 @@ $(document).on("click", ".text-weight-button", function () {
   if($(".freeTextEditor").hasClass("selectedEditor")){
     let fontWeight = toolbar.find("#text-bold").hasClass("active") ? 700 : 500;
     let fontStyle = toolbar.find("#text-italic").hasClass("active") ? "italic" : "";
-    $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").css({"font-weight": fontWeight, "font-style": fontStyle});
+    // $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").css({"font-weight": fontWeight, "font-style": fontStyle});
+    $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").css({"font-style": fontStyle});
   }
 })
 

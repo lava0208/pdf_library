@@ -149,6 +149,9 @@ class FreeTextEditor extends AnnotationEditor {
     //... custom toolbar text
     this.#fontSize = params.fontSize || FreeTextEditor._defaultSelectSize;
     this.#fontFamily = params.fontFamily || FreeTextEditor._defaultFontFamily;
+    console.log("=== initial ===");
+    console.log(this.#fontSize);
+    console.log(this.#fontFamily);
   }
 
   /** @inheritdoc */
@@ -185,10 +188,14 @@ class FreeTextEditor extends AnnotationEditor {
 
       //... custom toolbar text
       case AnnotationEditorParamsType.SELECTTEXT_SIZE:
+        console.log("type", type)
+        console.log("value" , value);
         // FreeTextEditor._defaultSelectSize = value;
         break;
       case AnnotationEditorParamsType.SELECTTEXT_FAMILY:
         FreeTextEditor._defaultFontFamily = value;
+        console.log("type", type)
+        console.log("value" , value);
         break;
     }
   }
@@ -226,19 +233,21 @@ class FreeTextEditor extends AnnotationEditor {
       ],
 
       //... custom toolbar text
-      [
-        AnnotationEditorParamsType.SELECTTEXT_SIZE,
-        FreeTextEditor._defaultSelectSize,
-      ],
-      [
-        AnnotationEditorParamsType.SELECTTEXT_FAMILY,
-        FreeTextEditor._defaultFontFamily,
-      ],
+      // [
+      //   AnnotationEditorParamsType.SELECTTEXT_SIZE,
+      //   FreeTextEditor._defaultSelectSize,
+      // ],
+      // [
+      //   AnnotationEditorParamsType.SELECTTEXT_FAMILY,
+      //   FreeTextEditor._defaultFontFamily,
+      // ],
     ];
   }
 
   /** @inheritdoc */
   get propertiesToUpdate() {
+    console.log("this.#fontSize " + this.#fontSize);
+    console.log("this.#fontFamily " + this.#fontFamily);
     return [
       [AnnotationEditorParamsType.FREETEXT_SIZE, this.#fontSize],
       [AnnotationEditorParamsType.FREETEXT_COLOR, this.#color],
@@ -254,11 +263,14 @@ class FreeTextEditor extends AnnotationEditor {
    * @param {number} fontSize
    */
   #updateFontSize(fontSize) {
+    
     const setFontsize = size => {
       this.editorDiv.style.fontSize = `calc(${size}px * var(--scale-factor))`;
       this.translate(0, -(size - this.#fontSize) * this.parentScale);
       this.#fontSize = size;
       this.#setEditorDimensions();
+
+      
     };
     const savedFontsize = this.#fontSize;
     this.addCommands({
@@ -299,16 +311,23 @@ class FreeTextEditor extends AnnotationEditor {
   }
 
   //... custom toolbar text
-  #updateFontFamily(style) {
-    const savedStyle = this.#fontFamily;
+  #updateFontFamily(fontFamily) {
+    const setFontfamily = style => {
+      this.editorDiv.style.fontFamily = style;
+      this.#fontFamily = style;
+    };
+    const savedFontfamily = this.#fontFamily;
     this.addCommands({
       cmd: () => {
-        this.#fontFamily = this.editorDiv.style.fontFamily = style;
+        setFontfamily(fontFamily);
       },
       undo: () => {
-        this.#fontFamily = this.editorDiv.style.fontFamily = savedStyle;
+        setFontfamily(savedFontfamily);
       },
       mustExec: true,
+
+      //... custom toolbar text
+      // type: AnnotationEditorParamsType.FREETEXT_SIZE,
       type: AnnotationEditorParamsType.SELECTTEXT_FAMILY,
       overwriteIfSameType: true,
       keepUndo: true,
@@ -624,6 +643,10 @@ class FreeTextEditor extends AnnotationEditor {
     //... custom toolbar text
     style.fontFamily = this.#fontFamily;
 
+    console.log("========== 5 ===========");
+    console.log("fontSize", this.#fontSize)
+    console.log("fontFamily", this.#fontFamily)
+
     this.div.append(this.editorDiv);
 
     this.overlayDiv = document.createElement("div");
@@ -774,11 +797,18 @@ class FreeTextEditor extends AnnotationEditor {
       };
     }
     const editor = super.deserialize(data, parent, uiManager);
-    editor.#fontSize = data.fontSize;
+    
+    //...
+    editor.#fontSize = Math.round(data.fontSize);
+    // editor.#fontSize = data.fontSize
     editor.#color = Util.makeHexColor(...data.color);
 
     //... custom toolbar text
     editor.#fontFamily = data.fontFamily;
+
+    console.log("=== 6 ===");
+    console.log(data.fontSize);
+    console.log(data.fontFamily);
 
     editor.#content = FreeTextEditor.#deserializeContent(data.value);
     editor.annotationElementId = data.id || null;
@@ -844,6 +874,10 @@ class FreeTextEditor extends AnnotationEditor {
   #hasElementChanged(serialized) {
     //... custom toolbar text
     const { value, fontSize, color, rect, pageIndex, fontFamily } = this.#initialData;
+
+    console.log("=== 7 ===");
+    console.log(fontSize);
+    console.log(fontFamily);
 
     return (
       serialized.value !== value ||

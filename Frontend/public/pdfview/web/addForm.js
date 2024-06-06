@@ -98,10 +98,6 @@ function getIdFromUrl() {
 }
 
 const generalUserMode = function () {
-  const urlParams = new URLSearchParams(window.location.search);
-  const initialId = urlParams.get('id');
-  const isDraft = urlParams.get('draft');
-
   if (initialId) {
     //... open draft document
     if(isDraft == null){
@@ -1325,9 +1321,6 @@ document.addEventListener("DOMContentLoaded", function () {
   drawFontFamily();
   drawFontSize();
   requestId = getIdFromUrl();
-  const urlParams = new URLSearchParams(window.location.search);
-  const initialId = urlParams.get('id');
-  const isDraft = urlParams.get('draft');
 
   var url = initialId && isDraft ? `${BASE_URL}/history/${initialId}` : `${BASE_URL}/getpdfdata?uniqueId=${requestId}`;
 

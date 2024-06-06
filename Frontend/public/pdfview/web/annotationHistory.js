@@ -1,11 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const urlParams = new URLSearchParams(window.location.search);
-    const initialId = urlParams.get('id');
-    const isDraft = urlParams.get('draft');
-
     if (initialId) {
         //... open draft document
-        if(isDraft != null && isDraft !== ""){
+        if(isDraft != null && isDraft !== "" && isDraft != "false"){
             getDocList(initialId);
         }
     }
@@ -499,10 +495,6 @@ const saveDoc = async function () {
     formData.append('pdfTextData', JSON.stringify(text_storage));
     formData.append("history", JSON.stringify(historyArr));
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const initialId = urlParams.get('id');
-    const isDraft = urlParams.get('draft');
-
     if(initialId && isDraft){
         //... custom api
         fetch(`${BASE_URL}/history/` + initialId, {
@@ -530,8 +522,6 @@ const saveDoc = async function () {
             console.error('Error:', error);
         });
     }
-
-    
 };
 
 const getDocList = async function (id) {
@@ -544,7 +534,8 @@ const getDocList = async function (id) {
     })
     .then(response => response.json())
         .then(data => {
-            $("#saveDraftButton p").text("Update Draft")
+            $("#saveDraftButton p").text("Update Draft");
+            $("#deleteDraftButton").removeClass("hidden");
             data.history.forEach(function(item, i){
                 let pageDiv;
                 let page = item.page;
@@ -1063,3 +1054,19 @@ const getDocList = async function (id) {
             console.error('Error:', error);
         });
 };
+
+//... Delete document
+const deleteDoc = async function () {
+    if (confirm("Do you want to delete this document?") == true) {
+        fetch(`${BASE_URL}/history/${initialId}`, {
+            method: "Delete"
+        })
+        .then(response => response.json())
+        .then(data => {
+            parent.window.location.href = "/documents";
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+}

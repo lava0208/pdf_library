@@ -2160,6 +2160,11 @@ dialog :link {
   font-size: 17px;
 }
 
+.menu-button i{
+  width: 16px;
+  font-size: 16px;
+}
+
 .active_menu {
   background-color: #dddedf;
 }
@@ -2231,6 +2236,7 @@ dialog :link {
   width: 17px;
   color: #535353;
   transition: transform 0.3s;
+  padding: 0 14px;
   /* Add transition for smooth rotation */
 }
 

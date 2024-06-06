@@ -3,6 +3,7 @@ import { BASE_URL } from '@/Config';
 import { useRouter } from 'next/router';
 import UserProfile from '@/components/UserProfile';
 import { useState, useEffect } from 'react';
+import withAuth from "@/components/withAuth";
 
 const PDFViewer = () => {
 
@@ -130,4 +131,4 @@ const PDFViewer = () => {
   );
 }
 
-export default PDFViewer;
+export default withAuth(PDFViewer);

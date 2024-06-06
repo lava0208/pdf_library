@@ -2456,3 +2456,7 @@ dialog :link {
   border: 0!important;
   box-shadow: none!important;
 }
+
+.popupAnnotation{
+  display: none;
+}

@@ -1247,7 +1247,9 @@ const drawFontSize = function () {
 
 //... Write Text Event
 $(document).on("DOMSubtreeModified", ".freeTextEditor.selectedEditor", function () {
-  let size = toolbar.find("#toolbar-font-size").val() + "px";
+  let value = toolbar.find("#toolbar-font-size").val() == "" || toolbar.find("#toolbar-font-size").val() == null ? 16 : toolbar.find("#toolbar-font-size").val();
+  
+  let size = value + "px";
   let fontSize = `calc(${size} * var(--scale-factor))`;
   let fontFamily = toolbar.find("#toolbar-font-style").val();
   let fontWeight = toolbar.find("#text-bold").hasClass("active") ? 700 : 500;
@@ -1260,8 +1262,9 @@ $(document).on("DOMSubtreeModified", ".freeTextEditor.selectedEditor", function 
 //... Change Font Size Event
 $(document).on("change", "#toolbar-font-size", function () {
   if($(".freeTextEditor").hasClass("selectedEditor")){
-    let size = $(this).val() + "px";
-    let fontSize = `calc(${$(this).val() + "px"} * var(--scale-factor))`;
+    let value = $(this).val() == "" || $(this).val() == null ? 16 : $(this).val();
+    let size = value + "px";
+    let fontSize = `calc(value + "px"} * var(--scale-factor))`;
     $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").attr("size", size);
     $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").css("font-size", fontSize);
   }
@@ -1371,7 +1374,7 @@ document.addEventListener("DOMContentLoaded", function () {
             drawFormElement();
 
             //...
-            isOpenSubmitDocument = true;
+            isOpenSubmitDocument = isDraft == "false" ? true : false;
           }
         }, 100);
       })

@@ -60,7 +60,8 @@ export default function UserProfile(props: any) {
                     })
                     .then(function (json) {
                         var data = json.signature !== "" ? json.signature : "";
-                        setSignature(`${BASE_URL + "/uploads/" + data}`)
+                        setSignature(`${BASE_URL + "/uploads/" + data}`);
+                        alert(json.message);
                     })
             } catch (error) {
                 // Handle error

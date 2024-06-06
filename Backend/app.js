@@ -232,7 +232,7 @@ app.post('/sendlink', upload.single('pdfFile'), (req, res) => {
       email: email,
       description: description
     })
-  
+
     formDataMap.set(uniqueId, newDataSet);
 
     // Send email to client with the unique link
@@ -395,6 +395,23 @@ app.get('/history', async (req, res) => {
   try {
     const documents = await Doc.find({});
     res.status(200).json(documents);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send('Error occurred: ' + error.message);
+  }
+});
+
+app.delete('/history/:uniqueId', async (req, res) => {
+  try {
+    const { uniqueId } = req.params;
+
+    const deletedDocument = await Doc.findOneAndDelete({ uniqueId });
+
+    if (!deletedDocument) {
+      return res.status(404).json({ message: 'Document not found' });
+    }
+
+    res.status(200).json({ message: 'Document deleted successfully' });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).send('Error occurred: ' + error.message);

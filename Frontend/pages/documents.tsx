@@ -5,6 +5,8 @@ import { BASE_URL } from "@/Config";
 import { useRouter } from "next/router";
 import Header from "@/components/Header";
 import withAuth from "@/components/withAuth";
+import {ToastContainer, toast} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const Documents = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -27,6 +29,31 @@ const Documents = () => {
             setDocuments(response.data)
         } catch (err:any) {
             setError(err);
+        }
+    }
+
+    const deleteDocument = async (id: any) => {
+        if (confirm("Do you want to delete this document?") == true) {
+            try {
+                const response: AxiosResponse = await axios.delete(`${BASE_URL}/history/` + id, {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+                getDocuments();
+                toast.success('🦄 Successfully Deleted!', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            } catch (err:any) {
+                setError(err);
+            }
         }
     }
 
@@ -77,7 +104,10 @@ const Documents = () => {
                                                     <i className="fa fa-eye" aria-hidden="true"></i> View
                                                 </h3>
                                                 <h3 onClick={() => { handleClick(document.uniqueLink) }}>
-                                                    <i className="fa fa-edit" aria-hidden="true"></i> Edit
+                                                    <i className="fa fa-edit" aria-hidden="true"></i> Update
+                                                </h3>
+                                                <h3 onClick={() => { deleteDocument(document.uniqueId) }}>
+                                                    <i className="fa fa-trash" aria-hidden="true"></i> Delete
                                                 </h3>
                                             </div>
                                         </div>
@@ -89,6 +119,7 @@ const Documents = () => {
                     </div>
                 </div>
             </div>
+            <ToastContainer />
         </>
     )
 }

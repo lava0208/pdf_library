@@ -18,7 +18,6 @@ const mongoose = require("mongoose");
 const mongoURI = require('./config').mongoURI;
 
 //...
-const Doc = require('./models/history')
 const userRouter = require('./routes/userRoute');
 const historyRouter = require('./routes/historyRoute');
 
@@ -292,134 +291,7 @@ app.post('/savedocument', upload.single('pdfFile'), (req, res) => {
   });
 })
 
-app.post('/history', upload.single('pdfFile'), async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).send('No PDF file uploaded.');
-    }
-
-    const pdfFilePath = getCurrentFile(); // This function should return the path to the PDF file
-    const pdfFileData = fs.readFileSync(pdfFilePath);
-    const base64Data = pdfFileData.toString('base64');
-    const dataUri = `data:application/pdf;base64,${base64Data}`;
-
-    const uniqueId = uuid.v4();
-    let newDataSet = [];
-
-    const formData = req.body.pdfFormData;
-    const textData = req.body.pdfTextData;
-
-    newDataSet.push({
-      pdfData: dataUri,
-      formData: formData,
-      textData: textData,
-    })
-
-    formDataMap.set(uniqueId, newDataSet);
-
-    const history = JSON.parse(req.body.history); // Parse the history JSON string
-
-    const uniqueLink = `https://pdf-vision.com/pdfviewer/?id=${uniqueId}&draft=true`;
-
-    // Create and save the new document
-    const newDocument = new Doc({
-      uniqueId,
-      pdfData: dataUri,
-      formData,
-      textData,
-      history,
-      uniqueLink
-    });
-
-    await newDocument.save();
-
-    res.status(201).json({ message: 'Document saved successfully', uniqueLink });
-  } catch (error) {
-    console.error('Error:', error);
-    res.status(500).send('Error occurred: ' + error.message);
-  }
-});
-
-app.put('/history/:uniqueId', upload.single('pdfFile'), async (req, res) => {
-  try {
-    const { uniqueId } = req.params;
-    const updateData = {};
-    if (req.file) {
-      const pdfFilePath = req.file.path;
-      const pdfFileData = fs.readFileSync(pdfFilePath);
-      const base64Data = pdfFileData.toString('base64');
-      const dataUri = `data:application/pdf;base64,${base64Data}`;
-      updateData.pdfData = dataUri;
-    }
-    if (req.body.pdfFormData) {
-      updateData.formData = req.body.pdfFormData;
-    }
-    if (req.body.pdfTextData) {
-      updateData.textData = req.body.pdfTextData;
-    }
-    if (req.body.history) {
-      let history = typeof req.body.history === 'string' ? JSON.parse(req.body.history) : req.body.history;
-      updateData.history = history;
-    }
-
-    const updatedDocument = await Doc.findOneAndUpdate({ uniqueId }, { $set: updateData }, { new: true });
-
-    if (!updatedDocument) {
-      return res.status(404).json({ message: 'Document not found' });
-    }
-
-    res.status(200).json({ message: 'Document updated successfully', document: updatedDocument });
-  } catch (error) {
-    console.error('Error:', error);
-    res.status(500).send('Error occurred: ' + error.message);
-  }
-});
-
-app.get('/history/:uniqueId', async (req, res) => {
-  try {
-    const { uniqueId } = req.params;
-    const document = await Doc.findOne({ uniqueId });
-
-    if (!document) {
-      return res.status(404).json({ message: 'Document not found' });
-    }
-
-    res.status(200).json(document);
-  } catch (error) {
-    console.error('Error:', error);
-    res.status(500).send('Error occurred: ' + error.message);
-  }
-});
-
-app.get('/history', async (req, res) => {
-  try {
-    const documents = await Doc.find({});
-    res.status(200).json(documents);
-  } catch (error) {
-    console.error('Error:', error);
-    res.status(500).send('Error occurred: ' + error.message);
-  }
-});
-
-app.delete('/history/:uniqueId', async (req, res) => {
-  try {
-    const { uniqueId } = req.params;
-
-    const deletedDocument = await Doc.findOneAndDelete({ uniqueId });
-
-    if (!deletedDocument) {
-      return res.status(404).json({ message: 'Document not found' });
-    }
-
-    res.status(200).json({ message: 'Document deleted successfully' });
-  } catch (error) {
-    console.error('Error:', error);
-    res.status(500).send('Error occurred: ' + error.message);
-  }
-});
-
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
 
 app.use(userRouter);
 app.use(historyRouter);

@@ -1328,6 +1328,9 @@ See https://github.com/adobe-type-tools/cmap-resources
         <button class="tablink" onclick="switchSignMethod(event, UPLOAD)">
           Upload
         </button>
+        <button class="tablink" onclick="switchSignMethod(event, PROFILE)">
+          List
+        </button>
       </div>
       <hr class="signature-hr" />
       <div id="signature-draw-body" class="signature-pad--body signature-tab-content" style="display: flex">
@@ -1394,6 +1397,15 @@ See https://github.com/adobe-type-tools/cmap-resources
         <div id="image-preview"></div>
       </div>
       <div id="signature-upload-footer" class="signature-tab-content"></div>
+      <div id="signature-profile-body" class="signature-tab-content">
+        <div id="profile-image-preview"></div>
+      </div>
+      <div id="signature-profile-footer" class="signature-tab-content">
+        <label for="signature-profile-image-input">
+          <i class="fa fa-upload"></i> Upload file
+          <input type="file" id="signature-profile-image-input" class="custom-file-input hidden" accept="image/*" />
+        </label>
+      </div>
       <hr class="signature-hr" />
       <div class="signature-footer signature-pad--actions" style="float: right">
         <div></div>

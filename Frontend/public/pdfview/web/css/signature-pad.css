@@ -234,6 +234,14 @@
   padding: 10px;
 }
 
+#signature-profile-body{
+  height: 100%;
+  border: 1px solid #e8e8e8;
+  margin-bottom: 8px;
+  gap: 8px;
+  padding: 10px;
+}
+
 #signature-type-footer {
   gap: 8px;
 }
@@ -262,8 +270,74 @@
   border: 2px dashed #ccc;
   width: 40%;
   height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+#image-preview img{
+  height: auto!important;
+}
+
+label[for="signature-profile-image-input"]{
+  bottom: 25px;
+  position: absolute;
+  cursor: pointer;
+}
+
+#profile-image-preview{
+  width: 100%;
+  overflow: auto;
+  max-height: 400px;
+}
+
+.profile-img-list{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 50px;
+  width: calc(100% - 20px);
+  position: relative;
+  gap: 10px;
+  padding: 5px 10px;
+  border-radius: 3px;
+}
+
+.profile-img-list:hover{
+  background-color: #f3f3f3;
+}
+
+.profile-img-list label{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 100%;
+  width: 100%;
+}
+
+.profile-img-list input{
+  width: 20px;
+  height: 20px;
+}
+
+.profile-img-list img{
+  height: 100%;
+}
+
+.profile-img-list button{
+  padding: 5px 10px;
+  transition-duration: 0.4s;
+  background-color: #3399ff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.profile-img-list button.btn-info{
+  background-color: #17a2b8;
+}
 
 @media (max-width: 480px) {
   .signature-pad--actions .button {

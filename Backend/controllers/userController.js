@@ -68,13 +68,13 @@ const getUserSignature = async function (req, res) {
             return res.status(404).json({ message: "User not found" });
         }
 
-        if (!user.signature) {
-            return res.status(200).json({ message: "Signature not found", signature: "" });
+        if (!user.signature || user.signature.length === 0) {
+            return res.status(200).json({ message: "Signature not found", signature: [] });
         }
 
-        const signatureUrl = path.basename(user.signature);
+        const signatureUrls = user.signature.map(sig => path.basename(sig));
 
-        res.status(200).json({ message: "success", signature: signatureUrl });
+        res.status(200).json({ message: "success", signatures: signatureUrls });
     } catch (err) {
         console.error("Error fetching signature:", err.message);
         res.status(500).json({ message: err.message });
@@ -90,8 +90,10 @@ const uploadUserSignature = async function (req, res) {
             return res.status(404).json({ message: "User not found" });
         }
 
-        user.signature = path.basename(req.file.path);
-        user.save();
+        user.signature.push(path.basename(req.file.path));
+        user.signature = user.signature.filter(Boolean);
+
+        await user.save();
 
         res.json({ message: "Signature uploaded successfully", signature: user.signature });
     } catch (err) {

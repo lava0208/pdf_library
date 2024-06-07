@@ -13,12 +13,18 @@ const canvas = wrapper.querySelector("canvas");
 const DRAW = "signature-draw",
   TYPE = "signature-type",
   UPLOAD = "signature-upload";
+PROFILE = "signature-profile";
 const signatureFonts = ["MrDafoe", "SCRIPTIN", "DrSugiyama"];
 const signatureTypeFont = document.getElementById("signature-type-font");
 const signatureTypeText = document.getElementById("signature-type-text");
 const signatureTypeColor = document.getElementById("signature-type-color");
 const dropArea = document.getElementById("drop-area");
 const fileInput = document.getElementById("signature-image-input");
+
+//...
+const profileFileInput = document.getElementById("signature-profile-image-input");
+const profileFiles = [];
+
 const imagePreview = document.getElementById("image-preview");
 const signaturePad = new SignaturePad(canvas, {
   // It's Necessary to use an opaque color when saving image as JPEG;
@@ -106,6 +112,11 @@ function switchSignMethod(event, method) {
   document.getElementById(`${method}-body`).style.display = "flex";
   document.getElementById(`${method}-footer`).style.display = "flex";
   event.currentTarget.className += " tablink-active";
+
+  console.log(method);
+  if(method == "signature-profile"){
+    fetchProfileSignatures()
+  }
 }
 
 function handleSignatureType() {
@@ -179,15 +190,15 @@ function handleSignatureImageInput() {
     ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
       dropArea.addEventListener(eventName, preventDefaults, false);
     });
-  
+
     ["dragenter", "dragover"].forEach((eventName) => {
       dropArea.addEventListener(eventName, highlight, false);
     });
-  
+
     ["dragleave", "drop"].forEach((eventName) => {
       dropArea.addEventListener(eventName, unhighlight, false);
     });
-  
+
     dropArea.addEventListener("drop", handleDrop, false);
   }
   if (fileInput) {
@@ -219,6 +230,7 @@ function handleSignatureImageInput() {
     }
   }
 
+  //...
   function handleFiles(file) {
     previewImage(file);
   }
@@ -237,6 +249,116 @@ function handleSignatureImageInput() {
 
     reader.readAsDataURL(file);
   }
+}
+
+//... Upload profile signatures
+if (profileFileInput) {
+  profileFileInput.addEventListener("change", handleProfileFileUpload, false);
+}
+
+function handleProfileFileUpload() {
+  const selectedFile = profileFileInput.files[0];
+  if (selectedFile) {
+    handleProfileFiles(selectedFile);
+  }
+}
+
+function handleProfileFiles(file) {
+  profileFiles.push(file);
+  previewProfileImage(file);
+}
+
+var profileImgId = 0;
+
+function previewProfileImage(file) {
+  profileImgId++;
+  const reader = new FileReader();
+
+  reader.onload = function (e) {
+    const imgDiv = `<div class="profile-img-list">
+      <label for="profile-signature${profileImgId}">
+        <img src="${e.target.result}" style="margin-left: 30px" />
+        <span>${file.name}</span>
+      </label>
+      <button onclick="handleProfileSignatureUpload(${profileImgId - 1})">Upload</button>
+    </div>`;
+
+    $("#profile-image-preview").append(imgDiv);
+  };
+
+  reader.readAsDataURL(file);
+}
+
+async function handleProfileSignatureUpload(index) {
+  const file = profileFiles[index];
+  if (file) {
+    const formData = new FormData();
+    formData.append('signature', file);
+    try {
+      const username = localStorage.getItem('username');
+
+      await fetch(`${BASE_URL}/api/users/signature/${username}`, {
+        method: "POST",
+        body: formData
+      })
+        .then(res => res.json())
+        .then(json => {
+          if (json.signature) {
+            alert(json.message);
+            fetchProfileSignatures()
+          } else {
+            alert("Failed to upload signature.");
+          }
+        })
+        .catch(error => {
+          console.error('Error uploading signature:', error);
+        });
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+}
+
+async function fetchProfileSignatures() {
+  try {
+    const username = localStorage.getItem('username');
+
+    await fetch(`${BASE_URL}/api/users/signature/${username}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      },
+    })
+      .then(function (res) {
+        return res.json();
+      })
+      .then(function (json) {
+        $("#profile-image-preview").empty();
+        if(json.signatures.length > 0){
+          json.signatures.forEach(function(item, i){
+            const imgDiv = `<div class="profile-img-list">
+              <label for="saved-profile-signature${i}" onclick="chooseSignature(this)">
+                <input type="checkbox" class="profile-img-checkbox" id="saved-profile-signature${i}" />
+                <img src="${BASE_URL + "/uploads/" + item}" />
+                <span>${item}</span>
+              </label>
+              <button class="btn-info" onclick="chooseSignature(this)">Choose</button>
+            </div>`;
+        
+            $("#profile-image-preview").append(imgDiv);
+          })
+        }
+      })
+  } catch (error) {
+    console.error("Error fetching signature:", error);
+  }
+};
+
+function chooseSignature(container){
+  $(".profile-img-list").each(function(){
+    $(this).find("input").prop("checked", false);
+  })
+  $(container).parent().find("input").prop("checked", true);
 }
 
 handleSignatureImageInput();

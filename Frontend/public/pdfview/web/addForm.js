@@ -1072,6 +1072,20 @@ const drawFormElement = function () {
                   } else {
                     alert("Please select an image file.");
                   }
+                } else if (currentSignType == PROFILE) {
+                  const file = document.getElementById("signature-profile-image-input")
+                    .files[0];
+                  if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                      signatureImgData = e.target.result;
+                      handleSignature();
+                      createAndAppendImage(signatureImgData);
+                    };
+                    reader.readAsDataURL(file);
+                  } else {
+                    alert("Please select an image file.");
+                  }
                 }
 
                 function createAndAppendImage(imgData) {
@@ -1079,7 +1093,7 @@ const drawFormElement = function () {
                   const signatureImg = document.createElement("img");
                   signatureImg.id = "signatureImg" + id;
                   signatureImg.style.width = "100%";
-                  signatureImg.style.height = "100%";
+                  // signatureImg.style.height = "100%";
                   signatureImg.src = imgData;
                   signatureImg.style.objectFit = "contain";
                   signatureContainer.textContent = "";
@@ -3814,6 +3828,20 @@ const eventHandler = async function (e) {
               } else {
                 alert("Please select an image file.");
               }
+            } else if (currentSignType == PROFILE) {
+              const file = document.getElementById("signature-profile-image-input")
+                .files[0];
+              if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                  signatureImgData = e.target.result;
+                  handleSignature();
+                  createAndAppendImage(signatureImgData, signatureContainer, signatureId);
+                };
+                reader.readAsDataURL(file);
+              } else {
+                alert("Please select an image file.");
+              }
             }
           };
         }
@@ -3828,7 +3856,7 @@ function createAndAppendImage(imgData, container, id) {
   const signatureImg = document.createElement("img");
   signatureImg.id = "signatureImg" + id;
   signatureImg.style.width = "100%";
-  signatureImg.style.height = "100%";
+  // signatureImg.style.height = "100%";
   signatureImg.src = imgData;
   signatureImg.style.objectFit = "contain";
   container.textContent = "";

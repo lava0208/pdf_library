@@ -11,7 +11,7 @@ const userSignup = async function (req, res) {
         const { username, email, password, role } = req.body;
         const user = await User.findOne({ username: username, email: email });
         if (user) {
-            res.status(409).send('User already exists');
+            return res.status(409).send('User already exists');
         } else {
             const newUser = new User({
                 username: username,
@@ -21,10 +21,10 @@ const userSignup = async function (req, res) {
                 signature: []
             });
             await newUser.save();
-            res.status(201).send('User created successfully');
+            return res.status(201).send('User created successfully');
         }
     } catch (err) {
-        res.status(500).send('Error occurred: ' + err.message);
+        return res.status(500).send('Error occurred: ' + err.message);
     }
 }
 
@@ -33,32 +33,31 @@ const userSignin = async function (req, res) {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email: email });
-        if (user) {
-            const hashPassword = await bcrypt.hash(password, user.salt);
-            if (hashPassword === user.password) {
-                const token = jwtSign({
-                    id: user._id,
-                    username: user.username,
-                    email: user.email,
-                });
-                res.status(201).json({
-                    token: token,
-                    username: user.username,
-                    color: randomColor,
-                    message: "User logined successfully"
-                });
-            } else {
-                res.status(409).send('Password doesn\'t matches');
-            }
-        } else {
-            res.status(409).send('User doesn\'t exists');
+        if (!user) {
+            return res.status(409).send('User doesn\'t exist');
         }
 
+        const isPasswordMatch = await bcrypt.compare(password, user.password);
+        if (!isPasswordMatch) {
+            return res.status(409).send('Password doesn\'t match');
+        }
+
+        const token = jwtSign({
+            id: user._id,
+            username: user.username,
+            email: user.email,
+        });
+
+        return res.status(201).json({
+            token: token,
+            username: user.username,
+            color: randomColor,
+            message: "User logged in successfully"
+        });
     } catch (error) {
-        res.status(500).send('Error occurred: ' + error.message);
+        return res.status(500).send('Error occurred: ' + error.message);
     }
 }
-
 const getUserSignature = async function (req, res) {
     try {
         const { username } = req.params;

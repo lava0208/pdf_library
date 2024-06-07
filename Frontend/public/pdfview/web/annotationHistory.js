@@ -1049,6 +1049,9 @@ const getDocList = async function (id) {
                 pageDiv.appendChild(historyDiv);
                 showHistoryBar.appendChild(pageDiv);
             })
+            if(data.history.length > 0){
+                baseId = data.history.length;
+            }
         })
         .catch((error) => {
             console.error('Error:', error);

@@ -1074,6 +1074,7 @@ const drawFormElement = function () {
                   }
                 } else if (currentSignType == PROFILE) {
                   if (selectedProfileSignature) {
+                    signatureImgData = selectedProfileSignature;
                     handleSignature();
                     createAndAppendImage(selectedProfileSignature);
                   } else {
@@ -3823,6 +3824,7 @@ const eventHandler = async function (e) {
               }
             } else if (currentSignType == PROFILE) {
               if (selectedProfileSignature) {
+                signatureImgData = selectedProfileSignature;
                 handleSignature();
                 createAndAppendImage(selectedProfileSignature, signatureContainer, signatureId);
               } else {

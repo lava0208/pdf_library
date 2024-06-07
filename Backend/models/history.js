@@ -1,4 +1,3 @@
-// models/History.js
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
@@ -36,6 +35,9 @@ const documentSchema = new Schema({
         type: String,
         unique: true,
         required: true
+    },
+    username: {
+        type: String
     },
     pdfData: {
         type: String

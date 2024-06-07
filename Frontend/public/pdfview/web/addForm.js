@@ -1332,7 +1332,9 @@ document.addEventListener("DOMContentLoaded", function () {
   drawFontSize();
   requestId = getIdFromUrl();
 
-  var url = initialId && isDraft ? `${BASE_URL}/history/${initialId}` : `${BASE_URL}/getpdfdata?uniqueId=${requestId}`;
+  let username = localStorage.getItem('username');
+
+  var url = initialId && isDraft ? `${BASE_URL}/history/${username}/${initialId}` : `${BASE_URL}/getpdfdata?uniqueId=${requestId}`;
 
   if (initialId) {
     fetch(`${url}`)

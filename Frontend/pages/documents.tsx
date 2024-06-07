@@ -21,7 +21,8 @@ const Documents = () => {
 
     const getDocuments = async () => {
         try {
-            const response: AxiosResponse = await axios.get(`${BASE_URL}/history`, {
+            const username = localStorage.getItem('username');
+            const response: AxiosResponse = await axios.get(`${BASE_URL}/history/${username}`, {
                 headers: {
                     "Content-Type": "application/json"
                 }
@@ -33,9 +34,10 @@ const Documents = () => {
     }
 
     const deleteDocument = async (id: any) => {
+        const username = localStorage.getItem('username');
         if (confirm("Do you want to delete this document?") == true) {
             try {
-                const response: AxiosResponse = await axios.delete(`${BASE_URL}/history/` + id, {
+                const response: AxiosResponse = await axios.delete(`${BASE_URL}/history/${username}/` + id, {
                     headers: {
                         "Content-Type": "application/json"
                     }
@@ -58,7 +60,7 @@ const Documents = () => {
     }
 
     useEffect(() => {
-        getDocuments()
+        getDocuments();
     }, []);
 
     return (

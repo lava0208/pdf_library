@@ -6,7 +6,6 @@ import { useState, useEffect } from 'react';
 import withAuth from "@/components/withAuth";
 
 const PDFViewer = () => {
-
   const router = useRouter();
 
   const [color, setColor] = useState('');
@@ -23,9 +22,10 @@ const PDFViewer = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const initialId = urlParams.get('id');
     const isOpenSavedPdf = urlParams.get('draft');
+    const username = localStorage.getItem('username');
     
     if (initialId) {
-      var url = isOpenSavedPdf != null ? `${BASE_URL}/history/${initialId}` : `${BASE_URL}/getpdfdata?uniqueId=${initialId}`;
+      var url = isOpenSavedPdf != null ? `${BASE_URL}/history/${username}/${initialId}` : `${BASE_URL}/getpdfdata?uniqueId=${initialId}`;
       
       fetch(url)
         .then((response) => {

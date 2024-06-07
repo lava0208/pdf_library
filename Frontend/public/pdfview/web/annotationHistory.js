@@ -494,6 +494,7 @@ const saveDoc = async function () {
     formData.append('pdfFormData', JSON.stringify(form_storage));
     formData.append('pdfTextData', JSON.stringify(text_storage));
     formData.append("history", JSON.stringify(historyArr));
+    formData.append("username", localStorage.getItem("username"));
 
     if(initialId && isDraft){
         //... custom api
@@ -525,8 +526,9 @@ const saveDoc = async function () {
 };
 
 const getDocList = async function (id) {
+    let username = localStorage.getItem("username");
     //... custom api
-    fetch(`${BASE_URL}/history/` + id, {
+    fetch(`${BASE_URL}/history/${username}/` + id, {
         method: "GET",
         headers: {
             "Content-Type": "application/json"
@@ -1060,8 +1062,9 @@ const getDocList = async function (id) {
 
 //... Delete document
 const deleteDoc = async function () {
+    let username = localStorage.getItem("username");
     if (confirm("Do you want to delete this document?") == true) {
-        fetch(`${BASE_URL}/history/${initialId}`, {
+        fetch(`${BASE_URL}/history/${username}/${initialId}`, {
             method: "Delete"
         })
         .then(response => response.json())

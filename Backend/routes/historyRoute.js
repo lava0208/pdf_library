@@ -1,4 +1,3 @@
-// routes/historyRoute.js
 const express = require('express');
 const router = express.Router();
 
@@ -22,10 +21,10 @@ const upload = multer({ storage: storage });
 
 const { getAllHistories, getHistory, createHistory, updateHistory, deleteHistory } = require('../controllers/historyController');
 
-router.get('/history', getAllHistories);
-router.get('/history/:uniqueId', getHistory);
+router.get('/history/:username', getAllHistories);
+router.get('/history/:username/:uniqueId', getHistory);
 router.post('/history', upload.single('pdfFile'), createHistory);
 router.put('/history/:uniqueId', upload.single('pdfFile'), updateHistory);
-router.delete('/history/:uniqueId', deleteHistory);
+router.delete('/history/:username/:uniqueId', deleteHistory);
 
 module.exports = router;

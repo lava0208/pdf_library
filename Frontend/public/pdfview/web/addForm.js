@@ -1073,16 +1073,9 @@ const drawFormElement = function () {
                     alert("Please select an image file.");
                   }
                 } else if (currentSignType == PROFILE) {
-                  const file = document.getElementById("signature-profile-image-input")
-                    .files[0];
-                  if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                      signatureImgData = e.target.result;
-                      handleSignature();
-                      createAndAppendImage(signatureImgData);
-                    };
-                    reader.readAsDataURL(file);
+                  if (selectedProfileSignature) {
+                    handleSignature();
+                    createAndAppendImage(selectedProfileSignature);
                   } else {
                     alert("Please select an image file.");
                   }
@@ -3829,16 +3822,9 @@ const eventHandler = async function (e) {
                 alert("Please select an image file.");
               }
             } else if (currentSignType == PROFILE) {
-              const file = document.getElementById("signature-profile-image-input")
-                .files[0];
-              if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                  signatureImgData = e.target.result;
-                  handleSignature();
-                  createAndAppendImage(signatureImgData, signatureContainer, signatureId);
-                };
-                reader.readAsDataURL(file);
+              if (selectedProfileSignature) {
+                handleSignature();
+                createAndAppendImage(selectedProfileSignature, signatureContainer, signatureId);
               } else {
                 alert("Please select an image file.");
               }

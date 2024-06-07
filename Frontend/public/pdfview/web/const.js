@@ -1,7 +1,7 @@
 /* Basic Config */
 
-const BASE_SERVER_URL = "https://pdf-vision.com:8081";
-const BASE_URL = "https://pdf-vision.com:8081";
+const BASE_SERVER_URL = "https://127.0.0.1:8081";
+const BASE_URL = "https://127.0.0.1:8081";
 const USERNAME = localStorage.getItem('username');
 
 /*
@@ -106,6 +106,7 @@ let toolbar = $("#editorFreeTextParamsToolbar");
 let isOnToolbar = false;
 let isOpenSubmitDocument = false;
 let baseId = 0;
+let selectedProfileSignature = null;
 
 const saveDraftButton = document.getElementById("saveDraftButton");
 const urlParams = new URLSearchParams(window.location.search);

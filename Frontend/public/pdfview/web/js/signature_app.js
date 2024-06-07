@@ -336,13 +336,14 @@ async function fetchProfileSignatures() {
         $("#profile-image-preview").empty();
         if(json.signatures.length > 0){
           json.signatures.forEach(function(item, i){
+            const imgUrl = `${BASE_URL}/uploads/${item}`;
             const imgDiv = `<div class="profile-img-list">
-              <label for="saved-profile-signature${i}" onclick="chooseSignature(this)">
+              <label for="saved-profile-signature${i}" onclick="chooseSignature('${imgUrl}')">
                 <input type="checkbox" class="profile-img-checkbox" id="saved-profile-signature${i}" />
-                <img src="${BASE_URL + "/uploads/" + item}" />
+                <img src="${imgUrl}" />
                 <span>${item}</span>
               </label>
-              <button class="btn-info" onclick="chooseSignature(this)">Choose</button>
+              <button class="btn-info" onclick="chooseSignature('${imgUrl}')">Choose</button>
             </div>`;
         
             $("#profile-image-preview").append(imgDiv);
@@ -354,11 +355,12 @@ async function fetchProfileSignatures() {
   }
 };
 
-function chooseSignature(container){
+function chooseSignature(imgSrc){
   $(".profile-img-list").each(function(){
     $(this).find("input").prop("checked", false);
-  })
-  $(container).parent().find("input").prop("checked", true);
+  });
+  $(event.target).closest(".profile-img-list").find("input").prop("checked", true);
+  selectedProfileSignature = imgSrc;
 }
 
 handleSignatureImageInput();

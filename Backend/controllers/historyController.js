@@ -1,6 +1,8 @@
 // controllers/historyController.js
 const fs = require('fs');
+const uuid = require('uuid');
 const Doc = require('../models/history');
+const { getCurrentFile } = require('../utils/currentFile');
 
 const getAllHistories = async function (req, res) {
     try {
@@ -32,6 +34,8 @@ const createHistory = async function (req, res) {
         if (!req.file) {
             return res.status(400).send('No PDF file uploaded.');
         }
+
+        const formDataMap = new Map();
 
         const pdfFilePath = getCurrentFile(); // This function should return the path to the PDF file
         const pdfFileData = fs.readFileSync(pdfFilePath);

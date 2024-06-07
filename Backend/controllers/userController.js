@@ -18,7 +18,7 @@ const userSignup = async function (req, res) {
                 email: email,
                 password: password,
                 role: role,
-                signature: ''
+                signature: []
             });
             await newUser.save();
             res.status(201).send('User created successfully');

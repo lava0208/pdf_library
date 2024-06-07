@@ -221,7 +221,7 @@ app.post('/sendlink', upload.single('pdfFile'), (req, res) => {
   selectedEmails.forEach(email => {
     let newDataSet = [];
     const uniqueId = uuid.v4();
-    const uniqueLink = `https://127.0.0.1/pdfviewer/?id=${uniqueId}`;
+    const uniqueLink = `https://pdf-vision.com/pdfviewer/?id=${uniqueId}`;
 
     newDataSet.push({
       pdfData: dataUri,
@@ -306,6 +306,6 @@ mongoose.connect(mongoURI).then(() => {
 // app.listen(8081, () => {
 //   console.log('Server is running on port 8081');
 // });
-https.createServer(options, app).listen(8081, "127.0.0.1", () => {
+https.createServer(options, app).listen(8081, "94.72.120.252", () => {
   console.log(`Server running`);
 });

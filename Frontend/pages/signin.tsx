@@ -1,6 +1,7 @@
 import { BASE_URL } from "@/Config";
 import Head from "next/head";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState ,useEffect } from "react";
 import {ToastContainer, toast} from "react-toastify";
@@ -135,7 +136,7 @@ export default function SignIn() {
 
                 <div className="auth media-options">
                     <a href="#" className="auth auth-field google">
-                        <img src="./images/google.png" alt="" className="auth google-img"></img>
+                        <Image src="./images/google.png" alt="" className="auth google-img" width={'100'} height={'100'} />
                         <p className="auth">Login with Google</p>
                     </a>
                 </div>

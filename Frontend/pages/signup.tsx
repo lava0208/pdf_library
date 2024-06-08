@@ -1,8 +1,8 @@
 import { BASE_URL } from "@/Config";
 import Head from "next/head";
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
-import {ToastContainer, toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function SignUp() {
@@ -119,7 +119,7 @@ export default function SignUp() {
 
                 <div className="auth media-options">
                     <a href="#" className="auth auth-field google">
-                        <img src="./images/google.png" alt="" className="auth google-img"></img>
+                        <Image src="./images/google.png" alt="" className="auth google-img" width={'100'} height={'100'} />
                         <p className="auth">Signup with Google</p>
                     </a>
                 </div>

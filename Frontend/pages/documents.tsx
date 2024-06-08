@@ -91,7 +91,7 @@ const Documents = () => {
                     <div className="row">
                         {documents.length > 0 && (
                             documents.map((document, i) =>(
-                                <div className="col-md-3 col-sm-6 document-list">
+                                <div key={document.uniqueId} className="col-md-3 col-sm-6 document-list">
                                     <div className="service-box">
                                         <div className="service-icon yellow">
                                             <div className="front-content">

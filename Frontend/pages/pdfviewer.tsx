@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import UserProfile from '@/components/UserProfile';
 import { useState, useEffect } from 'react';
 import withAuth from "@/components/withAuth";
+import Link from "next/link";
 
 const PDFViewer = () => {
   const router = useRouter();
@@ -101,9 +102,9 @@ const PDFViewer = () => {
           }}
         >
           <div className='flex justify-between items-center h-[40px] mx-3'>
-            <a href="/documents">
+            <Link href="/documents">
               <button className="btn btn-danger btn-sm py-1">Back to document</button>
-            </a>
+            </Link>
             <div className={`rounded-[50%] bg-white h-[25px] w-[25px] flex items-center justify-center cursor-pointer`} onClick={() => setShowProfile(!showProfile)}>
               <div className={`select-none rounded-[50%] h-[23px] w-[23px] font-sans text-white flex items-center justify-center text-lg`} 
                 style={{backgroundColor: `${color}`}}>{username.charAt(0).toUpperCase()}</div>

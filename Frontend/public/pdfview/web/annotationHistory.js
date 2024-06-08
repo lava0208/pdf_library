@@ -518,6 +518,7 @@ const saveDoc = async function () {
         .then(response => response.json())
         .then(data => {
             alert("It is saved successfully");
+            parent.window.location.href = data.uniqueLink;
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -1080,6 +1081,6 @@ const deleteDoc = async function () {
 }
 
 const openPdfViewer = async function () {
-    var url = `https://pdf-vision.com/pdfviewer?id=${initialId}&draft=false`;
+    var url = `https://127.0.0.1/pdfviewer?id=${initialId}&draft=false`;
     parent.window.location.href = url;
 }

@@ -24,6 +24,7 @@ const fileInput = document.getElementById("signature-image-input");
 //...
 const profileFileInput = document.getElementById("signature-profile-image-input");
 const profileFiles = [];
+const signatureProfileColor = document.getElementById("signature-profile-color");
 
 const imagePreview = document.getElementById("image-preview");
 const signaturePad = new SignaturePad(canvas, {

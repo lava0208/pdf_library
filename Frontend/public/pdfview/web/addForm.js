@@ -23,6 +23,7 @@ let pos_x_page = 0,
 let fontStyle = "",
   fontSize = 0,
   textColor = "";
+  textBackgroundColor = "";
 
 const SUBMIT = 1,
   RESET = 2,
@@ -391,16 +392,17 @@ const drawFormElement = function () {
                         element.xPage / 2 - 180,
                         element.yPage + 15
                       );
-                      // document.getElementById("text-font-style").value =
-                      //   element.fontStyle;
-                      // document.getElementById("text-font-size").value =
-                      //   element.fontSize;
-                      document.getElementById("toolbar-font-style").value =
+                      document.getElementById("text-font-style").value =
                         element.fontStyle;
-                      document.getElementById("toolbar-font-size").value =
+                      document.getElementById("text-font-size").value =
                         element.fontSize;
                       document.getElementById("text-font-color").value =
                         element.textColor;
+
+                      //... background color
+                      document.getElementById("text-font-background-color").value =
+                        element.textBackgroundColor;
+
                       let selected = element.align;
                       if (selected == ALIGN_LEFT)
                         document.getElementById("text-left").checked = true;
@@ -502,6 +504,11 @@ const drawFormElement = function () {
                         element.fontSize;
                       document.getElementById("combo-font-color").value =
                         element.textColor;
+
+                      //... background color
+                      document.getElementById("combo-font-background-color").value =
+                        element.textBackgroundColor;
+
                       element.optionArray.map((elementItem) => {
                         const optionContent = document.createElement("div");
                         const deleteDivId = `delete-span-${comboboxOptionCount}`;
@@ -647,6 +654,11 @@ const drawFormElement = function () {
                         element.fontSize;
                       document.getElementById("list-font-color").value =
                         element.textColor;
+
+                      //... background color
+                      document.getElementById("list-font-background-color").value =
+                        element.textBackgroundColor;
+
                       element.optionArray.map((elementItem) => {
                         const optionContent = document.createElement("div");
                         const deleteDivId = `delete-span-${listboxOptionCount}`;
@@ -815,6 +827,11 @@ const drawFormElement = function () {
                         element.fontSize;
                       document.getElementById("button-font-color").value =
                         element.textColor;
+
+                      //... background color
+                      document.getElementById("button-font-background-color").value =
+                        element.textBackgroundColor;
+
                       const selectedValue = document.getElementById(
                         "button-field-input-action"
                       );
@@ -894,6 +911,9 @@ const drawFormElement = function () {
             document.getElementById("date-font-size").value + "px";
           newDate.style.color = document.getElementById("date-font-color").value;
 
+          //... background color
+          // newDate.style.backgroundColor = document.getElementById("date-font-background-color").value;
+
           document
             .getElementById("date-font-style")
             .addEventListener("change", () => {
@@ -911,6 +931,14 @@ const drawFormElement = function () {
             .addEventListener("change", () => {
               document.getElementById(current_date_content_id).style.color =
                 document.getElementById("date-font-color").value;
+            });
+            
+          //... background color
+          document
+            .getElementById("date-font-background-color")
+            .addEventListener("change", () => {
+              document.getElementById(current_date_content_id).style.backgroundColor =
+                document.getElementById("date-font-background-color").value;
             });
 
           current_date_id = id;
@@ -950,6 +978,11 @@ const drawFormElement = function () {
                         element.baseFontSize;
                       document.getElementById("date-font-color").value =
                         element.textColor;
+
+                      //... background color
+                      document.getElementById("date-font-background-color").value =
+                        element.textBackgroundColor;
+
                       let selected = element.align;
                       if (selected == ALIGN_LEFT)
                         document.getElementById("date-left").checked = true;
@@ -992,6 +1025,14 @@ const drawFormElement = function () {
           signatureContainer.style.userSelect = "none";
           signatureContainer.style.color = "white";
           signatureContainer.textContent = "Double Click to sign here!";
+
+          //... background color
+          form_storage.map((element) => {
+            if (element.id == id) {              
+              document.getElementById("signature-font-background-color").value =
+              element.textBackgroundColor;
+            }
+          })
 
           if (item.imgData) createAndAppendImage(item.imgData, signatureContainer, id);
 
@@ -1085,11 +1126,16 @@ const drawFormElement = function () {
                 function createAndAppendImage(imgData) {
                   signature_creator.style.display = "none";
                   const signatureImg = document.createElement("img");
+                  signatureImg.className = "signatureImg";
                   signatureImg.id = "signatureImg" + id;
                   signatureImg.style.width = "100%";
                   // signatureImg.style.height = "100%";
                   signatureImg.src = imgData;
                   signatureImg.style.objectFit = "contain";
+
+                  //... background color
+                  // signatureImg.style.backgroundColor = document.getElementById("signature-font-background-color").value;
+
                   signatureContainer.textContent = "";
                   signatureContainer.append(signatureImg);
                   resizeCanvas(signatureContainer.id, SIGNATURE, id);
@@ -1565,12 +1611,14 @@ const handleText = function (e) {
   if(document.getElementById(TEXTFIELD_OPTION)) document.getElementById(TEXTFIELD_OPTION).style.display = "none";
   if (e) e.stopPropagation();
   const formFieldName = document.getElementById("text-field-input-name") && document.getElementById("text-field-input-name").value;
-  // fontStyle = generateFontName("text-font-style");
-  // fontSize = document.getElementById("text-font-size") && parseInt(document.getElementById("text-font-size").value);
-  fontStyle = generateFontName("toolbar-font-style");
-  fontSize = toolbar.find("#toolbar-font-size").val();
+  fontStyle = generateFontName("text-font-style");
+  fontSize = document.getElementById("text-font-size") && parseInt(document.getElementById("text-font-size").value);
   const regularFont = document.getElementById("text-font-style") && document.getElementById("text-font-style").value;
   textColor = document.getElementById("text-font-color") && document.getElementById("text-font-color").value;
+
+  //... background color
+  textBackgroundColor = document.getElementById("text-font-background-color") && document.getElementById("text-font-background-color").value;
+
   let initialValue = "";
   const currentFormText = document.getElementById(`text${current_form_id}`);
   if (currentFormText) {
@@ -1582,6 +1630,10 @@ const handleText = function (e) {
       form_storage[i].fontStyle = fontStyle;
       form_storage[i].fontSize = fontSize;
       form_storage[i].textColor = textColor;
+
+      //... background color
+      form_storage[i].textBackgroundColor = textBackgroundColor;
+
       form_storage[i].align = alignValue;
       form_storage[i].isBold = isBold;
       form_storage[i].isItalic = isItalic;
@@ -1630,6 +1682,10 @@ const handleText = function (e) {
       isItalic: isItalic,
       fontSize: fontSize,
       textColor: textColor,
+
+      //... background color
+      textBackgroundColor: textBackgroundColor,
+
       align: alignValue,
       xPage: formWidth,
       yPage: formHeight,
@@ -1638,6 +1694,10 @@ const handleText = function (e) {
     fontStyle = "";
     fontSize = 12;
     textColor = "";
+
+    //... background color
+    textBackgroundColor = "";
+
     alignValue = 0;
     const date = new Date(Date.now());
     addHistory(baseId, TEXTFIELD, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "text");
@@ -1659,6 +1719,10 @@ const handleCombo = function (e) {
   fontSize = document.getElementById("combo-font-size") && parseInt(document.getElementById("combo-font-size").value);
   const regularFont = document.getElementById("combo-font-style") && document.getElementById("combo-font-style").value;
   textColor = document.getElementById("combo-font-color") && document.getElementById("combo-font-color").value;
+
+  //... background color
+  textBackgroundColor = document.getElementById("combo-font-background-color") && document.getElementById("combo-font-background-color").value;
+
   let initialValue = comboboxOptionArray[0];
   const currentFormText = document.getElementById(`combo${current_form_id}`);
   if (currentFormText) {
@@ -1676,6 +1740,10 @@ const handleCombo = function (e) {
         form_storage[i].fontStyle = fontStyle;
         form_storage[i].fontSize = fontSize;
         form_storage[i].textColor = textColor;
+
+        //... background color
+        form_storage[i].textBackgroundColor = textBackgroundColor;
+
         form_storage[i].regularFontStyle = regularFont;
         form_storage[i].initialValue = initialValue;
         // form_storage[i].align = alignValue;
@@ -1721,6 +1789,10 @@ const handleCombo = function (e) {
       fontStyle: fontStyle,
       fontSize: fontSize,
       textColor: textColor,
+
+      //... background color
+      textBackgroundColor: textBackgroundColor,
+
       align: alignValue,
       xPage: formWidth,
       yPage: formHeight,
@@ -1729,6 +1801,10 @@ const handleCombo = function (e) {
     fontStyle = "";
     fontSize = 12;
     textColor = "";
+
+    //... background color
+    textBackgroundColor = "";
+
     alignValue = 0;
     comboboxOptionArray = [];
     const date = new Date(Date.now());
@@ -1748,6 +1824,10 @@ const handleList = function (e) {
   fontSize = document.getElementById("list-font-size") && parseInt(document.getElementById("list-font-size").value);
   const regularFont = document.getElementById("list-font-style") && document.getElementById("list-font-style").value;
   textColor = document.getElementById("list-font-color") && document.getElementById("list-font-color").value;
+
+  //... background color
+  textBackgroundColor = document.getElementById("list-font-background-color") && document.getElementById("list-font-background-color").value;
+
   let initialValue = "";
   const currentFormText = document.getElementById(`list${current_form_id}`);
   if (currentFormText) {
@@ -1764,6 +1844,10 @@ const handleList = function (e) {
         form_storage[i].fontStyle = fontStyle;
         form_storage[i].fontSize = fontSize;
         form_storage[i].textColor = textColor;
+
+        //... background color
+        form_storage[i].textBackgroundColor = textBackgroundColor;
+
         form_storage[i].regularFontStyle = regularFont;
         form_storage[i].initialValue = initialValue;
         // form_storage[i].align = alignValue;
@@ -1809,6 +1893,10 @@ const handleList = function (e) {
       fontStyle: fontStyle,
       fontSize: fontSize,
       textColor: textColor,
+
+      //... background color
+      textBackgroundColor: textBackgroundColor,
+
       align: alignValue,
       xPage: formWidth,
       yPage: formHeight,
@@ -1817,6 +1905,10 @@ const handleList = function (e) {
     fontStyle = "";
     fontSize = 12;
     textColor = "";
+
+    //... background color
+    textBackgroundColor = "";
+
     alignValue = 0;
     listboxOptionArray = [];
     const date = new Date(Date.now());
@@ -1956,6 +2048,10 @@ const handleButton = function (e) {
   fontStyle = document.getElementById("button-font-style").value;
   fontSize = parseInt(document.getElementById("button-font-size").value);
   textColor = document.getElementById("button-font-color").value;
+
+  //... background color
+  textBackgroundColor = document.getElementById("button-font-background-color") && document.getElementById("button-font-background-color").value;
+
   for (let i = 0; i < form_storage.length; i++) {
     if (
       form_storage[i].form_field_name == formFieldName &&
@@ -1965,6 +2061,10 @@ const handleButton = function (e) {
       form_storage[i].fontStyle = fontStyle;
       form_storage[i].fontSize = fontSize;
       form_storage[i].textColor = textColor;
+
+      //... background color
+      form_storage[i].textBackgroundColor = textBackgroundColor;
+
       form_storage[i].text = initialValue;
       form_storage[i].align = alignValue;
       break;
@@ -2008,6 +2108,10 @@ const handleButton = function (e) {
       fontStyle: fontStyle,
       fontSize: fontSize,
       textColor: textColor,
+
+      //... background color
+      textBackgroundColor: textBackgroundColor,
+
       align: alignValue,
       xPage: formWidth,
       yPage: formHeight,
@@ -2016,6 +2120,10 @@ const handleButton = function (e) {
     fontStyle = "";
     fontSize = 12;
     textColor = "";
+
+    //... background color
+    textBackgroundColor = "";
+
     alignValue = 0;
     form_action = 0;
     const date = new Date(Date.now());
@@ -2036,6 +2144,10 @@ const handleDate = function (e) {
   fontStyle = generateFontName("date-font-style");
   fontSize = document.getElementById("date-font-size") && parseInt(document.getElementById("date-font-size").value);
   textColor = document.getElementById("date-font-color") && document.getElementById("date-font-color").value;
+
+  //... background color
+  textBackgroundColor = document.getElementById("date-font-background-color") && document.getElementById("date-font-background-color").value;
+
   const regularFont = document.getElementById("date-font-style") && document.getElementById("date-font-style").value;
 
   if (window.getComputedStyle(document.getElementById(DATE_OPTION)).getPropertyValue('display') !== "none") {
@@ -2048,6 +2160,10 @@ const handleDate = function (e) {
         form_storage[i].fontStyle = fontStyle;
         form_storage[i].fontSize = fontSize * 0.75 * 0.8;
         form_storage[i].textColor = textColor;
+
+        //... background color
+        form_storage[i].textBackgroundColor = textBackgroundColor;
+
         form_storage[i].text = text;
         break;
       } else if (
@@ -2090,6 +2206,10 @@ const handleDate = function (e) {
       fontSize: fontSize * 0.75 * 0.8,
       baseFontSize: fontSize,
       textColor: textColor,
+
+      //... background color
+      textBackgroundColor: textBackgroundColor,
+
       width: formWidth * 0.75 * 0.8,
       height: formHeight * 0.75 * 0.8,
       xPage: formWidth,
@@ -2098,6 +2218,10 @@ const handleDate = function (e) {
     fontStyle = "";
     fontSize = 12;
     textColor = "";
+
+    //... background color
+    textBackgroundColor = "";
+
     const date = new Date(Date.now());
     addHistory(baseId, DATE, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "date");
   }
@@ -2125,6 +2249,20 @@ const handleSignature = function () {
     )
       count++;
   }
+
+  //... background color
+  textBackgroundColor = document.getElementById("signature-font-background-color") && document.getElementById("signature-font-background-color").value;
+
+  for (let i = 0; i < form_storage.length; i++) {
+    if (form_storage[i].id == current_form_id) {
+
+      //... background color
+      form_storage[i].textBackgroundColor = textBackgroundColor;
+
+      break;
+    }
+  }  
+
   if (baseId !== 0 && (count == signStorage.length || signStorage == null)) {
     form_storage.push({
       id: baseId,
@@ -2140,6 +2278,9 @@ const handleSignature = function () {
       xPage: formWidth,
       yPage: formHeight,
       imgData: signatureImgData,
+
+      //... background color
+      textBackgroundColor: textBackgroundColor,      
     });
     const date = new Date(Date.now());
     addHistory(baseId, SIGNATURE, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "signature");
@@ -3043,16 +3184,17 @@ const eventHandler = async function (e) {
                     element.xPage / 2 - 180,
                     element.yPage + 15
                   );
-                  // document.getElementById("text-font-style").value =
-                  //   element.fontStyle;
-                  // document.getElementById("text-font-size").value =
-                  //   element.fontSize;
-                  document.getElementById("toolbar-font-style").value =
+                  document.getElementById("text-font-style").value =
                     element.fontStyle;
-                  document.getElementById("toolbar-font-size").value =
+                  document.getElementById("text-font-size").value =
                     element.fontSize;
                   document.getElementById("text-font-color").value =
                     element.textColor;
+
+                  //... background color
+                  document.getElementById("text-font-background-color").value =
+                    element.textBackgroundColor;
+                  
                   let selected = element.align;
                   if (selected == ALIGN_LEFT)
                     document.getElementById("text-left").checked = true;
@@ -3172,6 +3314,11 @@ const eventHandler = async function (e) {
                     element.fontSize;
                   document.getElementById("combo-font-color").value =
                     element.textColor;
+
+                  //... background color
+                  document.getElementById("combo-font-background-color").value =
+                    element.textBackgroundColor;
+
                   element.optionArray.map((elementItem) => {
                     const optionContent = document.createElement("div");
                     const deleteDivId = `delete-span-${comboboxOptionCount}`;
@@ -3336,6 +3483,11 @@ const eventHandler = async function (e) {
                     element.fontSize;
                   document.getElementById("list-font-color").value =
                     element.textColor;
+
+                  //... background color
+                  document.getElementById("list-font-background-color").value =
+                    element.textBackgroundColor;
+
                   element.optionArray.map((elementItem) => {
                     const optionContent = document.createElement("div");
                     const deleteDivId = `delete-span-${listboxOptionCount}`;
@@ -3528,6 +3680,11 @@ const eventHandler = async function (e) {
                     element.fontSize;
                   document.getElementById("button-font-color").value =
                     element.textColor;
+
+                  //... background color
+                  document.getElementById("button-font-background-color").value =
+                    element.textBackgroundColor;
+
                   const selectedValue = document.getElementById(
                     "button-field-input-action"
                   );
@@ -3643,6 +3800,15 @@ const eventHandler = async function (e) {
           document.getElementById(current_date_content_id).style.color =
             document.getElementById("date-font-color").value;
         });
+
+      //... background color
+      document
+        .getElementById("date-font-background-color")
+        .addEventListener("change", () => {
+          document.getElementById(current_date_content_id).style.backgroundColor =
+            document.getElementById("date-font-background-color").value;
+        });
+
       document.getElementById(
         "date-input-name"
       ).value = `Date Form Field ${datefieldCount++}`;
@@ -3684,6 +3850,11 @@ const eventHandler = async function (e) {
                     element.baseFontSize;
                   document.getElementById("date-font-color").value =
                     element.textColor;
+                  
+                  //... background color
+                  document.getElementById("date-font-background-color").value =
+                    element.textBackgroundColor;
+
                   let selected = element.align;
                   if (selected == ALIGN_LEFT)
                     document.getElementById("date-left").checked = true;
@@ -3844,6 +4015,7 @@ const eventHandler = async function (e) {
 
 function createAndAppendImage(imgData, container, id) {
   const signatureImg = document.createElement("img");
+  signatureImg.className = "signatureImg";
   signatureImg.id = "signatureImg" + id;
   signatureImg.style.width = "100%";
   // signatureImg.style.height = "100%";
@@ -4294,6 +4466,7 @@ const changeMode = () => {
   const listfields = document.querySelectorAll(".list-field-input");
   const buttonfields = document.querySelectorAll(".button-field-input");
   const textcontentfields = document.querySelectorAll(".textcontent");
+  const signatureImages = document.querySelectorAll(".signatureImg");
   if (isEditing) {
     switchEditInsert.innerHTML = `
       <p>Edit Mode</p>
@@ -4372,6 +4545,10 @@ const changeMode = () => {
             if (formItem.align == 0) item.style.textAlign = "left";
             else if (formItem.align == 1) item.style.textAlign = "center";
             else if (formItem.align == 2) item.style.textAlign = "right";
+
+            //... background color
+            item.style.backgroundColor = formItem.textBackgroundColor;
+            item.style.border = "none";
           }
         });
       }
@@ -4395,6 +4572,10 @@ const changeMode = () => {
                 item.append(optionElement);
               });
             }
+
+            //... background color
+            item.style.backgroundColor = formItem.textBackgroundColor;
+            item.style.border = "none";            
           }
         });
       }
@@ -4407,6 +4588,10 @@ const changeMode = () => {
             item.style.fontSize = formItem.fontSize / 0.75 + "px";
             item.style.color = formItem.textColor;
             item.style.fontFamily = formItem.regularFontStyle;
+
+            //... background color
+            item.style.backgroundColor = formItem.textBackgroundColor;
+            item.style.border = "none";
           }
         });
       }
@@ -4439,6 +4624,10 @@ const changeMode = () => {
                 item.append(optionElement);
               });
             }
+
+            //... background color
+            item.style.backgroundColor = formItem.textBackgroundColor;
+            item.style.border = "none";            
           }
         });
       }
@@ -4454,11 +4643,39 @@ const changeMode = () => {
             item.style.color = formItem.textColor;
             item.style.fontFamily = formItem.regularFontStyle;
             item.textContent = formItem.text;
+
+            //... background color
+            item.style.backgroundColor = formItem.textBackgroundColor;
+            item.style.border = "none";
           }
         })
       }
     })
-    textcontentfields.forEach((item) => { item.contentEditable = "false" });
+
+    //... Enable all button fields
+    textcontentfields.forEach((item) => {
+      item.contentEditable = "false";
+      if (form_storage !== null) {
+        form_storage.forEach((formItem) => {
+          let formId = item.parentNode.id.replace("date", "");
+          if (formItem.id == formId) {
+            item.style.color = formItem.textColor;
+            item.style.backgroundColor = formItem.textBackgroundColor;
+          }
+        })
+      }
+    });
+    signatureImages.forEach((item) => {
+      item.contentEditable = "false";
+      if (form_storage !== null) {
+        form_storage.forEach((formItem) => {
+          let formId = item.parentNode.id.replace("signature", "");
+          if (formItem.id == formId) {
+            item.style.backgroundColor = formItem.textBackgroundColor;
+          }
+        })
+      }
+    });
   }
 };
 

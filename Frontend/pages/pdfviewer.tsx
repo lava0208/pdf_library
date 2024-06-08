@@ -10,13 +10,14 @@ const PDFViewer = () => {
 
   const [color, setColor] = useState('');
   const [username, setUsername] = useState('');
-
   const [showProfile, setShowProfile] = useState(false);
-
   const [id, setId] = useState('');
   const [isDraft, setIsDraft] = useState('');
 
   useEffect(() => {
+    // Scroll to the top of the page when the component is first rendered
+    window.scrollTo(0, 0);
+
     setColor(localStorage.getItem('color') || '');
     setUsername(localStorage.getItem('username') || '');
     const urlParams = new URLSearchParams(window.location.search);
@@ -70,7 +71,7 @@ const PDFViewer = () => {
         router.push("/signin");
       }
     }
-  }, [setId]);
+  }, [router]);
 
   useEffect(() => {
     if (id) {
@@ -81,9 +82,12 @@ const PDFViewer = () => {
         }else{
           iframe.src = `./pdfview/web/viewer.html?id=${id}`;
         }
+        iframe.onload = () => {
+          iframe.contentWindow?.scrollTo(0, 0);
+        };
       }
     }
-  }, [id]);
+  }, [id, isDraft]);
 
   return (
     <>

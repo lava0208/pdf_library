@@ -871,6 +871,13 @@ See https://github.com/adobe-type-tools/cmap-resources
             </div>
             <div class="form-style-container">
               <div class="form-style-name">
+                <i class="fa fa-fill"></i>
+                <span>Background Color</span>
+              </div>
+              <input type="color" id="text-font-background-color" name="colorPicker" class="form-field-input" />
+            </div>
+            <div class="form-style-container">
+              <div class="form-style-name">
                 <i class="fa fa-align-left"></i>
                 <span>Alignment</span>
               </div>
@@ -956,6 +963,13 @@ See https://github.com/adobe-type-tools/cmap-resources
                 <span>Color</span>
               </div>
               <input type="color" id="combo-font-color" name="colorPicker" class="form-field-input" />
+            </div>
+            <div class="form-style-container">
+              <div class="form-style-name">
+                <i class="fa fa-fill"></i>
+                <span>Background Color</span>
+              </div>
+              <input type="color" id="combo-font-background-color" name="colorPicker" class="form-field-input" />
             </div>
             <!-- <div class="form-style-container">
             <div class="form-style-name">
@@ -1045,6 +1059,13 @@ See https://github.com/adobe-type-tools/cmap-resources
               </div>
               <input type="color" id="list-font-color" name="colorPicker" class="form-field-input" />
             </div>
+            <div class="form-style-container">
+              <div class="form-style-name">
+                <i class="fa fa-fill"></i>
+                <span>Background Color</span>
+              </div>
+              <input type="color" id="list-font-background-color" name="colorPicker" class="form-field-input" />
+            </div>
             <!-- <div class="form-style-container">
             <div class="form-style-name">
               <i class="fa fa-align-left"></i>
@@ -1122,6 +1143,13 @@ See https://github.com/adobe-type-tools/cmap-resources
               </div>
               <input type="color" id="button-font-color" name="colorPicker" class="form-field-input" />
             </div>
+          </div>
+          <div class="form-style-container">
+            <div class="form-style-name">
+              <i class="fa fa-fill"></i>
+              <span>Background Color</span>
+            </div>
+            <input type="color" id="button-font-background-color" name="colorPicker" class="form-field-input" />
           </div>
         </div>
         <div class="form-input">
@@ -1234,6 +1262,13 @@ See https://github.com/adobe-type-tools/cmap-resources
                 <span>Color</span>
               </div>
               <input type="color" id="date-font-color" name="colorPicker" class="form-field-input" />
+            </div>
+            <div class="form-style-container">
+              <div class="form-style-name">
+                <i class="fa fa-fill"></i>
+                <span>Background Color</span>
+              </div>
+              <input type="color" id="date-font-background-color" name="colorPicker" class="form-field-input" />
             </div>
           </div>
         </div>
@@ -1405,6 +1440,14 @@ See https://github.com/adobe-type-tools/cmap-resources
           <i class="fa fa-upload"></i> Upload file
           <input type="file" id="signature-profile-image-input" class="custom-file-input hidden" accept="image/*" />
         </label>
+        <div class="signature-color-picker">
+          <div>
+            <span>Background color</span>
+          </div>
+          <div>
+            <input type="color" id="signature-font-background-color" value="#3c97fe" data-action="change-color" name="signature-color" />
+          </div>
+        </div>
       </div>
       <hr class="signature-hr" />
       <div class="signature-footer signature-pad--actions" style="float: right">

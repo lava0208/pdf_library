@@ -280,9 +280,8 @@
 }
 
 label[for="signature-profile-image-input"]{
-  bottom: 25px;
-  position: absolute;
   cursor: pointer;
+  min-width: fit-content;
 }
 
 #profile-image-preview{
@@ -337,6 +336,11 @@ label[for="signature-profile-image-input"]{
 
 .profile-img-list button.btn-info{
   background-color: #17a2b8;
+}
+
+#signature-profile-footer{
+  align-items: center;
+  gap: 10px;
 }
 
 @media (max-width: 480px) {

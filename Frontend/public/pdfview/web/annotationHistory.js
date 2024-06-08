@@ -517,14 +517,21 @@ const saveDoc = async function () {
         })
         .then(response => response.json())
         .then(data => {
+            $("#pdfViewerButton").removeClass("hidden");
+            $("#pdfViewerButton").attr("link", data.uniqueId);
             alert("It is saved successfully");
-            parent.window.location.href = data.uniqueLink;
         })
         .catch((error) => {
             console.error('Error:', error);
         });
     }
 };
+
+$("#pdfViewerButton").click(function () {
+    var id = $(this).attr("link") ? $(this).attr("link") : initialId;
+    var url = `https://pdf-vision.com/pdfviewer?id=${id}&draft=false`;
+    parent.window.location.href = url;
+})
 
 const getDocList = async function (id) {
     let username = localStorage.getItem("username");
@@ -1078,9 +1085,4 @@ const deleteDoc = async function () {
             console.error('Error:', error);
         });
     }
-}
-
-const openPdfViewer = async function () {
-    var url = `https://127.0.0.1/pdfviewer?id=${initialId}&draft=false`;
-    parent.window.location.href = url;
 }

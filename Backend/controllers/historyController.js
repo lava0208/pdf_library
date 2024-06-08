@@ -71,7 +71,7 @@ const createHistory = async (req, res) => {
 
         await newDocument.save();
 
-        res.status(201).json({ message: 'Document saved successfully', uniqueLink });
+        res.status(201).json({ message: 'Document saved successfully', uniqueLink, uniqueId });
     } catch (error) {
         console.error('Error:', error);
         res.status(500).send('Error occurred: ' + error.message);

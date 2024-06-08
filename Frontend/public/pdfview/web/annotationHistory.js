@@ -538,6 +538,8 @@ const getDocList = async function (id) {
         .then(data => {
             $("#saveDraftButton p").text("Update Draft");
             $("#deleteDraftButton").removeClass("hidden");
+            $("#pdfViewerButton").removeClass("hidden");
+            $("#secondaryPrint").addClass("hidden");
             data.history.forEach(function(item, i){
                 let pageDiv;
                 let page = item.page;
@@ -1075,4 +1077,9 @@ const deleteDoc = async function () {
             console.error('Error:', error);
         });
     }
+}
+
+const openPdfViewer = async function () {
+    var url = `https://pdf-vision.com/pdfviewer?id=${initialId}&draft=false`;
+    parent.window.location.href = url;
 }

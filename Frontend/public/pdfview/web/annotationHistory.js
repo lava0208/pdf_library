@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", function () {
         if(isDraft != null && isDraft !== "" && isDraft != "false"){
             getDocList(initialId);
         }
+    } else {
+        $("#secondaryPrint").addClass("hidden");
     }
 })
 
@@ -529,7 +531,7 @@ const saveDoc = async function () {
 
 $("#pdfViewerButton").click(function () {
     var id = $(this).attr("link") ? $(this).attr("link") : initialId;
-    var url = `https://pdf-vision.com/pdfviewer?id=${id}&draft=false`;
+    var url = `https://127.0.0.1/pdfviewer?id=${id}&draft=false`;
     parent.window.location.href = url;
 })
 

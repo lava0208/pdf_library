@@ -2,6 +2,7 @@ const fs = require('fs');
 const uuid = require('uuid');
 const Doc = require('../models/history');
 const { getCurrentFile } = require('../utils/currentFile');
+require('dotenv').config();
 
 const getAllHistories = async (req, res) => {
     try {
@@ -56,7 +57,7 @@ const createHistory = async (req, res) => {
 
         const history = JSON.parse(req.body.history); // Parse the history JSON string
 
-        const uniqueLink = `https://pdf-vision.com/pdfviewer/?id=${uniqueId}&draft=true`;
+        const uniqueLink = `https://${process.env.HOST}/pdfviewer/?id=${uniqueId}&draft=true`;
 
         // Create and save the new document
         const newDocument = new Doc({
@@ -81,7 +82,7 @@ const createHistory = async (req, res) => {
 const updateHistory = async (req, res) => {
     try {
         const { uniqueId } = req.params;
-        const username = req.body.username
+        const { username } = req.body;
         const updateData = {};
 
         if (req.file) {

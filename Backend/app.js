@@ -1,7 +1,9 @@
+require('dotenv').config();
+
 const express = require('express');
 const multer = require('multer');
 const cors = require('cors');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
 const mammoth = require('mammoth');
@@ -15,9 +17,8 @@ const https = require('https');
 const nodemailer = require('nodemailer');
 const uuid = require('uuid');
 const mongoose = require("mongoose");
-const mongoURI = require('./config').mongoURI;
+const mongoURI = process.env.MONGO_URI;
 
-//...
 const userRouter = require('./routes/userRoute');
 const historyRouter = require('./routes/historyRoute');
 
@@ -28,8 +29,8 @@ const { setCurrentFile, getCurrentFile } = require('./utils/currentFile');
 const transporter = nodemailer.createTransport({
   service: 'Gmail',
   auth: {
-    user: 'codevisiondeveloper@gmail.com',
-    pass: 'liktvdrrrxgsnery'
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_PASS
   }
 });
 
@@ -221,7 +222,7 @@ app.post('/sendlink', upload.single('pdfFile'), (req, res) => {
   selectedEmails.forEach(email => {
     let newDataSet = [];
     const uniqueId = uuid.v4();
-    const uniqueLink = `https://pdf-vision.com/pdfviewer/?id=${uniqueId}`;
+    const uniqueLink = `https://${process.env.HOST}/pdfviewer/?id=${uniqueId}`;
 
     newDataSet.push({
       pdfData: dataUri,
@@ -306,6 +307,6 @@ mongoose.connect(mongoURI).then(() => {
 // app.listen(8081, () => {
 //   console.log('Server is running on port 8081');
 // });
-https.createServer(options, app).listen(8081, "94.72.120.252", () => {
+https.createServer(options, app).listen(process.env.PORT, process.env.HOST, () => {
   console.log(`Server running`);
 });

@@ -1017,6 +1017,7 @@ const drawFormElement = function () {
           break;
         case SIGNATURE:
           const signatureContainer = document.createElement("div");
+          // signatureContainer.className = "signatureDiv";
           signatureContainer.id = "signature" + id;
           addFormElementStyle(signatureContainer, y, x, width, height);
           signatureContainer.style.display = "flex";
@@ -1033,12 +1034,11 @@ const drawFormElement = function () {
                 element.textBackgroundColor;
               setTimeout(() => {
                 $("#" + element.containerId).css("background-color", element.textBackgroundColor);
-              }, 100);              
+              }, 100);
             }
           })
 
           if (item.imgData) {
-
             if (item.imgData.includes("data:image/png;base64")) {
               createAndAppendImage(item.imgData, signatureContainer, id);
             } else {
@@ -1404,7 +1404,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return response.json();
       })
       .then(data => {
-        form_storage = [];
+        form_storage =  isDraft == "true" ? [] : JSON.parse(data.formData);
         // clientName = data.name;
         // clientEmail = data.email;
         // Handle the retrieved data from the backend
@@ -1638,34 +1638,38 @@ const handleText = function (e) {
     initialValue = currentFormText.querySelector(".text-field-input").value;
   }
 
-  for (let i = 0; i < form_storage.length; i++) {
-    if (form_storage[i].id == current_form_id) {
-      form_storage[i].fontStyle = fontStyle;
-      form_storage[i].fontSize = fontSize;
-      form_storage[i].textColor = textColor;
-
-      //... background color
-      form_storage[i].textBackgroundColor = textBackgroundColor;
-
-      form_storage[i].align = alignValue;
-      form_storage[i].isBold = isBold;
-      form_storage[i].isItalic = isItalic;
-      form_storage[i].regularFontStyle = regularFont;
-      form_storage[i].initialValue = initialValue;
-      break;
-    } else if (
-      form_storage[i].form_field_name == formFieldName &&
-      form_storage[i].id != current_form_id
-    ) {
-      break;
-    } else if (
-      form_storage[i].form_field_name != formFieldName &&
-      form_storage[i].id == current_form_id
-    ) {
-      form_storage[i].form_field_name = formFieldName;
-      break;
+  if(isDraft != "false"){
+    for (let i = 0; i < form_storage.length; i++) {
+      if (form_storage[i].id == current_form_id) {
+        form_storage[i].fontStyle = fontStyle;
+        form_storage[i].fontSize = fontSize;
+        form_storage[i].textColor = textColor;
+  
+        //... background color
+        form_storage[i].textBackgroundColor = textBackgroundColor;
+  
+        form_storage[i].align = alignValue;
+        form_storage[i].isBold = isBold;
+        form_storage[i].isItalic = isItalic;
+        form_storage[i].regularFontStyle = regularFont;
+        form_storage[i].initialValue = initialValue;
+        break;
+      } else if (
+        form_storage[i].form_field_name == formFieldName &&
+        form_storage[i].id != current_form_id
+      ) {
+        break;
+      } else if (
+        form_storage[i].form_field_name != formFieldName &&
+        form_storage[i].id == current_form_id
+      ) {
+        form_storage[i].form_field_name = formFieldName;
+        break;
+      }
     }
   }
+
+  
   let count = 0;
   for (let j = 0; j < form_storage.length; j++) {
     if (
@@ -2750,7 +2754,7 @@ const showOptionAndResizebar = function (
       selectStyleContent += `<option value=${item} style="font-family: ${item}">${item}</option>`;
     });
     fontSizeArr.map((item) => {
-      if (item == "auto")
+      if (item == "Auto")
         selectSizeContent += `<option value='16'}>Default</option>`;
       else selectSizeContent += `<option value=${item}>${item}</option>`;
     });
@@ -2805,7 +2809,6 @@ const addDeleteButton = function (currentId, container, object, type) {
         return comment.id !== parseInt(currentId);
       });
     } else {
-      console.log('hrer')
       currentObject = form_storage.find((item) => item.id = currentId);
       form_storage = form_storage.filter(function (item) {
         return item.id !== parseInt(currentId);
@@ -2816,7 +2819,6 @@ const addDeleteButton = function (currentId, container, object, type) {
     if (commentPageDiv && commentPageDiv.contains(currentHistoryDiv)) {
       commentPageDiv.removeChild(currentHistoryDiv);
     }
-    console.log(form_storage);
   });
   document.addEventListener("keydown", (e) => {
     if (type != "text-content" && e.key === "Delete") {
@@ -4600,7 +4602,7 @@ const changeMode = () => {
             // else item.style.fontWeight = "normal";
             // if(formItem.isItalic) item.style.fontStyle = "italic";
             // else item.style.fontStyle = "normal";
-            item.style.fontSize = formItem.fontSize / 0.75 + "px";
+            item.style.fontSize = formItem.fontSize + "px";
             item.style.color = formItem.textColor;
             item.style.fontFamily = formItem.regularFontStyle;
             if (formItem.align == 0) item.style.textAlign = "left";
@@ -4621,7 +4623,7 @@ const changeMode = () => {
         form_storage.forEach((formItem) => {
           let formId = item.parentNode.id.replace("combo", "");
           if (formItem.id == formId) {
-            item.style.fontSize = formItem.fontSize / 0.75 + "px";
+            item.style.fontSize = formItem.fontSize + "px";
             item.style.color = formItem.textColor;
             item.style.fontFamily = formItem.regularFontStyle;
             if (formItem.optionArray.length != 0) {
@@ -4646,7 +4648,7 @@ const changeMode = () => {
         form_storage.forEach((formItem) => {
           let formId = item.parentNode.id.replace("combo", "");
           if (formItem.id == formId) {
-            item.style.fontSize = formItem.fontSize / 0.75 + "px";
+            item.style.fontSize = formItem.fontSize + "px";
             item.style.color = formItem.textColor;
             item.style.fontFamily = formItem.regularFontStyle;
 
@@ -4665,7 +4667,7 @@ const changeMode = () => {
         form_storage.forEach((formItem) => {
           let formId = item.parentNode.id.replace("list", "");
           if (formItem.id == formId) {
-            item.style.fontSize = formItem.fontSize / 0.75 + "px";
+            item.style.fontSize = formItem.fontSize + "px";
             item.style.color = formItem.textColor;
             item.style.fontFamily = formItem.regularFontStyle;
             if (formItem.optionArray.length != 0) {
@@ -4700,7 +4702,7 @@ const changeMode = () => {
         form_storage.forEach((formItem) => {
           let formId = item.parentNode.id.replace("button", "");
           if (formItem.id == formId) {
-            item.style.fontSize = formItem.fontSize / 0.75 + "px";
+            item.style.fontSize = formItem.fontSize + "px";
             item.style.color = formItem.textColor;
             item.style.fontFamily = formItem.regularFontStyle;
             item.textContent = formItem.text;

@@ -3,6 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import {ToastContainer, toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function SignUp() {
@@ -65,9 +66,29 @@ export default function SignUp() {
                 })
                     .then((response) => {
                         if (response.ok) {
+                            toast.success('User created successfully', {
+                                position: "top-right",
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: "light",
+                            });
                             window.location.href = "/signin";
                         } else {
-                            window.location.href = "/signup";
+                            toast.error('User already exists', {
+                                position: "top-right",
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: "light",
+                            });
+                            // window.location.href = "/signup";
                         }
                     })
                     .catch((error) => {
@@ -125,6 +146,7 @@ export default function SignUp() {
                 </div>
 
             </div>
+            <ToastContainer />
         </div>
     )
 }

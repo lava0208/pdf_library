@@ -9,9 +9,9 @@ const path = require('path');
 const userSignup = async function (req, res) {
     try {
         const { username, email, password, role } = req.body;
-        const user = await User.findOne({ username: username, email: email });
+        const user = await User.findOne({ $or: [{ username: username }, { email: email }] });
         if (user) {
-            return res.status(409).send('User already exists');
+            return res.status(409).json({status: 'error', message: 'User already exists'});
         } else {
             const newUser = new User({
                 username: username,
@@ -21,7 +21,7 @@ const userSignup = async function (req, res) {
                 signature: []
             });
             await newUser.save();
-            return res.status(201).send('User created successfully');
+            return res.status(201).send({status: 'success', message: 'User created successfully'});
         }
     } catch (err) {
         return res.status(500).send('Error occurred: ' + err.message);

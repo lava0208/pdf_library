@@ -23,7 +23,7 @@ let pos_x_page = 0,
 let fontStyle = "",
   fontSize = 0,
   textColor = "";
-  textBackgroundColor = "";
+textBackgroundColor = "";
 
 const SUBMIT = 1,
   RESET = 2,
@@ -101,7 +101,7 @@ function getIdFromUrl() {
 const generalUserMode = function () {
   if (initialId) {
     //... open draft document
-    if(isDraft == null){
+    if (isDraft == null) {
       rightSidebarButton.style.display = "none";
       shareDocumentButton.style.display = "none";
       addTextButton.style.display = "none";
@@ -110,13 +110,13 @@ const generalUserMode = function () {
       saveDraftButton.style.display = "none";
       submitDocumentButton.style.display = "flex";
       changeMode();
-    }else{
-      if(isDraft == "true"){
+    } else {
+      if (isDraft == "true") {
         addTextButton.style.display = "block";
-        const viewer = document.getElementById('viewer');  
-        viewer.addEventListener('click', e => {});  
-        viewer.dispatchEvent(new Event('click'));  
-      }else{
+        const viewer = document.getElementById('viewer');
+        viewer.addEventListener('click', e => { });
+        viewer.dispatchEvent(new Event('click'));
+      } else {
         //... open submitted document
         rightSidebarButton.style.display = "none";
         shareDocumentButton.style.display = "none";
@@ -932,7 +932,7 @@ const drawFormElement = function () {
               document.getElementById(current_date_content_id).style.color =
                 document.getElementById("date-font-color").value;
             });
-            
+
           //... background color
           document
             .getElementById("date-font-background-color")
@@ -1028,13 +1028,26 @@ const drawFormElement = function () {
 
           //... background color
           form_storage.map((element) => {
-            if (element.id == id) {              
+            if (element.id == id) {
               document.getElementById("signature-font-background-color").value =
-              element.textBackgroundColor;
+                element.textBackgroundColor;
+              setTimeout(() => {
+                $("#" + element.containerId).css("background-color", element.textBackgroundColor);
+              }, 100);              
             }
           })
 
-          if (item.imgData) createAndAppendImage(item.imgData, signatureContainer, id);
+          if (item.imgData) {
+
+            if (item.imgData.includes("data:image/png;base64")) {
+              createAndAppendImage(item.imgData, signatureContainer, id);
+            } else {
+              imageUrlToBase64(item.imgData)
+                .then(async base64 => {
+                  createAndAppendImage(base64, signatureContainer, id);
+                })
+            }
+          }
 
           pg.appendChild(signatureContainer);
 
@@ -1298,7 +1311,7 @@ const drawFontSize = function () {
 //... Write Text Event
 $(document).on("DOMSubtreeModified", ".freeTextEditor.selectedEditor", function () {
   let value = toolbar.find("#toolbar-font-size").val() == "" || toolbar.find("#toolbar-font-size").val() == null ? 16 : toolbar.find("#toolbar-font-size").val();
-  
+
   let size = value + "px";
   let fontSize = `calc(${size} * var(--scale-factor))`;
   let fontFamily = toolbar.find("#toolbar-font-style").val();
@@ -1307,12 +1320,12 @@ $(document).on("DOMSubtreeModified", ".freeTextEditor.selectedEditor", function 
 
   $(this).find(".internal[role='textbox']").attr('size', size);
   // $(this).find(".internal[role='textbox']").css({"font-size": fontSize, "font-family": fontFamily, "font-weight": fontWeight, "font-style": fontStyle});
-  $(this).find(".internal[role='textbox']").css({"font-size": fontSize, "font-family": fontFamily, "font-style": fontStyle});
+  $(this).find(".internal[role='textbox']").css({ "font-size": fontSize, "font-family": fontFamily, "font-style": fontStyle });
 })
 
 //... Change Font Size Event
 $(document).on("change", "#toolbar-font-size", function () {
-  if($(".freeTextEditor").hasClass("selectedEditor")){
+  if ($(".freeTextEditor").hasClass("selectedEditor")) {
     let value = $(this).val() == "" || $(this).val() == null ? 16 : $(this).val();
     let size = value + "px";
     let fontSize = `calc(value + "px"} * var(--scale-factor))`;
@@ -1323,7 +1336,7 @@ $(document).on("change", "#toolbar-font-size", function () {
 
 //... Change Font Family Event
 $(document).on("change", "#toolbar-font-style", function () {
-  if($(".freeTextEditor").hasClass("selectedEditor")){
+  if ($(".freeTextEditor").hasClass("selectedEditor")) {
     let fontFamily = $(this).val();
     $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").css("font-family", fontFamily);
   }
@@ -1331,10 +1344,10 @@ $(document).on("change", "#toolbar-font-style", function () {
 
 //... Get Font Detail of Selected Text
 $(document).on("click", ".freeTextEditor", function () {
-  if(isOpenSubmitDocument){
+  if (isOpenSubmitDocument) {
     return false
   }
-  
+
   let size = $(this).find(".internal[role='textbox']").attr("size");
   let fontFamily = $(this).find(".internal[role='textbox']").css("font-family");
   let fontWeight = $(this).find(".internal[role='textbox']").css("font-weight");
@@ -1345,30 +1358,30 @@ $(document).on("click", ".freeTextEditor", function () {
   toolbar.find(`#toolbar-font-size option[pixel="${size}"]`).prop("selected", true);
   toolbar.find(`#toolbar-font-style option[value="${fontFamily}"]`).prop("selected", true);
 
-  if(fontWeight == 700){
+  if (fontWeight == 700) {
     toolbar.find("#text-bold").addClass("active")
-  }else{
+  } else {
     toolbar.find("#text-bold").removeClass("active")
   }
-  if(fontStyle == "italic"){
+  if (fontStyle == "italic") {
     toolbar.find("#text-italic").addClass("active")
-  }else{
+  } else {
     toolbar.find("#text-italic").removeClass("active")
   }
 })
 
 //... Change Font Style Event
 $(document).on("click", ".text-weight-button", function () {
-  if($(this).hasClass("active")){
+  if ($(this).hasClass("active")) {
     $(this).removeClass("active");
-  }else{
+  } else {
     $(this).addClass("active");
   }
-  if($(".freeTextEditor").hasClass("selectedEditor")){
+  if ($(".freeTextEditor").hasClass("selectedEditor")) {
     let fontWeight = toolbar.find("#text-bold").hasClass("active") ? 700 : 500;
     let fontStyle = toolbar.find("#text-italic").hasClass("active") ? "italic" : "";
     // $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").css({"font-weight": fontWeight, "font-style": fontStyle});
-    $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").css({"font-style": fontStyle});
+    $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").css({ "font-style": fontStyle });
   }
 })
 
@@ -1470,7 +1483,7 @@ const checkFormField = function (id) {
 
 // Remove the parent event.
 const removeParentEvent = function (id) {
-  if(document.getElementById(id)){
+  if (document.getElementById(id)) {
     document.getElementById(id).addEventListener("click", function (e) {
       e.stopPropagation();
     });
@@ -1509,7 +1522,7 @@ const convertStandardDateType = function (date) {
 
 const handleCheckbox = function (e) {
   isOptionPane = false;
-  if(document.getElementById(CHECKBOX_OPTION)){
+  if (document.getElementById(CHECKBOX_OPTION)) {
     document.getElementById(CHECKBOX_OPTION).style.display = "none";
   }
   if (e) e.stopPropagation();
@@ -1551,7 +1564,7 @@ const handleRadio = function (e) {
   isOptionPane = false;
   const label = document.getElementById("radio-label") && document.getElementById("radio-label").value;
   const value = document.getElementById("radio-value") && document.getElementById("radio-value").value;
-  if(document.getElementById(RADIO_OPTION)) document.getElementById(RADIO_OPTION).style.display = "none";
+  if (document.getElementById(RADIO_OPTION)) document.getElementById(RADIO_OPTION).style.display = "none";
   const formFieldName = document.getElementById("radio-field-input-name") && document.getElementById("radio-field-input-name").value;
   const currentRadio = document.getElementById(`radio${current_radio_id}`);
   if (currentRadio) currentRadio.querySelector('input[type="radio"]').name = formFieldName;
@@ -1608,7 +1621,7 @@ const handleRadio = function (e) {
 
 const handleText = function (e) {
   isOptionPane = false;
-  if(document.getElementById(TEXTFIELD_OPTION)) document.getElementById(TEXTFIELD_OPTION).style.display = "none";
+  if (document.getElementById(TEXTFIELD_OPTION)) document.getElementById(TEXTFIELD_OPTION).style.display = "none";
   if (e) e.stopPropagation();
   const formFieldName = document.getElementById("text-field-input-name") && document.getElementById("text-field-input-name").value;
   fontStyle = generateFontName("text-font-style");
@@ -1711,7 +1724,7 @@ const handleText = function (e) {
 
 const handleCombo = function (e) {
   isOptionPane = false;
-  if(document.getElementById(COMBOBOX_OPTION)) document.getElementById(COMBOBOX_OPTION).style.display = "none";
+  if (document.getElementById(COMBOBOX_OPTION)) document.getElementById(COMBOBOX_OPTION).style.display = "none";
   if (e) e.stopPropagation();
 
   const formFieldName = document.getElementById("combo-input-name") && document.getElementById("combo-input-name").value;
@@ -1817,7 +1830,7 @@ const handleCombo = function (e) {
 // When click "Save" button, save the information of Listbox element.
 
 const handleList = function (e) {
-  if(document.getElementById(LIST_OPTION)) document.getElementById(LIST_OPTION).style.display = "none";
+  if (document.getElementById(LIST_OPTION)) document.getElementById(LIST_OPTION).style.display = "none";
   if (e) e.stopPropagation();
   const formFieldName = document.getElementById("list-input-name") && document.getElementById("list-input-name").value;
   fontStyle = document.getElementById("list-font-style") && document.getElementById("list-font-style").value;
@@ -2027,7 +2040,7 @@ const showOption = function (id, x, y) {
 // When click "Save" button, save the information of Button element.
 const handleButton = function (e) {
   isOptionPane = false;
-  if(document.getElementById(BUTTON_OPTION)) document.getElementById(BUTTON_OPTION).style.display = "none";
+  if (document.getElementById(BUTTON_OPTION)) document.getElementById(BUTTON_OPTION).style.display = "none";
   let form_action = 0;
   const selectedValue = document.getElementById(
     "button-field-input-action"
@@ -2261,7 +2274,7 @@ const handleSignature = function () {
 
       break;
     }
-  }  
+  }
 
   if (baseId !== 0 && (count == signStorage.length || signStorage == null)) {
     form_storage.push({
@@ -2280,7 +2293,7 @@ const handleSignature = function () {
       imgData: signatureImgData,
 
       //... background color
-      textBackgroundColor: textBackgroundColor,      
+      textBackgroundColor: textBackgroundColor,
     });
     const date = new Date(Date.now());
     addHistory(baseId, SIGNATURE, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "signature");
@@ -2546,7 +2559,7 @@ const handleComment = function (id, type) {
   if (document.getElementById(`historyMainPart${baseId}`).hasChildNodes()) document.getElementById(`historyComment${baseId}`).style.display = "flex";
   if (type !== TEXTFIELD && type !== TEXT_CONTENT) {
     document.getElementById(`replyInput${baseId}`).focus();
-  } 
+  }
 }
 
 document.getElementById("viewer").addEventListener("mousedown", function (event) {
@@ -2614,7 +2627,7 @@ document.getElementById("viewer").addEventListener("mousedown", function (event)
     } else {
       removeAllResizeBar();
       optionIdArray.forEach((item) => {
-        if(document.getElementById(item)){
+        if (document.getElementById(item)) {
           if (document.getElementById(item).contains(currentObject)) {
             optionCount++;
           }
@@ -2680,6 +2693,43 @@ const hexToRgb = function (hex) {
   return { r, g, b };
 };
 
+const hexToRgbNew = function (hex) {
+  hex = hex.replace(/^#/, '');
+
+  // Parse the hex color components
+  const bigint = parseInt(hex, 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+
+  return PDFLib.rgb(r / 255, g / 255, b / 255);
+}
+
+async function imageUrlToBase64(imageUrl) {
+  // Fetch the image from the URL
+  const response = await fetch(imageUrl);
+  // Ensure the response is OK
+  if (!response.ok) {
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+  // Convert the response to a Blob
+  const blob = await response.blob();
+  // Create a new FileReader instance
+  const reader = new FileReader();
+
+  // Return a promise that resolves to a Base64 string when the reader is done
+  return new Promise((resolve, reject) => {
+    // Set up the onload event handler
+    reader.onloadend = () => {
+      resolve(reader.result);
+    };
+    // Set up the onerror event handler
+    reader.onerror = reject;
+    // Read the blob as a data URL (Base64)
+    reader.readAsDataURL(blob);
+  });
+}
+
 // Show the specified OptionPane and add resizebar.
 const showOptionAndResizebar = function (
   optionId,
@@ -2704,10 +2754,10 @@ const showOptionAndResizebar = function (
         selectSizeContent += `<option value='16'}>Default</option>`;
       else selectSizeContent += `<option value=${item}>${item}</option>`;
     });
-    if(document.getElementById(`${id}-font-style`)){
+    if (document.getElementById(`${id}-font-style`)) {
       document.getElementById(`${id}-font-style`).innerHTML = selectStyleContent;
     }
-    if(document.getElementById(`${id}-font-size`)){
+    if (document.getElementById(`${id}-font-size`)) {
       document.getElementById(`${id}-font-size`).innerHTML = selectSizeContent;
     }
   }
@@ -2737,7 +2787,7 @@ const addDeleteButton = function (currentId, container, object, type) {
     e.stopPropagation();
     e.preventDefault();
 
-    let currentObject; 
+    let currentObject;
 
     currentId = container.id.replace(`${type}_tooltipbar`, "");
     const target = document.getElementById(`${type}` + currentId);
@@ -3194,7 +3244,7 @@ const eventHandler = async function (e) {
                   //... background color
                   document.getElementById("text-font-background-color").value =
                     element.textBackgroundColor;
-                  
+
                   let selected = element.align;
                   if (selected == ALIGN_LEFT)
                     document.getElementById("text-left").checked = true;
@@ -3850,7 +3900,7 @@ const eventHandler = async function (e) {
                     element.baseFontSize;
                   document.getElementById("date-font-color").value =
                     element.textColor;
-                  
+
                   //... background color
                   document.getElementById("date-font-background-color").value =
                     element.textBackgroundColor;
@@ -4213,8 +4263,8 @@ async function addFormElements() {
               y: form_item.y - form_item.height,
               width: form_item.width,
               height: form_item.height,
-              textColor: PDFLib.rgb(r, g, b),
-              backgroundColor: PDFLib.rgb(1, 1, 1),
+              textColor: hexToRgbNew(form_item.textColor),
+              backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
               borderColor: PDFLib.rgb(1, 1, 1),
             });
             datefieldForm.setFontSize(form_item.fontSize);
@@ -4242,8 +4292,8 @@ async function addFormElements() {
               y: form_item.y - form_item.height,
               width: form_item.width,
               height: form_item.height,
-              textColor: PDFLib.rgb(r, g, b),
-              backgroundColor: PDFLib.rgb(1, 1, 1),
+              textColor: hexToRgbNew(form_item.textColor),
+              backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
               borderColor: PDFLib.rgb(1, 1, 1),
             });
             textfieldForm.updateAppearances(customFont);
@@ -4272,8 +4322,8 @@ async function addFormElements() {
               y: form_item.y - form_item.height,
               width: form_item.width,
               height: form_item.height,
-              textColor: PDFLib.rgb(r, g, b),
-              backgroundColor: PDFLib.rgb(1, 1, 1),
+              textColor: hexToRgbNew(form_item.textColor),
+              backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
               borderWidth: 1,
               borderColor: PDFLib.rgb(0.23, 0.23, 0.23),
             });
@@ -4300,8 +4350,8 @@ async function addFormElements() {
               y: form_item.y - form_item.height,
               width: form_item.width,
               height: form_item.height,
-              textColor: PDFLib.rgb(r, g, b),
-              backgroundColor: PDFLib.rgb(1, 1, 1),
+              textColor: hexToRgbNew(form_item.textColor),
+              backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
               borderColor: PDFLib.rgb(1, 1, 1),
             });
             listboxForm.updateAppearances(customFont);
@@ -4326,8 +4376,8 @@ async function addFormElements() {
             y: form_item.y - form_item.height,
             width: form_item.width,
             height: form_item.height,
-            textColor: PDFLib.rgb(r, g, b),
-            backgroundColor: PDFLib.rgb(0.24, 0.59, 0.99),
+            textColor: hexToRgbNew(form_item.textColor),
+            backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
           });
           buttonfieldForm.updateAppearances(customFont);
           buttonfieldForm.defaultUpdateAppearances(customFont);
@@ -4395,13 +4445,24 @@ async function addFormElements() {
           break;
         case SIGNATURE:
           if (form_item.imgData != undefined) {
-            const pngImage = await pdfDoc.embedPng(form_item.imgData);
-            page.drawImage(pngImage, {
-              x: form_item.x,
-              y: form_item.y - form_item.height,
-              width: form_item.width,
-              height: form_item.height,
-            });
+            if (form_item.imgData.includes("data:image/png;base64")) {
+              const pngImage = await pdfDoc.embedPng(form_item.imgData);
+              page.drawImage(pngImage, {
+                x: form_item.x,
+                y: form_item.y - form_item.height,
+                width: form_item.width,
+                height: form_item.height,
+              });
+            } else {
+              const imgData = $("#" + form_item.containerId).find("img").attr("src");
+              const pngImage = await pdfDoc.embedPng(imgData);
+              page.drawImage(pngImage, {
+                x: form_item.x,
+                y: form_item.y - form_item.height,
+                width: form_item.width,
+                height: form_item.height,
+              });
+            }
           }
           break;
         case SHAPE:
@@ -4575,7 +4636,7 @@ const changeMode = () => {
 
             //... background color
             item.style.backgroundColor = formItem.textBackgroundColor;
-            item.style.border = "none";            
+            item.style.border = "none";
           }
         });
       }
@@ -4627,7 +4688,7 @@ const changeMode = () => {
 
             //... background color
             item.style.backgroundColor = formItem.textBackgroundColor;
-            item.style.border = "none";            
+            item.style.border = "none";
           }
         });
       }

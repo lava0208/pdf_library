@@ -148,7 +148,7 @@ const Documents = () => {
                                                 <input
                                                     type="text"
                                                     className={isActiveId == document.uniqueId ? "form-control editing" : "form-control"}
-                                                    value={isActiveId === document.uniqueId ? inputValues[document.uniqueId] || document.name || `Document ${i + 1}` : document.name || `Document ${i + 1}`}
+                                                    value={isActiveId === document.uniqueId ? inputValues[document.uniqueId] || '' : document.name || `Document ${i + 1}`}
                                                     onChange={(e) => handleInputChange(document.uniqueId, e.target.value)}
                                                     disabled={isActiveId !== document.uniqueId}
                                                 />

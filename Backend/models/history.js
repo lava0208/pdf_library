@@ -36,6 +36,9 @@ const documentSchema = new Schema({
         unique: true,
         required: true
     },
+    name: {
+        type: String
+    },
     username: {
         type: String
     },

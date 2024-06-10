@@ -565,4 +565,37 @@ footer.footer p.small a:hover, footer.footer p.small a.focus {
 #Contact .address-block span {
 	text-transform: none;
 }
+.document-name{
+  display: flex;
+  align-items: center;
+  color: #fff;
+  position: relative;
+}
+.document-name input{
+  background-color: transparent;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  text-align: center;
+  padding: 5px 25px 5px 5px;
+}
+.document-name input.editing{
+  border: 1px solid #d9d9d92b;
+}
+.document-name input:disabled{
+  background-color: transparent;
+}
+.document-name input:focus{
+  color: #fff;
+  border: 1px solid #fff;
+  background-color: transparent;
+  outline: none;
+  box-shadow: none;
+}
+.document-name i{
+  position: absolute;
+  right: 5px;
+  top: 12px;
+  font-size: 14px;
+}
 /* Styles Begins */

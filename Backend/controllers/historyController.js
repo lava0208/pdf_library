@@ -119,6 +119,31 @@ const updateHistory = async (req, res) => {
     }
 };
 
+const updateHistoryName = async (req, res) => {
+    try {
+        const { id, username, documentname } = req.body;
+
+        const updateData = { name: documentname };
+
+        const updatedDocument = await Doc.findOneAndUpdate(
+            { uniqueId: id, username: username },
+            { $set: updateData },
+            { new: true }
+        );
+
+        if (!updatedDocument) {
+            return res.status(404).json({ message: 'Document not found' });
+        }
+
+        res.status(200).json({ message: 'Document updated successfully', document: updatedDocument });
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).send('Error occurred: ' + error.message);
+    }
+};
+
+
+
 const deleteHistory = async (req, res) => {
     try {
         const { uniqueId, username } = req.params;
@@ -141,5 +166,6 @@ module.exports = {
     getHistory,
     createHistory,
     updateHistory,
+    updateHistoryName,
     deleteHistory
 };

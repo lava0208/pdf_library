@@ -531,7 +531,7 @@ const saveDoc = async function () {
 
 $("#pdfViewerButton").click(function () {
     var id = $(this).attr("link") ? $(this).attr("link") : initialId;
-    var url = `https://pdf-vision.com/pdfviewer?id=${id}&draft=false`;
+    var url = `${BASE_SERVER_URL}/pdfviewer?id=${id}&draft=false`;
     parent.window.location.href = url;
 })
 

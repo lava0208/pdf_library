@@ -30,8 +30,8 @@ app.prepare()
       }
     });
 
-    https.createServer(options, server).listen(443, "94.72.120.252", () => {
-      console.log(`Server running at https://94.72.120.252/`);
+    https.createServer(options, server).listen(443, process.env.HOST, () => {
+      
     });
   })
   .catch((ex) => {

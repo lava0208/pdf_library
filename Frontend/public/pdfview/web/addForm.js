@@ -101,7 +101,7 @@ function getIdFromUrl() {
 const generalUserMode = function () {
   if (initialId) {
     //... open draft document
-    if (isDraft == null) {
+    if (isDraft == null || isDraft == "") {
       rightSidebarButton.style.display = "none";
       shareDocumentButton.style.display = "none";
       addTextButton.style.display = "none";
@@ -157,7 +157,6 @@ const drawFormElement = function () {
       new_x_y = PDFViewerApplication.pdfViewer._pages[
         PDFViewerApplication.page - 1
       ].viewport.convertToViewportPoint(x, y);
-      console.log(PDFViewerApplication.pdfViewer._pages[PDFViewerApplication.page - 1]);
       x = new_x_y[0];
       y = new_x_y[1];
       let pg = document.getElementById(String(item.page_number));
@@ -835,9 +834,7 @@ const drawFormElement = function () {
                       document.getElementById("button-font-background-color").value =
                         element.textBackgroundColor;
 
-                      const selectedValue = document.getElementById(
-                        "button-field-input-action"
-                      );
+                        const selectedValue = document.getElementById("button-field-input-action") && document.getElementById("button-field-input-action").value;
                       if (element.action == SUBMIT) {
                         selectedValue.value = "submit";
                       } else if (element.action == RESET) {
@@ -887,6 +884,7 @@ const drawFormElement = function () {
           newDate.value = item.text;
 
           newDate.addEventListener("change", () => {
+            let dateId = baseId;
             current_form_id = dateId;
             handleDate();
           });
@@ -1411,9 +1409,9 @@ document.addEventListener("DOMContentLoaded", function () {
         return response.json();
       })
       .then(data => {
-        form_storage = isDraft == "true" ? [] : JSON.parse(data.formData);
-        // clientName = data.name;
-        // clientEmail = data.email;
+        form_storage = isDraft == "true" ? [] : isDraft == "" ? JSON.parse(data[0].formData) : JSON.parse(data.formData);
+        clientName = isDraft == "" ? data[0].name : data.name;
+        clientEmail = isDraft == "" ? data[0].email : data.email;
         // Handle the retrieved data from the backend
         const dataURI = isDraft ? data.pdfData : data[0].pdfData;
         const base64Data = dataURI.split(',')[1];
@@ -1861,38 +1859,36 @@ const handleList = function (e) {
     if (currentFormText.querySelector(".list-field-input").querySelector(".active"))
       initialValue = currentFormText.querySelector(".list-field-input").querySelector(".active").textContent;
   }
-  if (isDraft != "false") {
-    for (let i = 0; i < form_storage.length; i++) {
-      if (form_storage[i].form_type === LIST) {
-        if (
-          form_storage[i].id == current_form_id
-        ) {
-          form_storage[i].optionArray =
-            form_storage[i].optionArray.concat(listboxOptionArray);
-          form_storage[i].fontStyle = fontStyle;
-          form_storage[i].fontSize = fontSize;
-          form_storage[i].textColor = textColor;
+  for (let i = 0; i < form_storage.length; i++) {
+    if (form_storage[i].form_type === LIST) {
+      if (
+        form_storage[i].id == current_form_id
+      ) {
+        form_storage[i].optionArray =
+          form_storage[i].optionArray.concat(listboxOptionArray);
+        form_storage[i].fontStyle = fontStyle;
+        form_storage[i].fontSize = fontSize;
+        form_storage[i].textColor = textColor;
 
-          //... background color
-          form_storage[i].textBackgroundColor = textBackgroundColor;
+        //... background color
+        form_storage[i].textBackgroundColor = textBackgroundColor;
 
-          form_storage[i].regularFontStyle = regularFont;
-          form_storage[i].initialValue = initialValue;
-          // form_storage[i].align = alignValue;
-          listboxOptionArray = [];
-          break;
-        } else if (
-          form_storage[i].form_field_name == formFieldName &&
-          form_storage[i].id != current_form_id
-        ) {
-          break;
-        } else if (
-          form_storage[i].form_field_name != formFieldName &&
-          form_storage[i].id == current_form_id
-        ) {
-          form_storage[i].form_field_name = formFieldName;
-          break;
-        }
+        form_storage[i].regularFontStyle = regularFont;
+        form_storage[i].initialValue = initialValue;
+        // form_storage[i].align = alignValue;
+        listboxOptionArray = [];
+        break;
+      } else if (
+        form_storage[i].form_field_name == formFieldName &&
+        form_storage[i].id != current_form_id
+      ) {
+        break;
+      } else if (
+        form_storage[i].form_field_name != formFieldName &&
+        form_storage[i].id == current_form_id
+      ) {
+        form_storage[i].form_field_name = formFieldName;
+        break;
       }
     }
   }
@@ -2058,9 +2054,7 @@ const handleButton = function (e) {
   isOptionPane = false;
   if (document.getElementById(BUTTON_OPTION)) document.getElementById(BUTTON_OPTION).style.display = "none";
   let form_action = 0;
-  const selectedValue = document.getElementById(
-    "button-field-input-action"
-  ).value;
+  const selectedValue = document.getElementById("button-field-input-action") && document.getElementById("button-field-input-action").value;
   if (selectedValue === "submit") {
     form_action = SUBMIT;
   } else if (selectedValue === "reset") {
@@ -2070,13 +2064,11 @@ const handleButton = function (e) {
   }
   if (e) e.stopPropagation();
 
-  const formFieldName = document.getElementById(
-    "button-field-input-name"
-  ).value;
-  let initialValue = document.getElementById("button-text").value;
-  fontStyle = document.getElementById("button-font-style").value;
-  fontSize = parseInt(document.getElementById("button-font-size").value);
-  textColor = document.getElementById("button-font-color").value;
+  const formFieldName = document.getElementById("button-field-input-name") && document.getElementById("button-field-input-name").value;
+  let initialValue = document.getElementById("button-text") && document.getElementById("button-text").value;
+  fontStyle = document.getElementById("button-font-style") && document.getElementById("button-font-style").value;
+  fontSize = document.getElementById("button-font-size") && parseInt(document.getElementById("button-font-size").value);
+  textColor = document.getElementById("button-font-color") && document.getElementById("button-font-color").value;
 
   //... background color
   textBackgroundColor = document.getElementById("button-font-background-color") && document.getElementById("button-font-background-color").value;
@@ -2160,9 +2152,8 @@ const handleButton = function (e) {
     const date = new Date(Date.now());
     addHistory(baseId, BUTTON, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "button");
   }
-  document
-    .getElementById("button-save-button")
-    .removeEventListener("click", handleButton);
+
+  if(document.getElementById("button-save-button")) document.getElementById("button-save-button").removeEventListener("click", handleButton);  
 };
 
 const handleDate = function (e) {
@@ -2919,25 +2910,25 @@ const submitAction = function () {
         toTransparent(currentItem.querySelector(".checkmark-radio"));
         break;
       case TEXTFIELD:
-        toTransparent(currentItem.querySelector(".text-field-input"));
+        // toTransparent(currentItem.querySelector(".text-field-input"));
         currentItem.querySelector(".text-field-input").disabled = true;
         break;
       case COMBOBOX:
-        toTransparent(currentItem.querySelector(".combobox-field-input"));
+        // toTransparent(currentItem.querySelector(".combobox-field-input"));
         currentItem.querySelector(".combobox-field-input").disabled = true;
 
         // currentItem.querySelector(".combobox-field-value").style.display = "block";
         // currentItem.querySelector(".combobox-field-value").textContent = item.initialValue;
         break;
       case LIST:
-        toTransparent(currentItem.querySelector(".list-field-input"));
+        // toTransparent(currentItem.querySelector(".list-field-input"));
         currentItem.querySelector(".list-field-input").querySelectorAll("p").forEach((pitem) => {
-          toTransparent(pitem);
+          // toTransparent(pitem);
           if (pitem.textContent != item.initialValue) pitem.remove();
         });
         break;
       case DATE:
-        toTransparent(currentItem.querySelector("input[type='date']"));
+        // toTransparent(currentItem.querySelector("input[type='date']"));
         currentItem.querySelector("input[type='date']").disabled = true;
         currentItem.style.boxShadow = "none";
         break;
@@ -2953,6 +2944,7 @@ const submitAction = function () {
   form_storage = form_storage.filter((item) => {
     return item.form_type !== BUTTON;
   })
+  isSubmit = true;
 }
 
 // Handle the specified event.
@@ -3766,9 +3758,7 @@ const eventHandler = async function (e) {
                   document.getElementById("button-font-background-color").value =
                     element.textBackgroundColor;
 
-                  const selectedValue = document.getElementById(
-                    "button-field-input-action"
-                  );
+                  const selectedValue = document.getElementById("button-field-input-action") && document.getElementById("button-field-input-action").value;
                   if (element.action == SUBMIT) {
                     selectedValue.value = "submit";
                   } else if (element.action == RESET) {
@@ -3836,6 +3826,7 @@ const eventHandler = async function (e) {
       newDate.value = formattedDate;
 
       newDate.addEventListener("change", () => {
+        let dateId = baseId;
         current_form_id = dateId;
         handleDate();
       });

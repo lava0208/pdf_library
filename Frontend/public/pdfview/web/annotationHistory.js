@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     } else {
         $("#secondaryPrint").addClass("hidden");
+        $("#secondarySaveFile").addClass("hidden");
     }
 })
 
@@ -550,6 +551,7 @@ const getDocList = async function (id) {
             $("#deleteDraftButton").removeClass("hidden");
             $("#pdfViewerButton").removeClass("hidden");
             $("#secondaryPrint").addClass("hidden");
+            $("#secondarySaveFile").addClass("hidden");
             data.history.forEach(function(item, i){
                 let pageDiv;
                 let page = item.page;

@@ -2906,8 +2906,8 @@ const submitAction = function () {
       case CHECKBOX:
         break;
       case RADIO:
-        toTransparent(currentItem.querySelector(".radioinputchild"));
-        toTransparent(currentItem.querySelector(".checkmark-radio"));
+        // toTransparent(currentItem.querySelector(".radioinputchild"));
+        // toTransparent(currentItem.querySelector(".checkmark-radio"));
         break;
       case TEXTFIELD:
         // toTransparent(currentItem.querySelector(".text-field-input"));
@@ -2930,7 +2930,7 @@ const submitAction = function () {
       case DATE:
         // toTransparent(currentItem.querySelector("input[type='date']"));
         currentItem.querySelector("input[type='date']").disabled = true;
-        currentItem.style.boxShadow = "none";
+        // currentItem.style.boxShadow = "none";
         break;
       case SIGNATURE:
         break;
@@ -4827,12 +4827,15 @@ const sendSubmitData = function () {
   formData.append('email', clientEmail);
   formData.append('currentId', requestId);
 
+  $("body").addClass("loading");
+
   fetch(`${BASE_URL}/savedocument`, {
     method: 'POST',
     body: formData
   })
     .then(response => {
       if (response.ok) {
+        $("body").removeClass("loading");
         alert("Thanks for your submitting your document!");
       } else {
         console.error('Failed to upload PDF file');

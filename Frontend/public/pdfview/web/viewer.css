@@ -2461,3 +2461,24 @@ dialog :link {
 .popupAnnotation{
   display: none;
 }
+
+body.loading .loading-container{
+  display: flex;
+}
+
+.loading-container{
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  background-color: white;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-container img{
+  width: fit-content;
+  max-width: 500px;
+}

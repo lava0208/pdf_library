@@ -1402,6 +1402,7 @@ document.addEventListener("DOMContentLoaded", function () {
   var url = initialId && isDraft ? `${BASE_URL}/history/${username}/${initialId}` : `${BASE_URL}/getpdfdata?uniqueId=${requestId}`;
 
   if (initialId) {
+    $("body").addClass("loading");
     fetch(`${url}`)
       .then(response => {
         if (!response.ok) {
@@ -1445,6 +1446,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             //...
             isOpenSubmitDocument = isDraft == "false" ? true : false;
+            $("body").removeClass("loading");
           }
         }, 100);
       })
@@ -2730,26 +2732,19 @@ const hexToRgbNew = function (hex) {
 }
 
 async function imageUrlToBase64(imageUrl) {
-  // Fetch the image from the URL
   const response = await fetch(imageUrl);
-  // Ensure the response is OK
   if (!response.ok) {
     throw new Error(`HTTP error! Status: ${response.status}`);
   }
-  // Convert the response to a Blob
+
   const blob = await response.blob();
-  // Create a new FileReader instance
   const reader = new FileReader();
 
-  // Return a promise that resolves to a Base64 string when the reader is done
   return new Promise((resolve, reject) => {
-    // Set up the onload event handler
     reader.onloadend = () => {
       resolve(reader.result);
     };
-    // Set up the onerror event handler
     reader.onerror = reject;
-    // Read the blob as a data URL (Base64)
     reader.readAsDataURL(blob);
   });
 }

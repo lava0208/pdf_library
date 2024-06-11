@@ -133,6 +133,8 @@ const generalUserMode = function () {
 
 const drawFormElement = function () {
   form_storage = draw_form_storage;
+  console.log("==== first load data ======");
+  console.log(form_storage);
   if (form_storage !== null) {
     form_storage.forEach((item) => {
       let id = item.id;
@@ -141,7 +143,7 @@ const drawFormElement = function () {
         x = item.x;
         y = item.y;
         width = item.xPage;
-        height = item.yPage;
+        height = item.form_type !== 10 ? item.yPage : 'auto'; //... fit signature height
         item.baseX = item.x;
         item.baseY = item.y;
       } else {
@@ -155,6 +157,7 @@ const drawFormElement = function () {
       new_x_y = PDFViewerApplication.pdfViewer._pages[
         PDFViewerApplication.page - 1
       ].viewport.convertToViewportPoint(x, y);
+      console.log(PDFViewerApplication.pdfViewer._pages[PDFViewerApplication.page - 1]);
       x = new_x_y[0];
       y = new_x_y[1];
       let pg = document.getElementById(String(item.page_number));
@@ -1032,8 +1035,8 @@ const drawFormElement = function () {
             if (element.id == id) {
               document.getElementById("signature-font-background-color").value =
                 element.textBackgroundColor;
-              
-              if(isDraft == "false"){
+
+              if (isDraft == "false") {
                 setTimeout(() => {
                   $("#" + element.containerId).css("background-color", element.textBackgroundColor);
                 }, 100);
@@ -2286,8 +2289,12 @@ const handleSignature = function () {
       if (form_storage[i].id == current_form_id) {
 
         //... background color
-        form_storage[i].textBackgroundColor = textBackgroundColor;
-
+        //... check if draw, type, upload
+        if (form_storage[i].imgData.includes("data:image/png;base64")) {
+          form_storage[i].textBackgroundColor = "#FFFFFF"
+        } else {
+          form_storage[i].textBackgroundColor = textBackgroundColor;
+        }
         break;
       }
     }
@@ -2310,7 +2317,7 @@ const handleSignature = function () {
       imgData: signatureImgData,
 
       //... background color
-      textBackgroundColor: textBackgroundColor,      
+      textBackgroundColor: textBackgroundColor,
     });
     const date = new Date(Date.now());
     addHistory(baseId, SIGNATURE, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "signature");
@@ -2862,6 +2869,20 @@ const addFormElementStyle = function (object, top, left, width, height) {
   object.style.left = left + "px";
   object.style.width = width + "px";
   object.style.height = height + "px";
+  object.style.background = "#3C97FE";
+  object.style.zIndex = standardZIndex;
+  object.tabIndex = 0;
+  object.style.borderRadius = "3px";
+  object.classList.add("form-fields");
+};
+
+//...
+const addSignatureElementStyle = function (object, top, left, width, minHeight) {
+  object.style.position = "absolute";
+  object.style.top = top + "px";
+  object.style.left = left + "px";
+  object.style.width = width + "px";
+  object.style.minHeight = minHeight + "px";
   object.style.background = "#3C97FE";
   object.style.zIndex = standardZIndex;
   object.tabIndex = 0;
@@ -3965,11 +3986,13 @@ const eventHandler = async function (e) {
       current_form_id = signatureId;
 
       formWidth = 200;
-      formHeight = 50;
+      formHeight = 40;
 
       const signatureContainer = document.createElement("div");
       signatureContainer.id = "signature" + signatureId;
-      addFormElementStyle(
+
+      //...
+      addSignatureElementStyle(
         signatureContainer,
         topPos,
         leftPos,

@@ -1032,9 +1032,12 @@ const drawFormElement = function () {
             if (element.id == id) {
               document.getElementById("signature-font-background-color").value =
                 element.textBackgroundColor;
-              setTimeout(() => {
-                $("#" + element.containerId).css("background-color", element.textBackgroundColor);
-              }, 100);
+              
+              if(isDraft == "false"){
+                setTimeout(() => {
+                  $("#" + element.containerId).css("background-color", element.textBackgroundColor);
+                }, 100);
+              }
             }
           })
 
@@ -1404,7 +1407,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return response.json();
       })
       .then(data => {
-        form_storage =  isDraft == "true" ? [] : JSON.parse(data.formData);
+        form_storage = isDraft == "true" ? [] : JSON.parse(data.formData);
         // clientName = data.name;
         // clientEmail = data.email;
         // Handle the retrieved data from the backend
@@ -1638,16 +1641,16 @@ const handleText = function (e) {
     initialValue = currentFormText.querySelector(".text-field-input").value;
   }
 
-  if(isDraft != "false"){
+  if (isDraft != "false") {
     for (let i = 0; i < form_storage.length; i++) {
       if (form_storage[i].id == current_form_id) {
         form_storage[i].fontStyle = fontStyle;
         form_storage[i].fontSize = fontSize;
         form_storage[i].textColor = textColor;
-  
+
         //... background color
         form_storage[i].textBackgroundColor = textBackgroundColor;
-  
+
         form_storage[i].align = alignValue;
         form_storage[i].isBold = isBold;
         form_storage[i].isItalic = isItalic;
@@ -1669,7 +1672,7 @@ const handleText = function (e) {
     }
   }
 
-  
+
   let count = 0;
   for (let j = 0; j < form_storage.length; j++) {
     if (
@@ -1746,37 +1749,39 @@ const handleCombo = function (e) {
     let currentValue = currentFormText.querySelector(".combobox-field-input").value;
     if (currentValue != "") initialValue = currentValue;
   }
-  for (let i = 0; i < form_storage.length; i++) {
-    if (form_storage[i].form_type === COMBOBOX) {
-      if (
-        form_storage[i].form_field_name == formFieldName &&
-        form_storage[i].id == current_form_id
-      ) {
-        form_storage[i].optionArray =
-          form_storage[i].optionArray.concat(comboboxOptionArray);
-        form_storage[i].fontStyle = fontStyle;
-        form_storage[i].fontSize = fontSize;
-        form_storage[i].textColor = textColor;
+  if (isDraft != "false") {
+    for (let i = 0; i < form_storage.length; i++) {
+      if (form_storage[i].form_type === COMBOBOX) {
+        if (
+          form_storage[i].form_field_name == formFieldName &&
+          form_storage[i].id == current_form_id
+        ) {
+          form_storage[i].optionArray =
+            form_storage[i].optionArray.concat(comboboxOptionArray);
+          form_storage[i].fontStyle = fontStyle;
+          form_storage[i].fontSize = fontSize;
+          form_storage[i].textColor = textColor;
 
-        //... background color
-        form_storage[i].textBackgroundColor = textBackgroundColor;
+          //... background color
+          form_storage[i].textBackgroundColor = textBackgroundColor;
 
-        form_storage[i].regularFontStyle = regularFont;
-        form_storage[i].initialValue = initialValue;
-        // form_storage[i].align = alignValue;
-        comboboxOptionArray = [];
-        break;
-      } else if (
-        form_storage[i].form_field_name == formFieldName &&
-        form_storage[i].id != current_form_id
-      ) {
-        break;
-      } else if (
-        form_storage[i].form_field_name != formFieldName &&
-        form_storage[i].id == current_form_id
-      ) {
-        if (formFieldName != "") form_storage[i].form_field_name = formFieldName;
-        break;
+          form_storage[i].regularFontStyle = regularFont;
+          form_storage[i].initialValue = initialValue;
+          // form_storage[i].align = alignValue;
+          comboboxOptionArray = [];
+          break;
+        } else if (
+          form_storage[i].form_field_name == formFieldName &&
+          form_storage[i].id != current_form_id
+        ) {
+          break;
+        } else if (
+          form_storage[i].form_field_name != formFieldName &&
+          form_storage[i].id == current_form_id
+        ) {
+          if (formFieldName != "") form_storage[i].form_field_name = formFieldName;
+          break;
+        }
       }
     }
   }
@@ -1851,36 +1856,38 @@ const handleList = function (e) {
     if (currentFormText.querySelector(".list-field-input").querySelector(".active"))
       initialValue = currentFormText.querySelector(".list-field-input").querySelector(".active").textContent;
   }
-  for (let i = 0; i < form_storage.length; i++) {
-    if (form_storage[i].form_type === LIST) {
-      if (
-        form_storage[i].id == current_form_id
-      ) {
-        form_storage[i].optionArray =
-          form_storage[i].optionArray.concat(listboxOptionArray);
-        form_storage[i].fontStyle = fontStyle;
-        form_storage[i].fontSize = fontSize;
-        form_storage[i].textColor = textColor;
+  if (isDraft != "false") {
+    for (let i = 0; i < form_storage.length; i++) {
+      if (form_storage[i].form_type === LIST) {
+        if (
+          form_storage[i].id == current_form_id
+        ) {
+          form_storage[i].optionArray =
+            form_storage[i].optionArray.concat(listboxOptionArray);
+          form_storage[i].fontStyle = fontStyle;
+          form_storage[i].fontSize = fontSize;
+          form_storage[i].textColor = textColor;
 
-        //... background color
-        form_storage[i].textBackgroundColor = textBackgroundColor;
+          //... background color
+          form_storage[i].textBackgroundColor = textBackgroundColor;
 
-        form_storage[i].regularFontStyle = regularFont;
-        form_storage[i].initialValue = initialValue;
-        // form_storage[i].align = alignValue;
-        listboxOptionArray = [];
-        break;
-      } else if (
-        form_storage[i].form_field_name == formFieldName &&
-        form_storage[i].id != current_form_id
-      ) {
-        break;
-      } else if (
-        form_storage[i].form_field_name != formFieldName &&
-        form_storage[i].id == current_form_id
-      ) {
-        form_storage[i].form_field_name = formFieldName;
-        break;
+          form_storage[i].regularFontStyle = regularFont;
+          form_storage[i].initialValue = initialValue;
+          // form_storage[i].align = alignValue;
+          listboxOptionArray = [];
+          break;
+        } else if (
+          form_storage[i].form_field_name == formFieldName &&
+          form_storage[i].id != current_form_id
+        ) {
+          break;
+        } else if (
+          form_storage[i].form_field_name != formFieldName &&
+          form_storage[i].id == current_form_id
+        ) {
+          form_storage[i].form_field_name = formFieldName;
+          break;
+        }
       }
     }
   }
@@ -2069,34 +2076,36 @@ const handleButton = function (e) {
   //... background color
   textBackgroundColor = document.getElementById("button-font-background-color") && document.getElementById("button-font-background-color").value;
 
-  for (let i = 0; i < form_storage.length; i++) {
-    if (
-      form_storage[i].form_field_name == formFieldName &&
-      form_storage[i].id == current_form_id
-    ) {
-      form_storage[i].action = form_action;
-      form_storage[i].fontStyle = fontStyle;
-      form_storage[i].fontSize = fontSize;
-      form_storage[i].textColor = textColor;
+  if (isDraft != "false") {
+    for (let i = 0; i < form_storage.length; i++) {
+      if (
+        form_storage[i].form_field_name == formFieldName &&
+        form_storage[i].id == current_form_id
+      ) {
+        form_storage[i].action = form_action;
+        form_storage[i].fontStyle = fontStyle;
+        form_storage[i].fontSize = fontSize;
+        form_storage[i].textColor = textColor;
 
-      //... background color
-      form_storage[i].textBackgroundColor = textBackgroundColor;
+        //... background color
+        form_storage[i].textBackgroundColor = textBackgroundColor;
 
-      form_storage[i].text = initialValue;
-      form_storage[i].align = alignValue;
-      break;
-    } else if (
-      form_storage[i].form_field_name == formFieldName &&
-      form_storage[i].id != current_form_id
-    ) {
-      break;
-    } else if (
-      form_storage[i].form_field_name != formFieldName &&
-      form_storage[i].id == current_form_id
-    ) {
-      form_storage[i].form_field_name = formFieldName;
-      form_storage[i].action = form_action;
-      break;
+        form_storage[i].text = initialValue;
+        form_storage[i].align = alignValue;
+        break;
+      } else if (
+        form_storage[i].form_field_name == formFieldName &&
+        form_storage[i].id != current_form_id
+      ) {
+        break;
+      } else if (
+        form_storage[i].form_field_name != formFieldName &&
+        form_storage[i].id == current_form_id
+      ) {
+        form_storage[i].form_field_name = formFieldName;
+        form_storage[i].action = form_action;
+        break;
+      }
     }
   }
   let count = 0;
@@ -2169,31 +2178,33 @@ const handleDate = function (e) {
 
   if (window.getComputedStyle(document.getElementById(DATE_OPTION)).getPropertyValue('display') !== "none") {
     document.getElementById(DATE_OPTION).style.display = "none";
-    for (let i = 0; i < form_storage.length; i++) {
-      if (
-        form_storage[i].form_field_name == formFieldName &&
-        form_storage[i].id == current_form_id
-      ) {
-        form_storage[i].fontStyle = fontStyle;
-        form_storage[i].fontSize = fontSize * 0.75 * 0.8;
-        form_storage[i].textColor = textColor;
+    if (isDraft != "false") {
+      for (let i = 0; i < form_storage.length; i++) {
+        if (
+          form_storage[i].form_field_name == formFieldName &&
+          form_storage[i].id == current_form_id
+        ) {
+          form_storage[i].fontStyle = fontStyle;
+          form_storage[i].fontSize = fontSize * 0.75 * 0.8;
+          form_storage[i].textColor = textColor;
 
-        //... background color
-        form_storage[i].textBackgroundColor = textBackgroundColor;
+          //... background color
+          form_storage[i].textBackgroundColor = textBackgroundColor;
 
-        form_storage[i].text = text;
-        break;
-      } else if (
-        form_storage[i].form_field_name == formFieldName &&
-        form_storage[i].id != current_form_id
-      ) {
-        break;
-      } else if (
-        form_storage[i].form_field_name != formFieldName &&
-        form_storage[i].id == current_form_id
-      ) {
-        form_storage[i].form_field_name = formFieldName;
-        break;
+          form_storage[i].text = text;
+          break;
+        } else if (
+          form_storage[i].form_field_name == formFieldName &&
+          form_storage[i].id != current_form_id
+        ) {
+          break;
+        } else if (
+          form_storage[i].form_field_name != formFieldName &&
+          form_storage[i].id == current_form_id
+        ) {
+          form_storage[i].form_field_name = formFieldName;
+          break;
+        }
       }
     }
   } else {
@@ -2248,14 +2259,6 @@ const handleDate = function (e) {
 };
 
 const handleSignature = function () {
-  for (let i = 0; i < form_storage.length; i++) {
-    if (
-      form_storage[i].id == current_form_id
-    ) {
-      form_storage[i].imgData = signatureImgData;
-      break;
-    }
-  }
   let signStorage = form_storage.filter(function (item) {
     return item.form_type == SIGNATURE;
   });
@@ -2270,13 +2273,18 @@ const handleSignature = function () {
   //... background color
   textBackgroundColor = document.getElementById("signature-font-background-color") && document.getElementById("signature-font-background-color").value;
 
-  for (let i = 0; i < form_storage.length; i++) {
-    if (form_storage[i].id == current_form_id) {
+  if (isDraft != "false") {
+    for (let i = 0; i < form_storage.length; i++) {
+      if (form_storage[i].id == current_form_id) {
 
-      //... background color
-      form_storage[i].textBackgroundColor = textBackgroundColor;
+        //... background color
+        form_storage[i].textBackgroundColor = textBackgroundColor;
 
-      break;
+        break;
+      } else {
+        form_storage[i].imgData = signatureImgData;
+        break;
+      }
     }
   }
 
@@ -2755,7 +2763,7 @@ const showOptionAndResizebar = function (
     });
     fontSizeArr.map((item) => {
       if (item == "Auto")
-        selectSizeContent += `<option value='16'}>Default</option>`;
+        selectSizeContent += `<option value='16'>Default</option>`;
       else selectSizeContent += `<option value=${item}>${item}</option>`;
     });
     if (document.getElementById(`${id}-font-style`)) {

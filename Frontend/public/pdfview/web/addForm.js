@@ -2259,6 +2259,14 @@ const handleDate = function (e) {
 };
 
 const handleSignature = function () {
+  for (let i = 0; i < form_storage.length; i++) {
+    if (
+      form_storage[i].id == current_form_id
+    ) {
+      form_storage[i].imgData = signatureImgData;
+      break;
+    }
+  }
   let signStorage = form_storage.filter(function (item) {
     return item.form_type == SIGNATURE;
   });
@@ -2281,9 +2289,6 @@ const handleSignature = function () {
         form_storage[i].textBackgroundColor = textBackgroundColor;
 
         break;
-      } else {
-        form_storage[i].imgData = signatureImgData;
-        break;
       }
     }
   }
@@ -2305,7 +2310,7 @@ const handleSignature = function () {
       imgData: signatureImgData,
 
       //... background color
-      textBackgroundColor: textBackgroundColor,
+      textBackgroundColor: textBackgroundColor,      
     });
     const date = new Date(Date.now());
     addHistory(baseId, SIGNATURE, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "signature");

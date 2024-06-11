@@ -359,8 +359,10 @@ async function fetchProfileSignatures() {
 function chooseSignature(imgSrc){
   $(".profile-img-list").each(function(){
     $(this).find("input").prop("checked", false);
+    $(this).removeClass("active");
   });
   $(event.target).closest(".profile-img-list").find("input").prop("checked", true);
+  $(event.target).closest(".profile-img-list").addClass("active");
   selectedProfileSignature = imgSrc;
 }
 

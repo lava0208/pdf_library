@@ -302,7 +302,8 @@ label[for="signature-profile-image-input"]{
   border-radius: 3px;
 }
 
-.profile-img-list:hover{
+.profile-img-list:hover,
+.profile-img-list.active{
   background-color: #f3f3f3;
 }
 

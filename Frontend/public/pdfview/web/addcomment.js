@@ -711,7 +711,7 @@ function splitTextIntoLines(text, maxWidth, font, fontSize) {
   return lines;
 }
 
-const setDocument = async function () {
+const setDocumentAsPDF = async function () {
   pdfBytes = await PDFViewerApplication.pdfDocument.saveDocument();
   const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
   pdfBytes = await pdfDoc.save();

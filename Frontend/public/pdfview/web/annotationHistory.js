@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
         $("#secondaryPrint").addClass("hidden");
         $("#secondarySaveFile").addClass("hidden");
+        $("#pdfEditorButton").addClass("hidden");
     }
 })
 
@@ -536,6 +537,12 @@ $("#pdfViewerButton").click(function () {
     parent.window.location.href = url;
 })
 
+$("#pdfEditorButton").click(function () {
+    var id = $(this).attr("link") ? $(this).attr("link") : initialId;
+    var url = `${BASE_SERVER_URL}/pdfviewer?id=${id}&draft=true`;
+    parent.window.location.href = url;
+})
+
 const getDocList = async function (id) {
     let username = localStorage.getItem("username");
     //... custom api
@@ -552,6 +559,7 @@ const getDocList = async function (id) {
             $("#pdfViewerButton").removeClass("hidden");
             $("#secondaryPrint").addClass("hidden");
             $("#secondarySaveFile").addClass("hidden");
+            $("#pdfEditorButton").addClass("hidden");
             data.history.forEach(function(item, i){
                 let pageDiv;
                 let page = item.page;

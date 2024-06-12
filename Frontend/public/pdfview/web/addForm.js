@@ -135,10 +135,38 @@ const drawFormElement = function () {
   form_storage = draw_form_storage;
   console.log("==== first load data ======");
   console.log(form_storage);
+
   if (form_storage !== null) {
+
+    //... initialize variable
+    let tmpCheckboxCount = 1;
+    let tmpRadioCount = 1;
+    let tmpTextfieldCount = 1;
+    let tmpComboCount = 1;
+    let tmpListCount = 1;
+    let tmpButtonCount = 1;
+    let tmpDatefieldCount = 1;
+
     form_storage.forEach((item) => {
       let id = item.id;
       let new_x_y, x, y, width, height;
+
+      if (item.form_type === 1) {
+        tmpCheckboxCount++;
+      } else if (item.form_type === 2) {
+        tmpRadioCount++;
+      } else if (item.form_type === 3) {
+        tmpTextfieldCount++;
+      } else if (item.form_type === 4) {
+        tmpComboCount++;
+      } else if (item.form_type === 5) {
+        tmpListCount++;
+      } else if (item.form_type === 6) {
+        tmpButtonCount++;
+      } else if (item.form_type === 8) {
+        tmpDatefieldCount++;
+      }
+
       if (item.form_type != RADIO) {
         x = item.x;
         y = item.y;
@@ -153,6 +181,9 @@ const drawFormElement = function () {
         height = item.data.yPage;
         item.data.baseX = item.data.x;
         item.data.baseY = item.data.y;
+      }
+      if (PDFViewerApplication.pdfViewer._pages[PDFViewerApplication.page - 1] == undefined) {
+        location.reload();
       }
       new_x_y = PDFViewerApplication.pdfViewer._pages[
         PDFViewerApplication.page - 1
@@ -834,7 +865,7 @@ const drawFormElement = function () {
                       document.getElementById("button-font-background-color").value =
                         element.textBackgroundColor;
 
-                        const selectedValue = document.getElementById("button-field-input-action") && document.getElementById("button-field-input-action").value;
+                      const selectedValue = document.getElementById("button-field-input-action") && document.getElementById("button-field-input-action").value;
                       if (element.action == SUBMIT) {
                         selectedValue.value = "submit";
                       } else if (element.action == RESET) {
@@ -1249,7 +1280,17 @@ const drawFormElement = function () {
           break;
       }
     })
+
+    //... initialize variable
+    checkboxCount = tmpCheckboxCount;
+    radioCount = tmpRadioCount;
+    textfieldCount = tmpTextfieldCount;
+    comboCount = tmpComboCount;
+    listCount = tmpListCount;
+    datefieldCount = tmpDatefieldCount;
+    buttonCount = tmpButtonCount;
   }
+
   if (text_storage !== null) {
     text_storage.forEach((item) => {
       let id = item.id;
@@ -1412,6 +1453,7 @@ document.addEventListener("DOMContentLoaded", function () {
         form_storage = isDraft == "true" ? [] : isDraft == "" ? JSON.parse(data[0].formData) : JSON.parse(data.formData);
         clientName = isDraft == "" ? data[0].name : data.name;
         clientEmail = isDraft == "" ? data[0].email : data.email;
+
         // Handle the retrieved data from the backend
         const dataURI = isDraft ? data.pdfData : data[0].pdfData;
         const base64Data = dataURI.split(',')[1];
@@ -1537,7 +1579,8 @@ const handleCheckbox = function (e) {
   const label = document.getElementById("checkbox-label").value;
   const value = document.getElementById("checkbox-value").value;
 
-  if (baseId !== 0 && (count == form_storage.length || form_storage == null)) {
+  // if (baseId !== 0 && (count == form_storage.length || form_storage == null)) {
+  if (baseId !== 0 && count == form_storage.length) {
     form_storage.push({
       id: baseId,
       containerId: "checkbox" + baseId,
@@ -1594,7 +1637,9 @@ const handleRadio = function (e) {
       }
     }
   }
-  if (baseId !== 0 && (count == form_storage.length || form_storage == null)) {
+
+  // if (baseId !== 0 && (count == form_storage.length || form_storage == null)) {
+  if (baseId !== 0 && count == form_storage.length) {
     form_storage.push({
       id: baseId,
       containerId: "radio" + baseId,
@@ -1644,39 +1689,37 @@ const handleText = function (e) {
     initialValue = currentFormText.querySelector(".text-field-input").value;
   }
 
-  if (isDraft != "false") {
-    for (let i = 0; i < form_storage.length; i++) {
-      if (form_storage[i].id == current_form_id) {
-        form_storage[i].fontStyle = fontStyle;
-        form_storage[i].fontSize = fontSize;
-        form_storage[i].textColor = textColor;
+  for (let i = 0; i < form_storage.length; i++) {
+    if (form_storage[i].id == current_form_id) {
+      form_storage[i].fontStyle = fontStyle;
+      form_storage[i].fontSize = fontSize;
+      form_storage[i].textColor = textColor;
 
-        //... background color
-        form_storage[i].textBackgroundColor = textBackgroundColor;
+      //... background color
+      form_storage[i].textBackgroundColor = textBackgroundColor;
 
-        form_storage[i].align = alignValue;
-        form_storage[i].isBold = isBold;
-        form_storage[i].isItalic = isItalic;
-        form_storage[i].regularFontStyle = regularFont;
-        form_storage[i].initialValue = initialValue;
-        break;
-      } else if (
-        form_storage[i].form_field_name == formFieldName &&
-        form_storage[i].id != current_form_id
-      ) {
-        break;
-      } else if (
-        form_storage[i].form_field_name != formFieldName &&
-        form_storage[i].id == current_form_id
-      ) {
-        form_storage[i].form_field_name = formFieldName;
-        break;
-      }
+      form_storage[i].align = alignValue;
+      form_storage[i].isBold = isBold;
+      form_storage[i].isItalic = isItalic;
+      form_storage[i].regularFontStyle = regularFont;
+      form_storage[i].initialValue = initialValue;
+      break;
+    } else if (
+      form_storage[i].form_field_name == formFieldName &&
+      form_storage[i].id != current_form_id
+    ) {
+      break;
+    } else if (
+      form_storage[i].form_field_name != formFieldName &&
+      form_storage[i].id == current_form_id
+    ) {
+      form_storage[i].form_field_name = formFieldName;
+      break;
     }
   }
 
-
   let count = 0;
+
   for (let j = 0; j < form_storage.length; j++) {
     if (
       form_storage[j].form_field_name != formFieldName &&
@@ -1685,7 +1728,8 @@ const handleText = function (e) {
       count++;
   }
 
-  if (baseId !== 0 && (count == form_storage.length || form_storage == null)) {
+  // if (baseId !== 0 && (count == form_storage.length || form_storage == null)) {
+  if (baseId !== 0 && count == form_storage.length) {
     form_storage.push({
       id: baseId,
       containerId: "text" + baseId,
@@ -1714,6 +1758,7 @@ const handleText = function (e) {
       yPage: formHeight,
       isReadOnly: false,
     });
+
     fontStyle = "";
     fontSize = 12;
     textColor = "";
@@ -1725,6 +1770,7 @@ const handleText = function (e) {
     const date = new Date(Date.now());
     addHistory(baseId, TEXTFIELD, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "text");
   }
+
   document
     .getElementById("text-save-button")
     .removeEventListener("click", handleText);
@@ -1752,43 +1798,44 @@ const handleCombo = function (e) {
     let currentValue = currentFormText.querySelector(".combobox-field-input").value;
     if (currentValue != "") initialValue = currentValue;
   }
-  if (isDraft != "false") {
-    for (let i = 0; i < form_storage.length; i++) {
-      if (form_storage[i].form_type === COMBOBOX) {
-        if (
-          form_storage[i].form_field_name == formFieldName &&
-          form_storage[i].id == current_form_id
-        ) {
-          form_storage[i].optionArray =
-            form_storage[i].optionArray.concat(comboboxOptionArray);
-          form_storage[i].fontStyle = fontStyle;
-          form_storage[i].fontSize = fontSize;
-          form_storage[i].textColor = textColor;
 
-          //... background color
-          form_storage[i].textBackgroundColor = textBackgroundColor;
+  for (let i = 0; i < form_storage.length; i++) {
+    if (form_storage[i].form_type === COMBOBOX) {
+      if (
+        form_storage[i].form_field_name == formFieldName &&
+        form_storage[i].id == current_form_id
+      ) {
+        form_storage[i].optionArray =
+          form_storage[i].optionArray.concat(comboboxOptionArray);
+        form_storage[i].fontStyle = fontStyle;
+        form_storage[i].fontSize = fontSize;
+        form_storage[i].textColor = textColor;
 
-          form_storage[i].regularFontStyle = regularFont;
-          form_storage[i].initialValue = initialValue;
-          // form_storage[i].align = alignValue;
-          comboboxOptionArray = [];
-          break;
-        } else if (
-          form_storage[i].form_field_name == formFieldName &&
-          form_storage[i].id != current_form_id
-        ) {
-          break;
-        } else if (
-          form_storage[i].form_field_name != formFieldName &&
-          form_storage[i].id == current_form_id
-        ) {
-          if (formFieldName != "") form_storage[i].form_field_name = formFieldName;
-          break;
-        }
+        //... background color
+        form_storage[i].textBackgroundColor = textBackgroundColor;
+
+        form_storage[i].regularFontStyle = regularFont;
+        form_storage[i].initialValue = initialValue;
+        // form_storage[i].align = alignValue;
+        comboboxOptionArray = [];
+        break;
+      } else if (
+        form_storage[i].form_field_name == formFieldName &&
+        form_storage[i].id != current_form_id
+      ) {
+        break;
+      } else if (
+        form_storage[i].form_field_name != formFieldName &&
+        form_storage[i].id == current_form_id
+      ) {
+        if (formFieldName != "") form_storage[i].form_field_name = formFieldName;
+        break;
       }
     }
   }
+
   let count = 0;
+
   for (let j = 0; j < form_storage.length; j++) {
     if (
       form_storage[j].form_field_name != formFieldName &&
@@ -1796,7 +1843,9 @@ const handleCombo = function (e) {
     )
       count++;
   }
-  if (baseId !== 0 && (count == form_storage.length || form_storage == null)) {
+
+  // if (baseId !== 0 && (count == form_storage.length || form_storage == null)) {
+  if (baseId !== 0 && count == form_storage.length) {
     form_storage.push({
       id: baseId,
       containerId: "combo" + baseId,
@@ -1859,6 +1908,7 @@ const handleList = function (e) {
     if (currentFormText.querySelector(".list-field-input").querySelector(".active"))
       initialValue = currentFormText.querySelector(".list-field-input").querySelector(".active").textContent;
   }
+
   for (let i = 0; i < form_storage.length; i++) {
     if (form_storage[i].form_type === LIST) {
       if (
@@ -1892,7 +1942,9 @@ const handleList = function (e) {
       }
     }
   }
+
   let count = 0;
+
   for (let j = 0; j < form_storage.length; j++) {
     if (
       form_storage[j].form_field_name != formFieldName &&
@@ -1900,7 +1952,9 @@ const handleList = function (e) {
     )
       count++;
   }
-  if (baseId !== 0 && (count == form_storage.length || form_storage == null)) {
+
+  // if (baseId !== 0 && (count == form_storage.length || form_storage == null)) {
+  if (baseId !== 0 && count == form_storage.length) {
     form_storage.push({
       id: baseId,
       containerId: "list" + baseId,
@@ -2073,39 +2127,39 @@ const handleButton = function (e) {
   //... background color
   textBackgroundColor = document.getElementById("button-font-background-color") && document.getElementById("button-font-background-color").value;
 
-  if (isDraft != "false") {
-    for (let i = 0; i < form_storage.length; i++) {
-      if (
-        form_storage[i].form_field_name == formFieldName &&
-        form_storage[i].id == current_form_id
-      ) {
-        form_storage[i].action = form_action;
-        form_storage[i].fontStyle = fontStyle;
-        form_storage[i].fontSize = fontSize;
-        form_storage[i].textColor = textColor;
+  for (let i = 0; i < form_storage.length; i++) {
+    if (
+      form_storage[i].form_field_name == formFieldName &&
+      form_storage[i].id == current_form_id
+    ) {
+      form_storage[i].action = form_action;
+      form_storage[i].fontStyle = fontStyle;
+      form_storage[i].fontSize = fontSize;
+      form_storage[i].textColor = textColor;
 
-        //... background color
-        form_storage[i].textBackgroundColor = textBackgroundColor;
+      //... background color
+      form_storage[i].textBackgroundColor = textBackgroundColor;
 
-        form_storage[i].text = initialValue;
-        form_storage[i].align = alignValue;
-        break;
-      } else if (
-        form_storage[i].form_field_name == formFieldName &&
-        form_storage[i].id != current_form_id
-      ) {
-        break;
-      } else if (
-        form_storage[i].form_field_name != formFieldName &&
-        form_storage[i].id == current_form_id
-      ) {
-        form_storage[i].form_field_name = formFieldName;
-        form_storage[i].action = form_action;
-        break;
-      }
+      form_storage[i].text = initialValue;
+      form_storage[i].align = alignValue;
+      break;
+    } else if (
+      form_storage[i].form_field_name == formFieldName &&
+      form_storage[i].id != current_form_id
+    ) {
+      break;
+    } else if (
+      form_storage[i].form_field_name != formFieldName &&
+      form_storage[i].id == current_form_id
+    ) {
+      form_storage[i].form_field_name = formFieldName;
+      form_storage[i].action = form_action;
+      break;
     }
   }
+
   let count = 0;
+
   for (let j = 0; j < form_storage.length; j++) {
     if (
       form_storage[j].form_field_name != formFieldName &&
@@ -2113,7 +2167,9 @@ const handleButton = function (e) {
     )
       count++;
   }
-  if (baseId !== 0 && (count == form_storage.length || form_storage == null)) {
+
+  // if (baseId !== 0 && (count == form_storage.length || form_storage == null)) {
+  if (baseId !== 0 && count == form_storage.length) {
     form_storage.push({
       id: baseId,
       containerId: "button" + baseId,
@@ -2153,10 +2209,11 @@ const handleButton = function (e) {
     addHistory(baseId, BUTTON, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "button");
   }
 
-  if(document.getElementById("button-save-button")) document.getElementById("button-save-button").removeEventListener("click", handleButton);  
+  if (document.getElementById("button-save-button")) document.getElementById("button-save-button").removeEventListener("click", handleButton);
 };
 
 const handleDate = function (e) {
+  console.log(form_storage);
   let text;
   const currentText = document.getElementById(current_date_content_id);
   if (currentText) text = currentText.value;
@@ -2174,33 +2231,32 @@ const handleDate = function (e) {
 
   if (window.getComputedStyle(document.getElementById(DATE_OPTION)).getPropertyValue('display') !== "none") {
     document.getElementById(DATE_OPTION).style.display = "none";
-    if (isDraft != "false") {
-      for (let i = 0; i < form_storage.length; i++) {
-        if (
-          form_storage[i].form_field_name == formFieldName &&
-          form_storage[i].id == current_form_id
-        ) {
-          form_storage[i].fontStyle = fontStyle;
-          form_storage[i].fontSize = fontSize * 0.75 * 0.8;
-          form_storage[i].textColor = textColor;
 
-          //... background color
-          form_storage[i].textBackgroundColor = textBackgroundColor;
+    for (let i = 0; i < form_storage.length; i++) {
+      if (
+        form_storage[i].form_field_name == formFieldName &&
+        form_storage[i].id == current_form_id
+      ) {
+        form_storage[i].fontStyle = fontStyle;
+        form_storage[i].fontSize = fontSize * 0.75 * 0.8;
+        form_storage[i].textColor = textColor;
 
-          form_storage[i].text = text;
-          break;
-        } else if (
-          form_storage[i].form_field_name == formFieldName &&
-          form_storage[i].id != current_form_id
-        ) {
-          break;
-        } else if (
-          form_storage[i].form_field_name != formFieldName &&
-          form_storage[i].id == current_form_id
-        ) {
-          form_storage[i].form_field_name = formFieldName;
-          break;
-        }
+        //... background color
+        form_storage[i].textBackgroundColor = textBackgroundColor;
+
+        form_storage[i].text = text;
+        break;
+      } else if (
+        form_storage[i].form_field_name == formFieldName &&
+        form_storage[i].id != current_form_id
+      ) {
+        break;
+      } else if (
+        form_storage[i].form_field_name != formFieldName &&
+        form_storage[i].id == current_form_id
+      ) {
+        form_storage[i].form_field_name = formFieldName;
+        break;
       }
     }
   } else {
@@ -2213,7 +2269,9 @@ const handleDate = function (e) {
   for (let j = 0; j < form_storage.length; j++) {
     if (form_storage[j].id != current_form_id) count++;
   }
-  if (baseId !== 0 && (count == form_storage.length || form_storage == null)) {
+
+  // if (baseId !== 0 && (count == form_storage.length || form_storage == null)) {
+  if (baseId !== 0 && count == form_storage.length) {
     form_storage.push({
       id: baseId,
       containerId: "datecontent" + baseId,

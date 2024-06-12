@@ -4229,6 +4229,59 @@ const flatten = async function () {
   }
 };
 
+function hexToRgb1(hex) {
+  const bigint = parseInt(hex.slice(1), 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+  return [r / 255, g / 255, b / 255]; // Convert to [0, 1] range
+}
+
+async function fetchImageAsBase64(url) {
+  const response = await fetch(url);
+  const blob = await response.blob();
+  const reader = new FileReader();
+
+  return new Promise((resolve, reject) => {
+    reader.onloadend = () => {
+      resolve(reader.result);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
+async function embedImage(form_item, pdfDoc, page) {
+  let imgData = form_item.imgData;
+
+  if (!imgData.includes("data:image/png;base64")) {
+    imgData = $("#" + form_item.containerId).find("img").attr("src");
+  }
+
+  const [r, g, b] = hexToRgb1(form_item.textBackgroundColor);
+
+  try {
+    const pngImage = await pdfDoc.embedPng(imgData);
+
+    page.drawRectangle({
+      x: form_item.x,
+      y: form_item.y - form_item.height,
+      width: form_item.width,
+      height: form_item.height,
+      color: PDFLib.rgb(r, g, b),
+    });
+
+    page.drawImage(pngImage, {
+      x: form_item.x,
+      y: form_item.y - form_item.height,
+      width: form_item.width,
+      height: form_item.height,
+    });
+  } catch (error) {
+    console.error('Error embedding image:', error);
+  }
+}
+
 async function addFormElements() {
   const fontStyles = {
     Courier: PDFLib.StandardFonts.Courier,
@@ -4527,25 +4580,9 @@ async function addFormElements() {
           break;
         case SIGNATURE:
           if (form_item.imgData != undefined) {
-            if (form_item.imgData.includes("data:image/png;base64")) {
-              const pngImage = await pdfDoc.embedPng(form_item.imgData);
-              page.drawImage(pngImage, {
-                x: form_item.x,
-                y: form_item.y - form_item.height,
-                width: form_item.width,
-                height: form_item.height,
-              });
-            } else {
-              const imgData = $("#" + form_item.containerId).find("img").attr("src");
-              const pngImage = await pdfDoc.embedPng(imgData);
-              page.drawImage(pngImage, {
-                x: form_item.x,
-                y: form_item.y - form_item.height,
-                width: form_item.width,
-                height: form_item.height,
-              });
-            }
+            await embedImage(form_item, pdfDoc, page);
           }
+          
           break;
         case SHAPE:
           const shapeImage = await pdfDoc.embedPng(form_item.imgData);

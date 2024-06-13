@@ -1364,8 +1364,8 @@ $(document).on("DOMSubtreeModified", ".freeTextEditor.selectedEditor", function 
   let fontStyle = toolbar.find("#text-italic").hasClass("active") ? "italic" : "";
 
   $(this).find(".internal[role='textbox']").attr('size', size);
-  // $(this).find(".internal[role='textbox']").css({"font-size": fontSize, "font-family": fontFamily, "font-weight": fontWeight, "font-style": fontStyle});
-  $(this).find(".internal[role='textbox']").css({ "font-size": fontSize, "font-family": fontFamily, "font-style": fontStyle });
+  $(this).find(".internal[role='textbox']").css({ "font-size": fontSize, "font-family": fontFamily, "font-weight": fontWeight, "font-style": fontStyle });
+  // $(this).find(".internal[role='textbox']").css({ "font-size": fontSize, "font-family": fontFamily, "font-style": fontStyle });
 })
 
 //... Change Font Size Event
@@ -1425,8 +1425,8 @@ $(document).on("click", ".text-weight-button", function () {
   if ($(".freeTextEditor").hasClass("selectedEditor")) {
     let fontWeight = toolbar.find("#text-bold").hasClass("active") ? 700 : 500;
     let fontStyle = toolbar.find("#text-italic").hasClass("active") ? "italic" : "";
-    // $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").css({"font-weight": fontWeight, "font-style": fontStyle});
-    $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").css({ "font-style": fontStyle });
+    $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").css({ "font-weight": fontWeight, "font-style": fontStyle });
+    // $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").css({ "font-style": fontStyle });
   }
 })
 
@@ -1704,6 +1704,12 @@ const handleText = function (e) {
         form_storage[i].isItalic = isItalic;
         form_storage[i].regularFontStyle = regularFont;
         form_storage[i].initialValue = initialValue;
+        form_storage[i].form_field_name = formFieldName;
+
+        console.log("form_storage[i].initialValue ");
+        console.log(form_storage[i]);
+
+        handleTrack(form_storage[i].id, formFieldName);
         break;
       } else if (
         form_storage[i].form_field_name == formFieldName &&
@@ -4498,19 +4504,19 @@ async function addFormElements() {
             comboboxForm.addOptions(form_item.optionArray);
             if (form_item.initialValue)
               comboboxForm.select(form_item.initialValue);
-              comboboxForm.addToPage(page, {
-                x: form_item.x,
-                y: form_item.y - form_item.height,
-                width: form_item.width,
-                height: form_item.height,
-                textColor: hexToRgbNew(form_item.textColor),
-                backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
-                borderWidth: 1,
-                borderColor: PDFLib.rgb(0.23, 0.23, 0.23),
-              });
-              comboboxForm.updateAppearances(customFont);
-              comboboxForm.defaultUpdateAppearances(customFont);
-              comboboxForm.setFontSize(form_item.fontSize);
+            comboboxForm.addToPage(page, {
+              x: form_item.x,
+              y: form_item.y - form_item.height,
+              width: form_item.width,
+              height: form_item.height,
+              textColor: hexToRgbNew(form_item.textColor),
+              backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
+              borderWidth: 1,
+              borderColor: PDFLib.rgb(0.23, 0.23, 0.23),
+            });
+            comboboxForm.updateAppearances(customFont);
+            comboboxForm.defaultUpdateAppearances(customFont);
+            comboboxForm.setFontSize(form_item.fontSize);
           } else {
             page.drawText(form_item.initialValue, {
               x: form_item.x,
@@ -4999,4 +5005,16 @@ const submitDocument = async function () {
       sendSubmitData();
     }
   }
+}
+
+//... Tracking
+const handleTrack = function (id, value) {
+  console.log("id " + id);
+  console.log("value " + value);
+  $(".historyDiv").each(function () {
+    var index = $(this).index();
+    if(id === index){
+      $(this).find(".actionText").text(value);
+    }
+  })
 }

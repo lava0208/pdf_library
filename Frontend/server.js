@@ -8,8 +8,8 @@ const app = next({ dev });
 const handle = app.getRequestHandler();
 
 const options = {
-  key: fs.readFileSync("./cert/privkey1.pem"),
-  cert: fs.readFileSync("./cert/fullchain1.pem"),
+  key: fs.readFileSync("./cert/privkey3.pem"),
+  cert: fs.readFileSync("./cert/fullchain3.pem"),
 };
 
 app.prepare()
@@ -30,9 +30,16 @@ app.prepare()
       }
     });
 
-    https.createServer(options, server).listen(443, process.env.HOST, () => {
-      
-    });
+    https.createServer(options, server).listen(443, process.env.HOST, () => { });
+    //https.createServer(options, server).listen(443, "127.0.0.1", () => {
+    //  console.log(`Server running at https://127.0.0.1/`);
+    //});
+    //https.createServer(options, server).listen(443, "94.72.120.252", () => {
+    //  console.log(`Server running at https://94.72.120.252/`);
+    //});
+
+
+
   })
   .catch((ex) => {
     console.error(ex.stack);

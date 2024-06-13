@@ -51,8 +51,8 @@ const storage = multer.diskStorage({
 });
 
 const options = {
-  key: fs.readFileSync("./cert/privkey1.pem"),
-  cert: fs.readFileSync("./cert/fullchain1.pem"),
+  key: fs.readFileSync("./cert/privkey3.pem"),
+  cert: fs.readFileSync("./cert/fullchain3.pem"),
 };
 
 const upload = multer({ storage: storage });

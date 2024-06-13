@@ -222,7 +222,7 @@ app.post('/sendlink', upload.single('pdfFile'), (req, res) => {
   selectedEmails.forEach(email => {
     let newDataSet = [];
     const uniqueId = uuid.v4();
-    const uniqueLink = `https://${process.env.HOST}/pdfviewer/?id=${uniqueId}`;
+    const uniqueLink = `https://${process.env.DOMAIN}/pdfviewer/?id=${uniqueId}`;
 
     newDataSet.push({
       pdfData: dataUri,
@@ -275,7 +275,7 @@ app.post('/savedocument', upload.single('pdfFile'), (req, res) => {
     text: `Dear ${req.body.name}! You just signed this document.`,
     attachments: [
       {
-        filename: 'Agreement.pdf',
+        filename: 'blankpdf.pdf',
         path: pdfFilePath
       }
     ]

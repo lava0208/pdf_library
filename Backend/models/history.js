@@ -16,6 +16,9 @@ const historySchema = new mongoose.Schema({
     actiontype: {
         type: String
     },
+    actiontext: {
+        type: String
+    },
     username: {
         type: String,
     },

@@ -416,6 +416,7 @@ const addHistory = function (id, type, username, date, page, typeString) {
             addReply.append(replyInput, replySave);
 
             const textHistory = document.createElement("span");
+            textHistory.className = "actiontext";
             textHistory.style.display = "flex";
             textHistory.style.alignItems = "center";
             textHistory.style.width = "60%";
@@ -469,6 +470,7 @@ const saveDoc = async function () {
             let payload = {};
             payload.id = generateUniqueId();
             payload.actiontype = $(this).find(".annotationTypeDiv").attr("type");
+            payload.actiontext = $(this).find(".actiontext").text();
             payload.username = $(this).find(".usernameDiv").text();
             payload.date = $(this).find(".dateDiv").text();
             payload.page = number;
@@ -588,6 +590,7 @@ const getDocList = async function (id) {
                 const historyDiv = document.createElement("div");
                 historyDiv.className = "historyDiv";
                 historyDiv.id = `historyDiv${i}`;
+                historyDiv.setAttribute("actiontype", type);
                 // style
                 historyDiv.style.display = "flex";
                 historyDiv.style.flexDirection = "column";
@@ -1046,11 +1049,12 @@ const getDocList = async function (id) {
                 addReply.append(replyInput, replySave);
 
                 const textHistory = document.createElement("span");
+                textHistory.className = "actiontext";
                 textHistory.style.display = "flex";
                 textHistory.style.alignItems = "center";
                 textHistory.style.width = "60%";
                 textHistory.style.justifyContent = "start";
-                textHistory.textContent = "Your text is here";
+                textHistory.textContent = item.actiontext;
                 textHistory.style.fontSize = "11px";
                 textHistory.style.color = "red";
 

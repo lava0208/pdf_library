@@ -1579,6 +1579,29 @@ const handleCheckbox = function (e) {
   const label = document.getElementById("checkbox-label").value;
   const value = document.getElementById("checkbox-value").value;
 
+  if (isDraft != "false") {
+    for (let i = 0; i < form_storage.length; i++) {
+      if (form_storage[i].id == current_form_id) {
+        form_storage[i].form_field_name = formFieldName;
+
+        //... handle track
+        handleTrack(form_storage[i].id, formFieldName);
+        break;
+      } else if (
+        form_storage[i].form_field_name == formFieldName &&
+        form_storage[i].id != current_form_id
+      ) {
+        break;
+      } else if (
+        form_storage[i].form_field_name != formFieldName &&
+        form_storage[i].id == current_form_id
+      ) {
+        form_storage[i].form_field_name = formFieldName;
+        break;
+      }
+    }
+  }
+
   // if (baseId !== 0 && (count == form_storage.length || form_storage == null)) {
   if (baseId !== 0 && count == form_storage.length) {
     form_storage.push({
@@ -1632,6 +1655,14 @@ const handleRadio = function (e) {
           form_storage[i].id == current_form_id
         ) {
           form_storage[i].data.option = formFieldName;
+          break;
+        }
+
+        if (form_storage[i].id == current_form_id) {
+          form_storage[i].form_field_name = formFieldName;
+  
+          //... handle track
+          handleTrack(form_storage[i].id, formFieldName);
           break;
         }
       }
@@ -1706,9 +1737,7 @@ const handleText = function (e) {
         form_storage[i].initialValue = initialValue;
         form_storage[i].form_field_name = formFieldName;
 
-        console.log("form_storage[i].initialValue ");
-        console.log(form_storage[i]);
-
+        //... handle track
         handleTrack(form_storage[i].id, formFieldName);
         break;
       } else if (
@@ -1843,8 +1872,12 @@ const handleCombo = function (e) {
 
           form_storage[i].regularFontStyle = regularFont;
           form_storage[i].initialValue = initialValue;
+          form_storage[i].form_field_name = formFieldName;
           // form_storage[i].align = alignValue;
           comboboxOptionArray = [];
+
+          //... handle track
+          handleTrack(form_storage[i].id, formFieldName);
           break;
         } else if (
           form_storage[i].form_field_name == formFieldName &&
@@ -1963,8 +1996,12 @@ const handleList = function (e) {
 
           form_storage[i].regularFontStyle = regularFont;
           form_storage[i].initialValue = initialValue;
+          form_storage[i].form_field_name = formFieldName;
           // form_storage[i].align = alignValue;
           listboxOptionArray = [];
+
+          //... handle track
+          handleTrack(form_storage[i].id, formFieldName);
           break;
         } else if (
           form_storage[i].form_field_name == formFieldName &&
@@ -2192,6 +2229,11 @@ const handleButton = function (e) {
 
         form_storage[i].text = initialValue;
         form_storage[i].align = alignValue;
+        form_storage[i].form_field_name = formFieldName;
+
+        //... handle track
+        handleTrack(form_storage[i].id, initialValue + " Type " + selectedValue );
+
         break;
       } else if (
         form_storage[i].form_field_name == formFieldName &&
@@ -2204,6 +2246,9 @@ const handleButton = function (e) {
       ) {
         form_storage[i].form_field_name = formFieldName;
         form_storage[i].action = form_action;
+
+        //... handle track
+        handleTrack(form_storage[i].id, initialValue + " Type " + selectedValue);
         break;
       }
     }
@@ -2279,9 +2324,10 @@ const handleDate = function (e) {
 
   const regularFont = document.getElementById("date-font-style") && document.getElementById("date-font-style").value;
 
-  if (window.getComputedStyle(document.getElementById(DATE_OPTION)).getPropertyValue('display') !== "none") {
+  if (window.getComputedStyle(document.getElementById(DATE_OPTION)).getPropertyValue('display') !== "none"){
     document.getElementById(DATE_OPTION).style.display = "none";
-
+  }
+    
     if (isDraft != "false") {
       for (let i = 0; i < form_storage.length; i++) {
         if (
@@ -2296,6 +2342,11 @@ const handleDate = function (e) {
           form_storage[i].textBackgroundColor = textBackgroundColor;
 
           form_storage[i].text = text;
+          form_storage[i].form_field_name = formFieldName;
+          
+          //... handle track
+          handleTrack(form_storage[i].id, formFieldName);
+
           break;
         } else if (
           form_storage[i].form_field_name == formFieldName &&
@@ -2307,11 +2358,13 @@ const handleDate = function (e) {
           form_storage[i].id == current_form_id
         ) {
           form_storage[i].form_field_name = formFieldName;
+
+          //... handle track
+          handleTrack(form_storage[i].id, formFieldName);
           break;
         }
       }
-    }
-  } else {
+    } else {
     for (let i = 0; i < form_storage.length; i++) {
       if (form_storage[i].id == current_form_id) form_storage[i].text = text;
     }
@@ -2398,6 +2451,11 @@ const handleSignature = function () {
         } else {
           form_storage[i].textBackgroundColor = textBackgroundColor;
         }
+
+        let sign_type = $(".signature-option .tablink-active").text();
+
+        //... handle track
+        handleTrack(form_storage[i].id, sign_type + " signature");
         break;
       }
     }
@@ -5009,12 +5067,10 @@ const submitDocument = async function () {
 
 //... Tracking
 const handleTrack = function (id, value) {
-  console.log("id " + id);
-  console.log("value " + value);
   $(".historyDiv").each(function () {
     var index = $(this).index();
     if(id === index){
-      $(this).find(".actionText").text(value);
+      $(this).find(".actiontext").text(value);
     }
   })
 }

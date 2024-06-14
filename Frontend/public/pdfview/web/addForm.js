@@ -1057,6 +1057,7 @@ const drawFormElement = function () {
           signatureContainer.style.justifyContent = "center";
           signatureContainer.style.userSelect = "none";
           signatureContainer.style.color = "white";
+          signatureContainer.style.minHeight = "40px";
           signatureContainer.textContent = "Double Click to sign here!";
 
           //... background color
@@ -4209,6 +4210,7 @@ const eventHandler = async function (e) {
       signatureContainer.style.justifyContent = "center";
       signatureContainer.style.userSelect = "none";
       signatureContainer.style.color = "white";
+      signatureContainer.style.minHeight = "40px";
       signatureContainer.textContent = "Double Click to sign here!";
 
       pg.appendChild(signatureContainer);

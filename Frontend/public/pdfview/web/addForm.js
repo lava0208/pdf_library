@@ -1365,6 +1365,12 @@ $(document).on("DOMSubtreeModified", ".freeTextEditor.selectedEditor", function 
 
   $(this).find(".internal[role='textbox']").attr('size', size);
   $(this).find(".internal[role='textbox']").css({ "font-size": fontSize, "font-family": fontFamily, "font-weight": fontWeight, "font-style": fontStyle });
+
+  let changedText = $(this).find(".internal[role='textbox']").text();
+  console.log("Changed text: " + changedText);
+
+  console.log("baseid " + baseId);
+  handleTrack(8, changedText)
   // $(this).find(".internal[role='textbox']").css({ "font-size": fontSize, "font-family": fontFamily, "font-style": fontStyle });
 })
 
@@ -1579,10 +1585,14 @@ const handleCheckbox = function (e) {
   const label = document.getElementById("checkbox-label").value;
   const value = document.getElementById("checkbox-value").value;
 
+  //... background color
+  textBackgroundColor = document.getElementById("checkbox-background-color") && document.getElementById("checkbox-background-color").value;
+
   if (isDraft != "false") {
     for (let i = 0; i < form_storage.length; i++) {
       if (form_storage[i].id == current_form_id) {
         form_storage[i].form_field_name = formFieldName;
+        form_storage[i].textBackgroundColor = textBackgroundColor;
 
         //... handle track
         handleTrack(form_storage[i].id, formFieldName);
@@ -1622,7 +1632,14 @@ const handleCheckbox = function (e) {
       isReadOnly: false,
       label: label,
       value: value,
+
+      //... background color
+      textBackgroundColor: textBackgroundColor,
     });
+
+    //... background color
+    textBackgroundColor = "";
+
     const date = new Date(Date.now());
     addHistory(baseId, CHECKBOX, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, 'checkbox');
   }
@@ -1636,6 +1653,10 @@ const handleRadio = function (e) {
   isOptionPane = false;
   const label = document.getElementById("radio-label") && document.getElementById("radio-label").value;
   const value = document.getElementById("radio-value") && document.getElementById("radio-value").value;
+
+  //... background color
+  textBackgroundColor = document.getElementById("radio-background-color") && document.getElementById("radio-background-color").value;
+
   if (document.getElementById(RADIO_OPTION)) document.getElementById(RADIO_OPTION).style.display = "none";
   const formFieldName = document.getElementById("radio-field-input-name") && document.getElementById("radio-field-input-name").value;
   const currentRadio = document.getElementById(`radio${current_radio_id}`);
@@ -1660,6 +1681,9 @@ const handleRadio = function (e) {
 
         if (form_storage[i].id == current_form_id) {
           form_storage[i].form_field_name = formFieldName;
+          
+          //... background color
+          form_storage[i].textBackgroundColor = textBackgroundColor;          
   
           //... handle track
           handleTrack(form_storage[i].id, formFieldName);
@@ -2013,6 +2037,20 @@ const handleList = function (e) {
           form_storage[i].id == current_form_id
         ) {
           form_storage[i].form_field_name = formFieldName;
+          form_storage[i].optionArray =
+            form_storage[i].optionArray.concat(listboxOptionArray);
+          form_storage[i].fontStyle = fontStyle;
+          form_storage[i].fontSize = fontSize;
+          form_storage[i].textColor = textColor;
+
+          //... background color
+          form_storage[i].textBackgroundColor = textBackgroundColor;
+
+          form_storage[i].regularFontStyle = regularFont;
+          form_storage[i].initialValue = initialValue;
+          form_storage[i].form_field_name = formFieldName;
+          // form_storage[i].align = alignValue;
+          listboxOptionArray = [];
           break;
         }
       }
@@ -3202,6 +3240,11 @@ const eventHandler = async function (e) {
                     element.label;
                   document.getElementById("checkbox-value").value =
                     element.value;
+
+                  //... background color
+                  document.getElementById("checkbox-background-color").value =
+                    element.textBackgroundColor;
+
                   isOptionPane = true;
                   option = showOption(
                     CHECKBOX_OPTION,
@@ -3312,6 +3355,11 @@ const eventHandler = async function (e) {
                     element.data.label;
                   document.getElementById("radio-value").value =
                     element.data.value;
+
+                  //... background color
+                  document.getElementById("checkbox-background-color").value =
+                    element.textBackgroundColor;
+                    
                   isOptionPane = true;
                   option = showOption(
                     RADIO_OPTION,
@@ -4328,6 +4376,7 @@ const flatten = async function () {
   pdfBytes = await PDFViewerApplication.pdfDocument.saveDocument();
   const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
   const form = pdfDoc.getForm();
+  console.log(form);
   form.flatten();
   pdfBytes = await pdfDoc.save();
   if (form_storage.length != 0)
@@ -4456,8 +4505,8 @@ async function addFormElements() {
                 y: form_item.y - form_item.height,
                 width: form_item.width,
                 height: form_item.height,
-                backgroundColor: PDFLib.rgb(1, 1, 1),
-                borderColor: PDFLib.rgb(1, 1, 1),
+                backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
+                borderColor: hexToRgbNew(form_item.textBackgroundColor),
               });
               checkboxForm.check();
               checkboxForm.enableReadOnly();
@@ -4468,8 +4517,8 @@ async function addFormElements() {
               y: form_item.y - form_item.height,
               width: form_item.width,
               height: form_item.height,
-              backgroundColor: PDFLib.rgb(1, 1, 1),
-              borderColor: PDFLib.rgb(1, 1, 1),
+              backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
+              borderColor: hexToRgbNew(form_item.textBackgroundColor),
             });
             if (form_item.isChecked) checkboxForm.check();
           }
@@ -4482,7 +4531,7 @@ async function addFormElements() {
                 y: form_item.data.y - form_item.data.height,
                 width: form_item.data.width,
                 height: form_item.data.height,
-                backgroundColor: PDFLib.rgb(1, 1, 1),
+                backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
               });
               radioForm.select(radioCount + "");
             }
@@ -4492,7 +4541,7 @@ async function addFormElements() {
               y: form_item.data.y - form_item.data.height,
               width: form_item.data.width,
               height: form_item.data.height,
-              backgroundColor: PDFLib.rgb(1, 1, 1),
+              backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
             });
             if (form_item.data.isChecked) {
               radioForm.select(radioCount + "");
@@ -4510,7 +4559,7 @@ async function addFormElements() {
               height: form_item.height,
               textColor: hexToRgbNew(form_item.textColor),
               backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
-              borderColor: PDFLib.rgb(1, 1, 1),
+              borderColor: hexToRgbNew(form_item.textBackgroundColor),
             });
             datefieldForm.setFontSize(form_item.fontSize);
             datefieldForm.setText(form_item.text);
@@ -4524,7 +4573,7 @@ async function addFormElements() {
               width: form_item.width,
               height: form_item.height,
               size: form_item.fontSize,
-              color: PDFLib.rgb(r, g, b)
+              color: hexToRgbNew(form_item.textColor),
             });
           }
           break;
@@ -4537,14 +4586,14 @@ async function addFormElements() {
               y: form_item.y - form_item.height,
               width: form_item.width,
               height: form_item.height,
+              size: form_item.fontSize,
               textColor: hexToRgbNew(form_item.textColor),
               backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
-              borderColor: PDFLib.rgb(1, 1, 1),
+              borderColor: hexToRgbNew(form_item.textBackgroundColor),
             });
+            textfieldForm.setFontSize(form_item.fontSize);
             textfieldForm.updateAppearances(customFont);
             textfieldForm.defaultUpdateAppearances(customFont);
-            textfieldForm.setFontSize(form_item.fontSize);
-            textfieldForm.setAlignment(form_item.align);
           } else {
             page.drawText(form_item.initialValue, {
               x: form_item.x,
@@ -4552,7 +4601,7 @@ async function addFormElements() {
               width: form_item.width,
               height: form_item.height,
               size: form_item.fontSize,
-              color: PDFLib.rgb(r, g, b)
+              color: hexToRgbNew(form_item.textColor),
             });
           }
           break;
@@ -4570,11 +4619,11 @@ async function addFormElements() {
               textColor: hexToRgbNew(form_item.textColor),
               backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
               borderWidth: 1,
-              borderColor: PDFLib.rgb(0.23, 0.23, 0.23),
+              borderColor: hexToRgbNew(form_item.textBackgroundColor),
             });
-            comboboxForm.updateAppearances(customFont);
-            comboboxForm.defaultUpdateAppearances(customFont);
             comboboxForm.setFontSize(form_item.fontSize);
+            comboboxForm.updateAppearances(customFont);
+            comboboxForm.defaultUpdateAppearances(customFont);            
           } else {
             page.drawText(form_item.initialValue, {
               x: form_item.x,
@@ -4582,7 +4631,7 @@ async function addFormElements() {
               width: form_item.width,
               height: form_item.height,
               size: form_item.fontSize,
-              color: PDFLib.rgb(r, g, b)
+              color: hexToRgbNew(form_item.textColor),
             });
           }
           break;
@@ -4595,13 +4644,14 @@ async function addFormElements() {
               y: form_item.y - form_item.height,
               width: form_item.width,
               height: form_item.height,
+              size: form_item.fontSize,
               textColor: hexToRgbNew(form_item.textColor),
               backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
-              borderColor: PDFLib.rgb(1, 1, 1),
+              borderColor: hexToRgbNew(form_item.textBackgroundColor),
             });
+            listboxForm.setFontSize(12);
             listboxForm.updateAppearances(customFont);
             listboxForm.defaultUpdateAppearances(customFont);
-            listboxForm.setFontSize(form_item.fontSize);
             if (form_item.initialValue)
               listboxForm.select(form_item.initialValue);
           } else {
@@ -4610,7 +4660,7 @@ async function addFormElements() {
               y: form_item.y - form_item.height,
               width: form_item.width,
               size: form_item.fontSize,
-              color: PDFLib.rgb(r, g, b)
+              color: hexToRgbNew(form_item.textColor),
             });
           }
           break;
@@ -4624,9 +4674,9 @@ async function addFormElements() {
             textColor: hexToRgbNew(form_item.textColor),
             backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
           });
+          buttonfieldForm.setFontSize(form_item.fontSize);
           buttonfieldForm.updateAppearances(customFont);
           buttonfieldForm.defaultUpdateAppearances(customFont);
-          buttonfieldForm.setFontSize(form_item.fontSize);
           let formScript = "";
           if (form_item.action == SUBMIT) {
             formScript = `
@@ -4708,7 +4758,7 @@ async function addFormElements() {
       }
     });
   }
-  if (text_storage.length != 0) {
+  if (text_storage.length != 0) {comboDiv
     await Promise.all(
       text_storage.map(async (text_item) => {
         const fontName = text_item.fontStyle;
@@ -4811,12 +4861,36 @@ const changeMode = () => {
     checkfields.forEach((item) => {
       item.style.display = "flex";
 
+      if (form_storage !== null) {
+        form_storage.forEach((formItem) => {
+          let formId = item.parentNode.id.replace("checkbox", "");
+          if (formItem.id == formId) {
+            //... background color
+            item.style.backgroundColor = formItem.textBackgroundColor;
+            item.style.border = "none";
+          }
+        })
+      }
     });
     radiofields1.forEach((item) => {
       item.style.display = "inline-block";
+
+      //... background color
+      item.style.backgroundColor = item.textBackgroundColor;
     });
     radiofields2.forEach((item) => {
       item.style.display = "inline-block";
+
+      if (form_storage !== null) {
+        form_storage.forEach((formItem) => {
+          let formId = item.parentNode.id.replace("radio", "");
+          if (formItem.id == formId) {
+            //... background color
+            item.style.backgroundColor = formItem.textBackgroundColor;
+            item.style.border = "none";
+          }
+        })
+      }
     });
     // Enable all text field to input
     textfields.forEach((item) => {

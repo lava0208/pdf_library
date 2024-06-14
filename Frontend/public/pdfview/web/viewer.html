@@ -372,7 +372,7 @@ See https://github.com/adobe-type-tools/cmap-resources
           data-l10n-id="pdfjs-print-button">
           <span data-l10n-id="pdfjs-print-button-label">Print</span>
         </button>
-        <button class="menu-button hidden" id="secondarySaveFile" title="Save" onclick="setDocumentAsPDF()">
+        <button class="menu-button" id="secondarySaveFile" title="Save" onclick="setDocumentAsPDF()">
           <i class="far fa-floppy-disk"></i>
           <p class="menu-button-item">Save</p>
         </button>        
@@ -788,6 +788,12 @@ See https://github.com/adobe-type-tools/cmap-resources
             <input id="checkbox-value" class="form-field-input" type="text" />
           </div>
         </div>
+        <div class="form-style-container">
+          <div class="form-style-name">
+            <span style="font-size: 18px;">Background Color</span>
+          </div>
+          <input type="color" id="checkbox-background-color" name="colorPicker" value="#FFFFFF" class="form-field-input" />
+        </div>
       </div>
       <div id="checkbox-save-button" class="checkbox-option-footer">
         <div class="form-save-button">Save</div>
@@ -829,6 +835,12 @@ See https://github.com/adobe-type-tools/cmap-resources
           <div class="form-field-input-container">
             <input id="radio-value" class="form-field-input" type="text" />
           </div>
+        </div>
+        <div class="form-style-container">
+          <div class="form-style-name">
+            <span style="font-size: 18px;">Background Color</span>
+          </div>
+          <input type="color" id="radio-background-color" name="colorPicker" value="#FFFFFF" class="form-field-input" />
         </div>
       </div>
       <div id="radio-save-button" class="checkbox-option-footer">

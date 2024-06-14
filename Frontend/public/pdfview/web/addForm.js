@@ -1342,7 +1342,12 @@ const drawFormElement = function () {
 const drawFontFamily = function () {
   toolbar.find("#toolbar-font-style").empty();
   fontStyleArr.forEach(function (item) {
-    let option = `<option value="${item}" style="font-family: ${item}">${item}</option>`;
+    let option = "";
+    if(item == "Calibri"){
+      option = `<option value="${item}" style="font-family: ${item}" selected="selected">${item}</option>`;
+    }else{
+      option = `<option value="${item}" style="font-family: ${item}">${item}</option>`;
+    }
     toolbar.find("#toolbar-font-style").append(option);
   })
 }
@@ -1351,7 +1356,7 @@ const drawFontFamily = function () {
 const drawFontSize = function () {
   toolbar.find("#toolbar-font-size").empty();
   fontSizeArr.forEach(function (item) {
-    let val = item == "Auto" ? 16 : item;
+    let val = item == "Auto" ? 12 : item;
     let option = `<option value="${val}" pixel="${val}px">${item}</option>`;
     toolbar.find("#toolbar-font-size").append(option);
   })
@@ -1359,7 +1364,7 @@ const drawFontSize = function () {
 
 //... Write Text Event
 $(document).on("DOMSubtreeModified", ".freeTextEditor.selectedEditor", function () {
-  let value = toolbar.find("#toolbar-font-size").val() == "" || toolbar.find("#toolbar-font-size").val() == null ? 16 : toolbar.find("#toolbar-font-size").val();
+  let value = toolbar.find("#toolbar-font-size").val() == "" || toolbar.find("#toolbar-font-size").val() == null ? 12 : toolbar.find("#toolbar-font-size").val();
 
   let size = value + "px";
   let fontSize = `calc(${size} * var(--scale-factor))`;
@@ -1381,7 +1386,7 @@ $(document).on("DOMSubtreeModified", ".freeTextEditor.selectedEditor", function 
 //... Change Font Size Event
 $(document).on("change", "#toolbar-font-size", function () {
   if ($(".freeTextEditor").hasClass("selectedEditor")) {
-    let value = $(this).val() == "" || $(this).val() == null ? 16 : $(this).val();
+    let value = $(this).val() == "" || $(this).val() == null ? 12 : $(this).val();
     let size = value + "px";
     let fontSize = `calc(value + "px"} * var(--scale-factor))`;
     $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").attr("size", size);
@@ -2971,7 +2976,7 @@ const showOptionAndResizebar = function (
     });
     fontSizeArr.map((item) => {
       if (item == "Auto")
-        selectSizeContent += `<option value='16'>Default</option>`;
+        selectSizeContent += `<option value='12'>Default</option>`;
       else selectSizeContent += `<option value=${item}>${item}</option>`;
     });
     if (document.getElementById(`${id}-font-style`)) {

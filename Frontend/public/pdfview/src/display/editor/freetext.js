@@ -54,8 +54,8 @@ class FreeTextEditor extends AnnotationEditor {
 
   //... custom toolbar text
   #fontFamily;
-  static _defaultSelectSize = 16;
-  static _defaultFontFamily = 'Courier';
+  static _defaultSelectSize = 12;
+  static _defaultFontFamily = 'Calibri';
 
   #initialData = null;
 
@@ -149,9 +149,6 @@ class FreeTextEditor extends AnnotationEditor {
     //... custom toolbar text
     this.#fontSize = params.fontSize || FreeTextEditor._defaultSelectSize;
     this.#fontFamily = params.fontFamily || FreeTextEditor._defaultFontFamily;
-    console.log("=== initial ===");
-    console.log(this.#fontSize);
-    console.log(this.#fontFamily);
   }
 
   /** @inheritdoc */
@@ -188,14 +185,10 @@ class FreeTextEditor extends AnnotationEditor {
 
       //... custom toolbar text
       case AnnotationEditorParamsType.SELECTTEXT_SIZE:
-        console.log("type", type)
-        console.log("value" , value);
         // FreeTextEditor._defaultSelectSize = value;
         break;
       case AnnotationEditorParamsType.SELECTTEXT_FAMILY:
         FreeTextEditor._defaultFontFamily = value;
-        console.log("type", type)
-        console.log("value" , value);
         break;
     }
   }
@@ -246,10 +239,7 @@ class FreeTextEditor extends AnnotationEditor {
 
   /** @inheritdoc */
   get propertiesToUpdate() {
-    console.log("this.#fontSize " + this.#fontSize);
-    console.log("this.#fontFamily " + this.#fontFamily);
     return [
-      [AnnotationEditorParamsType.FREETEXT_SIZE, this.#fontSize],
       [AnnotationEditorParamsType.FREETEXT_COLOR, this.#color],
 
       //... custom toolbar text
@@ -258,11 +248,8 @@ class FreeTextEditor extends AnnotationEditor {
     ];
   }
 
-  /**
-   * Update the font size and make this action as undoable.
-   * @param {number} fontSize
-   */
   #updateFontSize(fontSize) {
+    console.log("fontSize " + fontSize);
     
     const setFontsize = size => {
       this.editorDiv.style.fontSize = `calc(${size}px * var(--scale-factor))`;
@@ -284,9 +271,9 @@ class FreeTextEditor extends AnnotationEditor {
 
       //... custom toolbar text
       // type: AnnotationEditorParamsType.FREETEXT_SIZE,
-      type: AnnotationEditorParamsType.SELECTTEXT_SIZE,
-      overwriteIfSameType: true,
-      keepUndo: true,
+      // type: AnnotationEditorParamsType.SELECTTEXT_SIZE,
+      // overwriteIfSameType: true,
+      // keepUndo: true,
     });
   }
 
@@ -312,11 +299,14 @@ class FreeTextEditor extends AnnotationEditor {
 
   //... custom toolbar text
   #updateFontFamily(fontFamily) {
+    console.log("fontFamily " + fontFamily);
     const setFontfamily = style => {
       this.editorDiv.style.fontFamily = style;
       this.#fontFamily = style;
+      console.log("family" + this.#fontFamily);
     };
     const savedFontfamily = this.#fontFamily;
+    console.log("savedFontfamily " + savedFontfamily);
     this.addCommands({
       cmd: () => {
         setFontfamily(fontFamily);
@@ -630,9 +620,9 @@ class FreeTextEditor extends AnnotationEditor {
 
     const date = new Date(Date.now());
 
-    //... save history
-    baseId++;
+    //... save history    
     addHistory(baseId, TEXT_CONTENT, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "text-content");
+    baseId++;
 
     this.editorDiv.contentEditable = true;
 
@@ -800,7 +790,6 @@ class FreeTextEditor extends AnnotationEditor {
     
     //...
     editor.#fontSize = Math.round(data.fontSize);
-    // editor.#fontSize = data.fontSize
     editor.#color = Util.makeHexColor(...data.color);
 
     //... custom toolbar text
@@ -873,11 +862,7 @@ class FreeTextEditor extends AnnotationEditor {
 
   #hasElementChanged(serialized) {
     //... custom toolbar text
-    const { value, fontSize, color, rect, pageIndex, fontFamily } = this.#initialData;
-
-    console.log("=== 7 ===");
-    console.log(fontSize);
-    console.log(fontFamily);
+    const { value, fontSize, fontFamily, color, rect, pageIndex } = this.#initialData;
 
     return (
       serialized.value !== value ||

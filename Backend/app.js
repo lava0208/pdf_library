@@ -222,7 +222,7 @@ app.post('/sendlink', upload.single('pdfFile'), (req, res) => {
   selectedEmails.forEach(email => {
     let newDataSet = [];
     const uniqueId = uuid.v4();
-    const uniqueLink = `https://${process.env.DOMAIN}/pdfviewer/?id=${uniqueId}`;
+    const uniqueLink = `https://${process.env.DOMAIN}/openpdf/?id=${uniqueId}`;
 
     newDataSet.push({
       pdfData: dataUri,

@@ -1483,9 +1483,9 @@ document.addEventListener("DOMContentLoaded", function () {
         return response.json();
       })
       .then(data => {
-        form_storage = isDraft == "true" ? [] : isDraft == "" ? JSON.parse(data[0].formData) : JSON.parse(data.formData);
-        clientName = isDraft == "" ? data[0].name : data.name;
-        clientEmail = isDraft == "" ? data[0].email : data.email;
+        form_storage = isDraft == "true" ? [] : isDraft == null || isDraft == "" ? JSON.parse(data[0].formData) : JSON.parse(data.formData);
+        clientName = isDraft == null || isDraft == "" ? data[0].name : data.name;
+        clientEmail = isDraft == null || isDraft == "" ? data[0].email : data.email;
 
         // Handle the retrieved data from the backend
         const dataURI = isDraft ? data.pdfData : data[0].pdfData;

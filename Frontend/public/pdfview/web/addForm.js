@@ -1133,6 +1133,9 @@ const drawFormElement = function () {
               document.getElementById("signature-close").onclick = function () {
                 signature_creator.style.display = "none";
               };
+              document.getElementById("signature-close-button").onclick = function () {
+                signature_creator.style.display = "none";
+              };
               document.getElementById("signature-create").onclick = function () {
                 let canvas;
                 if (currentSignType == DRAW) {
@@ -4254,6 +4257,9 @@ const eventHandler = async function (e) {
           document.getElementById("signature-initial-tab").click();
           resetCanvas();
           document.getElementById("signature-close").onclick = function () {
+            signature_creator.style.display = "none";
+          };
+          document.getElementById("signature-close-button").onclick = function () {
             signature_creator.style.display = "none";
           };
           document.getElementById("signature-create").onclick = function () {

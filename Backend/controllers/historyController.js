@@ -57,7 +57,7 @@ const createHistory = async (req, res) => {
 
         const history = JSON.parse(req.body.history); // Parse the history JSON string
 
-        const uniqueLink = `https://${process.env.HOST}/pdfviewer/?id=${uniqueId}&draft=true`;
+        const uniqueLink = `https://${process.env.DOMAIN}/pdfviewer/?id=${uniqueId}&draft=true`;
 
         // Create and save the new document
         const newDocument = new Doc({

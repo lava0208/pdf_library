@@ -176,7 +176,7 @@ const Documents = () => {
                                                 <h3 onClick={() => { handleClick('/pdfviewer/?id=' + document.uniqueId + '&draft=false') }}>
                                                     <i className="fa fa-eye" aria-hidden="true"></i> View
                                                 </h3>
-                                                <h3 onClick={() => { handleClick(document.uniqueLink) }}>
+                                                <h3 onClick={() => { handleClick('/pdfviewer/?id=' + document.uniqueId + '&draft=true') }}>
                                                     <i className="fa fa-edit" aria-hidden="true"></i> Update
                                                 </h3>
                                                 <h3 onClick={() => { deleteDocument(document.uniqueId) }}>

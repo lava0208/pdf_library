@@ -1137,16 +1137,34 @@ const drawFormElement = function () {
               document.getElementById("signature-close-button").onclick = function () {
                 signature_creator.style.display = "none";
               };
+
+              let canvasDraw = document.querySelector("#signature-draw-body canvas");
+              let hasDrawn = false;
+
+              canvasDraw.addEventListener('click', function () {
+                hasDrawn = true;
+              });
+
               document.getElementById("signature-create").onclick = function () {
                 let canvas;
+
                 if (currentSignType == DRAW) {
-                  canvas = document
-                    .getElementById("signature-draw-body")
-                    .querySelector("canvas");
+                  if (!hasDrawn) {
+                    alert("Please draw something before creating the signature.");
+                    return;
+                  }
+
+                  canvas = document.querySelector("#signature-draw-body canvas");
                   signatureImgData = cropCanvas(canvas);
                   handleSignature();
                   createAndAppendImage(signatureImgData);
                 } else if (currentSignType == TYPE) {
+                  let canvasType = document.getElementById("signature-type-text").value;
+                  if (canvasType == "") {
+                    alert("Please type something before creating the signature.");
+                    return;
+                  }
+
                   canvas = document.getElementById("signature-type-canvas");
                   signatureImgData = cropCanvas(canvas);
                   handleSignature();
@@ -1343,9 +1361,9 @@ const drawFontFamily = function () {
   toolbar.find("#toolbar-font-style").empty();
   fontStyleArr.forEach(function (item) {
     let option = "";
-    if(item == "Calibri"){
+    if (item == "Calibri") {
       option = `<option value="${item}" style="font-family: ${item}" selected="selected">${item}</option>`;
-    }else{
+    } else {
       option = `<option value="${item}" style="font-family: ${item}">${item}</option>`;
     }
     toolbar.find("#toolbar-font-style").append(option);
@@ -1690,10 +1708,10 @@ const handleRadio = function (e) {
 
         if (form_storage[i].id == current_form_id) {
           form_storage[i].form_field_name = formFieldName;
-          
+
           //... background color
-          form_storage[i].textBackgroundColor = textBackgroundColor;          
-  
+          form_storage[i].textBackgroundColor = textBackgroundColor;
+
           //... handle track
           handleTrack(form_storage[i].id, formFieldName);
           break;
@@ -2279,7 +2297,7 @@ const handleButton = function (e) {
         form_storage[i].form_field_name = formFieldName;
 
         //... handle track
-        handleTrack(form_storage[i].id, initialValue + " Type " + selectedValue );
+        handleTrack(form_storage[i].id, initialValue + " Type " + selectedValue);
 
         break;
       } else if (
@@ -2371,47 +2389,47 @@ const handleDate = function (e) {
 
   const regularFont = document.getElementById("date-font-style") && document.getElementById("date-font-style").value;
 
-  if (window.getComputedStyle(document.getElementById(DATE_OPTION)).getPropertyValue('display') !== "none"){
+  if (window.getComputedStyle(document.getElementById(DATE_OPTION)).getPropertyValue('display') !== "none") {
     document.getElementById(DATE_OPTION).style.display = "none";
   }
-    
-    if (isDraft != "false") {
-      for (let i = 0; i < form_storage.length; i++) {
-        if (
-          form_storage[i].form_field_name == formFieldName &&
-          form_storage[i].id == current_form_id
-        ) {
-          form_storage[i].fontStyle = fontStyle;
-          form_storage[i].fontSize = fontSize * 0.75 * 0.8;
-          form_storage[i].textColor = textColor;
 
-          //... background color
-          form_storage[i].textBackgroundColor = textBackgroundColor;
+  if (isDraft != "false") {
+    for (let i = 0; i < form_storage.length; i++) {
+      if (
+        form_storage[i].form_field_name == formFieldName &&
+        form_storage[i].id == current_form_id
+      ) {
+        form_storage[i].fontStyle = fontStyle;
+        form_storage[i].fontSize = fontSize * 0.75 * 0.8;
+        form_storage[i].textColor = textColor;
 
-          form_storage[i].text = text;
-          form_storage[i].form_field_name = formFieldName;
-          
-          //... handle track
-          handleTrack(form_storage[i].id, formFieldName);
+        //... background color
+        form_storage[i].textBackgroundColor = textBackgroundColor;
 
-          break;
-        } else if (
-          form_storage[i].form_field_name == formFieldName &&
-          form_storage[i].id != current_form_id
-        ) {
-          break;
-        } else if (
-          form_storage[i].form_field_name != formFieldName &&
-          form_storage[i].id == current_form_id
-        ) {
-          form_storage[i].form_field_name = formFieldName;
+        form_storage[i].text = text;
+        form_storage[i].form_field_name = formFieldName;
 
-          //... handle track
-          handleTrack(form_storage[i].id, formFieldName);
-          break;
-        }
+        //... handle track
+        handleTrack(form_storage[i].id, formFieldName);
+
+        break;
+      } else if (
+        form_storage[i].form_field_name == formFieldName &&
+        form_storage[i].id != current_form_id
+      ) {
+        break;
+      } else if (
+        form_storage[i].form_field_name != formFieldName &&
+        form_storage[i].id == current_form_id
+      ) {
+        form_storage[i].form_field_name = formFieldName;
+
+        //... handle track
+        handleTrack(form_storage[i].id, formFieldName);
+        break;
       }
-    } else {
+    }
+  } else {
     for (let i = 0; i < form_storage.length; i++) {
       if (form_storage[i].id == current_form_id) form_storage[i].text = text;
     }
@@ -2492,12 +2510,7 @@ const handleSignature = function () {
       if (form_storage[i].id == current_form_id) {
 
         //... background color
-        //... check if draw, type, upload
-        if (form_storage[i].imgData.includes("data:image/png;base64")) {
-          form_storage[i].textBackgroundColor = "#FFFFFF"
-        } else {
-          form_storage[i].textBackgroundColor = textBackgroundColor;
-        }
+        form_storage[i].textBackgroundColor = textBackgroundColor;
 
         let sign_type = $(".signature-option .tablink-active").text();
 
@@ -3368,7 +3381,7 @@ const eventHandler = async function (e) {
                   //... background color
                   document.getElementById("checkbox-background-color").value =
                     element.textBackgroundColor;
-                    
+
                   isOptionPane = true;
                   option = showOption(
                     RADIO_OPTION,
@@ -4269,17 +4282,37 @@ const eventHandler = async function (e) {
           document.getElementById("signature-close-button").onclick = function () {
             signature_creator.style.display = "none";
           };
+
+          let canvasDraw = document.querySelector("#signature-draw-body canvas");
+          let hasDrawn = false;
+
+          canvasDraw.addEventListener('click', function () {
+            hasDrawn = true;
+          });
+
           document.getElementById("signature-create").onclick = function () {
             let canvas;
+
             signature_creator.style.display = "none";
+
             if (currentSignType == DRAW) {
-              canvas = document
-                .getElementById("signature-draw-body")
-                .querySelector("canvas");
+              if (!hasDrawn) {
+                alert("Please draw something before creating the signature.");
+                return;
+              }
+
+              canvas = document.querySelector("#signature-draw-body canvas");
+
               signatureImgData = cropCanvas(canvas);
               handleSignature();
               createAndAppendImage(signatureImgData, signatureContainer, signatureId);
             } else if (currentSignType == TYPE) {
+              let canvasType = document.getElementById("signature-type-text").value;
+              if (canvasType == "") {
+                alert("Please type something before creating the signature.");
+                return;
+              }
+
               canvas = document.getElementById("signature-type-canvas");
               signatureImgData = cropCanvas(canvas);
               handleSignature();
@@ -4636,7 +4669,7 @@ async function addFormElements() {
             });
             comboboxForm.setFontSize(form_item.fontSize);
             comboboxForm.updateAppearances(customFont);
-            comboboxForm.defaultUpdateAppearances(customFont);            
+            comboboxForm.defaultUpdateAppearances(customFont);
           } else {
             page.drawText(form_item.initialValue, {
               x: form_item.x,
@@ -4771,7 +4804,8 @@ async function addFormElements() {
       }
     });
   }
-  if (text_storage.length != 0) {comboDiv
+  if (text_storage.length != 0) {
+    comboDiv
     await Promise.all(
       text_storage.map(async (text_item) => {
         const fontName = text_item.fontStyle;
@@ -5156,7 +5190,7 @@ const submitDocument = async function () {
 const handleTrack = function (id, value) {
   $(".historyDiv").each(function () {
     var index = $(this).index();
-    if(id === index){
+    if (id === index) {
       $(this).find(".actiontext").text(value);
     }
   })

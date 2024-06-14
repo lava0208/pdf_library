@@ -1460,19 +1460,21 @@ See https://github.com/adobe-type-tools/cmap-resources
           <i class="fa fa-upload"></i> Upload file
           <input type="file" id="signature-profile-image-input" class="custom-file-input hidden" accept="image/*" />
         </label>
+      </div>
+      <hr class="signature-hr" />
+      <div class="signature-footer signature-pad--actions" style="float: right">
         <div class="signature-color-picker">
           <div>
-            <span>Background color</span>
+            <span>Background Color</span>
           </div>
           <div>
             <input type="color" id="signature-font-background-color" value="#ffffff" data-action="change-color" name="signature-color" />
           </div>
         </div>
-      </div>
-      <hr class="signature-hr" />
-      <div class="signature-footer signature-pad--actions" style="float: right">
-        <button id="signature-close-button" class="button">Close</button>
-        <button id="signature-create" class="button">Create</button>
+        <div>
+          <button id="signature-close-button" class="button">Close</button>
+          <button id="signature-create" class="button">Create</button>
+        </div>
       </div>
     </div>
   </div>

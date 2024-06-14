@@ -275,7 +275,7 @@ app.post('/savedocument', upload.single('pdfFile'), (req, res) => {
     text: `Dear ${req.body.name}! You just signed this document.`,
     attachments: [
       {
-        filename: 'blankpdf.pdf',
+        filename: 'agreement.pdf',
         path: pdfFilePath
       }
     ]

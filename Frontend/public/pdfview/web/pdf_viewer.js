@@ -1655,9 +1655,9 @@ class PDFViewer {
 
   _getVisiblePages() {
     const views =
-        this._scrollMode === ScrollMode.PAGE
-          ? this.#scrollModePageState.pages
-          : this._pages,
+      this._scrollMode === ScrollMode.PAGE
+        ? this.#scrollModePageState.pages
+        : this._pages,
       horizontal = this._scrollMode === ScrollMode.HORIZONTAL,
       rtl = horizontal && this._isContainerRtl;
 
@@ -2140,7 +2140,7 @@ class PDFViewer {
     }
     let newScale = this._currentScale;
 
-    
+
     if (scaleFactor > 1) {
       newScale = Math.round(newScale * scaleFactor * 100) / 100;
     } else {
@@ -2154,6 +2154,8 @@ class PDFViewer {
       noScroll: false,
       drawingDelay,
     });
+
+    this.customScale(newScale);
   }
 
   /**
@@ -2178,7 +2180,56 @@ class PDFViewer {
       noScroll: false,
       drawingDelay,
     });
+
+    this.customScale(newScale);
   }
+  originals = [];
+
+  initializeForm() {
+    var that = this;
+    $(".form-fields").each(function () {
+      let id = $(this).attr("id");
+      let top = that.getNumber($(this).css("top"));
+      let left = that.getNumber($(this).css("left"));
+      let width = that.getNumber($(this).css("width")) || $(this).width();
+      let height = that.getNumber($(this).css("height")) || $(this).height();
+      
+      if(id.includes("checkbox") || id.includes("radio") || id.includes("signature")){
+        that.originals[id] = { top, left, width, height }
+      } else{
+        let fontSize = that.getNumber($(this).find("input, select").css("font-size"));
+        that.originals[id] = { top, left, width, height, fontSize };
+      }
+    });
+  }
+
+  //... custom form components with zoom
+  customScale(scale) {
+    var that = this;
+    $(".form-fields").each(function () {
+      let id = $(this).attr("id");
+      let original = that.originals[id];
+
+      let updateWidth = original.width * scale + "px";
+      let updateHeight = original.height * scale + "px";
+      let updateTop = original.top * scale + "px";
+      let updateLeft = original.left * scale + "px";
+  
+      $(this).css({ width: updateWidth, height: updateHeight, top: updateTop, left: updateLeft });
+
+      if(id.includes("checkbox") || id.includes("radio") || id.includes("signature")){
+        
+      } else{
+        let updateFontSize = original.fontSize * scale + "px";
+        $(this).find("input, select").css("font-size", updateFontSize);
+      }      
+    });
+  }
+
+  getNumber(str) {
+    return parseFloat(str.replace("px", ""));
+  }
+
 
   #updateContainerHeightCss(height = this.container.clientHeight) {
     if (height !== this.#previousContainerHeight) {

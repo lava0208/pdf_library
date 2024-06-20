@@ -1209,6 +1209,9 @@ const PDFViewerApplication = {
 
       firstPagePromise.then(() => {
         this.eventBus.dispatch("documentloaded", { source: this });
+        setTimeout(() => {
+          this.pdfViewer.initializeForm();
+        }, 1000);        
       });
     });
 

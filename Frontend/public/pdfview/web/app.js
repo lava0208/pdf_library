@@ -1742,6 +1742,9 @@ const PDFViewerApplication = {
     );
     this.secondaryToolbar?.setPageNumber(this.pdfViewer.currentPageNumber);
 
+    //... set scale as 100% for first load
+    this.pdfViewer.currentScaleValue = 1;
+
     if (!this.pdfViewer.currentScaleValue) {
       // Scale was not initialized: invalid bookmark or scale was not specified.
       // Setting the default one.

@@ -138,7 +138,9 @@ class Toolbar {
   setPageNumber(pageNumber, pageLabel) {
     this.pageNumber = pageNumber;
     this.pageLabel = pageLabel;
-    this.#updateUIState(false);
+
+    //... set scale as 100% for first load
+    this.#updateUIState(false, true);
   }
 
   setPagesCount(pagesCount, hasPageLabels) {
@@ -269,7 +271,7 @@ class Toolbar {
     editorStampButton.disabled = isDisable;
   }
 
-  #updateUIState(resetNumPages = false) {
+  #updateUIState(resetNumPages = false, isFirstPageLoad = false) {
     const { pageNumber, pagesCount, pageScaleValue, pageScale } = this;
     const opts = this.#opts;
 
@@ -317,14 +319,16 @@ class Toolbar {
       predefinedValueFound = true;
     }
     if (!predefinedValueFound) {
+      //... set scale as 100% for first load
+      let scaleVal = isFirstPageLoad ? 100 : Math.round(pageScale * 10000) / 100;
       opts.customScaleOption.selected = true;
       opts.customScaleOption.setAttribute(
         "data-l10n-args",
         JSON.stringify({
-          scale: Math.round(pageScale * 10000) / 100,
+          scale: scaleVal,
         })
       );
-      opts.customScaleOption.text = `${Math.round(pageScale * 10000) / 100}` + "%";
+      opts.customScaleOption.text = `${scaleVal}` + "%";
     }
   }
 

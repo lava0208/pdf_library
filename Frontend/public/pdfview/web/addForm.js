@@ -4950,7 +4950,7 @@ const changeMode = () => {
             // else item.style.fontWeight = "normal";
             // if(formItem.isItalic) item.style.fontStyle = "italic";
             // else item.style.fontStyle = "normal";
-            item.style.fontSize = formItem.fontSize + "px";
+            item.style.fontSize = formItem.fontSize / 0.75 + "px";
             item.style.color = formItem.textColor;
             item.style.fontFamily = formItem.regularFontStyle;
             if (formItem.align == 0) item.style.textAlign = "left";
@@ -4971,7 +4971,7 @@ const changeMode = () => {
         form_storage.forEach((formItem) => {
           let formId = item.parentNode.id.replace("combo", "");
           if (formItem.id == formId) {
-            item.style.fontSize = formItem.fontSize + "px";
+            item.style.fontSize = formItem.fontSize / 0.75 + "px";
             item.style.color = formItem.textColor;
             item.style.fontFamily = formItem.regularFontStyle;
             if (formItem.optionArray.length != 0) {
@@ -4996,7 +4996,7 @@ const changeMode = () => {
         form_storage.forEach((formItem) => {
           let formId = item.parentNode.id.replace("combo", "");
           if (formItem.id == formId) {
-            item.style.fontSize = formItem.fontSize + "px";
+            item.style.fontSize = formItem.fontSize / 0.75 + "px";
             item.style.color = formItem.textColor;
             item.style.fontFamily = formItem.regularFontStyle;
 
@@ -5015,7 +5015,7 @@ const changeMode = () => {
         form_storage.forEach((formItem) => {
           let formId = item.parentNode.id.replace("list", "");
           if (formItem.id == formId) {
-            item.style.fontSize = formItem.fontSize + "px";
+            item.style.fontSize = formItem.fontSize / 0.75 + "px";
             item.style.color = formItem.textColor;
             item.style.fontFamily = formItem.regularFontStyle;
             if (formItem.optionArray.length != 0) {
@@ -5050,7 +5050,7 @@ const changeMode = () => {
         form_storage.forEach((formItem) => {
           let formId = item.parentNode.id.replace("button", "");
           if (formItem.id == formId) {
-            item.style.fontSize = formItem.fontSize + "px";
+            item.style.fontSize = formItem.fontSize / 0.75 + "px";
             item.style.color = formItem.textColor;
             item.style.fontFamily = formItem.regularFontStyle;
             item.textContent = formItem.text;

@@ -366,8 +366,10 @@ const moveEventHandler = (event, offsetX, offsetY, currentId) => {
     } else {
       form_storage.map(function (item) {
         if (item.id === parseInt(currentId)) {
-          item.x = item.baseX + offsetX * 0.75 * 0.8;
-          item.y = item.baseY - offsetY * 0.75 * 0.8;
+          // item.x = item.baseX + offsetX * 0.75 * 0.8;
+          // item.y = item.baseY - offsetY * 0.75 * 0.8;
+          item.x = item.baseX + offsetX * 0.75;
+          item.y = item.baseY - offsetY * 0.75;
         }
       });
     }

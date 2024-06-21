@@ -343,8 +343,10 @@ const moveEventHandler = (event, offsetX, offsetY, currentId) => {
 
     comment_storage.map(function (comment) {
       if (comment.id === parseInt(currentId)) {
-        comment.x = comment.baseX + offsetX * 0.75 * 0.8;
-        comment.y = comment.baseY - offsetY * 0.75 * 0.8;
+        comment.x = comment.baseX + offsetX * 0.75;
+        comment.y = comment.baseY - offsetY * 0.75;
+        // comment.x = comment.baseX + offsetX * 0.75 * 0.8;
+        // comment.y = comment.baseY - offsetY * 0.75 * 0.8;
       }
     });
   }
@@ -352,15 +354,19 @@ const moveEventHandler = (event, offsetX, offsetY, currentId) => {
     if (DrawType === RADIO) {
       form_storage.map(function (item) {
         if (item.id === parseInt(currentId)) {
-          item.data.x = item.data.baseX + offsetX * 0.75 * 0.8;
-          item.data.y = item.data.baseY - offsetY * 0.75 * 0.8;
+          item.data.x = item.data.baseX + offsetX * 0.75;
+          item.data.y = item.data.baseY - offsetY * 0.75;
+          // item.data.x = item.data.baseX + offsetX * 0.75 * 0.8;
+          // item.data.y = item.data.baseY - offsetY * 0.75 * 0.8;
         }
       });
     } else if (DrawType === TEXT_CONTENT) {
       text_storage.map(function (item) {
         if (item.id === parseInt(currentId)) {
-          item.x = item.baseX + offsetX * 0.75 * 0.8;
-          item.y = item.baseY - offsetY * 0.75 * 0.8;
+          item.x = item.baseX + offsetX * 0.75;
+          item.y = item.baseY - offsetY * 0.75;
+          // item.x = item.baseX + offsetX * 0.75 * 0.8;
+          // item.y = item.baseY - offsetY * 0.75 * 0.8;
         }
       });
     } else {

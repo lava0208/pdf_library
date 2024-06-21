@@ -4578,6 +4578,7 @@ async function addFormElements() {
                 width: form_item.data.width,
                 height: form_item.data.height,
                 backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
+                borderColor: hexToRgbNew(form_item.textBackgroundColor),
               });
               radioForm.select(radioCount + "");
             }
@@ -4588,6 +4589,7 @@ async function addFormElements() {
               width: form_item.data.width,
               height: form_item.data.height,
               backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
+              borderColor: hexToRgbNew(form_item.textBackgroundColor),
             });
             if (form_item.data.isChecked) {
               radioForm.select(radioCount + "");

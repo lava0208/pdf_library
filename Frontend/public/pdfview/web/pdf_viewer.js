@@ -2194,7 +2194,7 @@ class PDFViewer {
       let width = that.getNumber($(this).css("width")) || $(this).width();
       let height = that.getNumber($(this).css("height")) || $(this).height();
       
-      if(id.includes("checkbox") || id.includes("radio") || id.includes("signature")){
+      if(id.includes("checkbox") || id.includes("radio") || id.includes("button") || id.includes("list") || id.includes("signature")){
         that.originals[id] = { top, left, width, height }
       } else{
         let fontSize = that.getNumber($(this).find("input, select").css("font-size"));
@@ -2217,7 +2217,7 @@ class PDFViewer {
   
       $(this).css({ width: updateWidth, height: updateHeight, top: updateTop, left: updateLeft });
 
-      if(id.includes("checkbox") || id.includes("radio") || id.includes("signature")){
+      if(id.includes("checkbox") || id.includes("radio") || id.includes("button") || id.includes("list") || id.includes("signature")){
         
       } else{
         let updateFontSize = original.fontSize * scale + "px";

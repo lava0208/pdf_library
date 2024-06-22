@@ -574,9 +574,9 @@ const drawFormElement = function () {
 
                   addDeleteButton(current_combo_id, tooltipbar, comboDiv, "combo");
                 } else {
-                  document
-                    .getElementById("combo_tooltipbar" + current_combo_id)
-                    .remove();
+                  // document
+                  //   .getElementById("combo_tooltipbar" + current_combo_id)
+                  //   .remove();
                 }
               }
             }
@@ -723,9 +723,9 @@ const drawFormElement = function () {
 
                   addDeleteButton(current_list_id, tooltipbar, listDiv, "list");
                 } else {
-                  document
-                    .getElementById("list_tooltipbar" + current_list_id)
-                    .remove();
+                  // document
+                  //   .getElementById("list_tooltipbar" + current_list_id)
+                  //   .remove();
                 }
               }
             }
@@ -3659,9 +3659,9 @@ const eventHandler = async function (e) {
 
               addDeleteButton(current_combo_id, tooltipbar, comboDiv, "combo");
             } else {
-              document
-                .getElementById("combo_tooltipbar" + current_combo_id)
-                .remove();
+              // document
+              //   .getElementById("combo_tooltipbar" + current_combo_id)
+              //   .remove();
             }
           }
         }
@@ -3827,9 +3827,9 @@ const eventHandler = async function (e) {
 
               addDeleteButton(current_list_id, tooltipbar, listDiv, "list");
             } else {
-              document
-                .getElementById("list_tooltipbar" + current_list_id)
-                .remove();
+              // document
+              //   .getElementById("list_tooltipbar" + current_list_id)
+              //   .remove();
             }
           }
         }

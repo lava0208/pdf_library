@@ -1148,27 +1148,24 @@ const drawFormElement = function () {
               document.getElementById("signature-create").onclick = function () {
                 let canvas;
 
+                signature_creator.style.display = "none";
+
                 if (currentSignType == DRAW) {
-                  if (!hasDrawn) {
-                    alert("Please draw something before creating the signature.");
-                    return;
-                  }
-
-                  canvas = document.querySelector("#signature-draw-body canvas");
-                  signatureImgData = cropCanvas(canvas);
                   handleSignature();
-                  createAndAppendImage(signatureImgData);
+                  if (hasDrawn) {
+                    canvas = document.querySelector("#signature-draw-body canvas");
+                    signatureImgData = cropCanvas(canvas);
+                    createAndAppendImage(signatureImgData);
+                  }
                 } else if (currentSignType == TYPE) {
-                  let canvasType = document.getElementById("signature-type-text").value;
-                  if (canvasType == "") {
-                    alert("Please type something before creating the signature.");
-                    return;
-                  }
-
-                  canvas = document.getElementById("signature-type-canvas");
-                  signatureImgData = cropCanvas(canvas);
                   handleSignature();
-                  createAndAppendImage(signatureImgData);
+
+                  let canvasType = document.getElementById("signature-type-text").value;
+                  if (canvasType != "") {
+                    canvas = document.getElementById("signature-type-canvas");
+                    signatureImgData = cropCanvas(canvas);
+                    createAndAppendImage(signatureImgData);
+                  }
                 } else if (currentSignType == UPLOAD) {
                   const file = document.getElementById("signature-image-input")
                     .files[0];
@@ -4296,27 +4293,21 @@ const eventHandler = async function (e) {
             signature_creator.style.display = "none";
 
             if (currentSignType == DRAW) {
-              if (!hasDrawn) {
-                alert("Please draw something before creating the signature.");
-                return;
-              }
-
-              canvas = document.querySelector("#signature-draw-body canvas");
-
-              signatureImgData = cropCanvas(canvas);
               handleSignature();
-              createAndAppendImage(signatureImgData, signatureContainer, signatureId);
+              if (hasDrawn) {
+                canvas = document.querySelector("#signature-draw-body canvas");
+                signatureImgData = cropCanvas(canvas);
+                createAndAppendImage(signatureImgData, signatureContainer, signatureId);
+              }
             } else if (currentSignType == TYPE) {
-              let canvasType = document.getElementById("signature-type-text").value;
-              if (canvasType == "") {
-                alert("Please type something before creating the signature.");
-                return;
-              }
-
-              canvas = document.getElementById("signature-type-canvas");
-              signatureImgData = cropCanvas(canvas);
               handleSignature();
-              createAndAppendImage(signatureImgData, signatureContainer, signatureId);
+
+              let canvasType = document.getElementById("signature-type-text").value;
+              if (canvasType != "") {
+                canvas = document.getElementById("signature-type-canvas");
+                signatureImgData = cropCanvas(canvas);
+                createAndAppendImage(signatureImgData, signatureContainer, signatureId);
+              }
             } else if (currentSignType == UPLOAD) {
               const file = document.getElementById("signature-image-input")
                 .files[0];

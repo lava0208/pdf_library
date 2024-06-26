@@ -22,6 +22,8 @@ const mongoURI = process.env.MONGO_URI;
 const userRouter = require('./routes/userRoute');
 const historyRouter = require('./routes/historyRoute');
 
+const historyController = require('./controllers/historyController');
+
 const app = express();
 const { setCurrentFile, getCurrentFile } = require('./utils/currentFile');
 
@@ -196,63 +198,87 @@ app.get('/download_image', function (req, res) {
   readStream.pipe(res);
 });
 
-app.post('/sendlink', upload.single('pdfFile'), (req, res) => {
-  const pdfFilePath = getCurrentFile();
-  const pdfFileData = fs.readFileSync(pdfFilePath);
-  const base64Data = pdfFileData.toString('base64');
-  const dataUri = `data:application/pdf;base64,${base64Data}`;
+app.post('/sendlink', upload.single('pdfFile'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).send('No PDF file uploaded.');
+    }
 
-  if (!req.file) {
-    return res.status(400).send('No PDF file uploaded.');
-  }
+    const pdfFilePath = getCurrentFile();  // Ensure this returns the correct path
+    const pdfFileData = fs.readFileSync(pdfFilePath);
+    const base64Data = pdfFileData.toString('base64');
+    const dataUri = `data:application/pdf;base64,${base64Data}`;
 
-  const formData = req.body.pdfFormData;
-  const textData = req.body.pdfTextData;
-  const name = req.body.name;
-  const description = req.body.description;
+    const { pdfFormData, pdfTextData, name, description, emails, username } = req.body;
 
-  // Get the array of selected emails from the request body
-  const selectedEmails = req.body.emails.split(",");
+    if (!emails || emails.length === 0) {
+      return res.status(400).send('No recipient email addresses provided.');
+    }
 
-  if (!selectedEmails || selectedEmails.length === 0) {
-    return res.status(400).send('No recipient email addresses provided.');
-  }
+    const selectedEmails = emails.split(",");
 
-  // Iterate over each selected email and send an email
-  selectedEmails.forEach(email => {
-    let newDataSet = [];
-    const uniqueId = uuid.v4();
-    const uniqueLink = `https://${process.env.DOMAIN}/openpdf/?id=${uniqueId}`;
+    for (const email of selectedEmails) {
+      const uniqueId = uuid.v4();
+      const uniqueLink = `https://${process.env.DOMAIN}/openpdf/?id=${uniqueId}`;
 
-    newDataSet.push({
-      pdfData: dataUri,
-      formData: formData,
-      textData: textData,
-      name: name,
-      email: email,
-      description: description
-    })
+      const newDataSet = [{
+        pdfData: dataUri,
+        formData: pdfFormData,
+        textData: pdfTextData,
+        name: name,
+        email: email,
+        description: description,
+        uniqueLink: uniqueLink
+      }];
 
-    formDataMap.set(uniqueId, newDataSet);
+      // Save to documents table
+      const updateReq = {
+        body: {
+          id: uniqueId,
+          formDataMap: newDataSet
+        }
+      };
 
-    // Send email to client with the unique link
-    const mailOptions = {
-      from: 'Stephan Hapi <codevisiondeveloper@gmail.com>',
-      to: email,
-      subject: 'Please sign here',
-      text: `Dear ${name}, Here is the link to access the PDF form: ${uniqueLink}`
-    };
-
-    transporter.sendMail(mailOptions, function (error, info) {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log('Email sent: ' + info.response);
+      try {
+        await historyController.updateHistoryFormMap(updateReq, {
+          status: (statusCode) => ({
+            json: (message) => {
+              if (statusCode >= 400) {
+                throw new Error(message.message);
+              }
+            },
+            send: (message) => {
+              if (statusCode >= 400) {
+                throw new Error(message);
+              }
+            }
+          })
+        });
+      } catch (error) {
+        console.error('Error saving to documents:', error);
+        return res.status(500).send('Internal Server Error: ' + error.message);
       }
-    });
-  });
 
-  res.send('Emails sent with the PDF form link');
+      const mailOptions = {
+        from: 'Stephan Hapi <codevisiondeveloper@gmail.com>',
+        to: email,
+        subject: 'Please sign here',
+        text: `Dear ${name}, Here is the link to access the PDF form: ${uniqueLink}`,
+      };
+
+      try {
+        const info = await transporter.sendMail(mailOptions);
+        console.log('Email sent: ' + info.response);
+      } catch (error) {
+        console.error('Error sending email: ', error);
+      }
+    }
+
+    res.send('Emails sent with the PDF form link');
+  } catch (error) {
+    console.error('Error processing request: ', error);
+    res.status(500).send('Internal Server Error: ' + error.message);
+  }
 });
 
 app.get('/getpdfdata', (req, res) => {
@@ -263,6 +289,22 @@ app.get('/getpdfdata', (req, res) => {
     res.json(formData);
   } else {
     res.status(404).send('Form data not found');
+  }
+});
+
+app.get('/getpdfform', async (req, res) => {
+  const uniqueId = req.query.uniqueId;
+
+  try {
+    const formData = await historyController.getHistoryFormMap(uniqueId);
+
+    if (formData.formDataMap) {
+      res.json(formData.formDataMap);
+    } else {
+      res.status(404).send('Form data not found');
+    }
+  } catch (error) {
+    return res.status(500).send('Internal Server Error: ' + error.message);
   }
 });
 
@@ -303,9 +345,8 @@ mongoose.connect(mongoURI).then(() => {
   console.error(error);
 })
 
-// Start the server
-// app.listen(8081, () => {
-//   console.log('Server is running on port 8081');
+// app.listen(3000, () => {
+//   console.log('Server is running on port 3000');
 // });
 https.createServer(options, app).listen(process.env.PORT, process.env.HOST, () => {
   console.log(`Server running`);

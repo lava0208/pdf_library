@@ -28,6 +28,19 @@ const getHistory = async (req, res) => {
     }
 };
 
+const getHistoryFormMap = async (uniqueId) => {
+    try {
+        const document = await Doc.findOne({ uniqueId });
+        if (!document) {
+            throw new Error('Document not found');
+        }
+        return document;
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error('Error occurred: ' + error.message);
+    }
+};
+
 const createHistory = async (req, res) => {
     try {
         if (!req.file) {
@@ -106,6 +119,10 @@ const updateHistory = async (req, res) => {
             updateData.history = history;
         }
 
+        if (req.body.formDataMap) {
+            updateData.formDataMap = req.body.formDataMap;
+        }        
+
         const updatedDocument = await Doc.findOneAndUpdate({ uniqueId, username }, { $set: updateData }, { new: true });
 
         if (!updatedDocument) {
@@ -142,7 +159,33 @@ const updateHistoryName = async (req, res) => {
     }
 };
 
+const updateHistoryFormMap = async (req, res) => {
+    try {
+        const { id, formDataMap } = req.body;
+        const updateData = { 
+            formDataMap: formDataMap,
+            uniqueId: id,
+            history: [{
+                id: uuid.v4()
+            }]
+        };
 
+        const updatedDocument = await Doc.findOneAndUpdate(
+            { uniqueId: id },
+            { $set: updateData },
+            { new: true, upsert: true, setDefaultsOnInsert: true }
+        );
+
+        if (!updatedDocument) {
+            return res.status(404).json({ message: 'Document not found' });
+        }
+
+        return { message: 'Document updated successfully', document: updatedDocument };
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error('Error occurred: ' + error.message); // Throw error for mockRes handling
+    }
+};
 
 const deleteHistory = async (req, res) => {
     try {
@@ -164,8 +207,10 @@ const deleteHistory = async (req, res) => {
 module.exports = {
     getAllHistories,
     getHistory,
+    getHistoryFormMap,
     createHistory,
     updateHistory,
     updateHistoryName,
+    updateHistoryFormMap,
     deleteHistory
 };

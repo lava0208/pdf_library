@@ -48,6 +48,9 @@ const documentSchema = new Schema({
     pdfData: {
         type: String
     },
+    formDataMap: {
+        type: Array
+    },
     formData: {
         type: String
     },

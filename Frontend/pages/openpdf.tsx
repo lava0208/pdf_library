@@ -21,7 +21,7 @@ const OpenPdf = () => {
         const urlParams = new URLSearchParams(window.location.search);
         const initialId = urlParams.get('id');
         if (initialId) {
-            fetch(`${BASE_URL}/getpdfdata?uniqueId=${initialId}`)
+            fetch(`${BASE_URL}/getpdfform?uniqueId=${initialId}`)
                 .then((response) => {
                     if (response.ok) {
                         setId(initialId);
@@ -31,31 +31,6 @@ const OpenPdf = () => {
                     }
                 })
                 .catch((error) => { console.error(error) })
-        } else {
-            let token = localStorage.getItem("login-token");
-            if (token) {
-                fetch(`${BASE_URL}/signin`, {
-                    method: "GET",
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `${token}`
-                    }
-                }).then(response => {
-                    if (response.ok) {
-                        // Handle successful response
-                    } else {
-                        localStorage.setItem("originDestination", router.asPath);
-                        // Assuming router is defined elsewhere in your code
-                        router.push("/signin");
-                    }
-                }).catch(error => {
-                    console.error("Error fetching data:", error);
-                });
-            } else {
-                localStorage.setItem("originDestination", router.asPath);
-                // Assuming router is defined elsewhere in your code
-                router.push("/signin");
-            }
         }
     }, [setId]);
 

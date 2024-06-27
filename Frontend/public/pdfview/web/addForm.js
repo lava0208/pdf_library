@@ -1049,7 +1049,7 @@ const drawFormElement = function () {
           break;
         case SIGNATURE:
           const signatureContainer = document.createElement("div");
-          // signatureContainer.className = "signatureDiv";
+          signatureContainer.className = "signatureContainer";
           signatureContainer.id = "signature" + id;
           addFormElementStyle(signatureContainer, y, x, width, height);
           signatureContainer.style.display = "flex";
@@ -1066,7 +1066,7 @@ const drawFormElement = function () {
               document.getElementById("signature-font-background-color").value =
                 element.textBackgroundColor;
 
-              if (isDraft == "false") {
+              if (isDraft == "false" || isDraft == null) {
                 setTimeout(() => {
                   $("#" + element.containerId).css("background-color", element.textBackgroundColor);
                 }, 100);
@@ -1151,21 +1151,20 @@ const drawFormElement = function () {
                 signature_creator.style.display = "none";
 
                 if (currentSignType == DRAW) {
-                  handleSignature();
                   if (hasDrawn) {
                     canvas = document.querySelector("#signature-draw-body canvas");
                     signatureImgData = cropCanvas(canvas);
                     createAndAppendImage(signatureImgData);
                   }
-                } else if (currentSignType == TYPE) {
                   handleSignature();
-
+                } else if (currentSignType == TYPE) {
                   let canvasType = document.getElementById("signature-type-text").value;
                   if (canvasType != "") {
                     canvas = document.getElementById("signature-type-canvas");
                     signatureImgData = cropCanvas(canvas);
                     createAndAppendImage(signatureImgData);
                   }
+                  handleSignature();
                 } else if (currentSignType == UPLOAD) {
                   const file = document.getElementById("signature-image-input")
                     .files[0];
@@ -1210,6 +1209,9 @@ const drawFormElement = function () {
               };
             }
           });
+
+          console.log("=== end ===");
+          console.log(signatureImgData);
           break;
         case SHAPE:
           let canvas = $("#drawing-board").find("canvas")[0];
@@ -1468,7 +1470,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let username = localStorage.getItem('username');
 
-  var url = initialId && isDraft ? `${BASE_URL}/history/${username}/${initialId}` : `${BASE_URL}/getpdfdata?uniqueId=${requestId}`;
+  var url = "";
+  if(isDraft != null){
+    url = initialId && isDraft ? `${BASE_URL}/history/${username}/${initialId}` : `${BASE_URL}/getpdfdata?uniqueId=${requestId}`;
+  }else{
+    url = `${BASE_URL}/getpdfform?uniqueId=${initialId}`;
+  }
 
   if (initialId) {
     $("body").addClass("loading");
@@ -4211,6 +4218,7 @@ const eventHandler = async function (e) {
 
       const signatureContainer = document.createElement("div");
       signatureContainer.id = "signature" + signatureId;
+      signatureContainer.className = "signatureContainer";
 
       //...
       addSignatureElementStyle(
@@ -4293,21 +4301,20 @@ const eventHandler = async function (e) {
             signature_creator.style.display = "none";
 
             if (currentSignType == DRAW) {
-              handleSignature();
               if (hasDrawn) {
                 canvas = document.querySelector("#signature-draw-body canvas");
                 signatureImgData = cropCanvas(canvas);
                 createAndAppendImage(signatureImgData, signatureContainer, signatureId);
               }
-            } else if (currentSignType == TYPE) {
               handleSignature();
-
+            } else if (currentSignType == TYPE) {              
               let canvasType = document.getElementById("signature-type-text").value;
               if (canvasType != "") {
                 canvas = document.getElementById("signature-type-canvas");
                 signatureImgData = cropCanvas(canvas);
                 createAndAppendImage(signatureImgData, signatureContainer, signatureId);
               }
+              handleSignature();
             } else if (currentSignType == UPLOAD) {
               const file = document.getElementById("signature-image-input")
                 .files[0];
@@ -4846,7 +4853,7 @@ const changeMode = () => {
   const listfields = document.querySelectorAll(".list-field-input");
   const buttonfields = document.querySelectorAll(".button-field-input");
   const textcontentfields = document.querySelectorAll(".textcontent");
-  const signatureImages = document.querySelectorAll(".signatureImg");
+  const signatureImages = document.querySelectorAll(".signatureContainer");
   if (isEditing) {
     switchEditInsert.innerHTML = `
       <p>Edit Mode</p>
@@ -5073,7 +5080,7 @@ const changeMode = () => {
       item.contentEditable = "false";
       if (form_storage !== null) {
         form_storage.forEach((formItem) => {
-          let formId = item.parentNode.id.replace("signature", "");
+          let formId = item.id.replace("signature", "");
           if (formItem.id == formId) {
             item.style.backgroundColor = formItem.textBackgroundColor;
           }

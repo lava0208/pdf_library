@@ -1484,45 +1484,48 @@ document.addEventListener("DOMContentLoaded", function () {
         return response.json();
       })
       .then(data => {
-        form_storage = isDraft == "true" ? [] : isDraft == null || isDraft == "" ? JSON.parse(data[0].formData) : JSON.parse(data.formData);
-        clientName = isDraft == null || isDraft == "" ? data[0].name : data.name;
-        clientEmail = isDraft == null || isDraft == "" ? data[0].email : data.email;
+        if(data !== null){
+          form_storage = isDraft == "true" ? [] : isDraft == null || isDraft == "" ? JSON.parse(data[0].formData) : JSON.parse(data.formData);
+          clientName = isDraft == null || isDraft == "" ? data[0].name : data.name;
+          clientEmail = isDraft == null || isDraft == "" ? data[0].email : data.email;
 
-        // Handle the retrieved data from the backend
-        const dataURI = isDraft ? data.pdfData : data[0].pdfData;
-        const base64Data = dataURI.split(',')[1];
-        // Decode base64 data to binary
-        const binaryData = atob(base64Data);
+          // Handle the retrieved data from the backend
+          const dataURI = isDraft ? data.pdfData : data[0].pdfData;
+          const base64Data = dataURI.split(',')[1];
+          // Decode base64 data to binary
+          const binaryData = atob(base64Data);
 
-        // Convert binary data to Uint8Array
-        const array = new Uint8Array(binaryData.length);
-        for (let i = 0; i < binaryData.length; i++) {
-          array[i] = binaryData.charCodeAt(i);
-        }
-        // Create Blob from Uint8Array
-        const blob = new Blob([array], { type: 'application/pdf' });
-
-        // Create File from Blob
-        const fileName = 'downloaded.pdf';
-        const pdfFile = new File([blob], fileName, { type: 'application/pdf' });
-
-        draw_form_storage = isDraft ? JSON.parse(data.formData) : JSON.parse(data[0].formData);
-        text_storage = isDraft ? JSON.parse(data.textData) : JSON.parse(data[0].textData);
-        PDFViewerApplication.open({
-          url: URL.createObjectURL(pdfFile),
-          originalUrl: pdfFile.name,
-        });
-        const checkViewerInterval = setInterval(() => {
-          if (PDFViewerApplication.pdfDocument && PDFViewerApplication.pdfDocument.numPages > 0) {
-            // If the document is loaded, call the drawFormElement function
-            clearInterval(checkViewerInterval); // Clear the interval
-            drawFormElement();
-
-            //...
-            isOpenSubmitDocument = isDraft == "false" ? true : false;
-            $("body").removeClass("loading");
+          // Convert binary data to Uint8Array
+          const array = new Uint8Array(binaryData.length);
+          for (let i = 0; i < binaryData.length; i++) {
+            array[i] = binaryData.charCodeAt(i);
           }
-        }, 100);
+          // Create Blob from Uint8Array
+          const blob = new Blob([array], { type: 'application/pdf' });
+
+          // Create File from Blob
+          const fileName = 'downloaded.pdf';
+          const pdfFile = new File([blob], fileName, { type: 'application/pdf' });
+
+          draw_form_storage = isDraft ? JSON.parse(data.formData) : JSON.parse(data[0].formData);
+          text_storage = isDraft ? JSON.parse(data.textData) : JSON.parse(data[0].textData);
+          PDFViewerApplication.open({
+            url: URL.createObjectURL(pdfFile),
+            originalUrl: pdfFile.name,
+          });
+
+          const checkViewerInterval = setInterval(() => {
+            if (PDFViewerApplication.pdfDocument && PDFViewerApplication.pdfDocument.numPages > 0) {
+              // If the document is loaded, call the drawFormElement function
+              clearInterval(checkViewerInterval); // Clear the interval
+              drawFormElement();
+
+              //...
+              isOpenSubmitDocument = isDraft == "false" ? true : false;
+            }
+          }, 100);
+        }
+        $("body").removeClass("loading");
       })
       .catch(error => {
         console.error('Error fetching data from the backend:', error);
@@ -2523,6 +2526,8 @@ const handleSignature = function () {
   }
 
   if (baseId !== 0 && (count == signStorage.length || signStorage == null)) {
+    const formWidth = document.getElementById("signature" + baseId).offsetWidth;
+    const formHeight = document.getElementById("signature" + baseId).offsetHeight;
     form_storage.push({
       id: baseId,
       containerId: "signature" + baseId,
@@ -3130,7 +3135,7 @@ const submitAction = function () {
     let currentItem;
     if (item.form_type != DATE) currentItem = document.getElementById(item.containerId);
     else currentItem = document.getElementById(item.containerId).parentElement;
-    toTransparent(currentItem);
+    // toTransparent(currentItem);
     switch (item.form_type) {
       case CHECKBOX:
         break;
@@ -4451,6 +4456,7 @@ async function fetchImageAsBase64(url) {
 }
 
 async function embedImage(form_item, pdfDoc, page) {
+  console.log(form_item.textBackgroundColor);
   let imgData = form_item.imgData;
 
   if (!imgData.includes("data:image/png;base64")) {
@@ -4639,6 +4645,10 @@ async function addFormElements() {
             textfieldForm.updateAppearances(customFont);
             textfieldForm.defaultUpdateAppearances(customFont);
           } else {
+            console.log("^^^^^^^^^^^^^^^");
+            console.log(page);
+            console.log(form_item);
+            console.log(form_item.initialValue);
             page.drawText(form_item.initialValue, {
               x: form_item.x,
               y: form_item.y - form_item.height,
@@ -4669,7 +4679,8 @@ async function addFormElements() {
             comboboxForm.updateAppearances(customFont);
             comboboxForm.defaultUpdateAppearances(customFont);
           } else {
-            page.drawText(form_item.initialValue, {
+            const initialValue = form_item.initialValue != undefined ? form_item.initialValue : form_item.optionArray[0];
+            page.drawText(initialValue, {
               x: form_item.x,
               y: form_item.y - form_item.height,
               width: form_item.width,

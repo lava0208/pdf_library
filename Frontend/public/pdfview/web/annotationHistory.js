@@ -562,246 +562,128 @@ const getDocList = async function (id) {
             $("#secondaryPrint").addClass("hidden");
             $("#secondarySaveFile").addClass("hidden");
             $("#pdfEditorButton").addClass("hidden");
-            data.history.forEach(function(item, i){
-                let pageDiv;
-                let page = item.page;
 
-                if (showHistoryBar.querySelector(`#page${page}`)) {
-                    pageDiv = showHistoryBar.querySelector(`#page${page}`);
-                } else {
-                    pageDiv = document.createElement("div");
-                    pageDiv.className = "pageDiv";
-                    pageDiv.id = `page${page}`;
-                    pageDiv.style.display = "flex";
-                    pageDiv.style.flexDirection = "column";
-                    pageDiv.style.gap = "5px";
-                    const pageNum = document.createElement("span");
-                    pageNum.style.fontSize = "small";
-                    pageNum.innerHTML = `Page ${page}`;
-                    pageDiv.appendChild(pageNum)
-                }
-
-                let type = item.actiontype;
-                let username = item.username;
-                let date = convertStandardDateType(new Date(item.date));
-                let replies = item.reply;
-                
-                // historyDiv: Child Element of PageDiv
-                const historyDiv = document.createElement("div");
-                historyDiv.className = "historyDiv";
-                historyDiv.id = `historyDiv${i}`;
-                historyDiv.setAttribute("actiontype", type);
-                // style
-                historyDiv.style.display = "flex";
-                historyDiv.style.flexDirection = "column";
-                historyDiv.style.alignItems = "center";
-                historyDiv.style.justifyContent = "center";
-                historyDiv.style.cursor = "pointer";
-                historyDiv.style.userSelect = "none";
-                historyDiv.style.borderRadius = '5px';
-                historyDiv.style.boxShadow = "#868e96 0px 0px 3px 0px";
-
-                // history: Child Element of historyDiv
-
-                const history = document.createElement('div');
-                history.style.display = "flex";
-                history.style.alignItems = "center";
-                history.style.justifyContent = "space-between";
-                history.style.padding = "5px 10px";
-                history.style.width = "-webkit-fill-available";
-                // history.style.borderBottom = `1px solid #ccc`;
-
-                // AnnotationType: Child Element of history Element
-
-                const annotationType = document.createElement("span");
-                annotationType.className = "annotationTypeDiv";
-                annotationType.setAttribute("type", type);
-                annotationType.style.fontSize = "x-large";
-                switch (type) {
-                    case "1":
-                        annotationType.innerHTML = `<i class="fa-sharp fa-regular fa-square-check"></i>`;
-                        break;
-                    case "2":
-                        annotationType.innerHTML = `<i class="fa-regular fa-circle-dot"></i>`;
-                        break;
-                    case "3":
-                        annotationType.innerHTML = `<i class="fa fa-font"></i>`;
-                        break;
-                    case "4":
-                        annotationType.innerHTML = `<i class="fa-regular fa-calendar-days"></i>`;
-                        break;
-                    case "5":
-                        annotationType.innerHTML = `<i class="fa fa-caret-down"></i>`;
-                        break;
-                    case "6":
-                        annotationType.innerHTML = `<i class="fa fa-list"></i>`;
-                        break;
-                    case "7":
-                        annotationType.innerHTML = `<i class="fa-solid fa-stamp"></i>`;
-                        break;
-                    case "8":
-                        annotationType.innerHTML = `<i class="fa fa-toggle-off"></i>`;
-                        break;
-                    case "9":
-                        annotationType.innerHTML = `<i class="fa-solid fa-font"></i>`;
-                        break;
-                    case "10":
-                        annotationType.innerHTML = `<i class="fa-solid fa-shapes"></i>`;
-                        break;
-                    case "11":
-                        annotationType.innerHTML = `<i class="fa-solid fa-comment-dots"></i>`;
-                        break;
-                    default:
-                        break;
-                }
-
-                // UserDiv: Child Element of history Element
-                const userDiv = document.createElement("div");
-                // style
-                userDiv.style.display = 'flex';
-                userDiv.style.flexDirection = "column";
-                userDiv.style.width = "60%";
-                // child
-                const usernameDiv = document.createElement("span");
-                usernameDiv.className = "usernameDiv";
-                usernameDiv.style.fontWeight = "700";
-                const dateDiv = document.createElement("span");
-                dateDiv.className = "dateDiv";
-                dateDiv.style.fontSize = "xx-small";
-                usernameDiv.innerHTML = `${username}`;
-                dateDiv.innerHTML = `${date}`;
-                userDiv.append(usernameDiv, dateDiv);
-
-                // OptionDiv: Child Element of history Element
-
-                const optionDiv = document.createElement("div");
-                optionDiv.style.padding = "0px 3px";
-                optionDiv.style.position = "relative";
-                optionDiv.style.borderRadius = "3px";
-                const optionSpan = document.createElement("span");
-                optionSpan.style.color = "#5d5656";
-                optionSpan.innerHTML = `<i class="fa-solid fa-ellipsis"></i>`;
-
-                const optionPan = document.createElement("div");
-                optionPan.style.display = "none";
-                optionPan.style.position = "absolute";
-                optionPan.style.top = "21px";
-                optionPan.style.right = "0";
-                optionPan.style.zIndex = "100";
-                optionPan.style.backgroundColor = "white";
-                optionPan.style.borderRadius = '5px';
-                optionPan.style.boxShadow = "#868e96 0px 0px 3px 0px";
-                const DeleteBtn = document.createElement("div");
-                DeleteBtn.textContent = "Delete";
-                DeleteBtn.style.cursor = "pointer";
-                DeleteBtn.style.fontSize = "small";
-                DeleteBtn.style.padding = "3px 8px";
-                DeleteBtn.addEventListener("click", (e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    pageDiv.removeChild(historyDiv);
-                })
-                optionPan.append(DeleteBtn);
-                optionDiv.addEventListener("click", () => {
-                    if (window.getComputedStyle(optionPan).getPropertyValue('display') !== "none") {
-                        optionPan.style.display = "none";
-                        optionDiv.style.backgroundColor = "white";
+            if(data !== null){
+                data.history.forEach(function(item, i){
+                    let pageDiv;
+                    let page = item.page;
+    
+                    if (showHistoryBar.querySelector(`#page${page}`)) {
+                        pageDiv = showHistoryBar.querySelector(`#page${page}`);
                     } else {
-                        optionPan.style.display = "block";
-                        optionDiv.style.backgroundColor = "#dde6ee";
+                        pageDiv = document.createElement("div");
+                        pageDiv.className = "pageDiv";
+                        pageDiv.id = `page${page}`;
+                        pageDiv.style.display = "flex";
+                        pageDiv.style.flexDirection = "column";
+                        pageDiv.style.gap = "5px";
+                        const pageNum = document.createElement("span");
+                        pageNum.style.fontSize = "small";
+                        pageNum.innerHTML = `Page ${page}`;
+                        pageDiv.appendChild(pageNum)
                     }
-                })
-                optionDiv.append(optionSpan, optionPan);
-
-                const historyComment = document.createElement("div");
-                historyComment.id = "historyComment" + i;
-                historyComment.style.width = "100%";
-                historyComment.style.display = "none";
-                historyComment.style.alignItems = "center";
-                historyComment.style.justifyContent = "center";
-                historyComment.style.marginTop = "15px";
-                historyComment.style.marginBottom = "10px";
-                historyComment.classList.add("historyComment");
-                const historyLeftPart = document.createElement("div");
-                historyLeftPart.style.width = "20%";
-                const historyMainPart = document.createElement("div");
-                historyMainPart.id = "historyMainPart" + i;
-                historyMainPart.style.width = "80%";
-                historyMainPart.style.borderLeft = "1px solid #ccc";
-                historyMainPart.style.display = "flex";
-                historyMainPart.style.flexDirection = "column";
-                historyMainPart.style.gap = "4px";
-
-                historyComment.append(historyLeftPart, historyMainPart);
-
-                // AddReply Element: Child Element of historyDiv
-
-                const addReply = document.createElement("div");
-                addReply.id = "addReply" + i;
-                addReply.style.display = "none";
-                addReply.style.alignItems = "center";
-                addReply.style.justifyContent = "space-between";
-                addReply.style.padding = "10px 10px";
-                addReply.style.gap = '6px';
-                addReply.style.width = "-webkit-fill-available";
-                addReply.style.borderTop = `1px solid #ccc`;
-                addReply.classList.add("add-reply");
-
-                const replyInput = document.createElement("input");
-                replyInput.id = "replyInput" + i;
-                replyInput.style.width = "80%";
-                replyInput.style.borderRadius = "3px";
-                replyInput.addEventListener("focus", () => {
-                    replyInput.style.outline = "none";
-                    replyInput.style.border = "1px solid #3c97fe";
-                });
-                replyInput.placeholder = 'Add Reply...';
-                replyInput.style.padding = '2px';
-                replyInput.fontSize = '13px';
-                const replySave = document.createElement("div");
-                replySave.innerHTML = `<i class="fa-regular fa-paper-plane"></i>`;
-                replySave.style.cursor = "pointer";
-
-                replies.forEach(function (replyItem) {
-                    let replyusername = replyItem.username;
-                    let replydate = convertStandardDateType(new Date(replyItem.date));
-                    let replyDetail = replyItem.reply;
-
-                    historyComment.style.display = "flex";
-                    const commentReplyContainer = document.createElement("div");
-                    commentReplyContainer.className = "commentReplyContainer";
-                    commentReplyContainer.style.marginLeft = "10px";
-
-                    const commentReply = document.createElement("div");
-                    commentReply.style.display = "flex";
-                    commentReply.style.alignItems = "center";
-                    const replyUserDiv = document.createElement("div");
+    
+                    let type = item.actiontype;
+                    let username = item.username;
+                    let date = convertStandardDateType(new Date(item.date));
+                    let replies = item.reply;
+                    
+                    // historyDiv: Child Element of PageDiv
+                    const historyDiv = document.createElement("div");
+                    historyDiv.className = "historyDiv";
+                    historyDiv.id = `historyDiv${i}`;
+                    historyDiv.setAttribute("actiontype", type);
                     // style
-                    replyUserDiv.style.display = 'flex';
-                    replyUserDiv.style.flexDirection = "column";
-                    replyUserDiv.style.width = "75%";
+                    historyDiv.style.display = "flex";
+                    historyDiv.style.flexDirection = "column";
+                    historyDiv.style.alignItems = "center";
+                    historyDiv.style.justifyContent = "center";
+                    historyDiv.style.cursor = "pointer";
+                    historyDiv.style.userSelect = "none";
+                    historyDiv.style.borderRadius = '5px';
+                    historyDiv.style.boxShadow = "#868e96 0px 0px 3px 0px";
+    
+                    // history: Child Element of historyDiv
+    
+                    const history = document.createElement('div');
+                    history.style.display = "flex";
+                    history.style.alignItems = "center";
+                    history.style.justifyContent = "space-between";
+                    history.style.padding = "5px 10px";
+                    history.style.width = "-webkit-fill-available";
+                    // history.style.borderBottom = `1px solid #ccc`;
+    
+                    // AnnotationType: Child Element of history Element
+    
+                    const annotationType = document.createElement("span");
+                    annotationType.className = "annotationTypeDiv";
+                    annotationType.setAttribute("type", type);
+                    annotationType.style.fontSize = "x-large";
+                    switch (type) {
+                        case "1":
+                            annotationType.innerHTML = `<i class="fa-sharp fa-regular fa-square-check"></i>`;
+                            break;
+                        case "2":
+                            annotationType.innerHTML = `<i class="fa-regular fa-circle-dot"></i>`;
+                            break;
+                        case "3":
+                            annotationType.innerHTML = `<i class="fa fa-font"></i>`;
+                            break;
+                        case "4":
+                            annotationType.innerHTML = `<i class="fa-regular fa-calendar-days"></i>`;
+                            break;
+                        case "5":
+                            annotationType.innerHTML = `<i class="fa fa-caret-down"></i>`;
+                            break;
+                        case "6":
+                            annotationType.innerHTML = `<i class="fa fa-list"></i>`;
+                            break;
+                        case "7":
+                            annotationType.innerHTML = `<i class="fa-solid fa-stamp"></i>`;
+                            break;
+                        case "8":
+                            annotationType.innerHTML = `<i class="fa fa-toggle-off"></i>`;
+                            break;
+                        case "9":
+                            annotationType.innerHTML = `<i class="fa-solid fa-font"></i>`;
+                            break;
+                        case "10":
+                            annotationType.innerHTML = `<i class="fa-solid fa-shapes"></i>`;
+                            break;
+                        case "11":
+                            annotationType.innerHTML = `<i class="fa-solid fa-comment-dots"></i>`;
+                            break;
+                        default:
+                            break;
+                    }
+    
+                    // UserDiv: Child Element of history Element
+                    const userDiv = document.createElement("div");
+                    // style
+                    userDiv.style.display = 'flex';
+                    userDiv.style.flexDirection = "column";
+                    userDiv.style.width = "60%";
                     // child
-                    const replyusernameDiv = document.createElement("span");
-                    replyusernameDiv.className = "replyusernameDiv";
-                    replyusernameDiv.style.fontSize = "xx-small";
-                    const replydateDiv = document.createElement("span");
-                    replydateDiv.className = "replydateDiv";
-                    replydateDiv.style.fontSize = "xx-small";
-                    replyusernameDiv.innerHTML = `${replyusername}`;
-                    replydateDiv.innerHTML = replydate;
-                    replyUserDiv.append(replyusernameDiv, replydateDiv);
-                    const replyoptionDiv = document.createElement("div");
-                    replyoptionDiv.style.display = "flex";
-                    replyoptionDiv.style.justifyContent = "center";
-                    replyoptionDiv.style.width = "25%";
-                    replyoptionDiv.style.padding = "0px 3px";
-                    replyoptionDiv.style.position = "relative";
-                    replyoptionDiv.style.borderRadius = "3px";
-                    const replyoptionSpan = document.createElement("span");
-                    replyoptionSpan.style.color = "#5d5656";
-                    replyoptionSpan.style.cursor = "pointer";
-                    replyoptionSpan.innerHTML = `<i class="fa-solid fa-ellipsis"></i>`;
-
+                    const usernameDiv = document.createElement("span");
+                    usernameDiv.className = "usernameDiv";
+                    usernameDiv.style.fontWeight = "700";
+                    const dateDiv = document.createElement("span");
+                    dateDiv.className = "dateDiv";
+                    dateDiv.style.fontSize = "xx-small";
+                    usernameDiv.innerHTML = `${username}`;
+                    dateDiv.innerHTML = `${date}`;
+                    userDiv.append(usernameDiv, dateDiv);
+    
+                    // OptionDiv: Child Element of history Element
+    
+                    const optionDiv = document.createElement("div");
+                    optionDiv.style.padding = "0px 3px";
+                    optionDiv.style.position = "relative";
+                    optionDiv.style.borderRadius = "3px";
+                    const optionSpan = document.createElement("span");
+                    optionSpan.style.color = "#5d5656";
+                    optionSpan.innerHTML = `<i class="fa-solid fa-ellipsis"></i>`;
+    
                     const optionPan = document.createElement("div");
                     optionPan.style.display = "none";
                     optionPan.style.position = "absolute";
@@ -811,106 +693,87 @@ const getDocList = async function (id) {
                     optionPan.style.backgroundColor = "white";
                     optionPan.style.borderRadius = '5px';
                     optionPan.style.boxShadow = "#868e96 0px 0px 3px 0px";
-                    const EditBtn = document.createElement("div");
-                    EditBtn.textContent = "Edit";
-                    EditBtn.style.cursor = "pointer";
-                    EditBtn.style.fontSize = "small";
-                    EditBtn.style.padding = "3px 8px";
-                    EditBtn.addEventListener("click", (e) => {
-                        e.stopPropagation();
-                        let textValue = replyText.textContent;
-                        replyText.style.display = "none";
-                        editReplyText.style.display = "flex";
-                        editReplyTextInput.value = textValue;
-                        editReplyTextInput.focus();
-                        optionPan.style.display = "none";
-                        replyoptionDiv.style.backgroundColor = "white";
-                    })
                     const DeleteBtn = document.createElement("div");
                     DeleteBtn.textContent = "Delete";
                     DeleteBtn.style.cursor = "pointer";
                     DeleteBtn.style.fontSize = "small";
                     DeleteBtn.style.padding = "3px 8px";
-                    DeleteBtn.addEventListener("click", () => {
-                        historyMainPart.removeChild(commentReplyContainer);
+                    DeleteBtn.addEventListener("click", (e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        pageDiv.removeChild(historyDiv);
                     })
-                    optionPan.append(EditBtn, DeleteBtn);
-                    replyoptionDiv.addEventListener("click", () => {
+                    optionPan.append(DeleteBtn);
+                    optionDiv.addEventListener("click", () => {
                         if (window.getComputedStyle(optionPan).getPropertyValue('display') !== "none") {
                             optionPan.style.display = "none";
-                            replyoptionDiv.style.backgroundColor = "white";
+                            optionDiv.style.backgroundColor = "white";
                         } else {
                             optionPan.style.display = "block";
-                            replyoptionDiv.style.backgroundColor = "#dde6ee";
+                            optionDiv.style.backgroundColor = "#dde6ee";
                         }
                     })
-                    replyoptionDiv.append(replyoptionSpan, optionPan);
-                    commentReply.append(replyUserDiv, replyoptionDiv);
-
-                    const replyText = document.createElement("div");
-                    replyText.className = "replyText";
-                    replyText.style.marginTop = "8px";
-                    replyText.style.fontSize = "small";
-                    replyText.textContent = replyDetail;
-
-                    const editReplyText = document.createElement("div");
-                    editReplyText.style.display = "none";
-                    editReplyText.style.flexDirection = "column";
-                    editReplyText.style.marginRight = "10px";
-                    editReplyText.style.marginTop = "10px";
-                    editReplyText.style.gap = "3px";
-                    const editReplyTextInput = document.createElement("input");
-                    editReplyTextInput.style.borderRadius = "3px";
-                    editReplyTextInput.addEventListener("focus", () => {
-                        editReplyTextInput.style.outline = "none";
-                        editReplyTextInput.style.border = "1px solid #3c97fe";
+                    optionDiv.append(optionSpan, optionPan);
+    
+                    const historyComment = document.createElement("div");
+                    historyComment.id = "historyComment" + i;
+                    historyComment.style.width = "100%";
+                    historyComment.style.display = "none";
+                    historyComment.style.alignItems = "center";
+                    historyComment.style.justifyContent = "center";
+                    historyComment.style.marginTop = "15px";
+                    historyComment.style.marginBottom = "10px";
+                    historyComment.classList.add("historyComment");
+                    const historyLeftPart = document.createElement("div");
+                    historyLeftPart.style.width = "20%";
+                    const historyMainPart = document.createElement("div");
+                    historyMainPart.id = "historyMainPart" + i;
+                    historyMainPart.style.width = "80%";
+                    historyMainPart.style.borderLeft = "1px solid #ccc";
+                    historyMainPart.style.display = "flex";
+                    historyMainPart.style.flexDirection = "column";
+                    historyMainPart.style.gap = "4px";
+    
+                    historyComment.append(historyLeftPart, historyMainPart);
+    
+                    // AddReply Element: Child Element of historyDiv
+    
+                    const addReply = document.createElement("div");
+                    addReply.id = "addReply" + i;
+                    addReply.style.display = "none";
+                    addReply.style.alignItems = "center";
+                    addReply.style.justifyContent = "space-between";
+                    addReply.style.padding = "10px 10px";
+                    addReply.style.gap = '6px';
+                    addReply.style.width = "-webkit-fill-available";
+                    addReply.style.borderTop = `1px solid #ccc`;
+                    addReply.classList.add("add-reply");
+    
+                    const replyInput = document.createElement("input");
+                    replyInput.id = "replyInput" + i;
+                    replyInput.style.width = "80%";
+                    replyInput.style.borderRadius = "3px";
+                    replyInput.addEventListener("focus", () => {
+                        replyInput.style.outline = "none";
+                        replyInput.style.border = "1px solid #3c97fe";
                     });
-                    editReplyTextInput.style.padding = '2px';
-                    editReplyTextInput.fontSize = '13px';
-                    const editReplyBtnGroup = document.createElement("div");
-                    editReplyBtnGroup.style.display = "flex";
-                    editReplyBtnGroup.style.justifyContent = "end";
-                    editReplyBtnGroup.style.fontSize = "small";
-                    editReplyBtnGroup.style.gap = "6px";
-                    const editReplySaveBtn = document.createElement("div");
-                    editReplySaveBtn.textContent = "Save";
-                    editReplySaveBtn.style.padding = "1px 7px";
-                    editReplySaveBtn.style.borderRadius = "3px";
-                    editReplySaveBtn.style.backgroundColor = "#3c97fe";
-                    editReplySaveBtn.style.color = "white";
-                    const editReplyCancelBtn = document.createElement("div");
-                    editReplyCancelBtn.textContent = "Cancel";
-                    editReplyBtnGroup.append(editReplyCancelBtn, editReplySaveBtn);
-                    editReplyCancelBtn.addEventListener("click", () => {
-                        editReplyText.style.display = "none";
-                        replyText.style.display = "block";
-                    });
-                    editReplySaveBtn.addEventListener("click", () => {
-                        const textValue = editReplyTextInput.value;
-                        editReplyText.style.display = "none";
-                        replyText.style.display = "block";
-                        replyText.textContent = textValue;
-                    });
-                    editReplyText.append(editReplyTextInput, editReplyBtnGroup);
-
-                    commentReplyContainer.append(commentReply, replyText, editReplyText);
-
-                    historyMainPart.append(commentReplyContainer);
-                })
-
-
-
-                const addHistoryElement = function () {
-                    const reply = replyInput.value;
-                    if (reply !== "") {
-                        historyId++;
-                        saveHistory(username, date, page, reply, type);
-                        replyInput.value = '';
+                    replyInput.placeholder = 'Add Reply...';
+                    replyInput.style.padding = '2px';
+                    replyInput.fontSize = '13px';
+                    const replySave = document.createElement("div");
+                    replySave.innerHTML = `<i class="fa-regular fa-paper-plane"></i>`;
+                    replySave.style.cursor = "pointer";
+    
+                    replies.forEach(function (replyItem) {
+                        let replyusername = replyItem.username;
+                        let replydate = convertStandardDateType(new Date(replyItem.date));
+                        let replyDetail = replyItem.reply;
+    
                         historyComment.style.display = "flex";
                         const commentReplyContainer = document.createElement("div");
                         commentReplyContainer.className = "commentReplyContainer";
                         commentReplyContainer.style.marginLeft = "10px";
-
+    
                         const commentReply = document.createElement("div");
                         commentReply.style.display = "flex";
                         commentReply.style.alignItems = "center";
@@ -926,9 +789,8 @@ const getDocList = async function (id) {
                         const replydateDiv = document.createElement("span");
                         replydateDiv.className = "replydateDiv";
                         replydateDiv.style.fontSize = "xx-small";
-                        replyusernameDiv.innerHTML = `${username}`;
-                        const replyTime = new Date(Date.now());
-                        replydateDiv.innerHTML = `${convertStandardDateType(replyTime)}`;
+                        replyusernameDiv.innerHTML = `${replyusername}`;
+                        replydateDiv.innerHTML = replydate;
                         replyUserDiv.append(replyusernameDiv, replydateDiv);
                         const replyoptionDiv = document.createElement("div");
                         replyoptionDiv.style.display = "flex";
@@ -941,7 +803,7 @@ const getDocList = async function (id) {
                         replyoptionSpan.style.color = "#5d5656";
                         replyoptionSpan.style.cursor = "pointer";
                         replyoptionSpan.innerHTML = `<i class="fa-solid fa-ellipsis"></i>`;
-
+    
                         const optionPan = document.createElement("div");
                         optionPan.style.display = "none";
                         optionPan.style.position = "absolute";
@@ -986,13 +848,13 @@ const getDocList = async function (id) {
                         })
                         replyoptionDiv.append(replyoptionSpan, optionPan);
                         commentReply.append(replyUserDiv, replyoptionDiv);
-
+    
                         const replyText = document.createElement("div");
                         replyText.className = "replyText";
                         replyText.style.marginTop = "8px";
                         replyText.style.fontSize = "small";
-                        replyText.textContent = reply;
-
+                        replyText.textContent = replyDetail;
+    
                         const editReplyText = document.createElement("div");
                         editReplyText.style.display = "none";
                         editReplyText.style.flexDirection = "column";
@@ -1032,53 +894,194 @@ const getDocList = async function (id) {
                             replyText.textContent = textValue;
                         });
                         editReplyText.append(editReplyTextInput, editReplyBtnGroup);
-
+    
                         commentReplyContainer.append(commentReply, replyText, editReplyText);
-
+    
                         historyMainPart.append(commentReplyContainer);
+                    })
+    
+    
+    
+                    const addHistoryElement = function () {
+                        const reply = replyInput.value;
+                        if (reply !== "") {
+                            historyId++;
+                            saveHistory(username, date, page, reply, type);
+                            replyInput.value = '';
+                            historyComment.style.display = "flex";
+                            const commentReplyContainer = document.createElement("div");
+                            commentReplyContainer.className = "commentReplyContainer";
+                            commentReplyContainer.style.marginLeft = "10px";
+    
+                            const commentReply = document.createElement("div");
+                            commentReply.style.display = "flex";
+                            commentReply.style.alignItems = "center";
+                            const replyUserDiv = document.createElement("div");
+                            // style
+                            replyUserDiv.style.display = 'flex';
+                            replyUserDiv.style.flexDirection = "column";
+                            replyUserDiv.style.width = "75%";
+                            // child
+                            const replyusernameDiv = document.createElement("span");
+                            replyusernameDiv.className = "replyusernameDiv";
+                            replyusernameDiv.style.fontSize = "xx-small";
+                            const replydateDiv = document.createElement("span");
+                            replydateDiv.className = "replydateDiv";
+                            replydateDiv.style.fontSize = "xx-small";
+                            replyusernameDiv.innerHTML = `${username}`;
+                            const replyTime = new Date(Date.now());
+                            replydateDiv.innerHTML = `${convertStandardDateType(replyTime)}`;
+                            replyUserDiv.append(replyusernameDiv, replydateDiv);
+                            const replyoptionDiv = document.createElement("div");
+                            replyoptionDiv.style.display = "flex";
+                            replyoptionDiv.style.justifyContent = "center";
+                            replyoptionDiv.style.width = "25%";
+                            replyoptionDiv.style.padding = "0px 3px";
+                            replyoptionDiv.style.position = "relative";
+                            replyoptionDiv.style.borderRadius = "3px";
+                            const replyoptionSpan = document.createElement("span");
+                            replyoptionSpan.style.color = "#5d5656";
+                            replyoptionSpan.style.cursor = "pointer";
+                            replyoptionSpan.innerHTML = `<i class="fa-solid fa-ellipsis"></i>`;
+    
+                            const optionPan = document.createElement("div");
+                            optionPan.style.display = "none";
+                            optionPan.style.position = "absolute";
+                            optionPan.style.top = "21px";
+                            optionPan.style.right = "0";
+                            optionPan.style.zIndex = "100";
+                            optionPan.style.backgroundColor = "white";
+                            optionPan.style.borderRadius = '5px';
+                            optionPan.style.boxShadow = "#868e96 0px 0px 3px 0px";
+                            const EditBtn = document.createElement("div");
+                            EditBtn.textContent = "Edit";
+                            EditBtn.style.cursor = "pointer";
+                            EditBtn.style.fontSize = "small";
+                            EditBtn.style.padding = "3px 8px";
+                            EditBtn.addEventListener("click", (e) => {
+                                e.stopPropagation();
+                                let textValue = replyText.textContent;
+                                replyText.style.display = "none";
+                                editReplyText.style.display = "flex";
+                                editReplyTextInput.value = textValue;
+                                editReplyTextInput.focus();
+                                optionPan.style.display = "none";
+                                replyoptionDiv.style.backgroundColor = "white";
+                            })
+                            const DeleteBtn = document.createElement("div");
+                            DeleteBtn.textContent = "Delete";
+                            DeleteBtn.style.cursor = "pointer";
+                            DeleteBtn.style.fontSize = "small";
+                            DeleteBtn.style.padding = "3px 8px";
+                            DeleteBtn.addEventListener("click", () => {
+                                historyMainPart.removeChild(commentReplyContainer);
+                            })
+                            optionPan.append(EditBtn, DeleteBtn);
+                            replyoptionDiv.addEventListener("click", () => {
+                                if (window.getComputedStyle(optionPan).getPropertyValue('display') !== "none") {
+                                    optionPan.style.display = "none";
+                                    replyoptionDiv.style.backgroundColor = "white";
+                                } else {
+                                    optionPan.style.display = "block";
+                                    replyoptionDiv.style.backgroundColor = "#dde6ee";
+                                }
+                            })
+                            replyoptionDiv.append(replyoptionSpan, optionPan);
+                            commentReply.append(replyUserDiv, replyoptionDiv);
+    
+                            const replyText = document.createElement("div");
+                            replyText.className = "replyText";
+                            replyText.style.marginTop = "8px";
+                            replyText.style.fontSize = "small";
+                            replyText.textContent = reply;
+    
+                            const editReplyText = document.createElement("div");
+                            editReplyText.style.display = "none";
+                            editReplyText.style.flexDirection = "column";
+                            editReplyText.style.marginRight = "10px";
+                            editReplyText.style.marginTop = "10px";
+                            editReplyText.style.gap = "3px";
+                            const editReplyTextInput = document.createElement("input");
+                            editReplyTextInput.style.borderRadius = "3px";
+                            editReplyTextInput.addEventListener("focus", () => {
+                                editReplyTextInput.style.outline = "none";
+                                editReplyTextInput.style.border = "1px solid #3c97fe";
+                            });
+                            editReplyTextInput.style.padding = '2px';
+                            editReplyTextInput.fontSize = '13px';
+                            const editReplyBtnGroup = document.createElement("div");
+                            editReplyBtnGroup.style.display = "flex";
+                            editReplyBtnGroup.style.justifyContent = "end";
+                            editReplyBtnGroup.style.fontSize = "small";
+                            editReplyBtnGroup.style.gap = "6px";
+                            const editReplySaveBtn = document.createElement("div");
+                            editReplySaveBtn.textContent = "Save";
+                            editReplySaveBtn.style.padding = "1px 7px";
+                            editReplySaveBtn.style.borderRadius = "3px";
+                            editReplySaveBtn.style.backgroundColor = "#3c97fe";
+                            editReplySaveBtn.style.color = "white";
+                            const editReplyCancelBtn = document.createElement("div");
+                            editReplyCancelBtn.textContent = "Cancel";
+                            editReplyBtnGroup.append(editReplyCancelBtn, editReplySaveBtn);
+                            editReplyCancelBtn.addEventListener("click", () => {
+                                editReplyText.style.display = "none";
+                                replyText.style.display = "block";
+                            });
+                            editReplySaveBtn.addEventListener("click", () => {
+                                const textValue = editReplyTextInput.value;
+                                editReplyText.style.display = "none";
+                                replyText.style.display = "block";
+                                replyText.textContent = textValue;
+                            });
+                            editReplyText.append(editReplyTextInput, editReplyBtnGroup);
+    
+                            commentReplyContainer.append(commentReply, replyText, editReplyText);
+    
+                            historyMainPart.append(commentReplyContainer);
+                        }
                     }
-                }
-                replyInput.addEventListener("keydown", (e) => {
-                    if (e.key === "Enter") {
+                    replyInput.addEventListener("keydown", (e) => {
+                        if (e.key === "Enter") {
+                            addHistoryElement();
+                        }
+                    })
+                    replySave.addEventListener("click", () => {
                         addHistoryElement();
-                    }
-                })
-                replySave.addEventListener("click", () => {
-                    addHistoryElement();
-                })
-                addReply.append(replyInput, replySave);
-
-                const textHistory = document.createElement("span");
-                textHistory.className = "actiontext";
-                textHistory.style.display = "flex";
-                textHistory.style.alignItems = "center";
-                textHistory.style.width = "60%";
-                textHistory.style.justifyContent = "start";
-                textHistory.textContent = item.actiontext;
-                textHistory.style.fontSize = "11px";
-                textHistory.style.color = "red";
-
-                history.append(annotationType, userDiv, optionDiv);
-
-                historyDiv.append(history, textHistory, historyComment, addReply);
-
-                historyDiv.addEventListener("click", () => {
-                    showHistoryBar.querySelectorAll(".add-reply").forEach(reply => {
-                        reply.style.display = "none";
+                    })
+                    addReply.append(replyInput, replySave);
+    
+                    const textHistory = document.createElement("span");
+                    textHistory.className = "actiontext";
+                    textHistory.style.display = "flex";
+                    textHistory.style.alignItems = "center";
+                    textHistory.style.width = "60%";
+                    textHistory.style.justifyContent = "start";
+                    textHistory.textContent = item.actiontext;
+                    textHistory.style.fontSize = "11px";
+                    textHistory.style.color = "red";
+    
+                    history.append(annotationType, userDiv, optionDiv);
+    
+                    historyDiv.append(history, textHistory, historyComment, addReply);
+    
+                    historyDiv.addEventListener("click", () => {
+                        showHistoryBar.querySelectorAll(".add-reply").forEach(reply => {
+                            reply.style.display = "none";
+                        });
+                        showHistoryBar.querySelectorAll(".historyComment").forEach(comment => {
+                            comment.style.display = "none";
+                        });
+                        addReply.style.display = "flex";
+                        if (historyMainPart.hasChildNodes()) historyComment.style.display = "flex";
+                        if (type !== TEXTFIELD && type !== TEXT_CONTENT) replyInput.focus();
+                        removeAllResizeBar();
                     });
-                    showHistoryBar.querySelectorAll(".historyComment").forEach(comment => {
-                        comment.style.display = "none";
-                    });
-                    addReply.style.display = "flex";
-                    if (historyMainPart.hasChildNodes()) historyComment.style.display = "flex";
-                    if (type !== TEXTFIELD && type !== TEXT_CONTENT) replyInput.focus();
-                    removeAllResizeBar();
-                });
-                pageDiv.appendChild(historyDiv);
-                showHistoryBar.appendChild(pageDiv);
-            })
-            if(data.history.length > 0){
-                baseId = data.history.length;
+                    pageDiv.appendChild(historyDiv);
+                    showHistoryBar.appendChild(pageDiv);
+                })
+                if(data.history.length > 0){
+                    baseId = data.history.length;
+                }
             }
         })
         .catch((error) => {

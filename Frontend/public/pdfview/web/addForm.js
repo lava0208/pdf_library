@@ -1209,9 +1209,6 @@ const drawFormElement = function () {
               };
             }
           });
-
-          console.log("=== end ===");
-          console.log(signatureImgData);
           break;
         case SHAPE:
           let canvas = $("#drawing-board").find("canvas")[0];
@@ -4420,7 +4417,6 @@ const flatten = async function () {
   pdfBytes = await PDFViewerApplication.pdfDocument.saveDocument();
   const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
   const form = pdfDoc.getForm();
-  console.log(form);
   form.flatten();
   pdfBytes = await pdfDoc.save();
   if (form_storage.length != 0)
@@ -4556,13 +4552,14 @@ async function addFormElements() {
               checkboxForm.enableReadOnly();
             }
           } else {
+            const color = form_item.textBackgroundColor == undefined ? '#ccc' : form_item.textBackgroundColor;
             checkboxForm.addToPage(page, {
               x: form_item.x,
               y: form_item.y - form_item.height,
               width: form_item.width,
               height: form_item.height,
-              backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
-              borderColor: hexToRgbNew(form_item.textBackgroundColor),
+              backgroundColor: hexToRgbNew(color),
+              borderColor: hexToRgbNew(color),
             });
             if (form_item.isChecked) checkboxForm.check();
           }
@@ -4581,13 +4578,14 @@ async function addFormElements() {
               radioForm.select(radioCount + "");
             }
           } else {
+            const color = form_item.textBackgroundColor == undefined ? '#ccc' : form_item.textBackgroundColor;
             radioForm.addOptionToPage(radioCount + "", page, {
               x: form_item.data.x,
               y: form_item.data.y - form_item.data.height,
               width: form_item.data.width,
               height: form_item.data.height,
-              backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
-              borderColor: hexToRgbNew(form_item.textBackgroundColor),
+              backgroundColor: hexToRgbNew(color),
+              borderColor: hexToRgbNew(color),
             });
             if (form_item.data.isChecked) {
               radioForm.select(radioCount + "");
@@ -4785,6 +4783,7 @@ async function addFormElements() {
           });
           break;
         case SIGNATURE:
+          console.log(form_item);
           if (form_item.imgData != undefined) {
             await embedImage(form_item, pdfDoc, page);
           }

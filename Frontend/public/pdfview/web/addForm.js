@@ -222,6 +222,7 @@ const drawFormElement = function () {
           checkbox.addEventListener("click", () => {
             current_checkbox_id = id;
             DrawType = CHECKBOX;
+            console.log("current_checkbox_id " + current_checkbox_id);
           })
 
           checkbox.addEventListener("dblclick", () => {

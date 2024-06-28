@@ -1619,7 +1619,8 @@ const handleCheckbox = function (e) {
   //... background color
   textBackgroundColor = document.getElementById("checkbox-background-color") && document.getElementById("checkbox-background-color").value;
 
-  if (isDraft != "false") {
+    // if (isDraft != "false") {
+    if (isDraft == "true") {
     for (let i = 0; i < form_storage.length; i++) {
       if (form_storage[i].id == current_form_id) {
         form_storage[i].form_field_name = formFieldName;
@@ -1775,7 +1776,8 @@ const handleText = function (e) {
     initialValue = currentFormText.querySelector(".text-field-input").value;
   }
 
-  if (isDraft != "false") {
+    // if (isDraft != "false") {
+    if (isDraft == "true") {
     for (let i = 0; i < form_storage.length; i++) {
       if (form_storage[i].id == current_form_id) {
         form_storage[i].fontStyle = fontStyle;
@@ -1909,7 +1911,8 @@ const handleCombo = function (e) {
     if (currentValue != "") initialValue = currentValue;
   }
 
-  if (isDraft != "false") {
+    // if (isDraft != "false") {
+    if (isDraft == "true") {
     for (let i = 0; i < form_storage.length; i++) {
       if (form_storage[i].form_type === COMBOBOX) {
         if (
@@ -2034,7 +2037,8 @@ const handleList = function (e) {
       initialValue = currentFormText.querySelector(".list-field-input").querySelector(".active").textContent;
   }
 
-  if (isDraft != "false") {
+    // if (isDraft != "false") {
+    if (isDraft == "true") {
     for (let i = 0; i < form_storage.length; i++) {
       if (form_storage[i].form_type === LIST) {
         if (
@@ -2282,7 +2286,8 @@ const handleButton = function (e) {
   //... background color
   textBackgroundColor = document.getElementById("button-font-background-color") && document.getElementById("button-font-background-color").value;
 
-  if (isDraft != "false") {
+    // if (isDraft != "false") {
+    if (isDraft == "true") {
     for (let i = 0; i < form_storage.length; i++) {
       if (
         form_storage[i].form_field_name == formFieldName &&
@@ -2397,7 +2402,8 @@ const handleDate = function (e) {
     document.getElementById(DATE_OPTION).style.display = "none";
   }
 
-  if (isDraft != "false") {
+    // if (isDraft != "false") {
+    if (isDraft == "true") {
     for (let i = 0; i < form_storage.length; i++) {
       if (
         form_storage[i].form_field_name == formFieldName &&
@@ -2491,7 +2497,11 @@ const handleSignature = function () {
     if (
       form_storage[i].id == current_form_id
     ) {
-      form_storage[i].imgData = signatureImgData;
+      form_storage[i].imgData = signatureImgData;      
+      getImgHeight(signatureImgData).then(function(e){
+        form_storage[i].width = e.width * 0.3;
+        form_storage[i].height = e.height * 0.3;
+      })
       break;
     }
   }
@@ -2509,7 +2519,8 @@ const handleSignature = function () {
   //... background color
   textBackgroundColor = document.getElementById("signature-font-background-color") && document.getElementById("signature-font-background-color").value;
 
-  if (isDraft != "false") {
+  // if (isDraft != "false") {
+  if (isDraft == "true") {
     for (let i = 0; i < form_storage.length; i++) {
       if (form_storage[i].id == current_form_id) {
 
@@ -2526,8 +2537,6 @@ const handleSignature = function () {
   }
 
   if (baseId !== 0 && (count == signStorage.length || signStorage == null)) {
-    const formWidth = document.getElementById("signature" + baseId).offsetWidth;
-    const formHeight = document.getElementById("signature" + baseId).offsetHeight;
     form_storage.push({
       id: baseId,
       containerId: "signature" + baseId,
@@ -3122,13 +3131,12 @@ const toTransparent = function (object) {
 }
 
 const submitAction = function () {
-  const comboValue = document.querySelectorAll(".combobox-field-value");
   form_storage.forEach((item) => {
-    if (item.form_type === RADIO) {
-      item.data.isReadOnly = true;
-    } else {
-      item.isReadOnly = true;
-    }
+    // if (item.form_type === RADIO) {
+    //   item.data.isReadOnly = true;
+    // } else {
+    //   item.isReadOnly = true;
+    // }
 
     resizeCanvas(`${item.containerId}`);
     if (item.form_type == SHAPE) resizeCanvas(`${item.imgId}`);
@@ -3167,17 +3175,18 @@ const submitAction = function () {
         // currentItem.style.boxShadow = "none";
         break;
       case SIGNATURE:
+        // resizeCanvas(`${item.imgId}`);
         break;
       case BUTTON:
-        currentItem.remove();
+        // currentItem.remove();
         break;
       default:
         break;
     }
   })
-  form_storage = form_storage.filter((item) => {
-    return item.form_type !== BUTTON;
-  })
+  // form_storage = form_storage.filter((item) => {
+  //   return item.form_type !== BUTTON;
+  // })
   isSubmit = true;
 }
 
@@ -4456,7 +4465,6 @@ async function fetchImageAsBase64(url) {
 }
 
 async function embedImage(form_item, pdfDoc, page) {
-  console.log(form_item.textBackgroundColor);
   let imgData = form_item.imgData;
 
   if (!imgData.includes("data:image/png;base64")) {
@@ -4645,10 +4653,6 @@ async function addFormElements() {
             textfieldForm.updateAppearances(customFont);
             textfieldForm.defaultUpdateAppearances(customFont);
           } else {
-            console.log("^^^^^^^^^^^^^^^");
-            console.log(page);
-            console.log(form_item);
-            console.log(form_item.initialValue);
             page.drawText(form_item.initialValue, {
               x: form_item.x,
               y: form_item.y - form_item.height,
@@ -4694,6 +4698,9 @@ async function addFormElements() {
           if (!form_item.isReadOnly) {
             listboxForm = form.createOptionList(form_item.form_field_name);
             listboxForm.addOptions(form_item.optionArray);
+            if (form_item.initialValue)
+              listboxForm.select(form_item.initialValue);
+
             listboxForm.addToPage(page, {
               x: form_item.x,
               y: form_item.y - form_item.height,
@@ -4704,11 +4711,9 @@ async function addFormElements() {
               backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
               borderColor: hexToRgbNew(form_item.textBackgroundColor),
             });
-            listboxForm.setFontSize(12);
+            listboxForm.setFontSize(form_item.fontSize);
             listboxForm.updateAppearances(customFont);
             listboxForm.defaultUpdateAppearances(customFont);
-            if (form_item.initialValue)
-              listboxForm.select(form_item.initialValue);
           } else {
             page.drawText(form_item.initialValue, {
               x: form_item.x,
@@ -4794,7 +4799,6 @@ async function addFormElements() {
           });
           break;
         case SIGNATURE:
-          console.log(form_item);
           if (form_item.imgData != undefined) {
             await embedImage(form_item, pdfDoc, page);
           }
@@ -5204,4 +5208,15 @@ const handleTrack = function (id, value) {
       $(this).find(".actiontext").text(value);
     }
   })
+}
+
+const getImgHeight = async (src) => {
+  const img = new Image();
+  img.src = src;
+  await img.decode();
+  
+  let width = img.width;
+  let height = img.height;
+  
+  return { width: width, height: height};
 }

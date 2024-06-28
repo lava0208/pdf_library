@@ -2133,8 +2133,6 @@ class PDFViewer {
    * @param {ChangeScaleOptions} [options]
    */
   increaseScale({ drawingDelay, scaleFactor, steps } = {}) {
-    console.log("drawingDelay :" + drawingDelay);
-
     if (!this.pdfDocument) {
       return;
     }

@@ -111,7 +111,7 @@ const generalUserMode = function () {
       submitDocumentButton.style.display = "flex";
       changeMode();
     } else {
-      if (isDraft == "true") {
+    if (isDraft == "true" || isDraft == null) {
         addTextButton.style.display = "block";
         const viewer = document.getElementById('viewer');
         viewer.addEventListener('click', e => { });
@@ -1619,8 +1619,8 @@ const handleCheckbox = function (e) {
   //... background color
   textBackgroundColor = document.getElementById("checkbox-background-color") && document.getElementById("checkbox-background-color").value;
 
-    // if (isDraft != "false") {
-    if (isDraft == "true") {
+  // if (isDraft != "false") {
+  if (isDraft == "true" || isDraft == null) {
     for (let i = 0; i < form_storage.length; i++) {
       if (form_storage[i].id == current_form_id) {
         form_storage[i].form_field_name = formFieldName;
@@ -1776,8 +1776,8 @@ const handleText = function (e) {
     initialValue = currentFormText.querySelector(".text-field-input").value;
   }
 
-    // if (isDraft != "false") {
-    if (isDraft == "true") {
+  // if (isDraft != "false") {
+  if (isDraft == "true" || isDraft == null) {
     for (let i = 0; i < form_storage.length; i++) {
       if (form_storage[i].id == current_form_id) {
         form_storage[i].fontStyle = fontStyle;
@@ -1911,8 +1911,8 @@ const handleCombo = function (e) {
     if (currentValue != "") initialValue = currentValue;
   }
 
-    // if (isDraft != "false") {
-    if (isDraft == "true") {
+  // if (isDraft != "false") {
+  if (isDraft == "true" || isDraft == null) {
     for (let i = 0; i < form_storage.length; i++) {
       if (form_storage[i].form_type === COMBOBOX) {
         if (
@@ -2037,8 +2037,8 @@ const handleList = function (e) {
       initialValue = currentFormText.querySelector(".list-field-input").querySelector(".active").textContent;
   }
 
-    // if (isDraft != "false") {
-    if (isDraft == "true") {
+  // if (isDraft != "false") {
+  if (isDraft == "true" || isDraft == null) {
     for (let i = 0; i < form_storage.length; i++) {
       if (form_storage[i].form_type === LIST) {
         if (
@@ -2286,8 +2286,8 @@ const handleButton = function (e) {
   //... background color
   textBackgroundColor = document.getElementById("button-font-background-color") && document.getElementById("button-font-background-color").value;
 
-    // if (isDraft != "false") {
-    if (isDraft == "true") {
+  // if (isDraft != "false") {
+  if (isDraft == "true" || isDraft == null) {
     for (let i = 0; i < form_storage.length; i++) {
       if (
         form_storage[i].form_field_name == formFieldName &&
@@ -2402,8 +2402,8 @@ const handleDate = function (e) {
     document.getElementById(DATE_OPTION).style.display = "none";
   }
 
-    // if (isDraft != "false") {
-    if (isDraft == "true") {
+  // if (isDraft != "false") {
+  if (isDraft == "true" || isDraft == null) {
     for (let i = 0; i < form_storage.length; i++) {
       if (
         form_storage[i].form_field_name == formFieldName &&
@@ -4432,7 +4432,7 @@ const flatten = async function () {
   const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
   const form = pdfDoc.getForm();
   form.flatten();
-  pdfBytes = await pdfDoc.save();
+  // pdfBytes = await pdfDoc.save();
   if (form_storage.length != 0)
     addFormElements().then(() => {
       add_txt_comment();

@@ -2860,6 +2860,7 @@ document.getElementById("viewer").addEventListener("mousedown", function (event)
       event.preventDefault();
       removeAllResizeBar();
       saveFormElementByClick();
+      console.log("currentFormType " + currentFormType);
       if (currentFormType === DATE) {
         if (!currentObject.parentElement.querySelector("#topLeft")) addResizebar(currentObject.parentElement.id);
         currentObject.parentElement.style.zIndex = selectedZIndex;
@@ -2877,6 +2878,7 @@ document.getElementById("viewer").addEventListener("mousedown", function (event)
       } else {
         if (!currentObject.querySelector("#topLeft")) addResizebar(currentObject.id);
         currentObject.style.zIndex = selectedZIndex;
+        console.log(currentObject);
       }
       // handleComment(currentObject.id, currentFormType);
     } else {

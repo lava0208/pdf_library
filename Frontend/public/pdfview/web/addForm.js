@@ -2549,8 +2549,8 @@ const handleSignature = function () {
     ) {
       form_storage[i].imgData = signatureImgData;      
       getImgHeight(signatureImgData).then(function(e){
-        form_storage[i].width = e.width * 0.2;
-        form_storage[i].height = e.height * 0.2;
+        form_storage[i].width = e.width * 0.3;
+        form_storage[i].height = e.height * 0.3;
       })
       break;
     }
@@ -2993,17 +2993,13 @@ const resizeHandler = function (width, height, currentId) {
   }
 };
 
-const hexToRgb = function (hex) {
-  // Remove the '#' at the beginning if present
-  hex = hex.replace("#", "");
-
-  // Parse the hexadecimal color components
-  const r = parseInt(hex.substring(0, 2), 16) / 255;
-  const g = parseInt(hex.substring(2, 4), 16) / 255;
-  const b = parseInt(hex.substring(4, 6), 16) / 255;
-
-  return { r, g, b };
-};
+function hexToRgb(hex) {
+  const int = parseInt(hex.slice(1), 16);
+  const r = (int >> 16) & 255;
+  const g = (int >> 8) & 255;
+  const b = int & 255;
+  return PDFLib.rgb(r / 255, g / 255, b / 255);
+}
 
 const hexToRgbNew = function (hex) {
   hex = hex.replace(/^#/, '');
@@ -4601,7 +4597,6 @@ async function addFormElements() {
       }
       switch (form_item.form_type) {
         case CHECKBOX:
-          checkboxForm = form.createCheckBox(form_item.form_field_name);
           const color1 = form_item.textBackgroundColor === undefined ? '#ccc' : form_item.textBackgroundColor;
           page.drawRectangle({
             x: form_item.x,
@@ -4611,6 +4606,7 @@ async function addFormElements() {
             color: hexToRgbNew(color1),
             borderColor: hexToRgbNew(color1),
           });
+          checkboxForm = form.createCheckBox(form_item.form_field_name);
           checkboxForm.addToPage(page, {
             x: form_item.x,
             y: form_item.y - form_item.height,
@@ -4619,16 +4615,15 @@ async function addFormElements() {
             backgroundColor: hexToRgbNew(color1),
             borderColor: hexToRgbNew(color1),
           });
-
           const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
           if (form_item.isChecked) {
             checkboxForm.check();
             page.drawText('✔', {
               x: form_item.x + form_item.width * 0.25,
-              y: form_item.y - form_item.height * 0.75,
+              y: form_item.y - form_item.height + form_item.height * 0.25,
               size: form_item.height * 0.5,
               font: font,
-              color: form_item.textColor,
+              color: hexToRgbNew(form_item.textColor),
             });
           }
           if (form_item.isReadOnly) {

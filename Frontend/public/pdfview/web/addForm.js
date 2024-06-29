@@ -248,6 +248,11 @@ const drawFormElement = function () {
                         element.label;
                       document.getElementById("checkbox-value").value =
                         element.value;
+
+                      //... background color
+                      document.getElementById("checkbox-background-color").value =
+                      element.textBackgroundColor;
+
                       isOptionPane = true;
                       option = showOption(
                         CHECKBOX_OPTION,
@@ -337,6 +342,11 @@ const drawFormElement = function () {
                         element.data.label;
                       document.getElementById("radio-value").value =
                         element.data.value;
+
+                      //... background color
+                      document.getElementById("radio-background-color").value =
+                      element.textBackgroundColor;
+
                       isOptionPane = true;
                       option = showOption(
                         RADIO_OPTION,
@@ -1622,25 +1632,27 @@ const handleCheckbox = function (e) {
 
   // if (isDraft != "false") {
   if (isDraft == "true" || isDraft == null) {
-    for (let i = 0; i < form_storage.length; i++) {
-      if (form_storage[i].id == current_form_id) {
-        form_storage[i].form_field_name = formFieldName;
-        form_storage[i].textBackgroundColor = textBackgroundColor;
+    if (!isEditing) {
+      for (let i = 0; i < form_storage.length; i++) {
+        if (form_storage[i].id == current_form_id) {
+          form_storage[i].form_field_name = formFieldName;
+          form_storage[i].textBackgroundColor = textBackgroundColor;
 
-        //... handle track
-        handleTrack(form_storage[i].id, formFieldName);
-        break;
-      } else if (
-        form_storage[i].form_field_name == formFieldName &&
-        form_storage[i].id != current_form_id
-      ) {
-        break;
-      } else if (
-        form_storage[i].form_field_name != formFieldName &&
-        form_storage[i].id == current_form_id
-      ) {
-        form_storage[i].form_field_name = formFieldName;
-        break;
+          //... handle track
+          handleTrack(form_storage[i].id, formFieldName);
+          break;
+        } else if (
+          form_storage[i].form_field_name == formFieldName &&
+          form_storage[i].id != current_form_id
+        ) {
+          break;
+        } else if (
+          form_storage[i].form_field_name != formFieldName &&
+          form_storage[i].id == current_form_id
+        ) {
+          form_storage[i].form_field_name = formFieldName;
+          break;
+        }
       }
     }
   }
@@ -1777,8 +1789,10 @@ const handleText = function (e) {
     initialValue = currentFormText.querySelector(".text-field-input").value;
   }
 
+  console.log("isEditing " + isEditing);
+
   // if (isDraft != "false") {
-  if (isDraft == "true" || isDraft == null) {
+  if (isDraft == "true" && !isEditing) {
     for (let i = 0; i < form_storage.length; i++) {
       if (form_storage[i].id == current_form_id) {
         form_storage[i].fontStyle = fontStyle;
@@ -1830,6 +1844,16 @@ const handleText = function (e) {
       }
     }
   }
+
+  if (isDraft == null){
+    for (let i = 0; i < form_storage.length; i++) {
+      if (form_storage[i].id == current_form_id) {
+        form_storage[i].initialValue = initialValue;
+      }
+    }
+  }
+
+  console.log("formFieldName " + formFieldName);
 
   let count = 0;
 
@@ -1913,7 +1937,7 @@ const handleCombo = function (e) {
   }
 
   // if (isDraft != "false") {
-  if (isDraft == "true" || isDraft == null) {
+  if (isDraft == "true" && !isEditing) {
     for (let i = 0; i < form_storage.length; i++) {
       if (form_storage[i].form_type === COMBOBOX) {
         if (
@@ -1958,6 +1982,16 @@ const handleCombo = function (e) {
         if (form_storage[i].id == current_form_id) {
           form_storage[i].initialValue = initialValue;
           break;
+        }
+      }
+    }
+  }
+
+  if (isDraft == null){
+    for (let i = 0; i < form_storage.length; i++) {
+      if (form_storage[i].form_type === COMBOBOX) {
+        if (form_storage[i].id == current_form_id) {
+          form_storage[i].initialValue = initialValue;
         }
       }
     }
@@ -2039,7 +2073,7 @@ const handleList = function (e) {
   }
 
   // if (isDraft != "false") {
-  if (isDraft == "true" || isDraft == null) {
+  if (isDraft == "true" && !isEditing) {
     for (let i = 0; i < form_storage.length; i++) {
       if (form_storage[i].form_type === LIST) {
         if (
@@ -2099,6 +2133,14 @@ const handleList = function (e) {
         ) {
           form_storage[i].initialValue = initialValue;
         }
+      }
+    }
+  }
+
+  if (isDraft == null){
+    for (let i = 0; i < form_storage.length; i++) {
+      if (form_storage[i].id == current_form_id) {
+        form_storage[i].initialValue = initialValue;
       }
     }
   }
@@ -2289,42 +2331,44 @@ const handleButton = function (e) {
 
   // if (isDraft != "false") {
   if (isDraft == "true" || isDraft == null) {
-    for (let i = 0; i < form_storage.length; i++) {
-      if (
-        form_storage[i].form_field_name == formFieldName &&
-        form_storage[i].id == current_form_id
-      ) {
-        form_storage[i].action = form_action;
-        form_storage[i].fontStyle = fontStyle;
-        form_storage[i].fontSize = fontSize;
-        form_storage[i].textColor = textColor;
+    if (!isEditing) {
+      for (let i = 0; i < form_storage.length; i++) {
+        if (
+          form_storage[i].form_field_name == formFieldName &&
+          form_storage[i].id == current_form_id
+        ) {
+          form_storage[i].action = form_action;
+          form_storage[i].fontStyle = fontStyle;
+          form_storage[i].fontSize = fontSize;
+          form_storage[i].textColor = textColor;
 
-        //... background color
-        form_storage[i].textBackgroundColor = textBackgroundColor;
+          //... background color
+          form_storage[i].textBackgroundColor = textBackgroundColor;
 
-        form_storage[i].text = initialValue;
-        form_storage[i].align = alignValue;
-        form_storage[i].form_field_name = formFieldName;
+          form_storage[i].text = initialValue;
+          form_storage[i].align = alignValue;
+          form_storage[i].form_field_name = formFieldName;
 
-        //... handle track
-        handleTrack(form_storage[i].id, initialValue + " Type " + selectedValue);
+          //... handle track
+          handleTrack(form_storage[i].id, initialValue + " Type " + selectedValue);
 
-        break;
-      } else if (
-        form_storage[i].form_field_name == formFieldName &&
-        form_storage[i].id != current_form_id
-      ) {
-        break;
-      } else if (
-        form_storage[i].form_field_name != formFieldName &&
-        form_storage[i].id == current_form_id
-      ) {
-        form_storage[i].form_field_name = formFieldName;
-        form_storage[i].action = form_action;
+          break;
+        } else if (
+          form_storage[i].form_field_name == formFieldName &&
+          form_storage[i].id != current_form_id
+        ) {
+          break;
+        } else if (
+          form_storage[i].form_field_name != formFieldName &&
+          form_storage[i].id == current_form_id
+        ) {
+          form_storage[i].form_field_name = formFieldName;
+          form_storage[i].action = form_action;
 
-        //... handle track
-        handleTrack(form_storage[i].id, initialValue + " Type " + selectedValue);
-        break;
+          //... handle track
+          handleTrack(form_storage[i].id, initialValue + " Type " + selectedValue);
+          break;
+        }
       }
     }
   }
@@ -2404,7 +2448,7 @@ const handleDate = function (e) {
   }
 
   // if (isDraft != "false") {
-  if (isDraft == "true" || isDraft == null) {
+  if (isDraft == "true" && !isEditing) {
     for (let i = 0; i < form_storage.length; i++) {
       if (
         form_storage[i].form_field_name == formFieldName &&
@@ -2443,6 +2487,14 @@ const handleDate = function (e) {
   } else {
     for (let i = 0; i < form_storage.length; i++) {
       if (form_storage[i].id == current_form_id) form_storage[i].text = text;
+    }
+  }
+
+  if (isDraft == null){
+    for (let i = 0; i < form_storage.length; i++) {
+      if (form_storage[i].id == current_form_id) {
+        form_storage[i].initialValue = currentText;
+      }
     }
   }
 
@@ -2500,8 +2552,8 @@ const handleSignature = function () {
     ) {
       form_storage[i].imgData = signatureImgData;      
       getImgHeight(signatureImgData).then(function(e){
-        form_storage[i].width = e.width * 0.3;
-        form_storage[i].height = e.height * 0.3;
+        form_storage[i].width = e.width * 0.2;
+        form_storage[i].height = e.height * 0.2;
       })
       break;
     }
@@ -2521,7 +2573,7 @@ const handleSignature = function () {
   textBackgroundColor = document.getElementById("signature-font-background-color") && document.getElementById("signature-font-background-color").value;
 
   // if (isDraft != "false") {
-  if (isDraft == "true") {
+  if (isDraft == "true" && !isEditing) {
     for (let i = 0; i < form_storage.length; i++) {
       if (form_storage[i].id == current_form_id) {
 
@@ -2860,10 +2912,11 @@ document.getElementById("viewer").addEventListener("mousedown", function (event)
       event.preventDefault();
       removeAllResizeBar();
       saveFormElementByClick();
-      console.log("currentFormType " + currentFormType);
       if (currentFormType === DATE) {
         if (!currentObject.parentElement.querySelector("#topLeft")) addResizebar(currentObject.parentElement.id);
-        currentObject.parentElement.style.zIndex = selectedZIndex;
+        setTimeout(() => {
+          currentObject.parentElement.style.zIndex = selectedZIndex;
+        }, 100);
       } else if (currentFormType === SIGNATURE || currentFormType === SHAPE) {
         if (currentObject.tagName === "IMG") {
           if (!currentObject.parentElement.querySelector("#topLeft")) addResizebar(currentObject.parentElement.id);
@@ -2878,7 +2931,6 @@ document.getElementById("viewer").addEventListener("mousedown", function (event)
       } else {
         if (!currentObject.querySelector("#topLeft")) addResizebar(currentObject.id);
         currentObject.style.zIndex = selectedZIndex;
-        console.log(currentObject);
       }
       // handleComment(currentObject.id, currentFormType);
     } else {
@@ -3135,11 +3187,11 @@ const toTransparent = function (object) {
 
 const submitAction = function () {
   form_storage.forEach((item) => {
-    // if (item.form_type === RADIO) {
-    //   item.data.isReadOnly = true;
-    // } else {
-    //   item.isReadOnly = true;
-    // }
+    if (item.form_type === RADIO) {
+      item.data.isReadOnly = true;
+    } else {
+      item.isReadOnly = true;
+    }
 
     resizeCanvas(`${item.containerId}`);
     if (item.form_type == SHAPE) resizeCanvas(`${item.imgId}`);
@@ -4478,15 +4530,13 @@ async function embedImage(form_item, pdfDoc, page) {
 
   try {
     const pngImage = await pdfDoc.embedPng(imgData);
-
     page.drawRectangle({
       x: form_item.x,
       y: form_item.y - form_item.height,
       width: form_item.width,
       height: form_item.height,
-      color: PDFLib.rgb(r, g, b),
+      color: hexToRgbNew(form_item.textBackgroundColor),
     });
-
     page.drawImage(pngImage, {
       x: form_item.x,
       y: form_item.y - form_item.height,
@@ -4555,55 +4605,69 @@ async function addFormElements() {
       switch (form_item.form_type) {
         case CHECKBOX:
           checkboxForm = form.createCheckBox(form_item.form_field_name);
-          if (form_item.isReadOnly) {
-            if (form_item.isChecked) {
-              checkboxForm.addToPage(page, {
-                x: form_item.x,
-                y: form_item.y - form_item.height,
-                width: form_item.width,
-                height: form_item.height,
-                backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
-                borderColor: hexToRgbNew(form_item.textBackgroundColor),
-              });
-              checkboxForm.check();
-              checkboxForm.enableReadOnly();
-            }
-          } else {
-            const color = form_item.textBackgroundColor == undefined ? '#ccc' : form_item.textBackgroundColor;
-            checkboxForm.addToPage(page, {
-              x: form_item.x,
-              y: form_item.y - form_item.height,
-              width: form_item.width,
-              height: form_item.height,
-              backgroundColor: hexToRgbNew(color),
-              borderColor: hexToRgbNew(color),
+          const color1 = form_item.textBackgroundColor === undefined ? '#ccc' : form_item.textBackgroundColor;
+          page.drawRectangle({
+            x: form_item.x,
+            y: form_item.y - form_item.height,
+            width: form_item.width,
+            height: form_item.height,
+            color: hexToRgbNew(color1),
+            borderColor: hexToRgbNew(color1),
+          });
+          checkboxForm.addToPage(page, {
+            x: form_item.x,
+            y: form_item.y - form_item.height,
+            width: form_item.width,
+            height: form_item.height,
+            backgroundColor: hexToRgbNew(color1),
+            borderColor: hexToRgbNew(color1),
+          });
+
+          const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+          if (form_item.isChecked) {
+            checkboxForm.check();
+            page.drawText('✔', {
+              x: form_item.x + form_item.width * 0.25,
+              y: form_item.y - form_item.height * 0.75,
+              size: form_item.height * 0.5,
+              font: font,
+              color: form_item.textColor,
             });
-            if (form_item.isChecked) checkboxForm.check();
+          }
+          if (form_item.isReadOnly) {
+            checkboxForm.enableReadOnly();
           }
           break;
         case RADIO:
+          const color2 = form_item.textBackgroundColor === undefined ? '#ccc' : form_item.textBackgroundColor;
           if (form_item.data.isReadOnly) {
-            if (form_item.data.isChecked) {
-              radioForm.addOptionToPage(radioCount + "", page, {
-                x: form_item.data.x,
-                y: form_item.data.y - form_item.data.height,
-                width: form_item.data.width,
-                height: form_item.data.height,
-                backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
-                borderColor: hexToRgbNew(form_item.textBackgroundColor),
-              });
-              radioForm.select(radioCount + "");
-            }
-          } else {
-            const color = form_item.textBackgroundColor == undefined ? '#ccc' : form_item.textBackgroundColor;
+            page.drawRectangle({
+              x: form_item.data.x,
+              y: form_item.data.y - form_item.data.height,
+              width: form_item.data.width,
+              height: form_item.data.height,
+              color: hexToRgbNew(color2),
+              borderColor: hexToRgbNew(color2),
+            });
             radioForm.addOptionToPage(radioCount + "", page, {
               x: form_item.data.x,
               y: form_item.data.y - form_item.data.height,
               width: form_item.data.width,
               height: form_item.data.height,
-              backgroundColor: hexToRgbNew(color),
-              borderColor: hexToRgbNew(color),
             });
+            if (form_item.data.isChecked) {
+              radioForm.select(radioCount + "");
+            }
+          } else {
+            radioForm.addOptionToPage(radioCount + "", page, {
+              x: form_item.data.x,
+              y: form_item.data.y - form_item.data.height,
+              width: form_item.data.width,
+              height: form_item.data.height,
+              backgroundColor: hexToRgbNew(color2),
+              borderColor: hexToRgbNew(color2),
+            });
+        
             if (form_item.data.isChecked) {
               radioForm.select(radioCount + "");
             }
@@ -4611,7 +4675,7 @@ async function addFormElements() {
           radioCount++;
           break;
         case DATE:
-          if (!form_item.isReadOnly) {
+          if (!form_item.isReadOnly) {          
             datefieldForm = form.createTextField(form_item.form_field_name);
             datefieldForm.addToPage(page, {
               x: form_item.x,
@@ -4628,17 +4692,27 @@ async function addFormElements() {
             datefieldForm.defaultUpdateAppearances(customFont);
             datefieldForm.enableReadOnly();
           } else {
-            page.drawText(form_item.text, {
+            page.drawRectangle({
               x: form_item.x,
               y: form_item.y - form_item.height,
               width: form_item.width,
               height: form_item.height,
+              color: hexToRgbNew(form_item.textBackgroundColor),
+              borderColor: hexToRgbNew(form_item.textBackgroundColor),
+            });
+            const textY = form_item.y - form_item.height / 2 - form_item.fontSize / 2;
+            page.drawText(form_item.text, {
+              x: form_item.x + 2,
+              y: textY,
               size: form_item.fontSize,
               color: hexToRgbNew(form_item.textColor),
             });
           }
           break;
         case TEXTFIELD:
+          console.log("text read only " + form_item.isReadOnly);
+          console.log(form_item);
+          console.log(form_item.form_field_name);
           if (!form_item.isReadOnly) {
             textfieldForm = form.createTextField(form_item.form_field_name);
             textfieldForm.setText(form_item.initialValue);
@@ -4656,18 +4730,29 @@ async function addFormElements() {
             textfieldForm.updateAppearances(customFont);
             textfieldForm.defaultUpdateAppearances(customFont);
           } else {
-            page.drawText(form_item.initialValue, {
+            page.drawRectangle({
               x: form_item.x,
               y: form_item.y - form_item.height,
               width: form_item.width,
               height: form_item.height,
+              color: hexToRgbNew(form_item.textBackgroundColor),
+              borderColor: hexToRgbNew(form_item.textBackgroundColor),
+            });
+
+            const textY = form_item.y - form_item.height / 2 - form_item.fontSize / 2;
+
+            page.drawText(form_item.initialValue, {
+              x: form_item.x,
+              y: textY,
               size: form_item.fontSize,
-              color: hexToRgbNew(form_item.textColor),
+              color: hexToRgbNew(form_item.textColor)
             });
           }
           break;
         case COMBOBOX:
           if (!form_item.isReadOnly) {
+            console.log("====== COMBOBOX ======");
+            console.log(form_item.form_field_name);            
             comboboxForm = form.createDropdown(form_item.form_field_name);
             comboboxForm.addOptions(form_item.optionArray);
             if (form_item.initialValue)
@@ -4686,12 +4771,24 @@ async function addFormElements() {
             comboboxForm.updateAppearances(customFont);
             comboboxForm.defaultUpdateAppearances(customFont);
           } else {
-            const initialValue = form_item.initialValue != undefined ? form_item.initialValue : form_item.optionArray[0];
-            page.drawText(initialValue, {
+            const initialValue = form_item.initialValue !== undefined ? form_item.initialValue : form_item.optionArray[0];
+    
+            // Draw background rectangle for read-only combobox
+            page.drawRectangle({
               x: form_item.x,
               y: form_item.y - form_item.height,
               width: form_item.width,
               height: form_item.height,
+              color: hexToRgbNew(form_item.textBackgroundColor), // Use 'color' instead of 'backgroundColor'
+              borderColor: hexToRgbNew(form_item.textBackgroundColor),
+            });
+            
+            // Vertically center the text within the rectangle
+            const textY = form_item.y - form_item.height / 2 - form_item.fontSize / 2;
+
+            page.drawText(initialValue, {
+              x: form_item.x + 2, // Add slight padding to the left
+              y: textY,
               size: form_item.fontSize,
               color: hexToRgbNew(form_item.textColor),
             });
@@ -4718,10 +4815,17 @@ async function addFormElements() {
             listboxForm.updateAppearances(customFont);
             listboxForm.defaultUpdateAppearances(customFont);
           } else {
-            page.drawText(form_item.initialValue, {
+            page.drawRectangle({
               x: form_item.x,
               y: form_item.y - form_item.height,
               width: form_item.width,
+              height: form_item.height,
+              color: hexToRgbNew(form_item.textBackgroundColor),
+              borderColor: hexToRgbNew(form_item.textBackgroundColor),
+            });
+            page.drawText(form_item.initialValue, {
+              x: form_item.x + 2,
+              y: form_item.y - form_item.fontSize - 2,
               size: form_item.fontSize,
               color: hexToRgbNew(form_item.textColor),
             });
@@ -4804,8 +4908,31 @@ async function addFormElements() {
         case SIGNATURE:
           if (form_item.imgData != undefined) {
             await embedImage(form_item, pdfDoc, page);
-          }
+          }else{
+            page.drawRectangle({
+              x: form_item.x,
+              y: form_item.y - form_item.height,
+              width: form_item.width,
+              height: form_item.height,
+              color: hexToRgbNew(form_item.textBackgroundColor),
+              borderColor: hexToRgbNew(form_item.textBackgroundColor),
+            });
 
+            const text = "Double Click to sign here!";
+            const fontSize = 9;
+            const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+            const textWidth = font.widthOfTextAtSize(text, fontSize);
+            const textX = form_item.x + (form_item.width - textWidth) / 2;
+            const textY = form_item.y - form_item.height + (form_item.height - fontSize) / 2;
+
+            page.drawText(text, {
+              x: textX,
+              y: textY,
+              size: fontSize,
+              font: font,
+              color: hexToRgbNew("#000000"),
+            });
+          }
           break;
         case SHAPE:
           const shapeImage = await pdfDoc.embedPng(form_item.imgData);

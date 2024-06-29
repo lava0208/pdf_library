@@ -553,7 +553,7 @@ const drawFormElement = function () {
                       document.getElementById("combo-font-background-color").value =
                         element.textBackgroundColor;
 
-                      element.optionArray.map((elementItem) => {
+                      element.optionArray.forEach((elementItem, index) => {
                         const optionContent = document.createElement("div");
                         const deleteDivId = `delete-span-${comboboxOptionCount}`;
                         optionContent.id = `comboOption${deleteDivId}`;
@@ -565,15 +565,12 @@ const drawFormElement = function () {
                         deleteSpan.innerHTML = '<i class="fa fa-xmark"></i>';
                         deleteSpan.addEventListener("click", function () {
                           // Remove the corresponding div when the delete span is clicked
-                          element = element.optionArray.filter(function (item) {
-                            return item !== elementItem;
-                          });
+                          element.optionArray = element.optionArray.filter((item, i) => i !== index);
                           optionContent.remove();
                         });
                         optionContent.append(contentSpan, deleteSpan);
-                        document
-                          .getElementById("option-content")
-                          .append(optionContent);
+                        document.getElementById("option-content").append(optionContent);
+                        comboboxOptionCount++;
                       });
                       comboDiv.append(option);
                     }
@@ -952,7 +949,7 @@ const drawFormElement = function () {
             document.getElementById("date-font-style").value;
           newDate.style.fontSize =
             document.getElementById("date-font-size").value + "px";
-          newDate.style.color = document.getElementById("date-font-color").value;
+          // newDate.style.color = document.getElementById("date-font-color").value;
 
           //... background color
           // newDate.style.backgroundColor = document.getElementById("date-font-background-color").value;
@@ -4486,8 +4483,7 @@ const flatten = async function () {
   pdfBytes = await PDFViewerApplication.pdfDocument.saveDocument();
   const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
   const form = pdfDoc.getForm();
-  form.flatten();
-  // pdfBytes = await pdfDoc.save();
+  
   if (form_storage.length != 0)
     addFormElements().then(() => {
       add_txt_comment();
@@ -4495,6 +4491,8 @@ const flatten = async function () {
   else {
     add_txt_comment();
   }
+
+  form.flatten();
 };
 
 function hexToRgb1(hex) {
@@ -4600,7 +4598,6 @@ async function addFormElements() {
           selectedFont = fontByte.fontArrayBuffer;
         }
         customFont = await pdfDoc.embedFont(selectedFont);
-        var { r, g, b } = hexToRgb(form_item.textColor);
       }
       switch (form_item.form_type) {
         case CHECKBOX:
@@ -4710,9 +4707,6 @@ async function addFormElements() {
           }
           break;
         case TEXTFIELD:
-          console.log("text read only " + form_item.isReadOnly);
-          console.log(form_item);
-          console.log(form_item.form_field_name);
           if (!form_item.isReadOnly) {
             textfieldForm = form.createTextField(form_item.form_field_name);
             textfieldForm.setText(form_item.initialValue);

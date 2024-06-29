@@ -2916,7 +2916,7 @@ document.getElementById("viewer").addEventListener("mousedown", function (event)
         if (!currentObject.parentElement.querySelector("#topLeft")) addResizebar(currentObject.parentElement.id);
         setTimeout(() => {
           currentObject.parentElement.style.zIndex = selectedZIndex;
-        }, 100);
+        }, 200);
       } else if (currentFormType === SIGNATURE || currentFormType === SHAPE) {
         if (currentObject.tagName === "IMG") {
           if (!currentObject.parentElement.querySelector("#topLeft")) addResizebar(currentObject.parentElement.id);

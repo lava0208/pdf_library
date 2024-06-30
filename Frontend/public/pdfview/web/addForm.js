@@ -1786,10 +1786,11 @@ const handleText = function (e) {
     initialValue = currentFormText.querySelector(".text-field-input").value;
   }
 
+  console.log("isOpenEmailPdf " + isOpenEmailPdf);
   console.log("isEditing " + isEditing);
 
   // if (isDraft != "false") {
-  if (isDraft == "true" && !isEditing) {
+  if (isDraft == "true" && isOpenEmailPdf) {
     for (let i = 0; i < form_storage.length; i++) {
       if (form_storage[i].id == current_form_id) {
         form_storage[i].fontStyle = fontStyle;
@@ -1934,7 +1935,7 @@ const handleCombo = function (e) {
   }
 
   // if (isDraft != "false") {
-  if (isDraft == "true" && !isEditing) {
+  if (isDraft == "true" && isOpenEmailPdf) {
     for (let i = 0; i < form_storage.length; i++) {
       if (form_storage[i].form_type === COMBOBOX) {
         if (
@@ -2070,7 +2071,7 @@ const handleList = function (e) {
   }
 
   // if (isDraft != "false") {
-  if (isDraft == "true" && !isEditing) {
+  if (isDraft == "true" && isOpenEmailPdf) {
     for (let i = 0; i < form_storage.length; i++) {
       if (form_storage[i].form_type === LIST) {
         if (
@@ -2328,7 +2329,7 @@ const handleButton = function (e) {
 
   // if (isDraft != "false") {
   if (isDraft == "true" || isDraft == null) {
-    if (!isEditing) {
+    if (isOpenEmailPdf) {
       for (let i = 0; i < form_storage.length; i++) {
         if (
           form_storage[i].form_field_name == formFieldName &&
@@ -2445,7 +2446,7 @@ const handleDate = function (e) {
   }
 
   // if (isDraft != "false") {
-  if (isDraft == "true" && !isEditing) {
+  if (isDraft == "true" && isOpenEmailPdf) {
     for (let i = 0; i < form_storage.length; i++) {
       if (
         form_storage[i].form_field_name == formFieldName &&
@@ -2570,7 +2571,7 @@ const handleSignature = function () {
   textBackgroundColor = document.getElementById("signature-font-background-color") && document.getElementById("signature-font-background-color").value;
 
   // if (isDraft != "false") {
-  if (isDraft == "true" && !isEditing) {
+  if (isDraft == "true" && isOpenEmailPdf) {
     for (let i = 0; i < form_storage.length; i++) {
       if (form_storage[i].id == current_form_id) {
 
@@ -4623,7 +4624,7 @@ async function addFormElements() {
               y: form_item.y - form_item.height + form_item.height * 0.25,
               size: form_item.height * 0.5,
               font: font,
-              color: hexToRgbNew(form_item.textColor),
+              color: hexToRgbNew("#000000"),
             });
           }
           if (form_item.isReadOnly) {

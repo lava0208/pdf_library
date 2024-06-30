@@ -113,3 +113,4 @@ const saveDraftButton = document.getElementById("saveDraftButton");
 const urlParams = new URLSearchParams(window.location.search);
 const initialId = urlParams.get('id');
 const isDraft = urlParams.get('draft');
+const isOpenEmailPdf = parent.window.location.href.indexOf('openpdf') > -1;

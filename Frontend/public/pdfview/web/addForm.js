@@ -222,7 +222,12 @@ const drawFormElement = function () {
           checkbox.addEventListener("click", () => {
             current_checkbox_id = id;
             DrawType = CHECKBOX;
-            console.log("current_checkbox_id " + current_checkbox_id);
+
+            if (item.isChecked){
+              item.isChecked = false;
+            }else{
+              item.isChecked = true;
+            }
           })
 
           checkbox.addEventListener("dblclick", () => {
@@ -1629,7 +1634,7 @@ const handleCheckbox = function (e) {
 
   // if (isDraft != "false") {
   if (isDraft == "true" || isDraft == null) {
-    if (!isEditing) {
+    if (isOpenEmailPdf) {
       for (let i = 0; i < form_storage.length; i++) {
         if (form_storage[i].id == current_form_id) {
           form_storage[i].form_field_name = formFieldName;
@@ -1786,9 +1791,6 @@ const handleText = function (e) {
     initialValue = currentFormText.querySelector(".text-field-input").value;
   }
 
-  console.log("isOpenEmailPdf " + isOpenEmailPdf);
-  console.log("isEditing " + isEditing);
-
   // if (isDraft != "false") {
   if (isDraft == "true" && isOpenEmailPdf) {
     for (let i = 0; i < form_storage.length; i++) {
@@ -1850,8 +1852,6 @@ const handleText = function (e) {
       }
     }
   }
-
-  console.log("formFieldName " + formFieldName);
 
   let count = 0;
 
@@ -4616,16 +4616,8 @@ async function addFormElements() {
             backgroundColor: hexToRgbNew(color1),
             borderColor: hexToRgbNew(color1),
           });
-          const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
           if (form_item.isChecked) {
             checkboxForm.check();
-            page.drawText('✔', {
-              x: form_item.x + form_item.width * 0.25,
-              y: form_item.y - form_item.height + form_item.height * 0.25,
-              size: form_item.height * 0.5,
-              font: font,
-              color: hexToRgbNew("#000000"),
-            });
           }
           if (form_item.isReadOnly) {
             checkboxForm.enableReadOnly();

@@ -136,6 +136,8 @@ const drawFormElement = function () {
   console.log("==== first load data ======");
   console.log(form_storage);
 
+  let checkedCheckboxes = [];
+
   if (form_storage !== null) {
 
     //... initialize variable
@@ -202,35 +204,43 @@ const drawFormElement = function () {
           checkmark.classList.add("checkmark");
           checkbox.classList.add("checkbox");
           checkbox.appendChild(checkmark);
-          if (item.isChecked) checkbox.classList.add("checked");
+
+          if (item.isChecked) {
+            checkbox.classList.add("checked");
+            checkedCheckboxes.push(id);
+          }
+
           checkbox.onclick = function () {
             current_form_id = id;
             toggleCheckbox(checkbox.id);
 
-            setTimeout(() => {
-              if(checkbox.classList.contains("checked") == true){
-                item.isChecked = true;
-              }else{
-                item.isChecked = false;
+            let isChecked = checkbox.classList.contains("checked");
+            var checkboxIndex = form_storage.findIndex(x => x.form_field_name === item.form_field_name);
+
+            if (checkboxIndex !== -1) {
+              form_storage[checkboxIndex].isChecked = isChecked;
+
+              if (isChecked) {
+                if (!checkedCheckboxes.includes(checkboxIndex)) {
+                  checkedCheckboxes.push(checkboxIndex);
+                }
+              } else {
+                checkedCheckboxes = checkedCheckboxes.filter(index => index !== checkboxIndex);
               }
-            }, 500);
+            }
+
+            updateFormStorage(checkedCheckboxes);
           };
           pg.append(checkbox);
-          document.getElementById(
-            "checkbox-field-input-name"
-          ).value = item.formFieldName;
-          document.getElementById(
-            "checkbox-label"
-          ).value = item.label;
-          document.getElementById(
-            "checkbox-value"
-          ).value = item.value;
+          document.getElementById("checkbox-field-input-name").value = item.form_field_name;
+          document.getElementById("checkbox-label").value = item.label;
+          document.getElementById("checkbox-value").value = item.value;
           current_checkbox_id = id;
 
           checkbox.addEventListener("click", () => {
             current_checkbox_id = id;
             DrawType = CHECKBOX;
-          })
+          });
 
           checkbox.addEventListener("dblclick", () => {
             if (!isEditing) {
@@ -1406,9 +1416,10 @@ $(document).on("DOMSubtreeModified", ".freeTextEditor.selectedEditor", function 
   let fontFamily = toolbar.find("#toolbar-font-style").val();
   let fontWeight = toolbar.find("#text-bold").hasClass("active") ? 700 : 500;
   let fontStyle = toolbar.find("#text-italic").hasClass("active") ? "italic" : "";
+  let fontUnderline = toolbar.find("#text-underline").hasClass("active") ? "underline" : "none";
 
   $(this).find(".internal[role='textbox']").attr('size', size);
-  $(this).find(".internal[role='textbox']").css({ "font-size": fontSize, "font-family": fontFamily, "font-weight": fontWeight, "font-style": fontStyle });
+  $(this).find(".internal[role='textbox']").css({ "font-size": fontSize, "font-family": fontFamily, "font-weight": fontWeight, "font-style": fontStyle, "text-decoration": fontUnderline });
 
   let changedText = $(this).find(".internal[role='textbox']").text();
 
@@ -1445,6 +1456,7 @@ $(document).on("click", ".freeTextEditor", function () {
   let fontFamily = $(this).find(".internal[role='textbox']").css("font-family");
   let fontWeight = $(this).find(".internal[role='textbox']").css("font-weight");
   let fontStyle = $(this).find(".internal[role='textbox']").css("font-style");
+  let fontUnderline = $(this).find(".internal[role='textbox']").css("font-underline");
 
   // var calcSize = fontSize / var(--scale-factor);
 
@@ -1461,6 +1473,11 @@ $(document).on("click", ".freeTextEditor", function () {
   } else {
     toolbar.find("#text-italic").removeClass("active")
   }
+  if (fontUnderline == "underline") {
+    toolbar.find("#text-underline").addClass("active")
+  } else {
+    toolbar.find("#text-underline").removeClass("active")
+  }
 })
 
 //... Change Font Style Event
@@ -1473,7 +1490,8 @@ $(document).on("click", ".text-weight-button", function () {
   if ($(".freeTextEditor").hasClass("selectedEditor")) {
     let fontWeight = toolbar.find("#text-bold").hasClass("active") ? 700 : 500;
     let fontStyle = toolbar.find("#text-italic").hasClass("active") ? "italic" : "";
-    $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").css({ "font-weight": fontWeight, "font-style": fontStyle });
+    let fontUnderline = toolbar.find("#text-underline").hasClass("active") ? "underline" : "none";
+    $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").css({ "font-weight": fontWeight, "font-style": fontStyle, "text-decoration": fontUnderline });
     // $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").css({ "font-style": fontStyle });
   }
 })
@@ -5136,6 +5154,16 @@ function toggleCheckbox(id) {
     const checkbox = document.getElementById(id);
     checkbox.classList.toggle("checked");
   }
+}
+
+function updateFormStorage(lst) {
+  form_storage.forEach((item, index) => {
+    if (lst.includes(index)) {
+      item.isChecked = true;
+    } else {
+      item.isChecked = false;
+    }
+  });
 }
 
 function selectRadioButton(element, id) {

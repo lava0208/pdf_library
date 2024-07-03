@@ -4579,6 +4579,9 @@ async function addFormElements() {
             if (form_item.data.isChecked) {
               radioForm.select(radioCount + "");
             }
+            if (form_item.data.isReadOnly) {
+              radioForm.enableReadOnly();
+            }
           } else {
             radioForm.addOptionToPage(radioCount + "", page, {
               x: form_item.data.x,

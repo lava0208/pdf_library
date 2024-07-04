@@ -1822,42 +1822,28 @@ const handleText = function (e) {
     initialValue = currentFormText.querySelector(".text-field-input").value;
   }
 
-  if(!isOpenEmailPdf){
-    for (let i = 0; i < form_storage.length; i++) {
-      if (form_storage[i].id == current_form_id && !isEditing) {
-        form_storage[i].fontStyle = fontStyle;
-        form_storage[i].fontSize = fontSize;
-        form_storage[i].textColor = textColor;
-        form_storage[i].align = alignValue;
-        form_storage[i].isBold = isBold;
-        form_storage[i].isItalic = isItalic;
-        form_storage[i].regularFontStyle = regularFont;
-        form_storage[i].initialValue = initialValue;
-        
-        if(!isEditing){
+  for (let i = 0; i < form_storage.length; i++) {
+    if (form_storage[i].id == current_form_id) {
+      if (!isEditing) {
+        if (!isOpenEmailPdf) {
+          form_storage[i].fontStyle = fontStyle;
+          form_storage[i].fontSize = fontSize;
+          form_storage[i].textColor = textColor;
+          form_storage[i].align = alignValue;
+          form_storage[i].isBold = isBold;
+          form_storage[i].isItalic = isItalic;
+          form_storage[i].regularFontStyle = regularFont;
+          
           form_storage[i].textBackgroundColor = textBackgroundColor;
           form_storage[i].form_field_name = formFieldName;
+  
+          //... handle track
+          handleTrack(form_storage[i].id, formFieldName);
+          break;
+        } else {
+          form_storage[i].initialValue = initialValue;
         }
-
-        //... handle track
-        handleTrack(form_storage[i].id, formFieldName);
-        break;
-      } else if (
-        form_storage[i].form_field_name == formFieldName &&
-        form_storage[i].id != current_form_id
-      ) {
-        break;
-      } else if (
-        form_storage[i].form_field_name != formFieldName &&
-        form_storage[i].id == current_form_id
-      ) {
-        form_storage[i].form_field_name = formFieldName;
-        break;
-      }
-    }
-  }else{
-    for (let i = 0; i < form_storage.length; i++) {
-      if (form_storage[i].id == current_form_id) {
+      } else {
         form_storage[i].initialValue = initialValue;
       }
     }
@@ -1944,53 +1930,32 @@ const handleCombo = function (e) {
     if (currentValue != "") initialValue = currentValue;
   }
 
-  if(!isOpenEmailPdf){
-    for (let i = 0; i < form_storage.length; i++) {
-      if (form_storage[i].form_type === COMBOBOX && !isEditing) {
-        if (
-          form_storage[i].form_field_name == formFieldName &&
-          form_storage[i].id == current_form_id
-        ) {
+  for (let i = 0; i < form_storage.length; i++) {
+    if (form_storage[i].id == current_form_id) {
+      if (!isEditing) {
+        if (!isOpenEmailPdf) {
           form_storage[i].optionArray =
             form_storage[i].optionArray.concat(comboboxOptionArray);
           form_storage[i].fontStyle = fontStyle;
           form_storage[i].fontSize = fontSize;
           form_storage[i].textColor = textColor;
           form_storage[i].regularFontStyle = regularFont;
-          form_storage[i].initialValue = initialValue;
-          // form_storage[i].align = alignValue;
-          comboboxOptionArray = [];
+          form_storage[i].textBackgroundColor = textBackgroundColor;
+          form_storage[i].form_field_name = formFieldName;
 
-          if(!isEditing){
-            form_storage[i].textBackgroundColor = textBackgroundColor;
-            form_storage[i].form_field_name = formFieldName;
-          }
+          comboboxOptionArray = [];
 
           //... handle track
           handleTrack(form_storage[i].id, formFieldName);
           break;
-        } else if (
-          form_storage[i].form_field_name == formFieldName &&
-          form_storage[i].id != current_form_id
-        ) {
-          break;
-        } else if (
-          form_storage[i].form_field_name != formFieldName &&
-          form_storage[i].id == current_form_id
-        ) {
-          if (formFieldName != "") form_storage[i].form_field_name = formFieldName;
-          break;
+        } else {
+          form_storage[i].initialValue = initialValue;
         }
-      }
-    }
-  }else{
-    for (let i = 0; i < form_storage.length; i++) {
-      if (form_storage[i].id == current_form_id) {
+      } else {
         form_storage[i].initialValue = initialValue;
       }
     }
   }
-
 
   let count = 0;
 
@@ -2067,61 +2032,28 @@ const handleList = function (e) {
       initialValue = currentFormText.querySelector(".list-field-input").querySelector(".active").textContent;
   }
 
-  if(!isOpenEmailPdf){
-    for (let i = 0; i < form_storage.length; i++) {
-      if (form_storage[i].form_type === LIST && !isEditing) {
-        if (
-          form_storage[i].id == current_form_id
-        ) {
+  for (let i = 0; i < form_storage.length; i++) {
+    if (form_storage[i].id == current_form_id) {
+      if (!isEditing) {
+        if (!isOpenEmailPdf) {
           form_storage[i].optionArray =
             form_storage[i].optionArray.concat(listboxOptionArray);
           form_storage[i].fontStyle = fontStyle;
           form_storage[i].fontSize = fontSize;
           form_storage[i].textColor = textColor;
           form_storage[i].regularFontStyle = regularFont;
-          form_storage[i].initialValue = initialValue;
-          // form_storage[i].align = alignValue;
-          listboxOptionArray = [];
+          form_storage[i].textBackgroundColor = textBackgroundColor;
+          form_storage[i].form_field_name = formFieldName;
 
-          if(!isEditing){
-            form_storage[i].textBackgroundColor = textBackgroundColor;
-            form_storage[i].form_field_name = formFieldName;
-          }
+          listboxOptionArray = [];
 
           //... handle track
           handleTrack(form_storage[i].id, formFieldName);
           break;
-        } else if (
-          form_storage[i].form_field_name == formFieldName &&
-          form_storage[i].id != current_form_id
-        ) {
-          break;
-        } else if (
-          form_storage[i].form_field_name != formFieldName &&
-          form_storage[i].id == current_form_id
-        ) {
-          form_storage[i].form_field_name = formFieldName;
-          form_storage[i].optionArray =
-            form_storage[i].optionArray.concat(listboxOptionArray);
-          form_storage[i].fontStyle = fontStyle;
-          form_storage[i].fontSize = fontSize;
-          form_storage[i].textColor = textColor;
-
-          //... background color
-          form_storage[i].textBackgroundColor = textBackgroundColor;
-
-          form_storage[i].regularFontStyle = regularFont;
+        } else {
           form_storage[i].initialValue = initialValue;
-          form_storage[i].form_field_name = formFieldName;
-          // form_storage[i].align = alignValue;
-          listboxOptionArray = [];
-          break;
         }
-      }
-    }
-  }else{
-    for (let i = 0; i < form_storage.length; i++) {
-      if (form_storage[i].id == current_form_id) {
+      } else {
         form_storage[i].initialValue = initialValue;
       }
     }
@@ -2311,50 +2243,26 @@ const handleButton = function (e) {
   //... background color
   textBackgroundColor = document.getElementById("button-font-background-color") && document.getElementById("button-font-background-color").value;
 
-  if(!isOpenEmailPdf){
-    for (let i = 0; i < form_storage.length; i++) {
-      if (form_storage[i].form_type === BUTTON && !isEditing) {
-        if (
-          form_storage[i].form_field_name == formFieldName &&
-          form_storage[i].id == current_form_id
-        ) {
+  for (let i = 0; i < form_storage.length; i++) {
+    if (form_storage[i].id == current_form_id) {
+      if (!isEditing) {
+        if (!isOpenEmailPdf) {
           form_storage[i].action = form_action;
           form_storage[i].fontStyle = fontStyle;
           form_storage[i].fontSize = fontSize;
           form_storage[i].textColor = textColor;
           form_storage[i].text = initialValue;
           form_storage[i].align = alignValue;
-
-          if(!isEditing){
-            form_storage[i].textBackgroundColor = textBackgroundColor;
-            form_storage[i].form_field_name = formFieldName;
-          }
-
-          //... handle track
-          handleTrack(form_storage[i].id, initialValue + " Type " + selectedValue);
-
-          break;
-        } else if (
-          form_storage[i].form_field_name == formFieldName &&
-          form_storage[i].id != current_form_id
-        ) {
-          break;
-        } else if (
-          form_storage[i].form_field_name != formFieldName &&
-          form_storage[i].id == current_form_id
-        ) {
+          form_storage[i].textBackgroundColor = textBackgroundColor;
           form_storage[i].form_field_name = formFieldName;
-          form_storage[i].action = form_action;
 
           //... handle track
           handleTrack(form_storage[i].id, initialValue + " Type " + selectedValue);
           break;
+        } else {
+          form_storage[i].text = initialValue;
         }
-      }
-    }
-  }else{
-    for (let i = 0; i < form_storage.length; i++) {
-      if (form_storage[i].id == current_form_id) {
+      } else {
         form_storage[i].text = initialValue;
       }
     }
@@ -2434,50 +2342,24 @@ const handleDate = function (e) {
     document.getElementById(DATE_OPTION).style.display = "none";
   }
 
-  if(!isOpenEmailPdf){
-    for (let i = 0; i < form_storage.length; i++) {
-      if (form_storage[i].form_type === DATE && !isEditing) {
-        if (
-          form_storage[i].form_field_name == formFieldName &&
-          form_storage[i].id == current_form_id
-        ) {
+  for (let i = 0; i < form_storage.length; i++) {
+    if (form_storage[i].id == current_form_id) {
+      if (!isEditing) {
+        if (!isOpenEmailPdf) {
           form_storage[i].fontStyle = fontStyle;
           form_storage[i].fontSize = fontSize;
           form_storage[i].textColor = textColor;
           form_storage[i].text = text;
-
-          if(!isEditing){
-            form_storage[i].textBackgroundColor = textBackgroundColor;
-            form_storage[i].form_field_name = formFieldName;
-          }
+          form_storage[i].textBackgroundColor = textBackgroundColor;
+          form_storage[i].form_field_name = formFieldName;
 
           //... handle track
           handleTrack(form_storage[i].id, formFieldName);
-
           break;
-        } else if (
-          form_storage[i].form_field_name == formFieldName &&
-          form_storage[i].id != current_form_id
-        ) {
-          break;
-        } else if (
-          form_storage[i].form_field_name != formFieldName &&
-          form_storage[i].id == current_form_id
-        ) {
-
-          if(!isEditing){
-            form_storage[i].form_field_name = formFieldName;
-
-            //... handle track
-            handleTrack(form_storage[i].id, formFieldName);
-          }
-          break;
+        } else {
+          form_storage[i].text = text;
         }
-      }
-    }
-  }else{
-    for (let i = 0; i < form_storage.length; i++) {
-      if (form_storage[i].id == current_form_id) {
+      } else {
         form_storage[i].text = text;
       }
     }
@@ -4681,9 +4563,13 @@ async function addFormElements() {
           }
           break;
         case TEXTFIELD:
+          console.log("=== text ===");
+          console.log(form_storage);
+          console.log(form_item);
+          const initialValue = form_item.initialValue !== undefined ? form_item.initialValue : "";
           if (!form_item.isReadOnly) {
             textfieldForm = form.createTextField(form_item.form_field_name);
-            textfieldForm.setText(form_item.initialValue);
+            textfieldForm.setText(initialValue);
             textfieldForm.addToPage(page, {
               x: form_item.x,
               y: form_item.y - form_item.height,
@@ -4696,7 +4582,7 @@ async function addFormElements() {
             });
             textfieldForm.setFontSize(form_item.fontSize);
             textfieldForm.updateAppearances(customFont);
-            textfieldForm.defaultUpdateAppearances(customFont);
+            // textfieldForm.defaultUpdateAppearances(customFont);
           } else {
             page.drawRectangle({
               x: form_item.x,
@@ -4709,7 +4595,7 @@ async function addFormElements() {
 
             const textY = form_item.y - form_item.height / 2 - form_item.fontSize / 3;
 
-            page.drawText(form_item.initialValue, {
+            page.drawText(initialValue, {
               x: form_item.x,
               y: textY,
               size: form_item.fontSize,
@@ -4886,7 +4772,8 @@ async function addFormElements() {
 
             const text = "Double Click to sign here!";
             const fontSize = 9;
-            const textWidth = customFont.widthOfTextAtSize(text, fontSize);
+            const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+            const textWidth = font.widthOfTextAtSize(text, fontSize);
             const textX = form_item.x + (form_item.width - textWidth) / 2;
             const textY = form_item.y - form_item.height + (form_item.height - fontSize) / 2;
 
@@ -4894,7 +4781,6 @@ async function addFormElements() {
               x: textX,
               y: textY,
               size: fontSize,
-              font: customFont,
               color: hexToRgbNew("#000000"),
             });
           }

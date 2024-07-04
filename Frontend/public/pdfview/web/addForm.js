@@ -4563,9 +4563,6 @@ async function addFormElements() {
           }
           break;
         case TEXTFIELD:
-          console.log("=== text ===");
-          console.log(form_storage);
-          console.log(form_item);
           const initialValue = form_item.initialValue !== undefined ? form_item.initialValue : "";
           if (!form_item.isReadOnly) {
             textfieldForm = form.createTextField(form_item.form_field_name);
@@ -4622,7 +4619,7 @@ async function addFormElements() {
             });
             comboboxForm.setFontSize(form_item.fontSize);
             comboboxForm.updateAppearances(customFont);
-            comboboxForm.defaultUpdateAppearances(customFont);
+            // comboboxForm.defaultUpdateAppearances(customFont);
           } else {
             const initialValue = form_item.initialValue !== undefined ? form_item.initialValue : form_item.optionArray[0];
     
@@ -4665,7 +4662,7 @@ async function addFormElements() {
             });
             listboxForm.setFontSize(form_item.fontSize);
             listboxForm.updateAppearances(customFont);
-            listboxForm.defaultUpdateAppearances(customFont);
+            // listboxForm.defaultUpdateAppearances(customFont);
           } else {
             const initialValue = form_item.initialValue !== undefined ? form_item.initialValue : "";
             page.drawRectangle({
@@ -4697,7 +4694,7 @@ async function addFormElements() {
           });
           buttonfieldForm.setFontSize(form_item.fontSize);
           buttonfieldForm.updateAppearances(customFont);
-          buttonfieldForm.defaultUpdateAppearances(customFont);
+          // buttonfieldForm.defaultUpdateAppearances(customFont);
           let formScript = "";
           if (form_item.action == SUBMIT) {
             formScript = `

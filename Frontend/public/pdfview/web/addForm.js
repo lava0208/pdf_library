@@ -4886,7 +4886,7 @@ async function addFormElements() {
 
             const text = "Double Click to sign here!";
             const fontSize = 9;
-            const textWidth = font.widthOfTextAtSize(text, fontSize);
+            const textWidth = customFont.widthOfTextAtSize(text, fontSize);
             const textX = form_item.x + (form_item.width - textWidth) / 2;
             const textY = form_item.y - form_item.height + (form_item.height - fontSize) / 2;
 

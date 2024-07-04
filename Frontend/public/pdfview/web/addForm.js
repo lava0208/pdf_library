@@ -2436,7 +2436,7 @@ const handleDate = function (e) {
 
   if(!isOpenEmailPdf){
     for (let i = 0; i < form_storage.length; i++) {
-      if (form_storage[i].form_type === BUTTON && !isEditing) {
+      if (form_storage[i].form_type === DATE && !isEditing) {
         if (
           form_storage[i].form_field_name == formFieldName &&
           form_storage[i].id == current_form_id

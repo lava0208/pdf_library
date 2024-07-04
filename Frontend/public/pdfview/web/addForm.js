@@ -4552,7 +4552,7 @@ async function addFormElements() {
               color: hexToRgbNew(form_item.textBackgroundColor),
               borderColor: hexToRgbNew(form_item.textBackgroundColor),
             });
-            const textY = form_item.y - form_item.height / 2 - form_item.fontSize / 2;
+            const textY = form_item.y - form_item.height / 2 - form_item.fontSize / 3;
             page.drawText(initialValue, {
               x: form_item.x + 2,
               y: textY,
@@ -4618,7 +4618,7 @@ async function addFormElements() {
               borderColor: hexToRgbNew(form_item.textBackgroundColor),
             });
             comboboxForm.setFontSize(form_item.fontSize);
-            comboboxForm.updateAppearances(customFont);
+            // comboboxForm.updateAppearances(customFont);
             // comboboxForm.defaultUpdateAppearances(customFont);
           } else {
             const initialValue = form_item.initialValue !== undefined ? form_item.initialValue : form_item.optionArray[0];
@@ -4632,7 +4632,7 @@ async function addFormElements() {
               borderColor: hexToRgbNew(form_item.textBackgroundColor),
             });
             
-            const textY = form_item.y - form_item.height / 2 - form_item.fontSize / 2;
+            const textY = form_item.y - form_item.height / 2 - form_item.fontSize / 3;
 
             page.drawText(initialValue, {
               x: form_item.x + 2,

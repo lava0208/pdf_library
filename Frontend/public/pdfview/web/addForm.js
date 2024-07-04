@@ -135,6 +135,7 @@ const drawFormElement = function () {
   form_storage = draw_form_storage;
   console.log("==== first load data ======");
   console.log(form_storage);
+  console.log(text_storage);
 
   let checkedCheckboxes = [];
 
@@ -968,11 +969,9 @@ const drawFormElement = function () {
             "date"
           );
 
-          newDate.style.fontFamily =
-            document.getElementById("date-font-style").value;
-          newDate.style.fontSize =
-            document.getElementById("date-font-size").value + "px";
-          // newDate.style.color = document.getElementById("date-font-color").value;
+          newDate.style.fontFamily = item.fontStyle;
+          newDate.style.fontSize = item.fontSize + "px";
+          newDate.style.color = item.textColor;
 
           //... background color
           // newDate.style.backgroundColor = document.getElementById("date-font-background-color").value;
@@ -1376,7 +1375,7 @@ const drawFormElement = function () {
       container.append(newText);
       pg.append(container);
       newText.style.fontFamily = item.regularFontStyle;
-      newText.style.fontSize = item.baseFontSize;
+      newText.style.fontSize = `${item.fontSize}px`;
       newText.style.color = item.textColor;
     })
   }
@@ -4653,6 +4652,7 @@ async function addFormElements() {
             datefieldForm.defaultUpdateAppearances(customFont);
             datefieldForm.enableReadOnly();
           } else {
+            const initialValue = form_item.text !== undefined ? form_item.text : "";
             page.drawRectangle({
               x: form_item.x,
               y: form_item.y - form_item.height,
@@ -4662,11 +4662,12 @@ async function addFormElements() {
               borderColor: hexToRgbNew(form_item.textBackgroundColor),
             });
             const textY = form_item.y - form_item.height / 2 - form_item.fontSize / 2;
-            page.drawText(form_item.text, {
+            page.drawText(initialValue, {
               x: form_item.x + 2,
               y: textY,
               size: form_item.fontSize,
               color: hexToRgbNew(form_item.textColor),
+              font: customFont
             });
           }
           break;
@@ -4730,21 +4731,19 @@ async function addFormElements() {
           } else {
             const initialValue = form_item.initialValue !== undefined ? form_item.initialValue : form_item.optionArray[0];
     
-            // Draw background rectangle for read-only combobox
             page.drawRectangle({
               x: form_item.x,
               y: form_item.y - form_item.height,
               width: form_item.width,
               height: form_item.height,
-              color: hexToRgbNew(form_item.textBackgroundColor), // Use 'color' instead of 'backgroundColor'
+              color: hexToRgbNew(form_item.textBackgroundColor),
               borderColor: hexToRgbNew(form_item.textBackgroundColor),
             });
             
-            // Vertically center the text within the rectangle
             const textY = form_item.y - form_item.height / 2 - form_item.fontSize / 2;
 
             page.drawText(initialValue, {
-              x: form_item.x + 2, // Add slight padding to the left
+              x: form_item.x + 2,
               y: textY,
               size: form_item.fontSize,
               color: hexToRgbNew(form_item.textColor),
@@ -4773,6 +4772,7 @@ async function addFormElements() {
             listboxForm.updateAppearances(customFont);
             listboxForm.defaultUpdateAppearances(customFont);
           } else {
+            const initialValue = form_item.initialValue !== undefined ? form_item.initialValue : "";
             page.drawRectangle({
               x: form_item.x,
               y: form_item.y - form_item.height,
@@ -4781,11 +4781,12 @@ async function addFormElements() {
               color: hexToRgbNew(form_item.textBackgroundColor),
               borderColor: hexToRgbNew(form_item.textBackgroundColor),
             });
-            page.drawText(form_item.initialValue, {
+            page.drawText(initialValue, {
               x: form_item.x + 2,
               y: form_item.y - form_item.fontSize - 2,
               size: form_item.fontSize,
               color: hexToRgbNew(form_item.textColor),
+              font: customFont
             });
           }
           break;

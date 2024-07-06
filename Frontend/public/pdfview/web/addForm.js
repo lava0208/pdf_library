@@ -318,9 +318,10 @@ const drawFormElement = function () {
           inputRadio.style.display = "none";
           spanElement.style.display = "none";
 
-          if(item.data.isChecked){
+          if(item.data.isChecked && isOpenEmailPdf){
+          // if(item.data.isChecked){
             setTimeout(() => {
-              selectRadioButton(radio, id);
+              $("#" + item.containerId).find("input").prop("checked", true);
             }, 100);
           }
 
@@ -1374,8 +1375,10 @@ const drawFormElement = function () {
       })
       newText.innerHTML = textofStorage.replace(/\n/g, '<br>');
       newText.classList.add("textcontent");
+      newText.id = item.textContentId;
 
       const container = document.createElement("div");
+      container.id = item.containerId;
       container.style.position = "absolute";
       container.style.top = y + "px";
       container.style.left = x + "px";
@@ -1386,6 +1389,8 @@ const drawFormElement = function () {
       container.append(newText);
       pg.append(container);
       newText.style.fontFamily = item.regularFontStyle;
+      newText.style.fontWeight = item.isBold ? "bold" : "";
+      newText.style.fontStyle = item.isItalic ? "italic" : "";
       newText.style.fontSize = `${item.fontSize}px`;
       newText.style.color = item.textColor;
     })

@@ -1918,8 +1918,8 @@ dialog :link {
 
 .align-container {
   display: flex;
-  gap: 20px;
-  font-size: 16px;
+  gap: 15px;
+  font-size: 14px;
 }
 
 /* Resize Point */

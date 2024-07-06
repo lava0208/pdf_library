@@ -113,23 +113,46 @@ const Documents = () => {
                 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
             </Head>
             <Header text="My documents" />
-            <div id="Services" className="content-section text-center">
-                <div className="container">
+            <div id="Services" className="content-section">
+                <div className="container-fluid px-5">
                     {isLoading && <p>Loading documents...</p>}
                     {error && <p>Error: {error.message}</p>}
 
-                    <div className="block-heading">
-                        <h2>My documents</h2>
-                        <p>You can choose any document.</p>
-                    </div>
-
-                    <div className="text-right mb-5">
-                        <button
-                            className="btn btn-info"
-                            onClick={() => { handleClick('/pdfviewer') }}
-                        >
-                            Create document
-                        </button >
+                    <div className="document-navbar mb-3">
+                        <div className="dropdown">
+                            <button className="btn btn-info dropdown-toggle d-flex align-items-center" type="button" data-toggle="dropdown" aria-expanded="false">
+                                <i className="fa fa-plus"></i> <span className="px-3">New</span>
+                            </button>
+                            <div className="dropdown-menu">
+                                <a className="dropdown-item" href="#">
+                                    <i className="fa fa-folder"></i> Folder
+                                </a>
+                                <a className="dropdown-item" href="#" onClick={() => { handleClick('/pdfviewer') }}>
+                                    <i className="fa fa-file-word-o"></i> Word document
+                                </a>
+                                <a className="dropdown-item" href="#" onClick={() => { handleClick('/reorder_pages') }}>
+                                    <i className="fa fa-file"></i> Manage your page
+                                </a>
+                                <a className="dropdown-item" href="#" onClick={() => { handleClick('/extract_text') }}>
+                                    <i className="fa fa-font"></i> Extract text
+                                </a>
+                                <a className="dropdown-item" href="#" onClick={() => { handleClick('/image2text') }}>
+                                    <i className="fa fa-openid"></i> Image to text
+                                </a>
+                                <a className="dropdown-item" href="#" onClick={() => { handleClick('/word2pdf') }}>
+                                    <i className="fa fa-file-word-o"></i> Word to pdf
+                                </a>
+                                <a className="dropdown-item" href="#" onClick={() => { handleClick('/excel2pdf') }}>
+                                    <i className="fa fa-file-excel-o"></i> Excel to pdf
+                                </a>
+                                <a className="dropdown-item" href="#" onClick={() => { handleClick('/image2pdf') }}>
+                                    <i className="fa fa-picture-o"></i> Image to pdf
+                                </a>
+                                <a className="dropdown-item" href="#">
+                                    <i className="fa fa-code-fork"></i> Version control
+                                </a>
+                            </div>
+                        </div>
                     </div>
 
                     <div className="row">

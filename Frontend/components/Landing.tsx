@@ -13,7 +13,6 @@ export default function Landing() {
 
     // Load scripts in order
     const loadScripts = async () => {
-      await loadScript("/jquery-3.2.1.min.js");
       await loadScript("/all-plugins.js");
       await loadScript("/plugins-activate.js");
     };

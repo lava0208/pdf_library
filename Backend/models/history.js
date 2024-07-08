@@ -61,6 +61,19 @@ const documentSchema = new Schema({
         type: String
     },
     history: [historySchema],
+    folderId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Folder',
+        default: null
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
+    updatedAt: {
+        type: Date,
+        default: Date.now
+    }
 });
 
 const Doc = mongoose.model("Document", documentSchema);

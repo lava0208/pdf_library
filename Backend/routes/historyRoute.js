@@ -19,13 +19,14 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 
-const { getAllHistories, getHistory, createHistory, updateHistory, updateHistoryName, deleteHistory } = require('../controllers/historyController');
+const { getAllDocuments, getAllFolderDocuments, getDocument, createDocument, updateDocument, updateDocumentName, deleteDocument } = require('../controllers/historyController');
 
-router.get('/history/:username', getAllHistories);
-router.get('/history/:username/:uniqueId', getHistory);
-router.post('/history', upload.single('pdfFile'), createHistory);
-router.put('/history/:uniqueId', upload.single('pdfFile'), updateHistory);
-router.put('/history/:uniqueId/documentname', updateHistoryName);
-router.delete('/history/:username/:uniqueId', deleteHistory);
+router.get('/history/:username', getAllDocuments);
+router.get('/history/folder/:username/:folderId?', getAllFolderDocuments);
+router.get('/history/:username/:uniqueId', getDocument);
+router.post('/history', upload.single('pdfFile'), createDocument);
+router.put('/history/:uniqueId', upload.single('pdfFile'), updateDocument);
+router.put('/history/:uniqueId/documentname', updateDocumentName);
+router.delete('/history/:username/:uniqueId', deleteDocument);
 
 module.exports = router;

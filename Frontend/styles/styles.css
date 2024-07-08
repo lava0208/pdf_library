@@ -172,7 +172,7 @@ sup {
 }
 
 a {
-  color: #007bff;
+  color: #17a2b8;
   text-decoration: none;
   background-color: transparent;
   -webkit-text-decoration-skip: objects
@@ -1781,8 +1781,8 @@ pre code {
 
 .table td,
 .table th {
-  padding: .75rem;
-  vertical-align: top;
+  padding: .75rem 1rem;
+  vertical-align: middle;
   border-top: 1px solid #dee2e6
 }
 
@@ -3519,7 +3519,7 @@ input[type=submit].btn-block {
 .dropdown-item {
   display: block;
   width: 100%;
-  padding: .25rem 1rem;
+  padding: .5rem 1rem;
   clear: both;
   font-weight: 400;
   color: #212529;
@@ -3531,9 +3531,9 @@ input[type=submit].btn-block {
 
 .dropdown-item:focus,
 .dropdown-item:hover {
-  color: #16181b;
+  color: #fff;
   text-decoration: none;
-  background-color: #f8f9fa
+  background-color: #61d2e3
 }
 
 .dropdown-item.active,
@@ -3575,27 +3575,27 @@ input[type=submit].btn-block {
   color: #ebc511;
 }
 
-.document-navbar .dropdown-item .fa-file-word-o{
+.document-navbar .dropdown-item .fa-file, .document-navbar .dropdown-item .fa-font{
+  color: dodgerblue;
+}
+
+.fa-file-word-o{
   color: var(--blue);
 }
 
-.document-navbar .dropdown-item .fa-file-excel-o{
+.fa-file-excel-o{
   color: green;
 }
 
-.document-navbar .dropdown-item .fa-file-excel-o{
-  color: green;
-}
-
-.document-navbar .dropdown-item .fa-picture-o, .document-navbar .dropdown-item .fa-openid{
+.fa-picture-o, .fa-openid, .fa-file-word-o{
   color: purple;  
 }
 
-.document-navbar .dropdown-item .fa-file, .document-navbar .dropdown-item .fa-font{
-  color: rgb(240, 23, 135);
+.fa-file-pdf-o{
+  color: red;
 }
 
-.document-navbar .dropdown-item .fa-code-fork{
+.fa-code-fork{
   color: rgb(13, 255, 0);
 }
 
@@ -11753,5 +11753,28 @@ footer.footer p.small a.focus {
   top: 12px;
   font-size: 14px;
 }
+
+.folder-table th:first-child{
+  width: 30px;
+}
+
+.folder-table tbody tr{
+  cursor: pointer;
+}
+
+.folder-table tbody tr.active{
+  background-color: #17a2b8;
+  color: white;
+}
+
+.name-container{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.name-container .dropdown-toggle::after { 
+  content: none; 
+} 
 
 /* Styles Begins */

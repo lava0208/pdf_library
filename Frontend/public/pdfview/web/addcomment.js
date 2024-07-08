@@ -93,6 +93,7 @@ const handleBold = function () {
     document.getElementById(current_text_content_id).classList.add("bold-text");
     isBold = true;
   }
+  console.log("isBold " + isBold);
   saveTextContent();
 };
 const handleItalic = function () {
@@ -116,12 +117,8 @@ const handleItalic = function () {
 const addBoldItalicEvent = function () {
   const boldBtn = document.getElementById("text-bold");
   const italicBtn = document.getElementById("text-italic");
-  if(boldBtn){
-    boldBtn.addEventListener("click", handleBold);
-  }
-  if(italicBtn){
-    italicBtn.addEventListener("click", handleItalic);
-  }  
+  boldBtn.addEventListener("click", handleBold);
+  italicBtn.addEventListener("click", handleItalic);
 };
 
 document.addEventListener("keydown", function (event) {
@@ -137,12 +134,8 @@ document.addEventListener("keydown", function (event) {
 const removeBoldItalicEvent = function () {
   const boldBtn = document.getElementById("text-bold");
   const italicBtn = document.getElementById("text-italic");
-  if(boldBtn){
-    boldBtn.removeEventListener("click", handleBold);
-  }
-  if(italicBtn){
-    italicBtn.removeEventListener("click", handleItalic);
-  }
+  boldBtn.removeEventListener("click", handleBold);
+  italicBtn.removeEventListener("click", handleItalic);
   if (isBold) {
     boldBtn.classList.remove("text-weight-button-focused");
   }
@@ -153,13 +146,13 @@ const removeBoldItalicEvent = function () {
 };
 
 const saveTextContent = function () {
-  // fontStyle = generateFontName("text-content-font-style");
-  // fontSize = document.getElementById("text-content-font-size") && parseInt(document.getElementById("text-content-font-size").value);
-  fontStyle = generateFontName("toolbar-font-style");
-  fontSize = document.getElementById("toolbar-font-size") && parseInt(document.getElementById("toolbar-font-size").value);
+  fontStyle = generateFontName("text-content-font-style");
+  fontSize = document.getElementById("text-content-font-size") && parseInt(document.getElementById("text-content-font-size").value);
+  // fontStyle = generateFontName("toolbar-font-style");
+  // fontSize = document.getElementById("toolbar-font-size") && parseInt(document.getElementById("toolbar-font-size").value);
   textColor = document.getElementById("text-content-color") && document.getElementById("text-content-color").value;
-  // const regularFont = document.getElementById("text-content-font-style") && document.getElementById("text-content-font-style").value;
-  const regularFont = document.getElementById("toolbar-font-style") && document.getElementById("toolbar-font-style").value;
+  const regularFont = document.getElementById("text-content-font-style") && document.getElementById("text-content-font-style").value;
+  // const regularFont = document.getElementById("toolbar-font-style") && document.getElementById("toolbar-font-style").value;
   let text, lines;
   const resultArray = [];
   let prevElement = null;
@@ -179,7 +172,7 @@ const saveTextContent = function () {
     if (text_storage[i].id == current_text_num_id) {
       text_storage[i].fontStyle = fontStyle;
       text_storage[i].regularFontStyle = regularFont;
-      text_storage[i].fontSize = fontSize * 0.75 * 0.8;
+      text_storage[i].fontSize = fontSize;
       text_storage[i].textColor = textColor;
       text_storage[i].text = resultArray;
       text_storage[i].isBold = isBold;
@@ -211,7 +204,7 @@ const saveTextContent = function () {
       regularFontStyle: regularFont,
       isBold: isBold,
       isItalic: isItalic,
-      fontSize: fontSize * 0.75 * 0.8,
+      fontSize: fontSize,
       baseFontSize: fontSize,
       textColor: textColor,
       width: textContentSize.x * 0.75 * 0.75,
@@ -228,21 +221,13 @@ const saveTextContent = function () {
 }
 
 const handleTextContent = (e) => {
-  // console.log("******* TEXT_CONTENT_OPTION ********");
-  // console.log(TEXT_CONTENT_OPTION);
   isOptionPane = false;
-  if(document.getElementById(TEXT_CONTENT_OPTION)){
-    document.getElementById(TEXT_CONTENT_OPTION).style.display = "none";
-  }
-  
+  document.getElementById(TEXT_CONTENT_OPTION).style.display = "none";
   if (e) e.stopPropagation();
   saveTextContent();
-  if(document.getElementById("text-content-save-button")){
-    document
+  document
     .getElementById("text-content-save-button")
     .removeEventListener("click", handleTextContent);
-  }
-  
   removeBoldItalicEvent();
 };
 
@@ -398,8 +383,7 @@ document.getElementById("viewer").addEventListener("click", (evt) => {
 
   document.querySelectorAll('.textfield-content').forEach(div => {
     div.addEventListener('click', function() {
-      this.classList.remove("dblclicked");
-      this.style.zIndex = 1;
+      this.classList.remove("clicked");
     });
   });
 
@@ -475,10 +459,10 @@ document.getElementById("viewer").addEventListener("click", (evt) => {
 
     addBoldItalicEvent();
 
-    // newText.style.fontFamily = document.getElementById("text-content-font-style") && document.getElementById("text-content-font-style").value;
-    // newText.style.fontSize = document.getElementById("text-content-font-size") && document.getElementById("text-content-font-size").value + "px";
-    newText.style.fontFamily = document.getElementById("toolbar-font-style") && document.getElementById("toolbar-font-style").value;
-    newText.style.fontSize = document.getElementById("toolbar-font-size") && document.getElementById("toolbar-font-size").value + "px";
+    newText.style.fontFamily = document.getElementById("text-content-font-style") && document.getElementById("text-content-font-style").value;
+    newText.style.fontSize = document.getElementById("text-content-font-size") && document.getElementById("text-content-font-size").value + "px";
+    // newText.style.fontFamily = document.getElementById("toolbar-font-style") && document.getElementById("toolbar-font-style").value;
+    // newText.style.fontSize = document.getElementById("toolbar-font-size") && document.getElementById("toolbar-font-size").value + "px";
     newText.style.color = document.getElementById("text-content-color") && document.getElementById("text-content-color").value;
 
     $(document).on('change', '#text-content-font-style', function() {
@@ -527,9 +511,11 @@ document.getElementById("viewer").addEventListener("click", (evt) => {
       });
     
       $this.parent().addClass("dblclicked");
-      $('.textcontent').css('z-index', 1);
-      $('.textfield-content').css('z-index', standardZIndex);
+      $this.css('z-index', 1);
       $this.parent().css("z-index", standardZIndex);
+
+      console.log("text content clicked");
+      console.log($(this))
     
       $input.on('blur', function() {
         const newText = $input.val();
@@ -581,18 +567,18 @@ document.getElementById("viewer").addEventListener("click", (evt) => {
                   document.getElementById("text-bold").classList.add("text-weight-button-focused");
                 if (isItalic)
                   document.getElementById("text-italic").classList.add("text-weight-button-focused");
-                // if(document.getElementById("text-content-font-style")){
-                //   document.getElementById("text-content-font-style").value = element.regularFontStyle;
-                // }
-                // if(document.getElementById("text-content-font-size")){
-                //   document.getElementById("text-content-font-size").value = element.baseFontSize;
-                // }
-                if(document.getElementById("toolbar-font-style")){
-                  document.getElementById("toolbar-font-style").value = element.regularFontStyle;
+                if(document.getElementById("text-content-font-style")){
+                  document.getElementById("text-content-font-style").value = element.regularFontStyle;
                 }
-                if(document.getElementById("toolbar-font-size")){
-                  document.getElementById("toolbar-font-size").value = element.baseFontSize;
+                if(document.getElementById("text-content-font-size")){
+                  document.getElementById("text-content-font-size").value = element.fontSize;
                 }
+                // if(document.getElementById("toolbar-font-style")){
+                //   document.getElementById("toolbar-font-style").value = element.regularFontStyle;
+                // }
+                // if(document.getElementById("toolbar-font-size")){
+                //   document.getElementById("toolbar-font-size").value = element.baseFontSize;
+                // }
                 if(document.getElementById("text-content-color")){
                   document.getElementById("text-content-color").value = element.textColor;
                 }
@@ -633,6 +619,17 @@ document.getElementById("viewer").addEventListener("click", (evt) => {
   }
 });
 
+document.getElementById("add_comment_mode").addEventListener("click", (e) => {
+  isTextModeOn = false;
+  isAddCommentModeOn = !isAddCommentModeOn;
+  handleChange();
+});
+document.getElementById("add_text").addEventListener("click", (e) => {
+  isAddCommentModeOn = false;
+  isTextModeOn = !isTextModeOn;
+  handleChange();
+});
+
 $(document).on("click", "#editorFreeText", function(){
   $("#add_comment_mode").removeClass("active_menu")
   comment_control.style.display = "none";
@@ -663,7 +660,14 @@ $(document).on("click", "#add_comment_mode", function(){
 
 
 const handleChange = () => {
+  let addText = document.getElementById("add_text");
   let addComment = document.getElementById("add_comment_mode");
+  // Handle TextMode
+  if (!isTextModeOn) {
+    addText.classList.remove("active_menu");
+  } else {
+    addText.classList.add("active_menu");
+  }
   //Handle AddCommentMode
   if (!isAddCommentModeOn) {
     addComment.classList.remove("active_menu");

@@ -58,6 +58,7 @@ const userSignin = async function (req, res) {
         return res.status(500).send('Error occurred: ' + error.message);
     }
 }
+
 const getUserSignature = async function (req, res) {
     try {
         const { username } = req.params;

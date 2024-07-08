@@ -21,6 +21,7 @@ const mongoURI = process.env.MONGO_URI;
 
 const userRouter = require('./routes/userRoute');
 const historyRouter = require('./routes/historyRoute');
+const folderRouter = require('./routes/folderRoute');
 
 const historyController = require('./controllers/historyController');
 
@@ -240,7 +241,7 @@ app.post('/sendlink', upload.single('pdfFile'), async (req, res) => {
       };
 
       try {
-        await historyController.updateHistoryFormMap(updateReq, {
+        await historyController.updateDocumentFormMap(updateReq, {
           status: (statusCode) => ({
             json: (message) => {
               if (statusCode >= 400) {
@@ -296,7 +297,7 @@ app.get('/getpdfform', async (req, res) => {
   const uniqueId = req.query.uniqueId;
 
   try {
-    const formData = await historyController.getHistoryFormMap(uniqueId);
+    const formData = await historyController.getDocumentFormMap(uniqueId);
 
     if (formData.formDataMap) {
       res.json(formData.formDataMap);
@@ -338,6 +339,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use(userRouter);
 app.use(historyRouter);
+app.use(folderRouter);
 
 mongoose.connect(mongoURI).then(() => {
   console.log("Mongodb connected!");

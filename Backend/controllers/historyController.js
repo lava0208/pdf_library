@@ -4,7 +4,7 @@ const Doc = require('../models/history');
 const { getCurrentFile } = require('../utils/currentFile');
 require('dotenv').config();
 
-const getAllHistories = async (req, res) => {
+const getAllDocuments = async (req, res) => {
     try {
         const { username } = req.params;
         const documents = await Doc.find({ username });
@@ -16,7 +16,23 @@ const getAllHistories = async (req, res) => {
     }
 }
 
-const getHistory = async (req, res) => {
+const getAllFolderDocuments = async (req, res) => {
+    try {
+        const { username, folderId } = req.params;
+        const filter = { username };
+        if (folderId) {
+            filter.folderId = folderId;
+        }
+        const documents = await Document.find(filter);
+
+        res.status(200).json(documents);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).send('Error occurred: ' + error.message);
+    }
+};
+
+const getDocument = async (req, res) => {
     try {
         const { uniqueId, username } = req.params;
         const document = await Doc.findOne({ uniqueId, username });
@@ -28,7 +44,7 @@ const getHistory = async (req, res) => {
     }
 };
 
-const getHistoryFormMap = async (uniqueId) => {
+const getDocumentFormMap = async (uniqueId) => {
     try {
         const document = await Doc.findOne({ uniqueId });
         if (!document) {
@@ -41,7 +57,7 @@ const getHistoryFormMap = async (uniqueId) => {
     }
 };
 
-const createHistory = async (req, res) => {
+const createDocument = async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).send('No PDF file uploaded.');
@@ -92,7 +108,7 @@ const createHistory = async (req, res) => {
     }
 };
 
-const updateHistory = async (req, res) => {
+const updateDocument = async (req, res) => {
     try {
         const { uniqueId } = req.params;
         const { username } = req.body;
@@ -136,7 +152,7 @@ const updateHistory = async (req, res) => {
     }
 };
 
-const updateHistoryName = async (req, res) => {
+const updateDocumentName = async (req, res) => {
     try {
         const { id, username, documentname } = req.body;
 
@@ -159,7 +175,7 @@ const updateHistoryName = async (req, res) => {
     }
 };
 
-const updateHistoryFormMap = async (req, res) => {
+const updateDocumentFormMap = async (req, res) => {
     try {
         const { id, formDataMap } = req.body;
         const updateData = { 
@@ -187,7 +203,7 @@ const updateHistoryFormMap = async (req, res) => {
     }
 };
 
-const deleteHistory = async (req, res) => {
+const deleteDocument = async (req, res) => {
     try {
         const { uniqueId, username } = req.params;
 
@@ -205,12 +221,13 @@ const deleteHistory = async (req, res) => {
 };
 
 module.exports = {
-    getAllHistories,
-    getHistory,
-    getHistoryFormMap,
-    createHistory,
-    updateHistory,
-    updateHistoryName,
-    updateHistoryFormMap,
-    deleteHistory
+    getAllDocuments,
+    getAllFolderDocuments,
+    getDocument,
+    getDocumentFormMap,
+    createDocument,
+    updateDocument,
+    updateDocumentName,
+    updateDocumentFormMap,
+    deleteDocument
 };

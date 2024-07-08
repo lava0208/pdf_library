@@ -11,15 +11,21 @@ import 'react-toastify/dist/ReactToastify.css';
 const Documents = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [documents, setDocuments] = useState<any[]>([]);
+    const [folders, setFolders] = useState<any[]>([]);
     const [error, setError] = useState<null | Error>(null);
     const [isActiveId, setIsActiveId] = useState<string | null>(null);
     const [inputValues, setInputValues] = useState<{ [key: string]: string }>({});
+    const [folderName, setFolderName] = useState('New Folder');
+    const [parentId, setParentId] = useState('');
+    const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
+    const [path, setPath] = useState<any[]>([]);
+    const [activeFolderId, setActiveFolderId] = useState<string | null>(null);
 
     const router = useRouter();
 
     const handleClick = function (url: any) {
         router.push(url);
-    }
+    };
 
     const handleInputChange = (id: string, value: string) => {
         setInputValues(prevValues => ({
@@ -28,7 +34,7 @@ const Documents = () => {
         }));
     };
 
-    const getDocuments = async () => {
+    const getDocuments = async (folderId = null) => {
         try {
             const username = localStorage.getItem('username');
             const response: AxiosResponse = await axios.get(`${BASE_URL}/history/${username}`, {
@@ -36,11 +42,29 @@ const Documents = () => {
                     "Content-Type": "application/json"
                 }
             });
-            setDocuments(response.data)
+            setDocuments(response.data);
         } catch (err: any) {
             setError(err);
         }
-    }
+    };
+
+    const getFolderDocuments = async (folderId = null) => {
+        try {
+            const username = localStorage.getItem('username');
+            const response: AxiosResponse = await axios.get(`${BASE_URL}/history/${username}/${folderId || ''}`, {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            if (response.data && response.data.length > 0) {
+                setDocuments(response.data);
+            } else {
+                setDocuments([]);
+            }
+        } catch (err: any) {
+            setError(err);
+        }
+    };
 
     const updateDocumentName = async (id: any, documentname: any) => {
         const username = localStorage.getItem('username');
@@ -57,7 +81,6 @@ const Documents = () => {
                         "Content-Type": "application/json"
                     },
                 });
-                getDocuments();
                 setIsActiveId(null);
                 setInputValues({});
                 toast.success('🦄 Successfully Updated!', {
@@ -76,7 +99,6 @@ const Documents = () => {
         }
     };
 
-
     const deleteDocument = async (id: any) => {
         const username = localStorage.getItem('username');
         if (confirm("Do you want to delete this document?") == true) {
@@ -86,7 +108,6 @@ const Documents = () => {
                         "Content-Type": "application/json"
                     }
                 });
-                getDocuments();
                 toast.success('🦄 Successfully Deleted!', {
                     position: "top-right",
                     autoClose: 5000,
@@ -101,10 +122,54 @@ const Documents = () => {
                 setError(err);
             }
         }
-    }
+    };
+
+    const getFolders = async (parentId = null) => {
+        try {
+            const response: AxiosResponse = await axios.get(`${BASE_URL}/folder`, {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                params: { parentId }
+            });
+            if (response.data && response.data.length > 0) {
+                setFolders(response.data);
+            } else {
+                setFolders([]);
+            }
+        } catch (err: any) {
+            setError(err);
+        }
+    };
+
+    const createFolder = async () => {
+        try {
+            await axios.post(`${BASE_URL}/folder`, { name: folderName, parentId: currentFolderId });
+            setFolderName('');
+            setParentId('');
+        } catch (error) {
+            console.error('Error creating folder:', error);
+        }
+    };
+
+    const handleFolderClick = (folderId: any, folderName: string) => {
+        setCurrentFolderId(folderId);
+        setPath([...path, { folderId, folderName }]);
+        getFolders(folderId);
+        getFolderDocuments(folderId);
+    };
+
+    const handleBreadcrumbClick = (folderId: any, index: number) => {
+        setActiveFolderId(folderId);
+        setCurrentFolderId(folderId);
+        setPath(path.slice(0, index + 1));
+        getFolders(folderId);
+        getFolderDocuments(folderId);
+    };
 
     useEffect(() => {
-        getDocuments();
+        getFolders();
+        getFolderDocuments();
     }, []);
 
     return (
@@ -124,7 +189,7 @@ const Documents = () => {
                                 <i className="fa fa-plus"></i> <span className="px-3">New</span>
                             </button>
                             <div className="dropdown-menu">
-                                <a className="dropdown-item" href="#">
+                                <a className="dropdown-item" href="#" onClick={() => { createFolder() }}>
                                     <i className="fa fa-folder"></i> Folder
                                 </a>
                                 <a className="dropdown-item" href="#" onClick={() => { handleClick('/pdfviewer') }}>
@@ -155,69 +220,71 @@ const Documents = () => {
                         </div>
                     </div>
 
-                    <div className="row">
-                        {documents.length > 0 && (
-                            documents.map((document, i) => (
-                                <div key={document.uniqueId} className="col-md-3 col-sm-6 document-list">
-                                    <div className="service-box">
-                                        <div className="service-icon yellow">
-                                            <div className="front-content">
-                                                <i className="fa fa-book" aria-hidden="true"></i>
-                                                <h3>{document.name ? document.name : `Document ${i + 1}`}</h3>
+                    <nav aria-label="breadcrumb">
+                        <ol className="breadcrumb">
+                            <li className="breadcrumb-item">
+                                <a href="#" onClick={() => { handleBreadcrumbClick(null, -1) }}>
+                                    <i className="fa fa-home" style={{fontSize: 18}}></i>
+                                </a>
+                            </li>
+                            {path.map((folder, index) => (
+                                <li key={folder.folderId} className="breadcrumb-item">
+                                    <a href="#" onClick={() => { handleBreadcrumbClick(folder.folderId, index) }}>{folder.folderName}</a>
+                                </li>
+                            ))}
+                        </ol>
+                    </nav>
+
+                    <table className="table table-hover folder-table">
+                        <thead>
+                            <tr>
+                                <th><i className="fa fa-file"></i></th>
+                                <th>Name</th>
+                                <th>Modified</th>
+                                <th>Modified By</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {folders.map((folder) => (
+                                <tr key={folder._id} className={folder._id === activeFolderId ? 'active' : ''} onClick={() => setActiveFolderId(folder._id)} onDoubleClick={() => handleFolderClick(folder._id, folder.name)}>
+                                    <td><i className="fa fa-folder"></i></td>
+                                    <td>
+                                        <div className="name-container">
+                                            {folder.name}                                            
+                                            <div className="dropdown">
+                                                <button className="btn dropdown-toggle d-flex align-items-center" type="button" data-toggle="dropdown" aria-expanded="false">
+                                                    <i className="fa fas fa-ellipsis-h"></i>
+                                                </button>
+                                                <ul className="dropdown-menu dropdown-menu-left">
+                                                    <a className="dropdown-item" href="#">
+                                                        Rename
+                                                    </a>
+                                                    <a className="dropdown-item" href="#">
+                                                        Delete
+                                                    </a>
+                                                </ul>
                                             </div>
                                         </div>
-                                        <div className="service-content">
-                                            <div className="document-name">
-                                                <input
-                                                    type="text"
-                                                    className={isActiveId == document.uniqueId ? "form-control editing" : "form-control"}
-                                                    value={isActiveId === document.uniqueId ? inputValues[document.uniqueId] || '' : document.name || `Document ${i + 1}`}
-                                                    onChange={(e) => handleInputChange(document.uniqueId, e.target.value)}
-                                                    disabled={isActiveId !== document.uniqueId}
-                                                />
-                                                <i
-                                                    title="click here to edit name"
-                                                    className={`fa fa-edit ${isActiveId === document.uniqueId ? 'hidden' : ''}`}
-                                                    onClick={() => {
-                                                        setIsActiveId(document.uniqueId);
-                                                        setInputValues(prevValues => ({
-                                                            ...prevValues,
-                                                            [document.uniqueId]: document.name
-                                                        }));
-                                                    }}
-                                                />
-                                                <i
-                                                    title="click here to save name"
-                                                    className={`fa fa-save ${isActiveId === document.uniqueId ? '' : 'hidden'}`}
-                                                    onClick={() => {
-                                                        updateDocumentName(document.uniqueId, inputValues[document.uniqueId]);
-                                                    }}
-                                                />
-                                            </div>
-                                            {/* <h3>Manage Document</h3> */}
-                                            <div className="service-flex">
-                                                <h3 onClick={() => { handleClick('/pdfviewer/?id=' + document.uniqueId + '&draft=false') }}>
-                                                    <i className="fa fa-eye" aria-hidden="true"></i> View
-                                                </h3>
-                                                <h3 onClick={() => { handleClick('/pdfviewer/?id=' + document.uniqueId + '&draft=true') }}>
-                                                    <i className="fa fa-edit" aria-hidden="true"></i> Update
-                                                </h3>
-                                                <h3 onClick={() => { deleteDocument(document.uniqueId) }}>
-                                                    <i className="fa fa-trash" aria-hidden="true"></i> Delete
-                                                </h3>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )
-                            )
-                        )}
-                    </div>
+                                    </td>
+                                    <td>{new Date(folder.updatedAt).toLocaleDateString()}</td>
+                                    <td>{localStorage.getItem('username')}</td>
+                                </tr>
+                            ))}
+                            {documents.map((document, i) => (
+                                <tr key={document.uniqueId}>
+                                    <td><i className="fa fa-file-pdf-o"></i></td>
+                                    <td>{document.name ? document.name : `Document ${i + 1}`}</td>
+                                    <td>{new Date(document.updatedAt).toLocaleDateString()}</td>
+                                    <td>{document.username}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <ToastContainer />
         </>
-    )
+    );
 }
 
 export default withAuth(Documents);

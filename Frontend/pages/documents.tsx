@@ -91,41 +91,47 @@ const Documents = () => {
             username: username,
             documentname: documentname
         };
-
-        if (confirm("Do you want to update this document's name?") === true) {
-            try {
-                await axios.put(`${BASE_URL}/history/${id}/documentname`, payload, {
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                });
-                setIsActiveId(null);
-                setInputValues({});
-                toast.success('🦄 Successfully Updated!', {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                });
-            } catch (err: any) {
-                setError(err);
-            }
+    
+        try {
+            await axios.put(`${BASE_URL}/history/${id}/documentname`, payload, {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            });
+    
+            setDocuments((prevDocuments) =>
+                prevDocuments.map((doc) =>
+                    doc.uniqueId === id ? { ...doc, name: documentname } : doc
+                )
+            );
+    
+            setIsActiveId(null);
+            setInputValues({});
+            toast.success('🦄 Successfully Updated!', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        } catch (err: any) {
+            setError(err);
         }
     };
-
+    
     const deleteDocument = async (id: string) => {
         const username = localStorage.getItem('username');
-        if (confirm("Do you want to delete this document?") == true) {
+        if (confirm("Do you want to delete this document?") === true) {
             try {
                 await axios.delete(`${BASE_URL}/history/${username}/${id}`, {
                     headers: {
                         "Content-Type": "application/json"
                     }
                 });
+                setDocuments((prevDocuments) => prevDocuments.filter(doc => doc.uniqueId !== id));
                 toast.success('🦄 Successfully Deleted!', {
                     position: "top-right",
                     autoClose: 5000,
@@ -142,6 +148,37 @@ const Documents = () => {
         }
     };
 
+    const updateFolderName = async (id: string, folderName: string) => {
+        try {
+            await axios.put(`${BASE_URL}/folder/${id}`, { name: folderName }, {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+    
+            setFolders((prevFolders) =>
+                prevFolders.map((folder) =>
+                    folder._id === id ? { ...folder, name: folderName } : folder
+                )
+            );
+    
+            setRenamingFolderId(null);
+            setInputValues({});
+            toast.success('🦄 Successfully Updated!', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        } catch (err: any) {
+            setError(err);
+        }
+    };
+    
     const getFolders = async (parentId: string | null = null) => {
         try {
             const response: AxiosResponse<Folder[]> = await axios.get(`${BASE_URL}/folder`, {
@@ -229,21 +266,18 @@ const Documents = () => {
         setInputValues((prev) => ({ ...prev, [folderId]: folders.find((folder) => folder._id === folderId)?.name || '' }));
     };
 
-    const handleRenameBlur = async (folderId: string) => {
-        setRenamingFolderId(null);
-        if (inputValues[folderId] !== undefined) {
-            try {
-                await axios.put(`${BASE_URL}/folder/${folderId}`, { name: inputValues[folderId] || '' }, {
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                });
-                await getFolders(currentFolderId);
-            } catch (error) {
-                console.error('Error renaming folder:', error);
+    const handleRenameBlur = async (id: string, isFolder: boolean) => {
+        if (inputValues[id]) {
+            if (isFolder) {
+                await updateFolderName(id, inputValues[id]);
+            } else {
+                await updateDocumentName(id, inputValues[id]);
             }
+        } else {
+            setRenamingFolderId(null);
+            setIsActiveId(null);
         }
-    };
+    };       
 
     useEffect(() => {
         getFolders();
@@ -252,7 +286,7 @@ const Documents = () => {
 
     const adjustInputWidth = (input: HTMLInputElement | null) => {
         if (input) {
-            input.style.width = `${Math.max(input.value.length + 1, 8)}ch`;
+            input.style.width = `${Math.max(input.value.length + 1, 10)}ch`;
         }
     };
 
@@ -348,9 +382,9 @@ const Documents = () => {
                                                 type="text"
                                                 className="form-control"
                                                 readOnly={renamingFolderId !== folder._id}
-                                                value={inputValues[folder._id] !== undefined ? inputValues[folder._id] : folder.name}
+                                                value={renamingFolderId === folder._id ? inputValues[folder._id] || folder.name : folder.name}
                                                 onChange={(e) => handleInputChange(folder._id, e.target.value)}
-                                                onBlur={() => handleRenameBlur(folder._id)}
+                                                onBlur={() => handleRenameBlur(folder._id, true)}
                                                 onDoubleClick={(e) => e.stopPropagation()}
                                             />
                                             <div className="dropdown">
@@ -378,11 +412,44 @@ const Documents = () => {
                             {documents.map((document, i) => (
                                 <tr key={document.uniqueId}>
                                     <td><i className="fa fa-file-pdf-o"></i></td>
-                                    <td>{document.name ? document.name : `Document ${i + 1}`}</td>
+                                    <td>
+                                        <div className="name-container">
+                                            <input
+                                                id={`document-name-${document.uniqueId}`}
+                                                type="text"
+                                                className="form-control"
+                                                readOnly={isActiveId !== document.uniqueId}
+                                                value={inputValues[document.uniqueId] !== undefined ? inputValues[document.uniqueId] : document.name ? document.name : `Document ${i + 1}`}
+                                                onChange={(e) => handleInputChange(document.uniqueId, e.target.value)}
+                                                onBlur={() => handleRenameBlur(document.uniqueId, false)}
+                                                onDoubleClick={(e) => e.stopPropagation()}
+                                            />
+                                            <div className="dropdown">
+                                                <button className="btn dropdown-toggle d-flex align-items-center" type="button" data-toggle="dropdown" aria-expanded="false">
+                                                    <i className="fa fas fa-ellipsis-h"></i>
+                                                </button>
+                                                <ul className="dropdown-menu dropdown-menu-start">
+                                                    <a className="dropdown-item" href="#" onClick={() => setIsActiveId(document.uniqueId)}>
+                                                        Rename
+                                                    </a>
+                                                    <a className="dropdown-item" href="#" onClick={() => { handleClick('/pdfviewer/?id=' + document.uniqueId + '&draft=false') }}>
+                                                        View
+                                                    </a>
+                                                    <a className="dropdown-item" href="#" onClick={() => { handleClick('/pdfviewer/?id=' + document.uniqueId + '&draft=true') }}>
+                                                        Edit
+                                                    </a>
+                                                    <a className="dropdown-item" href="#" onClick={() => deleteDocument(document.uniqueId)}>
+                                                        Delete
+                                                    </a>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </td>
                                     <td>{new Date(document.updatedAt).toLocaleDateString()}</td>
                                     <td>{document.username}</td>
                                 </tr>
                             ))}
+
                         </tbody>
                     </table>
                 </div>

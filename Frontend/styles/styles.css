@@ -11797,4 +11797,8 @@ footer.footer p.small a.focus {
   padding: .375rem 0;
 }
 
+.name-container input:focus{
+  box-shadow: none;
+}
+
 /* Styles Begins */

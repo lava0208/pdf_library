@@ -8,22 +8,37 @@ import withAuth from "@/components/withAuth";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
+interface Document {
+    uniqueId: string;
+    name: string;
+    updatedAt: string;
+    username: string;
+}
+
+interface Folder {
+    _id: string;
+    name: string;
+    updatedAt: string;
+}
+
 const Documents = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const [documents, setDocuments] = useState<any[]>([]);
-    const [folders, setFolders] = useState<any[]>([]);
+    const [documents, setDocuments] = useState<Document[]>([]);
+    const [folders, setFolders] = useState<Folder[]>([]);
     const [error, setError] = useState<null | Error>(null);
     const [isActiveId, setIsActiveId] = useState<string | null>(null);
     const [inputValues, setInputValues] = useState<{ [key: string]: string }>({});
     const [folderName, setFolderName] = useState('New Folder');
     const [parentId, setParentId] = useState('');
     const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
-    const [path, setPath] = useState<any[]>([]);
+    const [path, setPath] = useState<{ folderId: string; folderName: string }[]>([]);
     const [activeFolderId, setActiveFolderId] = useState<string | null>(null);
+    const [clickTimeout, setClickTimeout] = useState<number | null>(null);
+    const [renamingFolderId, setRenamingFolderId] = useState<string | null>(null);
 
     const router = useRouter();
 
-    const handleClick = function (url: any) {
+    const handleClick = (url: string) => {
         router.push(url);
     };
 
@@ -34,10 +49,10 @@ const Documents = () => {
         }));
     };
 
-    const getDocuments = async (folderId = null) => {
+    const getDocuments = async (folderId: string | null = null) => {
         try {
             const username = localStorage.getItem('username');
-            const response: AxiosResponse = await axios.get(`${BASE_URL}/history/${username}`, {
+            const response: AxiosResponse<Document[]> = await axios.get(`${BASE_URL}/history/${username}`, {
                 headers: {
                     "Content-Type": "application/json"
                 }
@@ -48,10 +63,10 @@ const Documents = () => {
         }
     };
 
-    const getFolderDocuments = async (folderId = null) => {
+    const getFolderDocuments = async (folderId: string | null = null) => {
         try {
             const username = localStorage.getItem('username');
-            const response: AxiosResponse = await axios.get(`${BASE_URL}/history/${username}/${folderId || ''}`, {
+            const response: AxiosResponse<Document[]> = await axios.get(`${BASE_URL}/history/${username}/${folderId || ''}`, {
                 headers: {
                     "Content-Type": "application/json"
                 }
@@ -66,7 +81,7 @@ const Documents = () => {
         }
     };
 
-    const updateDocumentName = async (id: any, documentname: any) => {
+    const updateDocumentName = async (id: string, documentname: string) => {
         const username = localStorage.getItem('username');
         const payload = {
             id: id,
@@ -99,11 +114,11 @@ const Documents = () => {
         }
     };
 
-    const deleteDocument = async (id: any) => {
+    const deleteDocument = async (id: string) => {
         const username = localStorage.getItem('username');
         if (confirm("Do you want to delete this document?") == true) {
             try {
-                await axios.delete(`${BASE_URL}/history/${username}/` + id, {
+                await axios.delete(`${BASE_URL}/history/${username}/${id}`, {
                     headers: {
                         "Content-Type": "application/json"
                     }
@@ -124,9 +139,9 @@ const Documents = () => {
         }
     };
 
-    const getFolders = async (parentId = null) => {
+    const getFolders = async (parentId: string | null = null) => {
         try {
-            const response: AxiosResponse = await axios.get(`${BASE_URL}/folder`, {
+            const response: AxiosResponse<Folder[]> = await axios.get(`${BASE_URL}/folder`, {
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -147,19 +162,32 @@ const Documents = () => {
             await axios.post(`${BASE_URL}/folder`, { name: folderName, parentId: currentFolderId });
             setFolderName('');
             setParentId('');
+            await getFolders(currentFolderId); // Refresh the folder list after creating a new folder
         } catch (error) {
             console.error('Error creating folder:', error);
         }
     };
 
-    const handleFolderClick = (folderId: any, folderName: string) => {
-        setCurrentFolderId(folderId);
-        setPath([...path, { folderId, folderName }]);
-        getFolders(folderId);
-        getFolderDocuments(folderId);
+    const handleFolderClick = (folderId: string, folderName: string) => {
+        if (clickTimeout) {
+            clearTimeout(clickTimeout);
+            setClickTimeout(null);
+        } else {
+            const timeout = window.setTimeout(() => {
+                if (renamingFolderId === null) {
+                    setActiveFolderId(folderId);
+                    setCurrentFolderId(folderId);
+                    setPath([...path, { folderId, folderName }]);
+                    getFolders(folderId);
+                    getFolderDocuments(folderId);
+                }
+                setClickTimeout(null);
+            }, 200);
+            setClickTimeout(timeout);
+        }
     };
 
-    const handleBreadcrumbClick = (folderId: any, index: number) => {
+    const handleBreadcrumbClick = (folderId: string | null, index: number) => {
         setActiveFolderId(folderId);
         setCurrentFolderId(folderId);
         setPath(path.slice(0, index + 1));
@@ -167,10 +195,45 @@ const Documents = () => {
         getFolderDocuments(folderId);
     };
 
+    const handleRenameClick = (folderId: string) => {
+        setRenamingFolderId(folderId);
+        setInputValues((prev) => ({ ...prev, [folderId]: folders.find((folder) => folder._id === folderId)?.name || '' }));
+    };
+
+    const handleRenameBlur = async (folderId: string) => {
+        setRenamingFolderId(null);
+        if (inputValues[folderId]) {
+            try {
+                await axios.put(`${BASE_URL}/folder/${folderId}`, { name: inputValues[folderId] }, {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+                await getFolders(currentFolderId); // Refresh the folder list after renaming
+            } catch (error) {
+                console.error('Error renaming folder:', error);
+            }
+        }
+    };
+
     useEffect(() => {
         getFolders();
         getFolderDocuments();
     }, []);
+
+    // Function to adjust input width based on text length
+    const adjustInputWidth = (input: HTMLInputElement | null) => {
+        if (input) {
+            input.style.width = `${input.value.length + 1}ch`;
+        }
+    };
+
+    useEffect(() => {
+        // Adjust width on initial load
+        folders.forEach((folder) => {
+            adjustInputWidth(document.getElementById(`folder-name-${folder._id}`) as HTMLInputElement);
+        });
+    }, [folders]);
 
     return (
         <>
@@ -189,7 +252,7 @@ const Documents = () => {
                                 <i className="fa fa-plus"></i> <span className="px-3">New</span>
                             </button>
                             <div className="dropdown-menu">
-                                <a className="dropdown-item" href="#" onClick={() => { createFolder() }}>
+                                <a className="dropdown-item" href="#" onClick={createFolder}>
                                     <i className="fa fa-folder"></i> Folder
                                 </a>
                                 <a className="dropdown-item" href="#" onClick={() => { handleClick('/pdfviewer') }}>
@@ -224,7 +287,7 @@ const Documents = () => {
                         <ol className="breadcrumb">
                             <li className="breadcrumb-item">
                                 <a href="#" onClick={() => { handleBreadcrumbClick(null, -1) }}>
-                                    <i className="fa fa-home" style={{fontSize: 18}}></i>
+                                    <i className="fa fa-home" style={{ fontSize: 18 }}></i>
                                 </a>
                             </li>
                             {path.map((folder, index) => (
@@ -250,14 +313,26 @@ const Documents = () => {
                                     <td><i className="fa fa-folder"></i></td>
                                     <td>
                                         <div className="name-container">
-                                            {folder.name}                                            
+                                            <input
+                                                id={`folder-name-${folder._id}`}
+                                                type="text"
+                                                className="form-control"
+                                                readOnly={renamingFolderId !== folder._id}
+                                                value={renamingFolderId === folder._id ? inputValues[folder._id] || folder.name : folder.name}
+                                                onChange={(e) => handleInputChange(folder._id, e.target.value)}
+                                                onBlur={() => handleRenameBlur(folder._id)}
+                                                onDoubleClick={(e) => e.stopPropagation()}
+                                            />
                                             <div className="dropdown">
                                                 <button className="btn dropdown-toggle d-flex align-items-center" type="button" data-toggle="dropdown" aria-expanded="false">
                                                     <i className="fa fas fa-ellipsis-h"></i>
                                                 </button>
-                                                <ul className="dropdown-menu dropdown-menu-left">
-                                                    <a className="dropdown-item" href="#">
+                                                <ul className="dropdown-menu dropdown-menu-start">
+                                                    <a className="dropdown-item" href="#" onClick={() => handleRenameClick(folder._id)}>
                                                         Rename
+                                                    </a>
+                                                    <a className="dropdown-item" href="#" onClick={() => handleFolderClick(folder._id, folder.name)}>
+                                                        View
                                                     </a>
                                                     <a className="dropdown-item" href="#">
                                                         Delete

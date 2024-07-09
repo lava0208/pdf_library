@@ -3539,7 +3539,7 @@ input[type=submit].btn-block {
 .dropdown-item.active,
 .dropdown-item:active {
   text-decoration: none;
-  background-color: #f8f9fa
+  background-color: #61d2e3
 }
 
 .dropdown-item.disabled,
@@ -3550,6 +3550,11 @@ input[type=submit].btn-block {
 
 .dropdown-menu.show {
   display: block
+}
+
+.dropdown-menu-start{
+  right: 0;
+  left: auto;
 }
 
 .dropdown-header {
@@ -11767,6 +11772,10 @@ footer.footer p.small a.focus {
   color: white;
 }
 
+.folder-table tbody tr.active input{
+  color: #fff;
+}
+
 .name-container{
   display: flex;
   align-items: center;
@@ -11775,6 +11784,13 @@ footer.footer p.small a.focus {
 
 .name-container .dropdown-toggle::after { 
   content: none; 
-} 
+}
+
+.name-container input{
+  border: none;
+  background-color: transparent!important;
+  width: fit-content;
+  padding: .375rem 0;
+}
 
 /* Styles Begins */

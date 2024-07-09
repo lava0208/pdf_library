@@ -1,16 +1,17 @@
+const mongoose = require('mongoose');
 const Folder = require('../models/folder');
 
-// Create a new folder
 const createFolder = async (req, res) => {
     try {
         const { name, parentId } = req.body;
         const newFolder = new Folder({
             name,
-            parentId: parentId ? mongoose.Types.ObjectId(parentId) : null,
+            parentId: parentId ? new mongoose.Types.ObjectId(parentId) : null,
         });
         const savedFolder = await newFolder.save();
         res.status(201).json(savedFolder);
     } catch (error) {
+        console.error('Error creating folder:', error);
         res.status(500).json({ message: 'Error creating folder', error });
     }
 };
@@ -19,19 +20,11 @@ const createFolder = async (req, res) => {
 const getFolders = async (req, res) => {
     try {
         const { parentId } = req.query;
-        if (parentId) {
-            const folder = await Folder.findOne({where: {parentId: parentId}});
-            const result= [];
-            if (folder) {
-                result.push(folder)
-            }
-            res.status(200).json(result);
-        } else {
-            let query = { parentId: null };
-            const folders = await Folder.find(query);
-            res.status(200).json(folders);
-        }
+        const query = parentId ? { parentId: parentId } : { parentId: null };
+        const folders = await Folder.find(query);
+        res.status(200).json(folders);
     } catch (error) {
+        console.error('Error fetching folders:', error);
         res.status(500).json({ message: 'Error fetching folders', error });
     }
 };
@@ -53,23 +46,23 @@ const getFolderById = async (req, res) => {
 // Update a folder
 const updateFolder = async (req, res) => {
     try {
-        const { id } = req.params;
-        const { name, parentId } = req.body;
+        const { name } = req.body;
+        const folderId = req.params.id;
+
         const updatedFolder = await Folder.findByIdAndUpdate(
-            id,
-            {
-                name,
-                parentId: parentId ? mongoose.Types.ObjectId(parentId) : null,
-                updatedAt: new Date(),
-            },
-            { new: true }
+            folderId,
+            { $set: { name: name } },
+            { new: true, useFindAndModify: false }
         );
+
         if (!updatedFolder) {
             return res.status(404).json({ message: 'Folder not found' });
         }
+
         res.status(200).json(updatedFolder);
     } catch (error) {
-        res.status(500).json({ message: 'Error updating folder', error });
+        console.error('Error updating folder name:', error);
+        res.status(500).json({ message: 'Error updating folder name', error });
     }
 };
 

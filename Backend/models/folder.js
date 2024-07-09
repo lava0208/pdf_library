@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const folderSchema = new mongoose.Schema({
+const folderSchema = new Schema({
     name: {
         type: String,
         required: true
@@ -10,14 +11,15 @@ const folderSchema = new mongoose.Schema({
         ref: 'Folder',
         default: null
     },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
     updatedAt: {
         type: Date,
         default: Date.now
     }
+});
+
+folderSchema.pre('save', function(next) {
+    this.updatedAt = Date.now();
+    next();
 });
 
 const Folder = mongoose.model('Folder', folderSchema);

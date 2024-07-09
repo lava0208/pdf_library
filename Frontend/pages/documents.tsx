@@ -199,12 +199,22 @@ const Documents = () => {
 
     const createFolder = async () => {
         try {
-            await axios.post(`${BASE_URL}/folder`, { name: folderName, parentId: currentFolderId });
-            setFolderName('');
+            const parentIdToUse = currentFolderId || null;
+            await axios.post(`${BASE_URL}/folder`, { name: folderName, parentId: parentIdToUse });
+            setFolderName('New Folder');
             setParentId('');
-            await getFolders(currentFolderId); // Refresh the folder list after creating a new folder
+            await getFolders(parentIdToUse);
         } catch (error) {
-            console.error('Error creating folder:', error);
+            toast.error('Error creating folder', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
         }
     };
 
@@ -366,7 +376,7 @@ const Documents = () => {
                         <thead>
                             <tr>
                                 <th><i className="fa fa-file"></i></th>
-                                <th className="pl-4" style={{width: '50%'}}>Name</th>
+                                <th className="pl-3" style={{width: '50%'}}>Name</th>
                                 <th>Modified</th>
                                 <th>Modified By</th>
                             </tr>
@@ -449,7 +459,6 @@ const Documents = () => {
                                     <td>{document.username}</td>
                                 </tr>
                             ))}
-
                         </tbody>
                     </table>
                 </div>

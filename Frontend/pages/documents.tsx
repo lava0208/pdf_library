@@ -277,17 +277,22 @@ const Documents = () => {
     };
 
     const handleRenameBlur = async (id: string, isFolder: boolean) => {
-        if (inputValues[id]) {
-            if (isFolder) {
-                await updateFolderName(id, inputValues[id]);
-            } else {
-                await updateDocumentName(id, inputValues[id]);
-            }
-        } else {
+        const value = inputValues[id];
+        if (value === undefined || value.trim() === '') {
             setRenamingFolderId(null);
             setIsActiveId(null);
+            return;
         }
-    };       
+    
+        if (isFolder) {
+            await updateFolderName(id, value);
+        } else {
+            await updateDocumentName(id, value);
+        }
+        setRenamingFolderId(null);
+        setIsActiveId(null);
+    };
+    
 
     useEffect(() => {
         getFolders();
@@ -392,7 +397,7 @@ const Documents = () => {
                                                 type="text"
                                                 className="form-control"
                                                 readOnly={renamingFolderId !== folder._id}
-                                                value={renamingFolderId === folder._id ? inputValues[folder._id] || folder.name : folder.name}
+                                                value={inputValues[folder._id] !== undefined ? inputValues[folder._id] : folder.name}
                                                 onChange={(e) => handleInputChange(folder._id, e.target.value)}
                                                 onBlur={() => handleRenameBlur(folder._id, true)}
                                                 onDoubleClick={(e) => e.stopPropagation()}

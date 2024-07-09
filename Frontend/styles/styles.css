@@ -11787,9 +11787,13 @@ footer.footer p.small a.focus {
 }
 
 .name-container input{
-  border: none;
   background-color: transparent!important;
   width: fit-content;
+  padding: .375rem .5rem;
+}
+
+.name-container input:read-only{
+  border: none;
   padding: .375rem 0;
 }
 

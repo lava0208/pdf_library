@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios, { AxiosResponse } from 'axios';
 import Head from "next/head";
 import { BASE_URL } from "@/Config";
@@ -47,6 +47,9 @@ const Documents = () => {
             ...prevValues,
             [id]: value
         }));
+    
+        const inputElement = document.getElementById(`folder-name-${id}`) as HTMLInputElement;
+        adjustInputWidth(inputElement);
     };
 
     const getDocuments = async (folderId: string | null = null) => {
@@ -168,6 +171,32 @@ const Documents = () => {
         }
     };
 
+    const deleteFolder = async (folderId: string) => {
+        if (confirm("Do you want to delete this folder?") == true) {
+            try {
+                await axios.delete(`${BASE_URL}/folder/${folderId}`, {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+                await getFolders(currentFolderId);
+
+                toast.success('🦄 Successfully Deleted!', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            } catch (err: any) {
+                setError(err);
+            }
+        }
+    };
+
     const handleFolderClick = (folderId: string, folderName: string) => {
         if (clickTimeout) {
             clearTimeout(clickTimeout);
@@ -202,14 +231,14 @@ const Documents = () => {
 
     const handleRenameBlur = async (folderId: string) => {
         setRenamingFolderId(null);
-        if (inputValues[folderId]) {
+        if (inputValues[folderId] !== undefined) {
             try {
-                await axios.put(`${BASE_URL}/folder/${folderId}`, { name: inputValues[folderId] }, {
+                await axios.put(`${BASE_URL}/folder/${folderId}`, { name: inputValues[folderId] || '' }, {
                     headers: {
                         "Content-Type": "application/json"
                     }
                 });
-                await getFolders(currentFolderId); // Refresh the folder list after renaming
+                await getFolders(currentFolderId);
             } catch (error) {
                 console.error('Error renaming folder:', error);
             }
@@ -221,19 +250,20 @@ const Documents = () => {
         getFolderDocuments();
     }, []);
 
-    // Function to adjust input width based on text length
     const adjustInputWidth = (input: HTMLInputElement | null) => {
         if (input) {
-            input.style.width = `${input.value.length + 1}ch`;
+            input.style.width = `${Math.max(input.value.length + 1, 8)}ch`;
         }
     };
 
     useEffect(() => {
-        // Adjust width on initial load
         folders.forEach((folder) => {
-            adjustInputWidth(document.getElementById(`folder-name-${folder._id}`) as HTMLInputElement);
+            const inputElement = document.getElementById(`folder-name-${folder._id}`) as HTMLInputElement;
+            if (inputElement) {
+                adjustInputWidth(inputElement);
+            }
         });
-    }, [folders]);
+    }, [folders, inputValues]);
 
     return (
         <>
@@ -302,7 +332,7 @@ const Documents = () => {
                         <thead>
                             <tr>
                                 <th><i className="fa fa-file"></i></th>
-                                <th>Name</th>
+                                <th className="pl-4" style={{width: '50%'}}>Name</th>
                                 <th>Modified</th>
                                 <th>Modified By</th>
                             </tr>
@@ -318,7 +348,7 @@ const Documents = () => {
                                                 type="text"
                                                 className="form-control"
                                                 readOnly={renamingFolderId !== folder._id}
-                                                value={renamingFolderId === folder._id ? inputValues[folder._id] || folder.name : folder.name}
+                                                value={inputValues[folder._id] !== undefined ? inputValues[folder._id] : folder.name}
                                                 onChange={(e) => handleInputChange(folder._id, e.target.value)}
                                                 onBlur={() => handleRenameBlur(folder._id)}
                                                 onDoubleClick={(e) => e.stopPropagation()}
@@ -334,7 +364,7 @@ const Documents = () => {
                                                     <a className="dropdown-item" href="#" onClick={() => handleFolderClick(folder._id, folder.name)}>
                                                         View
                                                     </a>
-                                                    <a className="dropdown-item" href="#">
+                                                    <a className="dropdown-item" href="#" onClick={() => deleteFolder(folder._id)}>
                                                         Delete
                                                     </a>
                                                 </ul>

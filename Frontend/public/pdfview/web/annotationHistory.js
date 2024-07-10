@@ -501,6 +501,7 @@ const saveDoc = async function () {
     formData.append('pdfTextData', JSON.stringify(text_storage));
     formData.append("history", JSON.stringify(historyArr));
     formData.append("username", localStorage.getItem("username"));
+    formData.append("folderId", localStorage.getItem("currentFolderId"));
 
     if(initialId && isDraft){
         //... custom api

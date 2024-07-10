@@ -62,7 +62,7 @@ const documentSchema = new Schema({
     },
     history: [historySchema],
     folderId: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Folder',
         default: null
     },

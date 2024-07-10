@@ -1,5 +1,6 @@
 const fs = require('fs');
 const uuid = require('uuid');
+const mongoose = require('mongoose');
 const Doc = require('../models/history');
 const { getCurrentFile } = require('../utils/currentFile');
 require('dotenv').config();
@@ -18,13 +19,16 @@ const getAllDocuments = async (req, res) => {
 
 const getAllFolderDocuments = async (req, res) => {
     try {
-        const { username, folderId } = req.params;
-        const filter = { username };
-        if (folderId) {
-            filter.folderId = folderId;
+        const { folderId } = req.params;
+        
+        let query = {};
+        if (folderId && folderId !== 'null') {
+            query = { folderId: new mongoose.Types.ObjectId(folderId) };
+        } else {
+            query = { folderId: null };
         }
-        const documents = await Document.find(filter);
 
+        const documents = await Doc.find(query);
         res.status(200).json(documents);
     } catch (error) {
         console.error('Error:', error);
@@ -63,7 +67,7 @@ const createDocument = async (req, res) => {
             return res.status(400).send('No PDF file uploaded.');
         }
 
-        const { username } = req.body;
+        const { username, folderId } = req.body;
         const formDataMap = new Map();
         const pdfFilePath = getCurrentFile();
         const pdfFileData = fs.readFileSync(pdfFilePath);
@@ -96,7 +100,8 @@ const createDocument = async (req, res) => {
             formData,
             textData,
             history,
-            uniqueLink
+            uniqueLink,
+            folderId: folderId && folderId !== 'null' ? new mongoose.Types.ObjectId(folderId) : null
         });
 
         await newDocument.save();

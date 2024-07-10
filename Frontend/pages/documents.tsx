@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import axios, { AxiosResponse } from 'axios';
 import Head from "next/head";
 import { BASE_URL } from "@/Config";
@@ -19,6 +19,7 @@ interface Folder {
     _id: string;
     name: string;
     updatedAt: string;
+    parentId: string | null;
 }
 
 const Documents = () => {
@@ -47,29 +48,12 @@ const Documents = () => {
             ...prevValues,
             [id]: value
         }));
-    
-        const inputElement = document.getElementById(`folder-name-${id}`) as HTMLInputElement;
-        adjustInputWidth(inputElement);
-    };
-
-    const getDocuments = async (folderId: string | null = null) => {
-        try {
-            const username = localStorage.getItem('username');
-            const response: AxiosResponse<Document[]> = await axios.get(`${BASE_URL}/history/${username}`, {
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
-            setDocuments(response.data);
-        } catch (err: any) {
-            setError(err);
-        }
     };
 
     const getFolderDocuments = async (folderId: string | null = null) => {
         try {
             const username = localStorage.getItem('username');
-            const response: AxiosResponse<Document[]> = await axios.get(`${BASE_URL}/history/${username}/${folderId || ''}`, {
+            const response: AxiosResponse<Document[]> = await axios.get(`${BASE_URL}/history/folder/${username}/${folderId}`, {
                 headers: {
                     "Content-Type": "application/json"
                 }
@@ -91,20 +75,20 @@ const Documents = () => {
             username: username,
             documentname: documentname
         };
-    
+
         try {
             await axios.put(`${BASE_URL}/history/${id}/documentname`, payload, {
                 headers: {
                     "Content-Type": "application/json"
                 },
             });
-    
+
             setDocuments((prevDocuments) =>
                 prevDocuments.map((doc) =>
                     doc.uniqueId === id ? { ...doc, name: documentname } : doc
                 )
             );
-    
+
             setIsActiveId(null);
             setInputValues({});
             toast.success('🦄 Successfully Updated!', {
@@ -121,7 +105,38 @@ const Documents = () => {
             setError(err);
         }
     };
-    
+
+    const updateFolderName = async (id: string, folderName: string) => {
+        try {
+            await axios.put(`${BASE_URL}/folder/${id}`, { name: folderName }, {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            setFolders((prevFolders) =>
+                prevFolders.map((folder) =>
+                    folder._id === id ? { ...folder, name: folderName } : folder
+                )
+            );
+
+            setRenamingFolderId(null);
+            setInputValues({});
+            toast.success('🦄 Successfully Updated!', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        } catch (err: any) {
+            setError(err);
+        }
+    };
+
     const deleteDocument = async (id: string) => {
         const username = localStorage.getItem('username');
         if (confirm("Do you want to delete this document?") === true) {
@@ -148,37 +163,6 @@ const Documents = () => {
         }
     };
 
-    const updateFolderName = async (id: string, folderName: string) => {
-        try {
-            await axios.put(`${BASE_URL}/folder/${id}`, { name: folderName }, {
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
-    
-            setFolders((prevFolders) =>
-                prevFolders.map((folder) =>
-                    folder._id === id ? { ...folder, name: folderName } : folder
-                )
-            );
-    
-            setRenamingFolderId(null);
-            setInputValues({});
-            toast.success('🦄 Successfully Updated!', {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-            });
-        } catch (err: any) {
-            setError(err);
-        }
-    };
-    
     const getFolders = async (parentId: string | null = null) => {
         try {
             const response: AxiosResponse<Folder[]> = await axios.get(`${BASE_URL}/folder`, {
@@ -198,6 +182,20 @@ const Documents = () => {
     };
 
     const createFolder = async () => {
+        if (!folderName.trim()) {
+            toast.error('Folder name cannot be empty', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+            return;
+        }
+
         try {
             const parentIdToUse = currentFolderId || null;
             await axios.post(`${BASE_URL}/folder`, { name: folderName, parentId: parentIdToUse });
@@ -219,15 +217,14 @@ const Documents = () => {
     };
 
     const deleteFolder = async (folderId: string) => {
-        if (confirm("Do you want to delete this folder?") == true) {
+        if (confirm("Do you want to delete this folder?") === true) {
             try {
                 await axios.delete(`${BASE_URL}/folder/${folderId}`, {
                     headers: {
                         "Content-Type": "application/json"
                     }
                 });
-                await getFolders(currentFolderId);
-
+                setFolders((prevFolders) => prevFolders.filter(folder => folder._id !== folderId));
                 toast.success('🦄 Successfully Deleted!', {
                     position: "top-right",
                     autoClose: 5000,
@@ -245,22 +242,12 @@ const Documents = () => {
     };
 
     const handleFolderClick = (folderId: string, folderName: string) => {
-        if (clickTimeout) {
-            clearTimeout(clickTimeout);
-            setClickTimeout(null);
-        } else {
-            const timeout = window.setTimeout(() => {
-                if (renamingFolderId === null) {
-                    setActiveFolderId(folderId);
-                    setCurrentFolderId(folderId);
-                    setPath([...path, { folderId, folderName }]);
-                    getFolders(folderId);
-                    getFolderDocuments(folderId);
-                }
-                setClickTimeout(null);
-            }, 200);
-            setClickTimeout(timeout);
-        }
+        setActiveFolderId(folderId);
+        setCurrentFolderId(folderId);
+        setPath([...path, { folderId, folderName }]);
+        getFolders(folderId);
+        getFolderDocuments(folderId);
+        localStorage.setItem("currentFolderId", folderId);
     };
 
     const handleBreadcrumbClick = (folderId: string | null, index: number) => {
@@ -269,11 +256,20 @@ const Documents = () => {
         setPath(path.slice(0, index + 1));
         getFolders(folderId);
         getFolderDocuments(folderId);
+
+        if(index === -1){
+            localStorage.removeItem("currentFolderId")
+        }
     };
 
-    const handleRenameClick = (folderId: string) => {
-        setRenamingFolderId(folderId);
-        setInputValues((prev) => ({ ...prev, [folderId]: folders.find((folder) => folder._id === folderId)?.name || '' }));
+    const handleRenameClick = (id: string, isFolder: boolean) => {
+        setRenamingFolderId(id);
+        setInputValues((prev) => ({
+            ...prev,
+            [id]: isFolder
+                ? folders.find((folder) => folder._id === id)?.name || ''
+                : documents.find((doc) => doc.uniqueId === id)?.name || ''
+        }));
     };
 
     const handleRenameBlur = async (id: string, isFolder: boolean) => {
@@ -283,7 +279,6 @@ const Documents = () => {
             setIsActiveId(null);
             return;
         }
-    
         if (isFolder) {
             await updateFolderName(id, value);
         } else {
@@ -292,27 +287,24 @@ const Documents = () => {
         setRenamingFolderId(null);
         setIsActiveId(null);
     };
-    
 
     useEffect(() => {
+        localStorage.removeItem("currentFolderId")
         getFolders();
         getFolderDocuments();
     }, []);
 
     const adjustInputWidth = (input: HTMLInputElement | null) => {
         if (input) {
-            input.style.width = `${Math.max(input.value.length + 1, 10)}ch`;
+            input.style.width = `${Math.max(input.value.length + 1, 5)}ch`;
         }
     };
 
     useEffect(() => {
         folders.forEach((folder) => {
-            const inputElement = document.getElementById(`folder-name-${folder._id}`) as HTMLInputElement;
-            if (inputElement) {
-                adjustInputWidth(inputElement);
-            }
+            adjustInputWidth(document.getElementById(`folder-name-${folder._id}`) as HTMLInputElement);
         });
-    }, [folders, inputValues]);
+    }, [folders]);
 
     return (
         <>
@@ -381,7 +373,7 @@ const Documents = () => {
                         <thead>
                             <tr>
                                 <th><i className="fa fa-file"></i></th>
-                                <th className="pl-3" style={{width: '50%'}}>Name</th>
+                                <th>Name</th>
                                 <th>Modified</th>
                                 <th>Modified By</th>
                             </tr>
@@ -407,7 +399,7 @@ const Documents = () => {
                                                     <i className="fa fas fa-ellipsis-h"></i>
                                                 </button>
                                                 <ul className="dropdown-menu dropdown-menu-start">
-                                                    <a className="dropdown-item" href="#" onClick={() => handleRenameClick(folder._id)}>
+                                                    <a className="dropdown-item" href="#" onClick={() => handleRenameClick(folder._id, true)}>
                                                         Rename
                                                     </a>
                                                     <a className="dropdown-item" href="#" onClick={() => handleFolderClick(folder._id, folder.name)}>
@@ -433,7 +425,7 @@ const Documents = () => {
                                                 id={`document-name-${document.uniqueId}`}
                                                 type="text"
                                                 className="form-control"
-                                                readOnly={isActiveId !== document.uniqueId}
+                                                readOnly={renamingFolderId !== document.uniqueId}
                                                 value={inputValues[document.uniqueId] !== undefined ? inputValues[document.uniqueId] : document.name ? document.name : `Document ${i + 1}`}
                                                 onChange={(e) => handleInputChange(document.uniqueId, e.target.value)}
                                                 onBlur={() => handleRenameBlur(document.uniqueId, false)}
@@ -444,14 +436,8 @@ const Documents = () => {
                                                     <i className="fa fas fa-ellipsis-h"></i>
                                                 </button>
                                                 <ul className="dropdown-menu dropdown-menu-start">
-                                                    <a className="dropdown-item" href="#" onClick={() => setIsActiveId(document.uniqueId)}>
+                                                    <a className="dropdown-item" href="#" onClick={() => handleRenameClick(document.uniqueId, false)}>
                                                         Rename
-                                                    </a>
-                                                    <a className="dropdown-item" href="#" onClick={() => { handleClick('/pdfviewer/?id=' + document.uniqueId + '&draft=false') }}>
-                                                        View
-                                                    </a>
-                                                    <a className="dropdown-item" href="#" onClick={() => { handleClick('/pdfviewer/?id=' + document.uniqueId + '&draft=true') }}>
-                                                        Edit
                                                     </a>
                                                     <a className="dropdown-item" href="#" onClick={() => deleteDocument(document.uniqueId)}>
                                                         Delete

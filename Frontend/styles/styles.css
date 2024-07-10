@@ -5777,7 +5777,10 @@ input[type=submit].btn-block {
 .close:hover {
   color: #000;
   text-decoration: none;
-  opacity: .75
+  opacity: .75;
+  box-shadow: none;
+  border: none;
+  outline: none;
 }
 
 .close:not(:disabled):not(.disabled) {
@@ -5804,7 +5807,8 @@ button.close {
   z-index: 1050;
   display: none;
   overflow: hidden;
-  outline: 0
+  outline: 0;
+  backdrop-filter: brightness(0.5);
 }
 
 .modal-open .modal {
@@ -11105,7 +11109,6 @@ h6 {
 }
 
 span {
-  color: #fff;
   vertical-align: middle;
   font-family: 'Source Sans Pro', sans-serif;
   text-transform: capitalize;
@@ -11799,6 +11802,12 @@ footer.footer p.small a.focus {
 
 .name-container input:focus{
   box-shadow: none;
+}
+
+.modal .list-group-item:hover{
+  background-color: #17a2b8;
+  color: #fff;
+  cursor: pointer;
 }
 
 /* Styles Begins */

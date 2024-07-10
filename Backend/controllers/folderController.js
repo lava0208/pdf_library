@@ -80,10 +80,33 @@ const deleteFolder = async (req, res) => {
     }
 };
 
+// Folder controller
+const moveFolder = async (req, res) => {
+    try {
+        const { folderId } = req.params;
+        const { newParentId } = req.body;
+
+        const folder = await Folder.findByIdAndUpdate(
+            folderId,
+            { parentId: newParentId },
+            { new: true }
+        );
+
+        if (!folder) {
+            return res.status(404).json({ message: 'Folder not found' });
+        }
+
+        res.status(200).json({ message: 'Folder moved successfully', folder });
+    } catch (error) {
+        res.status(500).json({ message: 'Error moving folder', error });
+    }
+};
+
 module.exports = {
     createFolder,
     getFolders,
     getFolderById,
     updateFolder,
-    deleteFolder
+    deleteFolder,
+    moveFolder
 };

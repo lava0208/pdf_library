@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import axios, { AxiosResponse } from 'axios';
-import Head from "next/head";
-import { BASE_URL } from "@/Config";
-import { useRouter } from "next/router";
-import Header from "@/components/Header";
-import withAuth from "@/components/withAuth";
-import { ToastContainer, toast } from "react-toastify";
+import Head from 'next/head';
+import { BASE_URL } from '@/Config';
+import { useRouter } from 'next/router';
+import Header from '@/components/Header';
+import withAuth from '@/components/withAuth';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 interface Document {
@@ -13,6 +13,7 @@ interface Document {
     name: string;
     updatedAt: string;
     username: string;
+    folderId: string | null; // Add folderId to the Document interface
 }
 
 interface Folder {
@@ -36,6 +37,10 @@ const Documents = () => {
     const [activeFolderId, setActiveFolderId] = useState<string | null>(null);
     const [clickTimeout, setClickTimeout] = useState<number | null>(null);
     const [renamingFolderId, setRenamingFolderId] = useState<string | null>(null);
+    const [showMoveModal, setShowMoveModal] = useState(false);
+    const [moveItemId, setMoveItemId] = useState<string | null>(null);
+    const [moveItemName, setMoveItemName] = useState<string | null>(null);
+    const [isFolderMove, setIsFolderMove] = useState<boolean>(true);
 
     const router = useRouter();
 
@@ -288,6 +293,53 @@ const Documents = () => {
         setIsActiveId(null);
     };
 
+    const openMoveModal = (id: string, name: string, isFolder: boolean) => {
+        setMoveItemId(id);
+        setMoveItemName(name);
+        setIsFolderMove(isFolder);
+        setShowMoveModal(true);
+    };
+
+    const moveItem = async (newParentId: string | null) => {
+        if (moveItemId) {
+            try {
+                const endpoint = isFolderMove ? `/folder/${moveItemId}/move` : `/history/${moveItemId}/move`;
+                await axios.put(`${BASE_URL}${endpoint}`, { newParentId: newParentId ? newParentId : null }, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+    
+                // Refresh folders and documents
+                getFolders(currentFolderId);
+                getFolderDocuments(currentFolderId);
+    
+                setShowMoveModal(false);
+                toast.success('🦄 Successfully Moved!', {
+                    position: 'top-right',
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'light',
+                });
+            } catch (error) {
+                toast.error('Error moving item', {
+                    position: 'top-right',
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'light',
+                });
+            }
+        }
+    };
+
     useEffect(() => {
         localStorage.removeItem("currentFolderId")
         getFolders();
@@ -299,6 +351,33 @@ const Documents = () => {
             input.style.width = `${Math.max(input.value.length + 1, 5)}ch`;
         }
     };
+
+    // Move modal JSX
+    const MoveModal = () => (
+        <div className={`modal ${showMoveModal ? 'd-block' : 'd-none'}`} role="dialog">
+            <div className="modal-dialog" role="document">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h5 className="modal-title">Move {isFolderMove ? 'Folder' : 'Document'}: {moveItemName}</h5>
+                        <button type="button" className="close" onClick={() => setShowMoveModal(false)}>
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div className="modal-body">
+                        <p>Select the destination folder:</p>
+                        <ul className="list-group">
+                            <li className="list-group-item" onClick={() => moveItem(null)}>Home</li>
+                            {folders.filter(folder => folder._id !== moveItemId).map((folder) => (
+                                <li key={folder._id} className="list-group-item" onClick={() => moveItem(folder._id)}>
+                                    <i className="fa fa-folder mr-2"></i> {folder.name}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 
     useEffect(() => {
         folders.forEach((folder) => {
@@ -408,6 +487,9 @@ const Documents = () => {
                                                     <a className="dropdown-item" href="#" onClick={() => deleteFolder(folder._id)}>
                                                         Delete
                                                     </a>
+                                                    <a className="dropdown-item" href="#" onClick={() => openMoveModal(folder._id, folder.name, true)}>
+                                                        Move
+                                                    </a>
                                                 </ul>
                                             </div>
                                         </div>
@@ -442,6 +524,9 @@ const Documents = () => {
                                                     <a className="dropdown-item" href="#" onClick={() => deleteDocument(document.uniqueId)}>
                                                         Delete
                                                     </a>
+                                                    <a className="dropdown-item" href="#" onClick={() => openMoveModal(document.uniqueId, document.name, false)}>
+                                                        Move
+                                                    </a>
                                                 </ul>
                                             </div>
                                         </div>
@@ -454,9 +539,10 @@ const Documents = () => {
                     </table>
                 </div>
             </div>
+            <MoveModal />
             <ToastContainer />
         </>
     );
-}
+};
 
 export default withAuth(Documents);

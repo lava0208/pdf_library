@@ -225,6 +225,25 @@ const deleteDocument = async (req, res) => {
     }
 };
 
+const moveDocument = async (req, res) => {
+    try {
+        const { newParentId } = req.body;
+        const { uniqueId } = req.params;
+
+        const document = await Doc.findOne({ uniqueId });
+        if (!document) {
+            return res.status(404).json({ message: 'Document not found' });
+        }
+
+        document.folderId = newParentId ? new mongoose.Types.ObjectId(newParentId) : null;
+        await document.save();
+
+        res.status(200).json({ message: 'Document moved successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error moving document', error });
+    }
+};
+
 module.exports = {
     getAllDocuments,
     getAllFolderDocuments,
@@ -234,5 +253,6 @@ module.exports = {
     updateDocument,
     updateDocumentName,
     updateDocumentFormMap,
-    deleteDocument
+    deleteDocument,
+    moveDocument
 };

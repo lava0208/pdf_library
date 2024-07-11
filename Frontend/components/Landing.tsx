@@ -64,6 +64,9 @@ export default function Landing() {
           <li className="sidebar-nav-item">
             <a className="smooth-scroll" href="#Contact">Contact</a>
           </li>
+          <li className="sidebar-nav-item">
+            <a href="#" onClick={() => { handleClick('/documents') }}>Documents</a>
+          </li>
         </ul>
       </nav >
       {/* < !--Header Starts-- > */}

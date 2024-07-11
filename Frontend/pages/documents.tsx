@@ -35,12 +35,23 @@ const Documents = () => {
     const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
     const [path, setPath] = useState<{ folderId: string; folderName: string }[]>([]);
     const [activeFolderId, setActiveFolderId] = useState<string | null>(null);
-    const [clickTimeout, setClickTimeout] = useState<number | null>(null);
     const [renamingFolderId, setRenamingFolderId] = useState<string | null>(null);
     const [showMoveModal, setShowMoveModal] = useState(false);
     const [moveItemId, setMoveItemId] = useState<string | null>(null);
     const [moveItemName, setMoveItemName] = useState<string | null>(null);
     const [isFolderMove, setIsFolderMove] = useState<boolean>(true);
+
+    useEffect(() => {
+        localStorage.removeItem("currentFolderId")
+        getFolders();
+        getFolderDocuments();
+    }, []);
+
+    useEffect(() => {
+        folders.forEach((folder) => {
+            adjustInputWidth(document.getElementById(`folder-name-${folder._id}`) as HTMLInputElement);
+        });
+    }, [folders]);
 
     const router = useRouter();
 
@@ -349,6 +360,7 @@ const Documents = () => {
             formData.append('folderId', currentFolderId || '');
     
             try {
+                setIsLoading(true);
                 const response = await axios.post(`${BASE_URL}/upload`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
@@ -367,6 +379,7 @@ const Documents = () => {
                         theme: "light",
                     });
                     getFolderDocuments(currentFolderId);
+                    setIsLoading(false);
                 }
             } catch (error) {
                 toast.error('Error uploading PDF', {
@@ -379,15 +392,10 @@ const Documents = () => {
                     progress: undefined,
                     theme: "light",
                 });
+                setIsLoading(false);
             }
         }
     };
-
-    useEffect(() => {
-        localStorage.removeItem("currentFolderId")
-        getFolders();
-        getFolderDocuments();
-    }, []);
 
     const adjustInputWidth = (input: HTMLInputElement | null) => {
         if (input) {
@@ -395,7 +403,6 @@ const Documents = () => {
         }
     };
 
-    // Move modal JSX
     const MoveModal = () => (
         <div className={`modal ${showMoveModal ? 'd-block' : 'd-none'}`} role="dialog">
             <div className="modal-dialog" role="document">
@@ -409,7 +416,9 @@ const Documents = () => {
                     <div className="modal-body">
                         <p>Select the destination folder:</p>
                         <ul className="list-group">
-                            <li className="list-group-item" onClick={() => moveItem(null)}>Home</li>
+                            <li className="list-group-item" onClick={() => moveItem(null)}>
+                                <i className="fa fa-home mr-2"></i> Home
+                            </li>
                             {folders.filter(folder => folder._id !== moveItemId).map((folder) => (
                                 <li key={folder._id} className="list-group-item" onClick={() => moveItem(folder._id)}>
                                     <i className="fa fa-folder mr-2"></i> {folder.name}
@@ -422,12 +431,6 @@ const Documents = () => {
         </div>
     );
 
-    useEffect(() => {
-        folders.forEach((folder) => {
-            adjustInputWidth(document.getElementById(`folder-name-${folder._id}`) as HTMLInputElement);
-        });
-    }, [folders]);
-
     return (
         <>
             <Head>
@@ -436,8 +439,9 @@ const Documents = () => {
             <Header text="My documents" />
             <div id="Services" className="content-section">
                 <div className="container-fluid px-5">
-                    {isLoading && <p>Loading documents...</p>}
-                    {error && <p>Error: {error.message}</p>}
+                    {isLoading && <div className="loading-icon-container">
+                        <img src="images/loading-icon.gif" className="img-fluid bg-img" />
+                    </div>}
 
                     <div className="document-navbar mb-3">
                         <div className="dropdown">
@@ -449,7 +453,7 @@ const Documents = () => {
                                     <i className="fa fa-folder"></i> Folder
                                 </a>
                                 <a className="dropdown-item" href="#" onClick={() => { handleClick('/pdfviewer') }}>
-                                    <i className="fa fa-file-word-o"></i> Word document
+                                    <i className="fa fa-file-pdf-o"></i> PDF document
                                 </a>
                                 <a className="dropdown-item" href="#" onClick={() => { handleClick('/reorder_pages') }}>
                                     <i className="fa fa-file"></i> Manage your page

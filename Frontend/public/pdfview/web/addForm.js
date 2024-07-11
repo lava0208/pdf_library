@@ -139,7 +139,7 @@ const drawFormElement = function () {
 
   let checkedCheckboxes = [];
 
-  if (form_storage !== null) {
+  if (form_storage  && form_storage !== null) {
 
     //... initialize variable
     let tmpCheckboxCount = 1;
@@ -1351,7 +1351,7 @@ const drawFormElement = function () {
     buttonCount = tmpButtonCount;
   }
 
-  if (text_storage !== null) {
+  if (text_storage  && text_storage !== null) {
     text_storage.forEach((item) => {
       let id = item.id;
       let new_x_y, x, y, width, height;
@@ -1537,7 +1537,7 @@ document.addEventListener("DOMContentLoaded", function () {
       })
       .then(data => {
         if(data !== null){
-          form_storage = isDraft == "true" ? [] : isDraft == null || isDraft == "" ? JSON.parse(data[0].formData) : JSON.parse(data.formData);
+          form_storage = isDraft == "true" ? [] : isDraft == null || isDraft == "" ? data[0].formData && JSON.parse(data[0].formData) : data.formData && JSON.parse(data.formData);
           clientName = isDraft == null || isDraft == "" ? data[0].name : data.name;
           clientEmail = isDraft == null || isDraft == "" ? data[0].email : data.email;
 
@@ -1559,8 +1559,8 @@ document.addEventListener("DOMContentLoaded", function () {
           const fileName = 'downloaded.pdf';
           const pdfFile = new File([blob], fileName, { type: 'application/pdf' });
 
-          draw_form_storage = isDraft ? JSON.parse(data.formData) : JSON.parse(data[0].formData);
-          text_storage = isDraft ? JSON.parse(data.textData) : JSON.parse(data[0].textData);
+          draw_form_storage = isDraft ? data.formData && JSON.parse(data.formData) : data[0].formData && JSON.parse(data[0].formData);
+          text_storage = isDraft ? data.textData && JSON.parse(data.textData) : data[0].textData && JSON.parse(data[0].textData);
           PDFViewerApplication.open({
             url: URL.createObjectURL(pdfFile),
             originalUrl: pdfFile.name,
@@ -2685,7 +2685,7 @@ const saveFormElementByClick = function () {
       element.remove();
     }
   });
-  if (form_storage.length != 0) {
+  if (form_storage && form_storage.length != 0) {
     form_storage.forEach((item) => {
       let currentItem = document.getElementById(item.containerId);
       if (currentItem) {
@@ -2695,7 +2695,7 @@ const saveFormElementByClick = function () {
       }
     })
   }
-  if (text_storage.length != 0) {
+  if (text_storage && text_storage.length != 0) {
     text_storage.forEach((item) => {
       let currentItem = document.getElementById(item.containerId);
       if (currentItem) {
@@ -2708,7 +2708,7 @@ const saveFormElementByClick = function () {
 }
 
 const removeAllResizeBar = function () {
-  if (form_storage !== null) {
+  if (form_storage  && form_storage !== null) {
     form_storage.forEach((item) => {
       let currentItem;
       if (item.form_type === DATE) currentItem = document.getElementById(item.containerId) && document.getElementById(item.containerId).parentElement;
@@ -2718,7 +2718,7 @@ const removeAllResizeBar = function () {
       }
     })
   }
-  if (text_storage !== null) {
+  if (text_storage  && text_storage !== null) {
     text_storage.forEach((item) => {
       const currentItem = document.getElementById(item.containerId);
       if (currentItem && currentItem.querySelector("#topLeft")) removeResizebar(currentItem.id);
@@ -2760,7 +2760,7 @@ document.getElementById("viewer").addEventListener("mousedown", function (event)
       currentObjectParentId = parentElement.id;
     }
   }
-  if (form_storage !== null) {
+  if (form_storage  && form_storage !== null) {
     form_storage.forEach((item) => {
       if (item.containerId === currentObject.id || item.containerId === currentObjectParentId) {
         currentFormType = item.form_type;
@@ -2769,7 +2769,7 @@ document.getElementById("viewer").addEventListener("mousedown", function (event)
       }
     })
   }
-  if (text_storage !== null) {
+  if (text_storage  && text_storage !== null) {
     text_storage.forEach((item) => {
       if (item.textContentId === currentObject.id) {
         currentFormType = item.form_type;
@@ -3858,7 +3858,7 @@ const eventHandler = async function (e) {
       buttonAction.addEventListener("click", function (event) {
         let parentElement = event.target.parentNode;
         let newId = parentElement.id.replace("button", "");
-        if (form_storage !== null) {
+        if (form_storage  && form_storage !== null) {
           form_storage.forEach((item) => {
             if (item.id == newId) {
               if (item.action === SUBMIT) {
@@ -4355,7 +4355,7 @@ const flatten = async function () {
   const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
   const form = pdfDoc.getForm();
   
-  if (form_storage.length != 0)
+  if (form_storage && form_storage.length != 0)
     addFormElements().then(() => {
       add_txt_comment();
       form.flatten();
@@ -4443,7 +4443,7 @@ async function addFormElements() {
   let checkboxForm, radioForm, textfieldForm, comboboxForm, datefieldForm;
   let radioOption;
   let selectedFont = "";
-  if (form_storage.length != 0) {
+  if (form_storage && form_storage.length != 0) {
     form_storage.map(async (form_item) => {
       page = pdfDoc.getPage(form_item.page_number - 1);
       if (form_item.form_type == RADIO) {
@@ -4801,7 +4801,7 @@ async function addFormElements() {
       }
     });
   }
-  if (text_storage.length != 0) {
+  if (text_storage && text_storage.length != 0) {
     comboDiv
     await Promise.all(
       text_storage.map(async (text_item) => {
@@ -4904,7 +4904,7 @@ const changeMode = () => {
     checkfields.forEach((item) => {
       item.style.display = "flex";
 
-      if (form_storage !== null) {
+      if (form_storage  && form_storage !== null) {
         form_storage.forEach((formItem) => {
           let formId = item.parentNode.id.replace("checkbox", "");
           if (formItem.id == formId) {
@@ -4924,7 +4924,7 @@ const changeMode = () => {
     radiofields2.forEach((item) => {
       item.style.display = "inline-block";
 
-      if (form_storage !== null) {
+      if (form_storage  && form_storage !== null) {
         form_storage.forEach((formItem) => {
           let formId = item.parentNode.id.replace("radio", "");
           if (formItem.id == formId) {
@@ -4938,7 +4938,7 @@ const changeMode = () => {
     // Enable all text field to input
     textfields.forEach((item) => {
       item.style.display = "block";
-      if (form_storage !== null) {
+      if (form_storage  && form_storage !== null) {
         form_storage.forEach((formItem) => {
           let formId = item.parentNode.id.replace("text", "");
           if (formItem.id == formId) {
@@ -4963,7 +4963,7 @@ const changeMode = () => {
     // Enable all combobox fields
     combofields.forEach((item) => {
       item.style.display = "block";
-      if (form_storage !== null) {
+      if (form_storage  && form_storage !== null) {
         form_storage.forEach((formItem) => {
           let formId = item.parentNode.id.replace("combo", "");
           if (formItem.id == formId) {
@@ -4988,7 +4988,7 @@ const changeMode = () => {
       }
     });
     combovalues.forEach((item) => {
-      if (form_storage !== null) {
+      if (form_storage  && form_storage !== null) {
         form_storage.forEach((formItem) => {
           let formId = item.parentNode.id.replace("combo", "");
           if (formItem.id == formId) {
@@ -5007,7 +5007,7 @@ const changeMode = () => {
     listfields.forEach((item) => {
       let activeElement = null;
       item.style.display = "block";
-      if (form_storage !== null) {
+      if (form_storage  && form_storage !== null) {
         form_storage.forEach((formItem) => {
           let formId = item.parentNode.id.replace("list", "");
           if (formItem.id == formId) {
@@ -5042,7 +5042,7 @@ const changeMode = () => {
     // Enable all button fields
     buttonfields.forEach((item) => {
       item.style.display = "flex";
-      if (form_storage !== null) {
+      if (form_storage  && form_storage !== null) {
         form_storage.forEach((formItem) => {
           let formId = item.parentNode.id.replace("button", "");
           if (formItem.id == formId) {
@@ -5062,7 +5062,7 @@ const changeMode = () => {
     //... Enable all button fields
     textcontentfields.forEach((item) => {
       item.contentEditable = "false";
-      if (form_storage !== null) {
+      if (form_storage  && form_storage !== null) {
         form_storage.forEach((formItem) => {
           let formId = item.parentNode.id.replace("date", "");
           if (formItem.id == formId) {
@@ -5074,7 +5074,7 @@ const changeMode = () => {
     });
     signatureImages.forEach((item) => {
       item.contentEditable = "false";
-      if (form_storage !== null) {
+      if (form_storage  && form_storage !== null) {
         form_storage.forEach((formItem) => {
           let formId = item.id.replace("signature", "");
           if (formItem.id == formId) {
@@ -5184,7 +5184,7 @@ const submitDocument = async function () {
     pdfBytes = await PDFViewerApplication.pdfDocument.saveDocument();
     const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
     pdfBytes = await pdfDoc.save();
-    if (form_storage.length != 0) {
+    if (form_storage && form_storage.length != 0) {
       addFormElements().then(() => {
         sendSubmitData();
       });

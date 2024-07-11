@@ -7,7 +7,11 @@ export default function Header(props: any) {
   const [username, setUsername] = useState('');
   const [showProfile, setShowProfile] = useState(false);
   const handleLogo = () => {
-    window.location.href = "/";
+    if(window.location.pathname == "/documents"){
+      window.location.href = "/";
+    }else{
+      window.location.href = "/documents";
+    }
   }
   useEffect(() => {
     setColor(localStorage.getItem('color') || '');

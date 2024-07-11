@@ -358,6 +358,8 @@ const Documents = () => {
             formData.append('pdf', file);
             formData.append('username', localStorage.getItem('username') || '');
             formData.append('folderId', currentFolderId || '');
+            const fileNameWithoutExtension = file.name.replace(/\.[^/.]+$/, "");
+            formData.append('docname', fileNameWithoutExtension || '');
     
             try {
                 setIsLoading(true);
@@ -380,6 +382,7 @@ const Documents = () => {
                     });
                     getFolderDocuments(currentFolderId);
                     setIsLoading(false);
+                    event.target.value = '';
                 }
             } catch (error) {
                 toast.error('Error uploading PDF', {
@@ -478,13 +481,11 @@ const Documents = () => {
                                 </a>
                             </div>
                         </div>
-                        <a className="btn btn-info d-flex align-items-center" type="button" href="#">                            
-                            <label className="mb-0" htmlFor="pdf-upload" style={{cursor: 'pointer'}}>
-                                <i className="fa fa-upload pr-3"></i>
-                                Upload
-                                <input type="file" id="pdf-upload" accept="application/pdf" onChange={handleFileUpload} style={{ display: 'none' }} />
-                            </label>
-                        </a>
+                        <label className="btn btn-info d-flex align-items-center mb-0" htmlFor="pdf-upload" style={{cursor: 'pointer'}}>
+                            <i className="fa fa-upload pr-3"></i>
+                            Upload
+                            <input type="file" id="pdf-upload" accept="application/pdf" onChange={handleFileUpload} style={{ display: 'none' }} />
+                        </label>
                     </div>
 
                     <nav aria-label="breadcrumb">

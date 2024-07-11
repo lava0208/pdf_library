@@ -340,7 +340,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.post('/upload', upload.single('pdf'), async (req, res) => {
   try {
-      const { username, folderId } = req.body;
+      const { username, folderId, docname } = req.body;
       const file = req.file;
 
       if (!file) {
@@ -357,6 +357,7 @@ app.post('/upload', upload.single('pdf'), async (req, res) => {
 
       const newDocument = new Doc({
           uniqueId,
+          name: docname,
           username,
           pdfData: dataUri,
           folderId: folderId || null,

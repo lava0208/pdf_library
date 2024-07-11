@@ -1,4 +1,5 @@
-import { Html, Head, Main, NextScript } from "next/document";
+import { Html, Head, Main, NextScript } from 'next/document';
+import Script from 'next/script';
 
 export default function Document() {
   return (
@@ -24,13 +25,12 @@ export default function Document() {
         <link rel="manifest" href="/manifest.json" />
         <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#2a61af" />
         <link rel="shortcut icon" href="/favicon.ico" />
-
-        <script type="text/javascript" src="/jquery-3.2.1.min.js"></script>
-        <script type="text/javascript" src="/bootstrap.min.js"></script>
       </Head>
       <body>
         <Main />
         <NextScript />
+        <Script src="/jquery-3.2.1.min.js" strategy="beforeInteractive" />
+        <Script src="/bootstrap.min.js" strategy="beforeInteractive" />
       </body>
     </Html>
   );

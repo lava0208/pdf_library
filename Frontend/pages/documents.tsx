@@ -474,9 +474,9 @@ const Documents = () => {
                                 </a>
                             </div>
                         </div>
-                        <a className="btn btn-info d-flex align-items-center" type="button" href="#">
-                            <i className="fa fa-upload"></i>
-                            <label className="pl-3 pl-2 mb-0" htmlFor="pdf-upload" style={{cursor: 'pointer'}}>
+                        <a className="btn btn-info d-flex align-items-center" type="button" href="#">                            
+                            <label className="mb-0" htmlFor="pdf-upload" style={{cursor: 'pointer'}}>
+                                <i className="fa fa-upload pr-3"></i>
                                 Upload
                                 <input type="file" id="pdf-upload" accept="application/pdf" onChange={handleFileUpload} style={{ display: 'none' }} />
                             </label>

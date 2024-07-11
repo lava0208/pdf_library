@@ -133,13 +133,22 @@ const generalUserMode = function () {
 
 const drawFormElement = function () {
   form_storage = draw_form_storage;
+
+  if(form_storage == undefined){
+    form_storage = [];
+  };
+
+  if(text_storage == undefined){
+    text_storage = [];
+  }
+
   console.log("==== first load data ======");
   console.log(form_storage);
   console.log(text_storage);
 
   let checkedCheckboxes = [];
 
-  if (form_storage  && form_storage !== null) {
+  if (form_storage && form_storage !== null) {
 
     //... initialize variable
     let tmpCheckboxCount = 1;
@@ -1375,6 +1384,7 @@ const drawFormElement = function () {
       })
       newText.innerHTML = textofStorage.replace(/\n/g, '<br>');
       newText.classList.add("textcontent");
+      newText.classList.add("oldtextcontent");
       newText.id = item.textContentId;
 
       const container = document.createElement("div");

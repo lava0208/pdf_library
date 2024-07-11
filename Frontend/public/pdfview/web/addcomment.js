@@ -381,9 +381,31 @@ document.getElementById("viewer").addEventListener("click", (evt) => {
   comment_x = x_y[0];
   comment_y = x_y[1];
 
-  document.querySelectorAll('.textfield-content').forEach(div => {
+  document.querySelectorAll('.textfield-content').forEach((div, index) => {
     div.addEventListener('click', function() {
       this.classList.remove("clicked");
+    });
+    div.addEventListener('dblclick', function() {
+      if (isDraft) {
+        const textContent = this.querySelector('.textcontent');
+        if (textContent.classList.contains('oldtextcontent') && textContent) {
+          textContent.setAttribute("contentEditable", "true");
+          // resizeCanvas(
+          //   this.id, 
+          //   textContent,
+          //   index + 1,
+          //   TEXT_CONTENT_OPTION
+          // );
+
+          // showOptionAndResizebar(
+          //   TEXT_CONTENT_OPTION,
+          //   div,
+          //   300,
+          //   15,
+          //   "text-content"
+          // );
+        }
+      }
     });
   });
 
@@ -513,9 +535,6 @@ document.getElementById("viewer").addEventListener("click", (evt) => {
       $this.parent().addClass("dblclicked");
       $this.css('z-index', 1);
       $this.parent().css("z-index", standardZIndex);
-
-      console.log("text content clicked");
-      console.log($(this))
     
       $input.on('blur', function() {
         const newText = $input.val();

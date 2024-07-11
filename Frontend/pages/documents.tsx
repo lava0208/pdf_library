@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios, { AxiosResponse } from 'axios';
 import Head from 'next/head';
-import { BASE_URL } from '@/Config';
+import { BASE_URL, BASE_WEBSITE } from '@/Config';
 import { useRouter } from 'next/router';
 import Header from '@/components/Header';
 import withAuth from '@/components/withAuth';
@@ -340,6 +340,49 @@ const Documents = () => {
         }
     };
 
+    const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            const formData = new FormData();
+            formData.append('pdf', file);
+            formData.append('username', localStorage.getItem('username') || '');
+            formData.append('folderId', currentFolderId || '');
+    
+            try {
+                const response = await axios.post(`${BASE_URL}/upload`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+    
+                if (response.status === 201) {
+                    toast.success('🦄 PDF uploaded successfully!', {
+                        position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                    });
+                    getFolderDocuments(currentFolderId);
+                }
+            } catch (error) {
+                toast.error('Error uploading PDF', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            }
+        }
+    };
+
     useEffect(() => {
         localStorage.removeItem("currentFolderId")
         getFolders();
@@ -431,6 +474,13 @@ const Documents = () => {
                                 </a>
                             </div>
                         </div>
+                        <a className="btn btn-info d-flex align-items-center" type="button" href="#">
+                            <i className="fa fa-upload"></i>
+                            <label className="pl-3 pl-2 mb-0" htmlFor="pdf-upload" style={{cursor: 'pointer'}}>
+                                Upload
+                                <input type="file" id="pdf-upload" accept="application/pdf" onChange={handleFileUpload} style={{ display: 'none' }} />
+                            </label>
+                        </a>
                     </div>
 
                     <nav aria-label="breadcrumb">
@@ -478,17 +528,17 @@ const Documents = () => {
                                                     <i className="fa fas fa-ellipsis-h"></i>
                                                 </button>
                                                 <ul className="dropdown-menu dropdown-menu-start">
-                                                    <a className="dropdown-item" href="#" onClick={() => handleRenameClick(folder._id, true)}>
-                                                        Rename
-                                                    </a>
                                                     <a className="dropdown-item" href="#" onClick={() => handleFolderClick(folder._id, folder.name)}>
                                                         View
                                                     </a>
-                                                    <a className="dropdown-item" href="#" onClick={() => deleteFolder(folder._id)}>
-                                                        Delete
+                                                    <a className="dropdown-item" href="#" onClick={() => handleRenameClick(folder._id, true)}>
+                                                        Rename
                                                     </a>
                                                     <a className="dropdown-item" href="#" onClick={() => openMoveModal(folder._id, folder.name, true)}>
                                                         Move
+                                                    </a>
+                                                    <a className="dropdown-item" href="#" onClick={() => deleteFolder(folder._id)}>
+                                                        Delete
                                                     </a>
                                                 </ul>
                                             </div>
@@ -517,15 +567,21 @@ const Documents = () => {
                                                 <button className="btn dropdown-toggle d-flex align-items-center" type="button" data-toggle="dropdown" aria-expanded="false">
                                                     <i className="fa fas fa-ellipsis-h"></i>
                                                 </button>
-                                                <ul className="dropdown-menu dropdown-menu-start">
+                                                <ul className="dropdown-menu dropdown-menu-start">                                                
+                                                    <a className="dropdown-item" href="#" onClick={() => handleClick(`${BASE_WEBSITE}/pdfviewer?id=${document.uniqueId}&draft=false`)}>
+                                                        View
+                                                    </a>
+                                                    <a className="dropdown-item" href="#" onClick={() => handleClick(`${BASE_WEBSITE}/pdfviewer?id=${document.uniqueId}&draft=true`)}>
+                                                        Edit
+                                                    </a>
                                                     <a className="dropdown-item" href="#" onClick={() => handleRenameClick(document.uniqueId, false)}>
                                                         Rename
                                                     </a>
-                                                    <a className="dropdown-item" href="#" onClick={() => deleteDocument(document.uniqueId)}>
-                                                        Delete
-                                                    </a>
                                                     <a className="dropdown-item" href="#" onClick={() => openMoveModal(document.uniqueId, document.name, false)}>
                                                         Move
+                                                    </a>
+                                                    <a className="dropdown-item" href="#" onClick={() => deleteDocument(document.uniqueId)}>
+                                                        Delete
                                                     </a>
                                                 </ul>
                                             </div>

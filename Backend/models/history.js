@@ -10,7 +10,6 @@ const replySchema = new Schema({
 const historySchema = new mongoose.Schema({
     id: {
         type: String,
-        unique: true,
         required: true
     },
     actiontype: {

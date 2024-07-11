@@ -27,6 +27,7 @@ const historyController = require('./controllers/historyController');
 
 const app = express();
 const { setCurrentFile, getCurrentFile } = require('./utils/currentFile');
+const Doc = require('./models/history');
 
 // Configure nodemailer transporter
 const transporter = nodemailer.createTransport({
@@ -336,6 +337,42 @@ app.post('/savedocument', upload.single('pdfFile'), (req, res) => {
 })
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+app.post('/upload', upload.single('pdf'), async (req, res) => {
+  try {
+      const { username, folderId } = req.body;
+      const file = req.file;
+
+      if (!file) {
+          return res.status(400).send('No PDF file uploaded.');
+      }
+
+      const pdfFilePath = file.path;
+      const pdfFileData = fs.readFileSync(pdfFilePath);
+      const base64Data = pdfFileData.toString('base64');
+      const dataUri = `data:application/pdf;base64,${base64Data}`;
+
+      const uniqueId = uuid.v4();
+      const uniqueLink = `https://${process.env.DOMAIN}/pdfviewer/?id=${uniqueId}&draft=true`;
+
+      const newDocument = new Doc({
+          uniqueId,
+          username,
+          pdfData: dataUri,
+          folderId: folderId || null,
+          uniqueLink,
+          history: []
+      });
+
+      await newDocument.save();
+
+      res.status(201).json({ message: 'Document saved successfully', uniqueLink, uniqueId });
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send('Error occurred: ' + error.message);
+  }
+});
+
 
 app.use(userRouter);
 app.use(historyRouter);

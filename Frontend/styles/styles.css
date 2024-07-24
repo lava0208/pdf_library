@@ -11800,6 +11800,10 @@ footer.footer p.small a.focus {
   padding: .375rem .5rem;
 }
 
+.name-container.document-container input{
+  width: 100%;
+}
+
 .name-container input:read-only{
   border: none;
   padding: .375rem 0;

@@ -557,7 +557,7 @@ const Documents = () => {
                                 <tr key={document.uniqueId}>
                                     <td><i className="fa fa-file-pdf-o"></i></td>
                                     <td>
-                                        <div className="name-container">
+                                        <div className="name-container document-container">
                                             <input
                                                 id={`document-name-${document.uniqueId}`}
                                                 type="text"

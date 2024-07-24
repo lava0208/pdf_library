@@ -176,6 +176,11 @@
   grid-column-gap: 0.25rem;
 }
 
+#colors.dropdown-item{
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.25rem;
+}
+
 #colors .drawing-color.selected {
   border: 1px solid var(--active-bg);
 }
@@ -227,6 +232,70 @@
 
 #colors .drawing-color:nth-child(5) {
   background-color: rgb(0, 144, 254);
+}
+
+#colors .drawing-color[color='white'] {
+  background-color: white;
+}
+
+#colors .drawing-color[color='black'] {
+  background-color: black;
+}
+
+#colors .drawing-color[color='red'] {
+  background-color: red;
+}
+
+#colors .drawing-color[color='green'] {
+  background-color: green;
+}
+
+#colors .drawing-color[color='blue'] {
+  background-color: blue;
+}
+
+#colors .drawing-color[color='gray'] {
+  background-color: gray;
+}
+
+#colors .drawing-color[color='silver'] {
+  background-color: silver;
+}
+
+#colors .drawing-color[color='maroon'] {
+  background-color: maroon;
+}
+
+#colors .drawing-color[color='purple'] {
+  background-color: purple;
+}
+
+#colors .drawing-color[color='fuchsia'] {
+  background-color: fuchsia;
+}
+
+#colors .drawing-color[color='lime'] {
+  background-color: lime;
+}
+
+#colors .drawing-color[color='olive'] {
+  background-color: olive;
+}
+
+#colors .drawing-color[color='yellow'] {
+  background-color: yellow;
+}
+
+#colors .drawing-color[color='navy'] {
+  background-color: navy;
+}
+
+#colors .drawing-color[color='teal'] {
+  background-color: teal;
+}
+
+#colors .drawing-color[color='aqua'] {
+  background-color: aqua;
 }
 
 canvas {

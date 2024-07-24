@@ -1,5 +1,4 @@
 const addShapeBtn = document.getElementById("shape_format");
-// let isDrawingShape = isDraft == "true";
 let isDrawingShape = false;
 const ratio = Math.max(window.devicePixelRatio || 1, 1);
 
@@ -32,10 +31,11 @@ $("#border-radius-dropdown input").on("input", function () {
   selectedBorderRadius = $(this).val();
 });
 
-const handleShape = function (w, h, canvasWidth, canvasHeight) {
+const handleShape = function (w, h, canvasWidth, canvasHeight, shapeFillColor, shapeOutlineColor, textColor, borderRaduis, shapeText) {
   for (let i = 0; i < form_storage.length; i++) {
     if (form_storage[i].id == current_form_id) {
       form_storage[i].imgData = shapeImgData;
+      form_storage[i].shapeText = shapeText;
       break;
     }
   }
@@ -67,6 +67,11 @@ const handleShape = function (w, h, canvasWidth, canvasHeight) {
       canvasWidth: canvasWidth,
       canvasHeight: canvasHeight,
       imgData: shapeImgData,
+      shapeFillColor: shapeFillColor,
+      shapeOutlineColor: shapeOutlineColor,
+      textColor: textColor,
+      borderRaduis: borderRaduis,
+      shapeText: shapeText
     });
   }
   const date = new Date(Date.now());
@@ -138,6 +143,7 @@ $("#viewer").on("click", function (e) {
 
     // Append contenteditable div to shapeContainer
     const editableDiv = document.createElement("div");
+    editableDiv.className = "shapeText";
     editableDiv.setAttribute("contenteditable", "true");
     editableDiv.style.position = "absolute";
     editableDiv.style.width = "100%";
@@ -146,7 +152,7 @@ $("#viewer").on("click", function (e) {
     editableDiv.style.alignItems = "center";
     editableDiv.style.justifyContent = "center";    
     editableDiv.style.textAlign = "center";
-    editableDiv.style.color = selectedTextColor; // Set the text color
+    editableDiv.style.color = selectedTextColor;
     editableDiv.focus();
 
     shapeContainer.appendChild(editableDiv);
@@ -154,6 +160,12 @@ $("#viewer").on("click", function (e) {
     pg.appendChild(shapeContainer);
     editableDiv.focus();
     resizeCanvas(shapeContainer.id, SHAPE, shapeId);
+
+    editableDiv.addEventListener("blur", () => {
+      shapeText = editableDiv.innerHTML.trim(); // Save the text content on blur
+      console.log("shapeText on blur:", shapeText); // Debug log
+      handleShape(boundingBox.width, boundingBox.height, canvas.width, canvas.height, selectedShapeFillColor, selectedShapeOutlineColor, selectedTextColor, selectedBorderRadius, shapeText);
+    });
 
     editableDiv.addEventListener("dblclick", (event) => {
       current_shape_id = shapeId;
@@ -194,7 +206,7 @@ $("#viewer").on("click", function (e) {
               shapeHeight = boundingBox.height;
               $("#drawing-board-container").css("display", "none");
               shapeImg.src = shapeImgData;
-              handleShape(shapeWidth, shapeHeight, canvas.width, canvas.height);
+              handleShape(shapeWidth, shapeHeight, canvas.width, canvas.height, selectedShapeFillColor, selectedShapeOutlineColor, selectedTextColor, selectedBorderRadius, shapeText);
             });
           });
           tooltipbar.append(editBtn);
@@ -213,7 +225,6 @@ $("#viewer").on("click", function (e) {
       }
     });
 
-    handleShape(boundingBox.width, boundingBox.height, canvas.width, canvas.height);
     $("#drawing-shape-create").off("click");
   }
 });
@@ -227,6 +238,7 @@ function saveText(editableDiv, shapeContainer) {
   updateText(editableDiv, shapeContainer);
   editableDiv.style.display = 'block';
   editableDiv.style.textAlign = 'center';
+  shapeText = editableDiv.innerHTML.trim();
 }
 
 function showTextInput(event, shapeContainer, editableDiv) {

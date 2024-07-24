@@ -1280,10 +1280,32 @@ const drawFormElement = function () {
           shapeContainer.style.width = width + "px";
           shapeContainer.style.height = height + "px";
           shapeContainer.style.zIndex = standardZIndex;
+          shapeContainer.style.display = "flex";
+          shapeContainer.style.alignItems = "center";
+          shapeContainer.style.justifyContent = "center";
+          shapeContainer.style.backgroundColor = item.shapeFillColor;
+          shapeContainer.style.border = `1px solid ${item.shapeOutlineColor}`;
+          shapeContainer.style.color = item.textColor;
+          shapeContainer.style.borderRadius = item.borderRaduis + "px";
           shapeContainer.tabIndex = 0;
           shapeContainer.classList.add("form-fields");
 
+          const editableDiv = document.createElement("div");
+          editableDiv.className = "shapeText";
+          editableDiv.setAttribute("contenteditable", "true");
+          editableDiv.innerHTML = item.shapeText;
+          editableDiv.style.position = "absolute";
+          editableDiv.style.width = "100%";
+          editableDiv.style.height = "fit-content";
+          editableDiv.style.display = "flex";
+          editableDiv.style.alignItems = "center";
+          editableDiv.style.justifyContent = "center";    
+          editableDiv.style.textAlign = "center";
+          editableDiv.style.color = item.textColor;
+          editableDiv.focus();
+
           shapeContainer.append(shapeImg);
+          shapeContainer.append(editableDiv);
           pg.appendChild(shapeContainer);
           resizeCanvas(shapeContainer.id, SHAPE, id);
 

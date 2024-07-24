@@ -1,9 +1,12 @@
 const addShapeBtn = document.getElementById("shape_format");
-const squreImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAmUAAAEDCAYAAAB0ynP9AAAAAXNSR0IArs4c6QAADWxJREFUeF7t2TEKw0AMAEHd/x+d4KuC0/sWPFelsxipWMiamc94BAgQIECAAAECRwWWKDvq7+MECBAgQIAAgS3wG2XXb48AAQIECBAgQOBZgf2vpSh7Ft3XCBAgQIAAAQJ3AVHmJggQIECAAAECAQFRFliCEQgQIECAAAECoswNECBAgAABAgQCAqIssAQjECBAgAABAgREmRsgQIAAAQIECAQERFlgCUYgQIAAAQIECIgyN0CAAAECBAgQCAiIssASjECAAAECBAgQEGVugAABAgQIECAQEBBlgSUYgQABAgQIECAgytwAAQIECBAgQCAgIMoCSzACAQIECBAgQECUuQECBAgQIECAQEBAlAWWYAQCBAgQIECAgChzAwQIECBAgACBgIAoCyzBCAQIECBAgAABUeYGCBAgQIAAAQIBAVEWWIIRCBAgQIAAAQKizA0QIECAAAECBAICoiywBCMQIECAAAECBESZGyBAgAABAgQIBAREWWAJRiBAgAABAgQIiDI3QIAAAQIECBAICIiywBKMQIAAAQIECBAQZW6AAAECBAgQIBAQEGWBJRiBAAECBAgQICDK3AABAgQIECBAICAgygJLMAIBAgQIECBAQJS5AQIECBAgQIBAQECUBZZgBAIECBAgQICAKHMDBAgQIECAAIGAgCgLLMEIBAgQIECAAAFR5gYIECBAgAABAgEBURZYghEIECBAgAABAqLMDRAgQIAAAQIEAgKiLLAEIxAgQIAAAQIERJkbIECAAAECBAgEBERZYAlGIECAAAECBAiIMjdAgAABAgQIEAgIiLLAEoxAgAABAgQIEBBlboAAAQIECBAgEBAQZYElGIEAAQIECBAgIMrcAAECBAgQIEAgICDKAkswAgECBAgQIEBAlLkBAgQIECBAgEBAQJQFlmAEAgQIECBAgIAocwMECBAgQIAAgYCAKAsswQgECBAgQIAAAVHmBggQIECAAAECAQFRFliCEQgQIECAAAECoswNECBAgAABAgQCAqIssAQjECBAgAABAgREmRsgQIAAAQIECAQERFlgCUYgQIAAAQIECIgyN0CAAAECBAgQCAiIssASjECAAAECBAgQEGVugAABAgQIECAQEBBlgSUYgQABAgQIECAgytwAAQIECBAgQCAgIMoCSzACAQIECBAgQECUuQECBAgQIECAQEBAlAWWYAQCBAgQIECAgChzAwQIECBAgACBgIAoCyzBCAQIECBAgAABUeYGCBAgQIAAAQIBAVEWWIIRCBAgQIAAAQKizA0QIECAAAECBAICoiywBCMQIECAAAECBESZGyBAgAABAgQIBAREWWAJRiBAgAABAgQIiDI3QIAAAQIECBAICIiywBKMQIAAAQIECBAQZW6AAAECBAgQIBAQEGWBJRiBAAECBAgQICDK3AABAgQIECBAICAgygJLMAIBAgQIECBAQJS5AQIECBAgQIBAQECUBZZgBAIECBAgQICAKHMDBAgQIECAAIGAgCgLLMEIBAgQIECAAAFR5gYIECBAgAABAgEBURZYghEIECBAgAABAqLMDRAgQIAAAQIEAgKiLLAEIxAgQIAAAQIERJkbIECAAAECBAgEBERZYAlGIECAAAECBAiIMjdAgAABAgQIEAgIiLLAEoxAgAABAgQIEBBlboAAAQIECBAgEBAQZYElGIEAAQIECBAgIMrcAAECBAgQIEAgICDKAkswAgECBAgQIEBAlLkBAgQIECBAgEBAQJQFlmAEAgQIECBAgIAocwMECBAgQIAAgYCAKAsswQgECBAgQIAAAVHmBggQIECAAAECAQFRFliCEQgQIECAAAECoswNECBAgAABAgQCAqIssAQjECBAgAABAgREmRsgQIAAAQIECAQERFlgCUYgQIAAAQIECIgyN0CAAAECBAgQCAiIssASjECAAAECBAgQEGVugAABAgQIECAQEBBlgSUYgQABAgQIECAgytwAAQIECBAgQCAgIMoCSzACAQIECBAgQECUuQECBAgQIECAQEBAlAWWYAQCBAgQIECAgChzAwQIECBAgACBgIAoCyzBCAQIECBAgAABUeYGCBAgQIAAAQIBAVEWWIIRCBAgQIAAAQKizA0QIECAAAECBAICoiywBCMQIECAAAECBESZGyBAgAABAgQIBAREWWAJRiBAgAABAgQIiDI3QIAAAQIECBAICIiywBKMQIAAAQIECBAQZW6AAAECBAgQIBAQEGWBJRiBAAECBAgQICDK3AABAgQIECBAICAgygJLMAIBAgQIECBAQJS5AQIECBAgQIBAQECUBZZgBAIECBAgQICAKHMDBAgQIECAAIGAgCgLLMEIBAgQIECAAAFR5gYIECBAgAABAgEBURZYghEIECBAgAABAqLMDRAgQIAAAQIEAgKiLLAEIxAgQIAAAQIERJkbIECAAAECBAgEBERZYAlGIECAAAECBAiIMjdAgAABAgQIEAgIiLLAEoxAgAABAgQIEBBlboAAAQIECBAgEBAQZYElGIEAAQIECBAgIMrcAAECBAgQIEAgICDKAkswAgECBAgQIEBAlLkBAgQIECBAgEBAQJQFlmAEAgQIECBAgIAocwMECBAgQIAAgYCAKAsswQgECBAgQIAAAVHmBggQIECAAAECAQFRFliCEQgQIECAAAECoswNECBAgAABAgQCAqIssAQjECBAgAABAgREmRsgQIAAAQIECAQERFlgCUYgQIAAAQIECIgyN0CAAAECBAgQCAiIssASjECAAAECBAgQEGVugAABAgQIECAQEBBlgSUYgQABAgQIECAgytwAAQIECBAgQCAgIMoCSzACAQIECBAgQECUuQECBAgQIECAQEBAlAWWYAQCBAgQIECAgChzAwQIECBAgACBgIAoCyzBCAQIECBAgAABUeYGCBAgQIAAAQIBAVEWWIIRCBAgQIAAAQKizA0QIECAAAECBAICoiywBCMQIECAAAECBESZGyBAgAABAgQIBAREWWAJRiBAgAABAgQIiDI3QIAAAQIECBAICIiywBKMQIAAAQIECBAQZW6AAAECBAgQIBAQEGWBJRiBAAECBAgQICDK3AABAgQIECBAICAgygJLMAIBAgQIECBAQJS5AQIECBAgQIBAQECUBZZgBAIECBAgQICAKHMDBAgQIECAAIGAgCgLLMEIBAgQIECAAAFR5gYIECBAgAABAgEBURZYghEIECBAgAABAqLMDRAgQIAAAQIEAgKiLLAEIxAgQIAAAQIERJkbIECAAAECBAgEBERZYAlGIECAAAECBAiIMjdAgAABAgQIEAgIiLLAEoxAgAABAgQIEBBlboAAAQIECBAgEBAQZYElGIEAAQIECBAgIMrcAAECBAgQIEAgICDKAkswAgECBAgQIEBAlLkBAgQIECBAgEBAQJQFlmAEAgQIECBAgIAocwMECBAgQIAAgYCAKAsswQgECBAgQIAAAVHmBggQIECAAAECAQFRFliCEQgQIECAAAECoswNECBAgAABAgQCAqIssAQjECBAgAABAgREmRsgQIAAAQIECAQERFlgCUYgQIAAAQIECIgyN0CAAAECBAgQCAiIssASjECAAAECBAgQEGVugAABAgQIECAQEBBlgSUYgQABAgQIECAgytwAAQIECBAgQCAgIMoCSzACAQIECBAgQECUuQECBAgQIECAQEBAlAWWYAQCBAgQIECAgChzAwQIECBAgACBgIAoCyzBCAQIECBAgAABUeYGCBAgQIAAAQIBAVEWWIIRCBAgQIAAAQKizA0QIECAAAECBAICoiywBCMQIECAAAECBESZGyBAgAABAgQIBAREWWAJRiBAgAABAgQIiDI3QIAAAQIECBAICIiywBKMQIAAAQIECBAQZW6AAAECBAgQIBAQEGWBJRiBAAECBAgQICDK3AABAgQIECBAICAgygJLMAIBAgQIECBAQJS5AQIECBAgQIBAQECUBZZgBAIECBAgQICAKHMDBAgQIECAAIGAgCgLLMEIBAgQIECAAAFR5gYIECBAgAABAgEBURZYghEIECBAgAABAqLMDRAgQIAAAQIEAgKiLLAEIxAgQIAAAQIERJkbIECAAAECBAgEBERZYAlGIECAAAECBAiIMjdAgAABAgQIEAgIiLLAEoxAgAABAgQIEBBlboAAAQIECBAgEBAQZYElGIEAAQIECBAgIMrcAAECBAgQIEAgICDKAkswAgECBAgQIEBAlLkBAgQIECBAgEBAQJQFlmAEAgQIECBAgIAocwMECBAgQIAAgYCAKAsswQgECBAgQIAAAVHmBggQIECAAAECAQFRFliCEQgQIECAAAECoswNECBAgAABAgQCAqIssAQjECBAgAABAgREmRsgQIAAAQIECAQERFlgCUYgQIAAAQIECIgyN0CAAAECBAgQCAiIssASjECAAAECBAgQEGVugAABAgQIECAQEBBlgSUYgQABAgQIECAgytwAAQIECBAgQCAgIMoCSzACAQIECBAgQECUuQECBAgQIECAQEDgL8oCMxmBAAECBAgQIPBOgTUzu848AgQIECBAgACBcwJfDr0CH66ENEoAAAAASUVORK5CYII=";
-
-let isDrawingShape = isDraft == "true";
-console.log("isDraft " + isDraft);
+// let isDrawingShape = isDraft == "true";
+let isDrawingShape = false;
 const ratio = Math.max(window.devicePixelRatio || 1, 1);
+
+let selectedShapeFillColor = 'transparent'; // Default no fill
+let selectedShapeOutlineColor = 'black'; // Default black outline
+let selectedTextColor = 'black'; // Default black text color
+let selectedBorderRadius = 0; // Default no border radius
 
 $(addShapeBtn).on("click", function () {
   $("#editorShapeFormatToolbar").toggleClass("hidden");
@@ -12,6 +15,21 @@ $(addShapeBtn).on("click", function () {
 $(".shape-item").on("click", function () {
   isDrawingShape = true;
   $("#editorShapeFormatToolbar").addClass("hidden");
+});
+
+$(".drawing-color").on("click", function () {
+  const color = $(this).attr("color");
+  if ($(this).closest('#shape-fill-dropdown').length) {
+    selectedShapeFillColor = color;
+  } else if ($(this).closest('#shape-outline-dropdown').length) {
+    selectedShapeOutlineColor = color;
+  } else if ($(this).closest('#text-color-dropdown').length) {
+    selectedTextColor = color;
+  }
+});
+
+$("#border-radius-dropdown input").on("input", function () {
+  selectedBorderRadius = $(this).val();
 });
 
 const handleShape = function (w, h, canvasWidth, canvasHeight) {
@@ -56,7 +74,6 @@ const handleShape = function (w, h, canvasWidth, canvasHeight) {
 };
 
 $("#viewer").on("click", function (e) {
-  console.log("isDrawingShape " + isDrawingShape);
   if (isDrawingShape) {
     baseId++;
     let ost = computePageOffset();
@@ -88,8 +105,7 @@ $("#viewer").on("click", function (e) {
     isDrawingShape = false;
     $(addShapeBtn).removeClass("active_menu");
 
-    cropCanvas(canvas);
-    shapeImgData = squreImg;
+    shapeImgData = cropCanvas(canvas);
 
     shapeWidth = 300;
     shapeHeight = 150;
@@ -109,21 +125,34 @@ $("#viewer").on("click", function (e) {
     shapeContainer.style.width = shapeWidth + "px";
     shapeContainer.style.height = shapeHeight + "px";
     shapeContainer.style.zIndex = standardZIndex;
+    shapeContainer.style.display = "flex";
+    shapeContainer.style.alignItems = "center";
+    shapeContainer.style.justifyContent = "center";
     shapeContainer.tabIndex = 0;
     shapeContainer.classList.add("form-fields");
+
+    // Apply selected styles to the shapeContainer
+    shapeContainer.style.backgroundColor = selectedShapeFillColor;
+    shapeContainer.style.border = selectedShapeOutlineColor ? `2px solid ${selectedShapeOutlineColor}` : '1px solid black';
+    shapeContainer.style.borderRadius = `${selectedBorderRadius}px`;
 
     // Append contenteditable div to shapeContainer
     const editableDiv = document.createElement("div");
     editableDiv.setAttribute("contenteditable", "true");
     editableDiv.style.position = "absolute";
     editableDiv.style.width = "100%";
-    editableDiv.style.height = "100%";
+    editableDiv.style.height = "fit-content";
+    editableDiv.style.display = "flex";
+    editableDiv.style.alignItems = "center";
+    editableDiv.style.justifyContent = "center";    
     editableDiv.style.textAlign = "center";
+    editableDiv.style.color = selectedTextColor; // Set the text color
     editableDiv.focus();
 
     shapeContainer.appendChild(editableDiv);
     shapeContainer.append(shapeImg);
     pg.appendChild(shapeContainer);
+    editableDiv.focus();
     resizeCanvas(shapeContainer.id, SHAPE, shapeId);
 
     editableDiv.addEventListener("dblclick", (event) => {

@@ -79,6 +79,13 @@ const handleShape = function (w, h, canvasWidth, canvasHeight, shapeFillColor, s
 };
 
 $("#viewer").on("click", function (e) {
+  if(isDraft == "true"){
+    if (form_storage && form_storage !== null) {
+      form_storage.forEach((formItem) => {
+        drawShapeFromStorage(formItem);
+      });
+    }
+  }
   if (isDrawingShape) {
     baseId++;
     let ost = computePageOffset();
@@ -124,6 +131,7 @@ $("#viewer").on("click", function (e) {
 
     const shapeContainer = document.createElement("div");
     shapeContainer.id = "shape" + shapeId;
+    shapeContainer.className = "shapeContainer";
     shapeContainer.style.position = "absolute";
     shapeContainer.style.top = y + "px";
     shapeContainer.style.left = x + "px";
@@ -228,6 +236,24 @@ $("#viewer").on("click", function (e) {
     $("#drawing-shape-create").off("click");
   }
 });
+
+function drawShapeFromStorage(formItem) {
+  const shapeContainer = document.getElementById(formItem.containerId);
+
+  const editableDiv = shapeContainer.querySelector(".shapeText");
+  editableDiv.focus();
+
+  editableDiv.addEventListener("dblclick", (event) => {
+    current_shape_id = formItem.id;
+    showTextInput(event, shapeContainer, editableDiv);
+  });
+
+  editableDiv.addEventListener("blur", () => {
+    const shapeText = editableDiv.innerHTML.trim(); // Save the text content on blur
+    formItem.shapeText = shapeText; // Update the form_storage item
+    console.log("shapeText on blur:", shapeText); // Debug log
+  });
+}
 
 function updateText(editableDiv) {
   editableDiv.style.display = 'block';

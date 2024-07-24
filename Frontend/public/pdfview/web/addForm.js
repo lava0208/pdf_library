@@ -1273,6 +1273,7 @@ const drawFormElement = function () {
           shapeImg.style.objectFit = "fill";
 
           const shapeContainer = document.createElement("div");
+          shapeContainer.className = "shapeContainer";
           shapeContainer.id = "shape" + id;
           shapeContainer.style.position = "absolute";
           shapeContainer.style.top = y + "px";

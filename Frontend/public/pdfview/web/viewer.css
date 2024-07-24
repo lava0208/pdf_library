@@ -2540,3 +2540,18 @@ body.loading .loading-container{
   display: flex;
   gap: 7px;
 }
+
+div[contenteditable="true"]:focus{
+  outline: none;
+}
+
+#shape-canvas{
+  width: 800px; 
+  height: 430px; 
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  z-index: -1; 
+  touch-action: none; 
+  user-select: none;
+}

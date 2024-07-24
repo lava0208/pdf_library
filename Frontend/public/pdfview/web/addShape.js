@@ -1,14 +1,17 @@
-const addShapeBtn = document.getElementById("add_shape");
-let isDrawingShape = false;
+const addShapeBtn = document.getElementById("shape_format");
+const squreImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAmUAAAEDCAYAAAB0ynP9AAAAAXNSR0IArs4c6QAADWxJREFUeF7t2TEKw0AMAEHd/x+d4KuC0/sWPFelsxipWMiamc94BAgQIECAAAECRwWWKDvq7+MECBAgQIAAgS3wG2XXb48AAQIECBAgQOBZgf2vpSh7Ft3XCBAgQIAAAQJ3AVHmJggQIECAAAECAQFRFliCEQgQIECAAAECoswNECBAgAABAgQCAqIssAQjECBAgAABAgREmRsgQIAAAQIECAQERFlgCUYgQIAAAQIECIgyN0CAAAECBAgQCAiIssASjECAAAECBAgQEGVugAABAgQIECAQEBBlgSUYgQABAgQIECAgytwAAQIECBAgQCAgIMoCSzACAQIECBAgQECUuQECBAgQIECAQEBAlAWWYAQCBAgQIECAgChzAwQIECBAgACBgIAoCyzBCAQIECBAgAABUeYGCBAgQIAAAQIBAVEWWIIRCBAgQIAAAQKizA0QIECAAAECBAICoiywBCMQIECAAAECBESZGyBAgAABAgQIBAREWWAJRiBAgAABAgQIiDI3QIAAAQIECBAICIiywBKMQIAAAQIECBAQZW6AAAECBAgQIBAQEGWBJRiBAAECBAgQICDK3AABAgQIECBAICAgygJLMAIBAgQIECBAQJS5AQIECBAgQIBAQECUBZZgBAIECBAgQICAKHMDBAgQIECAAIGAgCgLLMEIBAgQIECAAAFR5gYIECBAgAABAgEBURZYghEIECBAgAABAqLMDRAgQIAAAQIEAgKiLLAEIxAgQIAAAQIERJkbIECAAAECBAgEBERZYAlGIECAAAECBAiIMjdAgAABAgQIEAgIiLLAEoxAgAABAgQIEBBlboAAAQIECBAgEBAQZYElGIEAAQIECBAgIMrcAAECBAgQIEAgICDKAkswAgECBAgQIEBAlLkBAgQIECBAgEBAQJQFlmAEAgQIECBAgIAocwMECBAgQIAAgYCAKAsswQgECBAgQIAAAVHmBggQIECAAAECAQFRFliCEQgQIECAAAECoswNECBAgAABAgQCAqIssAQjECBAgAABAgREmRsgQIAAAQIECAQERFlgCUYgQIAAAQIECIgyN0CAAAECBAgQCAiIssASjECAAAECBAgQEGVugAABAgQIECAQEBBlgSUYgQABAgQIECAgytwAAQIECBAgQCAgIMoCSzACAQIECBAgQECUuQECBAgQIECAQEBAlAWWYAQCBAgQIECAgChzAwQIECBAgACBgIAoCyzBCAQIECBAgAABUeYGCBAgQIAAAQIBAVEWWIIRCBAgQIAAAQKizA0QIECAAAECBAICoiywBCMQIECAAAECBESZGyBAgAABAgQIBAREWWAJRiBAgAABAgQIiDI3QIAAAQIECBAICIiywBKMQIAAAQIECBAQZW6AAAECBAgQIBAQEGWBJRiBAAECBAgQICDK3AABAgQIECBAICAgygJLMAIBAgQIECBAQJS5AQIECBAgQIBAQECUBZZgBAIECBAgQICAKHMDBAgQIECAAIGAgCgLLMEIBAgQIECAAAFR5gYIECBAgAABAgEBURZYghEIECBAgAABAqLMDRAgQIAAAQIEAgKiLLAEIxAgQIAAAQIERJkbIECAAAECBAgEBERZYAlGIECAAAECBAiIMjdAgAABAgQIEAgIiLLAEoxAgAABAgQIEBBlboAAAQIECBAgEBAQZYElGIEAAQIECBAgIMrcAAECBAgQIEAgICDKAkswAgECBAgQIEBAlLkBAgQIECBAgEBAQJQFlmAEAgQIECBAgIAocwMECBAgQIAAgYCAKAsswQgECBAgQIAAAVHmBggQIECAAAECAQFRFliCEQgQIECAAAECoswNECBAgAABAgQCAqIssAQjECBAgAABAgREmRsgQIAAAQIECAQERFlgCUYgQIAAAQIECIgyN0CAAAECBAgQCAiIssASjECAAAECBAgQEGVugAABAgQIECAQEBBlgSUYgQABAgQIECAgytwAAQIECBAgQCAgIMoCSzACAQIECBAgQECUuQECBAgQIECAQEBAlAWWYAQCBAgQIECAgChzAwQIECBAgACBgIAoCyzBCAQIECBAgAABUeYGCBAgQIAAAQIBAVEWWIIRCBAgQIAAAQKizA0QIECAAAECBAICoiywBCMQIECAAAECBESZGyBAgAABAgQIBAREWWAJRiBAgAABAgQIiDI3QIAAAQIECBAICIiywBKMQIAAAQIECBAQZW6AAAECBAgQIBAQEGWBJRiBAAECBAgQICDK3AABAgQIECBAICAgygJLMAIBAgQIECBAQJS5AQIECBAgQIBAQECUBZZgBAIECBAgQICAKHMDBAgQIECAAIGAgCgLLMEIBAgQIECAAAFR5gYIECBAgAABAgEBURZYghEIECBAgAABAqLMDRAgQIAAAQIEAgKiLLAEIxAgQIAAAQIERJkbIECAAAECBAgEBERZYAlGIECAAAECBAiIMjdAgAABAgQIEAgIiLLAEoxAgAABAgQIEBBlboAAAQIECBAgEBAQZYElGIEAAQIECBAgIMrcAAECBAgQIEAgICDKAkswAgECBAgQIEBAlLkBAgQIECBAgEBAQJQFlmAEAgQIECBAgIAocwMECBAgQIAAgYCAKAsswQgECBAgQIAAAVHmBggQIECAAAECAQFRFliCEQgQIECAAAECoswNECBAgAABAgQCAqIssAQjECBAgAABAgREmRsgQIAAAQIECAQERFlgCUYgQIAAAQIECIgyN0CAAAECBAgQCAiIssASjECAAAECBAgQEGVugAABAgQIECAQEBBlgSUYgQABAgQIECAgytwAAQIECBAgQCAgIMoCSzACAQIECBAgQECUuQECBAgQIECAQEBAlAWWYAQCBAgQIECAgChzAwQIECBAgACBgIAoCyzBCAQIECBAgAABUeYGCBAgQIAAAQIBAVEWWIIRCBAgQIAAAQKizA0QIECAAAECBAICoiywBCMQIECAAAECBESZGyBAgAABAgQIBAREWWAJRiBAgAABAgQIiDI3QIAAAQIECBAICIiywBKMQIAAAQIECBAQZW6AAAECBAgQIBAQEGWBJRiBAAECBAgQICDK3AABAgQIECBAICAgygJLMAIBAgQIECBAQJS5AQIECBAgQIBAQECUBZZgBAIECBAgQICAKHMDBAgQIECAAIGAgCgLLMEIBAgQIECAAAFR5gYIECBAgAABAgEBURZYghEIECBAgAABAqLMDRAgQIAAAQIEAgKiLLAEIxAgQIAAAQIERJkbIECAAAECBAgEBERZYAlGIECAAAECBAiIMjdAgAABAgQIEAgIiLLAEoxAgAABAgQIEBBlboAAAQIECBAgEBAQZYElGIEAAQIECBAgIMrcAAECBAgQIEAgICDKAkswAgECBAgQIEBAlLkBAgQIECBAgEBAQJQFlmAEAgQIECBAgIAocwMECBAgQIAAgYCAKAsswQgECBAgQIAAAVHmBggQIECAAAECAQFRFliCEQgQIECAAAECoswNECBAgAABAgQCAqIssAQjECBAgAABAgREmRsgQIAAAQIECAQERFlgCUYgQIAAAQIECIgyN0CAAAECBAgQCAiIssASjECAAAECBAgQEGVugAABAgQIECAQEBBlgSUYgQABAgQIECAgytwAAQIECBAgQCAgIMoCSzACAQIECBAgQECUuQECBAgQIECAQEBAlAWWYAQCBAgQIECAgChzAwQIECBAgACBgIAoCyzBCAQIECBAgAABUeYGCBAgQIAAAQIBAVEWWIIRCBAgQIAAAQKizA0QIECAAAECBAICoiywBCMQIECAAAECBESZGyBAgAABAgQIBAREWWAJRiBAgAABAgQIiDI3QIAAAQIECBAICIiywBKMQIAAAQIECBAQZW6AAAECBAgQIBAQEGWBJRiBAAECBAgQICDK3AABAgQIECBAICAgygJLMAIBAgQIECBAQJS5AQIECBAgQIBAQECUBZZgBAIECBAgQICAKHMDBAgQIECAAIGAgCgLLMEIBAgQIECAAAFR5gYIECBAgAABAgEBURZYghEIECBAgAABAqLMDRAgQIAAAQIEAgKiLLAEIxAgQIAAAQIERJkbIECAAAECBAgEBERZYAlGIECAAAECBAiIMjdAgAABAgQIEAgIiLLAEoxAgAABAgQIEBBlboAAAQIECBAgEBAQZYElGIEAAQIECBAgIMrcAAECBAgQIEAgICDKAkswAgECBAgQIEBAlLkBAgQIECBAgEBAQJQFlmAEAgQIECBAgIAocwMECBAgQIAAgYCAKAsswQgECBAgQIAAAVHmBggQIECAAAECAQFRFliCEQgQIECAAAECoswNECBAgAABAgQCAqIssAQjECBAgAABAgREmRsgQIAAAQIECAQERFlgCUYgQIAAAQIECIgyN0CAAAECBAgQCAiIssASjECAAAECBAgQEGVugAABAgQIECAQEBBlgSUYgQABAgQIECAgytwAAQIECBAgQCAgIMoCSzACAQIECBAgQECUuQECBAgQIECAQEDgL8oCMxmBAAECBAgQIPBOgTUzu848AgQIECBAgACBcwJfDr0CH66ENEoAAAAASUVORK5CYII=";
+
+let isDrawingShape = isDraft == "true" ? true : false;
+console.log("isDraft " + isDraft);
 const ratio = Math.max(window.devicePixelRatio || 1, 1);
 
 $(addShapeBtn).on("click", function () {
-  if (!isDrawingShape) {
-    $(this).addClass("active_menu");
-  } else {
-    $(this).removeClass("active_menu");
-  }
-  isDrawingShape = !isDrawingShape;
+  $("#editorShapeFormatToolbar").toggleClass("hidden");
+});
+
+$(".shape-item").on("click", function () {
+  isDrawingShape = true;
+  $("#editorShapeFormatToolbar").addClass("hidden");
 });
 
 const handleShape = function (w, h, canvasWidth, canvasHeight) {
@@ -57,6 +60,7 @@ const handleShape = function (w, h, canvasWidth, canvasHeight) {
 };
 
 $("#viewer").on("click", function (e) {
+  console.log("isDrawingShape " + isDrawingShape);
   if (isDrawingShape) {
     baseId++;
     let ost = computePageOffset();
@@ -79,31 +83,28 @@ $("#viewer").on("click", function (e) {
     let shapeWidth = 0;
     let shapeHeight = 0;
 
-    $("#drawing-board-container").css("display", "flex");
+    // $("#drawing-board-container").css("display", "flex");
 
     $("#clear-canvas").click();
     // let origin = localStorage.getItem("modifiedContentDrawingShape")
     // if(origin) $("#drawing-board-container").html(origin);
-    let canvas = $("#drawing-board").find("canvas")[0];
+    // let canvas = $("#drawing-board").find("canvas")[0];
+    let canvas = $("#shape-canvas")[0];
     canvas.width = canvas.offsetWidth * ratio;
     canvas.height = canvas.offsetHeight * ratio;
 
     plot.initStore();
-    // let plot = new PlotApp();
     isDrawingShape = false;
     $(addShapeBtn).removeClass("active_menu");
+    // $("#drawing-shape-create").on("click", function () {
+      cropCanvas(canvas);
 
-    $("#drawing-board-close").on("click", function () {
-      $("#drawing-board-container").css("display", "none");
-    });
+      shapeImgData = squreImg;
 
-    $("#drawing-shape-create").on("click", function () {
-      shapeImgData = cropCanvas(canvas);
+      shapeWidth = 300;
+      shapeHeight = 150;
 
-      shapeWidth = boundingBox.width;
-      shapeHeight = boundingBox.height;
-
-      $("#drawing-board-container").css("display", "none");
+      // $("#drawing-board-container").css("display", "none");
       const shapeImg = document.createElement("img");
       shapeImg.id = "shapeImg" + shapeId;
       shapeImg.style.width = "100%";
@@ -126,8 +127,10 @@ $("#viewer").on("click", function (e) {
       pg.appendChild(shapeContainer);
       resizeCanvas(shapeContainer.id, SHAPE, shapeId);
 
-      shapeContainer.addEventListener("dblclick", () => {
+      shapeContainer.addEventListener("dblclick", (event) => {
         current_shape_id = shapeId;
+
+        showTextInput(event, shapeContainer);
 
         let istooltipshow = false;
 
@@ -184,6 +187,68 @@ $("#viewer").on("click", function (e) {
       });
       handleShape(boundingBox.width, boundingBox.height, canvas.width, canvas.height);
       $("#drawing-shape-create").off("click");
-    });
+    // })
   }
 });
+
+
+let currentShape;
+const textInput = document.getElementById('shape-text-input');
+
+textInput.addEventListener('blur', () => saveText());
+textInput.addEventListener('input', () => updateText());
+
+function updateText() {
+  const text = textInput.value.trim();
+
+  if (text) {
+    let textObj = currentShape.querySelector('.text-content');
+
+    if (!textObj) {
+      textObj = document.createElement('div');
+      textObj.classList.add('text-content');
+      currentShape.appendChild(textObj);
+    }
+
+    textObj.textContent = text;
+    textObj.style.position = 'absolute';
+    textObj.style.left = '50%';
+    textObj.style.top = '50%';
+    textObj.style.transform = 'translate(-50%, -50%)';
+    textObj.style.whiteSpace = 'nowrap';
+    textObj.style.pointerEvents = 'none';
+  }
+}
+
+function saveText() {
+  updateText();
+  textInput.style.display = 'none';
+  const textObj = currentShape.querySelector('.text-content');
+  if (textObj) {
+    textObj.style.display = 'block';
+  }
+}
+
+function showTextInput(event) {
+  currentShape = shape1;
+  const shapeRect = currentShape.getBoundingClientRect();
+  const textObj = currentShape.querySelector('.text-content');
+
+  if (textObj) {
+    textInput.value = textObj.textContent;
+  } else {
+    textInput.value = '';
+  }
+
+  const shapeCenterX = shapeRect.left + shapeRect.width / 2;
+  const shapeCenterY = shapeRect.top + shapeRect.height / 2;
+
+  textInput.style.display = 'block';
+  textInput.style.left = `${shapeCenterX - textInput.offsetWidth / 2}px`;
+  textInput.style.top = `${shapeCenterY - textInput.offsetHeight / 2}px`;
+  textInput.focus();
+
+  if (textObj) {
+    textObj.style.display = 'none';
+  }
+}

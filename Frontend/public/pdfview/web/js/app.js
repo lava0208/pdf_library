@@ -24,10 +24,18 @@ class PlotApp {
     this.fillColor = false;
     this.colorBtns = document.querySelectorAll(".drawing-color");
 
+    this.dropdownContainers = [
+      '#shape-fill-dropdown',
+      '#shape-outline-dropdown',
+      '#text-color-dropdown',
+      '#border-radius-dropdown'
+    ];
+
     /***********
      * art-board
      ***********/
-    this.canvas = document.getElementById("drawing-board").querySelector('canvas');
+    // this.canvas = document.getElementById("drawing-board").querySelector('canvas');
+    this.canvas = document.getElementById("shape-canvas");
     this.storeRect = [];
     this.storeCircle = [];
   }
@@ -92,18 +100,39 @@ class PlotApp {
       return;
     });
     // colors
-    this.colorBtns.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        // adding click event to all color button
-        // removing active class from the previous option and adding on current clicked option
-        document.querySelector(".drawing-color.selected").classList.remove("selected");
-        btn.classList.add("selected");
-        // passing selected btn background as selectedColor value
-        this.selectedColor = window
-          .getComputedStyle(btn)
-          .getPropertyValue("background-color");
+    // this.colorBtns.forEach((btn) => {
+    //   btn.addEventListener("click", () => {
+    //     // adding click event to all color button
+    //     // removing active class from the previous option and adding on current clicked option
+    //     document.querySelector(".drawing-color.selected").classList.remove("selected");
+    //     btn.classList.add("selected");
+    //     // passing selected btn background as selectedColor value
+    //     this.selectedColor = window
+    //       .getComputedStyle(btn)
+    //       .getPropertyValue("background-color");
+    //   });
+    // });
+
+    this.dropdownContainers.forEach(container => {
+      const dropdownMenu = document.querySelector(`${container} .dropdown-menu`);
+
+      dropdownMenu.querySelectorAll('.drawing-color').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const selectedBtn = dropdownMenu.querySelector('.drawing-color.selected');
+          if (selectedBtn) {
+            selectedBtn.classList.remove('selected');
+          }
+          btn.classList.add('selected');
+          const selectedColor = window
+            .getComputedStyle(btn)
+            .getPropertyValue("background-color");
+  
+          console.log('Selected color:', selectedColor);
+        });
       });
     });
+    
+
     // color picker
     if (!this.colorPicker.hasEventListener) {
       this.colorPicker.hasEventListener = true;
@@ -123,6 +152,7 @@ class PlotApp {
     this.canvas.addEventListener("mousedown", (e) => this.startDraw(e));
     this.canvas.addEventListener("mousemove", (e) => this.drawing(e));
     this.canvas.addEventListener("mouseup", (e) => {
+      console.log(e);
       this.isDrawing = false;
       switch (this.selectedTool) {
         case "rectangle":

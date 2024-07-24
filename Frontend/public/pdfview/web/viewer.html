@@ -49,6 +49,7 @@ See https://github.com/adobe-type-tools/cmap-resources
   <link rel="stylesheet" href="css/signature-font.css" />
   <link rel="stylesheet" href="css/share-document.css" />
   <link rel="stylesheet" href="css/index.css" />
+  <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />  
 
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script> -->
@@ -203,6 +204,99 @@ See https://github.com/adobe-type-tools/cmap-resources
           <div id="editorHighlightColorPicker" class="colorPicker">
             <span id="highlightColorPickerLabel" class="editorParamsLabel"
               data-l10n-id="pdfjs-editor-highlight-colorpicker-label">Highlight color</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="editorParamsToolbar hidden doorHangerRight" id="editorShapeFormatToolbar">
+        <div class="shape-container">
+          <img src="./images/shape.png" alt="shape" class="shape-item" />
+          <img src="./images/letter-shape.png" alt="shape with letter" class="shape-item" />
+        </div>
+        <div class="shape-dropdown-container">
+          <div class="dropdown" id="shape-fill-dropdown">
+            <button class="btn dropdown-toggle d-flex align-items-center" type="button" data-toggle="dropdown" aria-expanded="false">
+              <i class="fa fa-fill"></i> <span class="pl-1">Shape Fill</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-start">
+              <a class="dropdown-item" href="#" id="colors">
+                <div class="drawing-color" color="white"></div>
+                <div class="drawing-color" color="black"></div>
+                <div class="drawing-color" color="red"></div>
+                <div class="drawing-color" color="green"></div>
+                <div class="drawing-color" color="blue"></div>
+                <div class="drawing-color" color="gray"></div>
+                <div class="drawing-color" color="silver"></div>
+                <div class="drawing-color" color="maroon"></div>
+                <div class="drawing-color" color="purple"></div>
+                <div class="drawing-color" color="fuchsia"></div>
+                <div class="drawing-color" color="lime"></div>
+                <div class="drawing-color" color="olive"></div>
+                <div class="drawing-color" color="yellow"></div>
+                <div class="drawing-color" color="navy"></div>
+                <div class="drawing-color" color="teal"></div>
+                <div class="drawing-color" color="aqua"></div>
+              </a>
+            </div>
+          </div>
+          <div class="dropdown" id="shape-outline-dropdown">
+            <button class="btn dropdown-toggle d-flex align-items-center" type="button" data-toggle="dropdown" aria-expanded="false">
+              <i class="fa fa-solid fa-pen-to-square"></i> <span class="pl-1">Shape Outline</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-start">
+              <a class="dropdown-item" href="#" id="colors">
+                <div class="drawing-color" color="white"></div>
+                <div class="drawing-color" color="black"></div>
+                <div class="drawing-color" color="red"></div>
+                <div class="drawing-color" color="green"></div>
+                <div class="drawing-color" color="blue"></div>
+                <div class="drawing-color" color="gray"></div>
+                <div class="drawing-color" color="silver"></div>
+                <div class="drawing-color" color="maroon"></div>
+                <div class="drawing-color" color="purple"></div>
+                <div class="drawing-color" color="fuchsia"></div>
+                <div class="drawing-color" color="lime"></div>
+                <div class="drawing-color" color="olive"></div>
+                <div class="drawing-color" color="yellow"></div>
+                <div class="drawing-color" color="navy"></div>
+                <div class="drawing-color" color="teal"></div>
+                <div class="drawing-color" color="aqua"></div>
+              </a>
+            </div>
+          </div>
+          <div class="dropdown" id="text-color-dropdown">
+            <button class="btn dropdown-toggle d-flex align-items-center" type="button" data-toggle="dropdown" aria-expanded="false">
+              <i class="fa-solid fa-highlighter"></i> <span class="pl-1">Text Color</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-start">
+              <a class="dropdown-item" href="#" id="colors">
+                <div class="drawing-color" color="white"></div>
+                <div class="drawing-color" color="black"></div>
+                <div class="drawing-color" color="red"></div>
+                <div class="drawing-color" color="green"></div>
+                <div class="drawing-color" color="blue"></div>
+                <div class="drawing-color" color="gray"></div>
+                <div class="drawing-color" color="silver"></div>
+                <div class="drawing-color" color="maroon"></div>
+                <div class="drawing-color" color="purple"></div>
+                <div class="drawing-color" color="fuchsia"></div>
+                <div class="drawing-color" color="lime"></div>
+                <div class="drawing-color" color="olive"></div>
+                <div class="drawing-color" color="yellow"></div>
+                <div class="drawing-color" color="navy"></div>
+                <div class="drawing-color" color="teal"></div>
+                <div class="drawing-color" color="aqua"></div>
+              </a>
+            </div>
+          </div>
+          <div class="dropdown" id="border-radius-dropdown">
+            <button class="btn dropdown-toggle d-flex align-items-center" type="button" data-toggle="dropdown" aria-expanded="false">
+              <i class="fa fa-solid fa-border-top-left"></i> <span class="pl-1">Border Radius</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-start text-center">
+              <input type="range" id="editorInkThickness" class="editorParamsSlider" value="1" min="1" max="20" step="1"
+                tabindex="105" />
+            </div>
           </div>
         </div>
       </div>
@@ -567,6 +661,9 @@ See https://github.com/adobe-type-tools/cmap-resources
 
       <div id="viewerContainer" tabindex="0" style="margin-top: 5px">
         <div id="viewer" class="pdfViewer"></div>
+        <canvas id="shape-canvas" style="width: 800px; height: 430px; position: absolute; top: 0; left: 0; z-index: -1; touch-action: none; user-select: none"></canvas>
+        <!-- <canvas id="shape-canvas" style="position: absolute; width: 1074px; height: 834px; left: calc(50% - 530px); top: 10px; background: lightblue; touch-action: none; user-select: none; z-index: -1;"></canvas> -->
+        <input type="text" id="shape-text-input" style="display:none; position:absolute;" />
       </div>
     </div>
     <!-- mainContainer -->
@@ -1324,6 +1421,10 @@ See https://github.com/adobe-type-tools/cmap-resources
     </button>
     <div class="horizontalToolbarSeparator"></div>
     <p class="toolbarTitle">Add Shapes:</p>
+    <button class="menu-button" id="shape_format" title="Shape Format">
+      <i class="fa-solid fa-shapes" style="width: 17px"></i>
+      <p class="menu-button-item">Shape Format</p>
+    </button>
     <button class="menu-button" id="add_shape" title="Add Shapes">
       <i class="fa-solid fa-shapes" style="width: 17px"></i>
       <p class="menu-button-item">Add Shapes</p>
@@ -1378,7 +1479,6 @@ See https://github.com/adobe-type-tools/cmap-resources
       <p class="menu-button-item">Fluttern</p>
     </button>
   </div>
-  
 
   <div id="signature-creator" onselectstart="return false" class="signature-container">
     <div id="signature-pad" class="signature-pad">
@@ -1529,6 +1629,9 @@ See https://github.com/adobe-type-tools/cmap-resources
             <div class="drawing-tool" id="bucket">
               <img src="./images/bucket.svg" alt="bucket" />
             </div>
+            <div class="drawing-tool" id="text">
+              <img src="./images/toolbarButton-editorFreeText.svg" alt="text" />
+            </div>
           </div>
           <!-- group title -->
           <p class="title">tools</p>
@@ -1548,6 +1651,9 @@ See https://github.com/adobe-type-tools/cmap-resources
             <!-- circle -->
             <div class="drawing-tool" id="circle">
               <img src="./images/circle.svg" alt="circle" />
+            </div>
+            <div class="drawing-tool" id="triangle">
+              <img src="./images/triangle.svg" alt="triangle" />
             </div>
           </div>
           <!-- group title -->
@@ -1645,6 +1751,7 @@ See https://github.com/adobe-type-tools/cmap-resources
   <!--#if GENERIC-->
   <input type="file" id="fileInput" class="hidden" />
   <script src="js/jquery-3.6.0.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
   <script src="js/select2.min.js"></script>
   <script src="js/pdf.min.js" defer></script>
   <script src="jQuery.print.js"></script>

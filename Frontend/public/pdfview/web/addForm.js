@@ -1285,9 +1285,9 @@ const drawFormElement = function () {
           shapeContainer.style.alignItems = "center";
           shapeContainer.style.justifyContent = "center";
           shapeContainer.style.backgroundColor = item.shapeFillColor;
-          shapeContainer.style.border = `1px solid ${item.shapeOutlineColor}`;
+          shapeContainer.style.border = `${item.borderWidth} solid ${item.borderColor}`;
           shapeContainer.style.color = item.textColor;
-          shapeContainer.style.borderRadius = item.borderRaduis + "px";
+          shapeContainer.style.borderRadius = item.borderRadius + "px";
           shapeContainer.tabIndex = 0;
           shapeContainer.classList.add("form-fields");
 
@@ -1302,6 +1302,7 @@ const drawFormElement = function () {
           editableDiv.style.alignItems = "center";
           editableDiv.style.justifyContent = "center";    
           editableDiv.style.textAlign = "center";
+          editableDiv.style.fontSize = item.textSize;
           editableDiv.style.color = item.textColor;
           editableDiv.focus();
 
@@ -1323,35 +1324,6 @@ const drawFormElement = function () {
               isDragging = false;
             } else {
               if (!istooltipshow) {
-                let tooltipbar = document.createElement("div");
-                let editBtn = document.createElement("button");
-                editBtn.style.padding = "5px";
-                editBtn.innerHTML = `<i class="fa-solid fa-pen"></i>`;
-                $(editBtn).on("click", function () {
-                  let targetShape = form_storage.filter(function (item) {
-                    return item.id == parseInt(current_shape_id);
-                  });
-                  $("#drawing-board-container").css("display", "flex");
-                  let targetCtx = canvas.getContext("2d");
-                  $("#clear-canvas").click();
-                  let image = new Image();
-                  image.src = targetShape[0].imgData;
-
-                  image.onload = function () {
-                    let centerX = canvas.width / 2 - image.width / 2;
-                    let centerY = canvas.height / 2 - image.height / 2;
-                    targetCtx.drawImage(image, centerX, centerY);
-                  };
-                  $("#drawing-shape-create").on("click", function () {
-                    shapeImgData = cropCanvas(canvas);
-                    shapeWidth = boundingBox.width;
-                    shapeHeight = boundingBox.height;
-                    $("#drawing-board-container").css("display", "none");
-                    shapeImg.src = shapeImgData;
-                    handleShape(shapeWidth, shapeHeight, item.canvasWidth, item.canvasHeight);
-                  });
-                });
-                tooltipbar.append(editBtn);
                 current_form_id = id;
                 addDeleteButton(
                   current_shape_id,

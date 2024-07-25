@@ -6,6 +6,8 @@ let selectedShapeFillColor = 'transparent'; // Default no fill
 let selectedShapeOutlineColor = 'black'; // Default black outline
 let selectedTextColor = 'black'; // Default black text color
 let selectedBorderRadius = 0; // Default no border radius
+let selectedBorderWeight = 1;
+let selectedTextSize = 14;
 
 $(addShapeBtn).on("click", function () {
   $("#editorShapeFormatToolbar").toggleClass("hidden");
@@ -27,16 +29,27 @@ $(".drawing-color").on("click", function () {
   }
 });
 
-$("#border-radius-dropdown input").on("input", function () {
-  selectedBorderRadius = $(this).val();
+$(".size-dropdown input").on("input", function () {
+  $(this).next('.range-value').remove();
+  var type = $(this).parents(".size-dropdown").attr("type"); // border raduis = 1, border width = 2, text size = 3;
+  if(type === "1"){
+    selectedBorderRadius = $(this).val();
+    $(this).after(`<span class="range-value">${selectedBorderRadius}px</span>`);
+  }else if(type === "2"){
+    selectedBorderWeight = $(this).val();
+    $(this).after(`<span class="range-value">${selectedBorderWeight}px</span>`);
+  }else{
+    selectedTextSize = $(this).val();
+    $(this).after(`<span class="range-value">${selectedTextSize}px</span>`);
+  }  
 });
 
-const handleShape = function (w, h, canvasWidth, canvasHeight, shapeFillColor, shapeOutlineColor, textColor, borderRaduis, shapeText) {
+const handleShape = function (w, h, canvasWidth, canvasHeight, shapeFillColor, borderColor, textColor, borderRadius, borderWidth, textSize, shapeText) {
   for (let i = 0; i < form_storage.length; i++) {
     if (form_storage[i].id == current_form_id) {
       form_storage[i].imgData = shapeImgData;
       form_storage[i].shapeText = shapeText;
-      break;
+      return;
     }
   }
   formWidth = w;
@@ -68,9 +81,11 @@ const handleShape = function (w, h, canvasWidth, canvasHeight, shapeFillColor, s
       canvasHeight: canvasHeight,
       imgData: shapeImgData,
       shapeFillColor: shapeFillColor,
-      shapeOutlineColor: shapeOutlineColor,
+      borderColor: borderColor,
       textColor: textColor,
-      borderRaduis: borderRaduis,
+      borderRadius: borderRadius,
+      borderWidth: borderWidth,
+      textSize: textSize,
       shapeText: shapeText
     });
   }
@@ -79,7 +94,7 @@ const handleShape = function (w, h, canvasWidth, canvasHeight, shapeFillColor, s
 };
 
 $("#viewer").on("click", function (e) {
-  if(isDraft == "true"){
+  if (isDraft == "true") {
     if (form_storage && form_storage !== null) {
       form_storage.forEach((formItem) => {
         drawShapeFromStorage(formItem);
@@ -146,8 +161,9 @@ $("#viewer").on("click", function (e) {
 
     // Apply selected styles to the shapeContainer
     shapeContainer.style.backgroundColor = selectedShapeFillColor;
-    shapeContainer.style.border = selectedShapeOutlineColor ? `2px solid ${selectedShapeOutlineColor}` : '1px solid black';
+    shapeContainer.style.border = `${selectedBorderWeight}px solid ${selectedShapeOutlineColor}`;
     shapeContainer.style.borderRadius = `${selectedBorderRadius}px`;
+    shapeContainer.style.fontSize = `${selectedTextSize}px`;
 
     // Append contenteditable div to shapeContainer
     const editableDiv = document.createElement("div");
@@ -160,6 +176,7 @@ $("#viewer").on("click", function (e) {
     editableDiv.style.alignItems = "center";
     editableDiv.style.justifyContent = "center";    
     editableDiv.style.textAlign = "center";
+    editableDiv.style.fontSize = selectedTextSize;
     editableDiv.style.color = selectedTextColor;
     editableDiv.focus();
 
@@ -170,9 +187,8 @@ $("#viewer").on("click", function (e) {
     resizeCanvas(shapeContainer.id, SHAPE, shapeId);
 
     editableDiv.addEventListener("blur", () => {
-      shapeText = editableDiv.innerHTML.trim(); // Save the text content on blur
-      console.log("shapeText on blur:", shapeText); // Debug log
-      handleShape(boundingBox.width, boundingBox.height, canvas.width, canvas.height, selectedShapeFillColor, selectedShapeOutlineColor, selectedTextColor, selectedBorderRadius, shapeText);
+      shapeText = editableDiv.innerHTML.trim();
+      handleShape(boundingBox.width, boundingBox.height, canvas.width, canvas.height, selectedShapeFillColor, selectedShapeOutlineColor, selectedTextColor, selectedBorderRadius, selectedBorderWeight, selectedTextSize, shapeText);
     });
 
     editableDiv.addEventListener("dblclick", (event) => {
@@ -214,7 +230,7 @@ $("#viewer").on("click", function (e) {
               shapeHeight = boundingBox.height;
               $("#drawing-board-container").css("display", "none");
               shapeImg.src = shapeImgData;
-              handleShape(shapeWidth, shapeHeight, canvas.width, canvas.height, selectedShapeFillColor, selectedShapeOutlineColor, selectedTextColor, selectedBorderRadius, shapeText);
+              handleShape(shapeWidth, shapeHeight, canvas.width, canvas.height, selectedShapeFillColor, selectedShapeOutlineColor, selectedTextColor, selectedBorderRadius, selectedBorderWeight, selectedTextSize, shapeText);
             });
           });
           tooltipbar.append(editBtn);
@@ -240,7 +256,15 @@ $("#viewer").on("click", function (e) {
 function drawShapeFromStorage(formItem) {
   const shapeContainer = document.getElementById(formItem.containerId);
 
+  // Apply styles to the shapeContainer
+  shapeContainer.style.backgroundColor = formItem.shapeFillColor;
+  shapeContainer.style.border = `${formItem.borderWidth}px solid ${formItem.borderColor}`;
+  shapeContainer.style.borderRadius = `${formItem.borderRadius}px`;
+
   const editableDiv = shapeContainer.querySelector(".shapeText");
+  editableDiv.innerHTML = formItem.shapeText;
+  editableDiv.style.fontSize = `${formItem.textSize}px`;
+  editableDiv.style.color = formItem.textColor;
   editableDiv.focus();
 
   editableDiv.addEventListener("dblclick", (event) => {

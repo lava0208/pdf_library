@@ -475,7 +475,7 @@ body {
 #editorShapeFormatToolbar{
   top: 213px;
   padding: 10px;
-  width: 600px;
+  width: 500px;
   display: flex;
   gap: 7px;
   flex-direction: column;
@@ -2537,7 +2537,8 @@ body.loading .loading-container{
 }
 
 .shape-dropdown-container{
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 7px;
 }
 
@@ -2554,4 +2555,9 @@ div[contenteditable="true"]:focus{
   z-index: -1; 
   touch-action: none; 
   user-select: none;
+}
+
+.range-value {
+  display: inline-block;
+  margin-left: 10px;
 }

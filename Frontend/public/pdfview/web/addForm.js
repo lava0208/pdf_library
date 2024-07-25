@@ -1427,26 +1427,6 @@ const drawFontSize = function () {
   })
 }
 
-//... Write Text Event
-$(document).on("DOMSubtreeModified", ".freeTextEditor.selectedEditor", function () {
-  let value = toolbar.find("#toolbar-font-size").val() == "" || toolbar.find("#toolbar-font-size").val() == null ? 12 : toolbar.find("#toolbar-font-size").val();
-
-  let size = value + "px";
-  let fontSize = `calc(${size} * var(--scale-factor))`;
-  let fontFamily = toolbar.find("#toolbar-font-style").val();
-  let fontWeight = toolbar.find("#text-bold").hasClass("active") ? 700 : 500;
-  let fontStyle = toolbar.find("#text-italic").hasClass("active") ? "italic" : "";
-  let fontUnderline = toolbar.find("#text-underline").hasClass("active") ? "underline" : "none";
-
-  $(this).find(".internal[role='textbox']").attr('size', size);
-  $(this).find(".internal[role='textbox']").css({ "font-size": fontSize, "font-family": fontFamily, "font-weight": fontWeight, "font-style": fontStyle, "text-decoration": fontUnderline });
-
-  let changedText = $(this).find(".internal[role='textbox']").text();
-
-  handleTrack(8, changedText)
-  // $(this).find(".internal[role='textbox']").css({ "font-size": fontSize, "font-family": fontFamily, "font-style": fontStyle });
-})
-
 //... Change Font Size Event
 $(document).on("change", "#toolbar-font-size", function () {
   if ($(".freeTextEditor").hasClass("selectedEditor")) {

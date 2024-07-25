@@ -124,7 +124,7 @@ $("#viewer").on("click", function (e) {
     let shapeHeight = 0;
 
     $("#clear-canvas").click();
-    let canvas = $("#shape-canvas")[0];
+    let canvas = $("#drawing-shape-board canvas")[0];
     canvas.width = canvas.offsetWidth * ratio;
     canvas.height = canvas.offsetHeight * ratio;
 

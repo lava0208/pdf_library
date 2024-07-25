@@ -35,7 +35,7 @@ class PlotApp {
      * art-board
      ***********/
     // this.canvas = document.getElementById("drawing-board").querySelector('canvas');
-    this.canvas = document.getElementById("shape-canvas");
+    this.canvas = document.getElementById("drawing-shape-board").querySelector('canvas');
     this.storeRect = [];
     this.storeCircle = [];
   }

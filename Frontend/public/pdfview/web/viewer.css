@@ -2551,3 +2551,15 @@ div[contenteditable="true"]:focus{
   display: inline-block;
   margin-left: 10px;
 }
+
+#drawing-shape-board{
+  position: absolute;
+  left: calc(50% - 150px);
+  top: 55px;
+  z-index: -1;
+}
+
+#drawing-shape-board canvas{
+  width: 300px;
+  height: 150px;
+}

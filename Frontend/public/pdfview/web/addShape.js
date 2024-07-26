@@ -1,21 +1,29 @@
 const addShapeBtn = document.getElementById("shape_format");
 let isDrawingShape = false;
-const ratio = Math.max(window.devicePixelRatio || 1, 1);
+let shapeId = baseId;
+
+const viewer = document.getElementById("viewer");
+let isDrawing = false;
+let startX = 0;
+let startY = 0;
+let rectElement;
 
 let selectedShapeFillColor = 'transparent'; // Default no fill
 let selectedShapeOutlineColor = 'black'; // Default black outline
 let selectedTextColor = 'black'; // Default black text color
 let selectedBorderRadius = 0; // Default no border radius
 let selectedBorderWeight = 1;
-let selectedTextSize = 14;
+let selectedTextSize = 16;
 
 $(addShapeBtn).on("click", function () {
   $("#editorShapeFormatToolbar").toggleClass("hidden");
 });
 
 $(".shape-item").on("click", function () {
+  baseId++;
   isDrawingShape = true;
   $("#editorShapeFormatToolbar").addClass("hidden");
+  viewer.style.cursor = 'crosshair';
 });
 
 $(".drawing-color").on("click", function () {
@@ -31,17 +39,17 @@ $(".drawing-color").on("click", function () {
 
 $(".size-dropdown input").on("input", function () {
   $(this).next('.range-value').remove();
-  var type = $(this).parents(".size-dropdown").attr("type"); // border raduis = 1, border width = 2, text size = 3;
-  if(type === "1"){
+  var type = $(this).parents(".size-dropdown").attr("type"); // border radius = 1, border width = 2, text size = 3;
+  if (type === "1") {
     selectedBorderRadius = $(this).val();
     $(this).after(`<span class="range-value">${selectedBorderRadius}px</span>`);
-  }else if(type === "2"){
+  } else if (type === "2") {
     selectedBorderWeight = $(this).val();
     $(this).after(`<span class="range-value">${selectedBorderWeight}px</span>`);
-  }else{
+  } else {
     selectedTextSize = $(this).val();
     $(this).after(`<span class="range-value">${selectedTextSize}px</span>`);
-  }  
+  }
 });
 
 const handleShape = function (w, h, canvasWidth, canvasHeight, shapeFillColor, borderColor, textColor, borderRadius, borderWidth, textSize, shapeText) {
@@ -93,170 +101,178 @@ const handleShape = function (w, h, canvasWidth, canvasHeight, shapeFillColor, b
   addHistory(baseId, SHAPE, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "shape");
 };
 
-$("#viewer").on("click", function (e) {
-  if (isDraft == "true") {
-    if (form_storage && form_storage !== null) {
-      form_storage.forEach((formItem) => {
-        drawShapeFromStorage(formItem);
-      });
-    }
-  }
-  if (isDrawingShape) {
-    baseId++;
-    let ost = computePageOffset();
-    let x = e.pageX - ost.left;
-    let y = e.pageY - ost.top;
+viewer.addEventListener("mousedown", function (e) {
+  if (!isDrawingShape) return;  
+  
+  const rect = viewer.getBoundingClientRect();
+  startX = e.clientX - rect.left;
+  startY = e.clientY - rect.top;
+  
+  isDrawing = true;
+  viewer.style.cursor = 'auto';
 
-    let pageId = String(PDFViewerApplication.page);
-    let pg = document.getElementById(pageId);
+  rectElement = document.createElement("div");
+  rectElement.id = "shape" + baseId;
+  rectElement.className = "shapeContainer form-fields";
+  rectElement.style.display = "flex";
+  rectElement.style.alignItems = "center";
+  rectElement.style.justifyContent = "center";
+  rectElement.style.position = "absolute";
+  rectElement.style.left = `${startX}px`;
+  rectElement.style.top = `${startY}px`;
+  rectElement.style.border = `${selectedBorderWeight}px solid ${selectedShapeOutlineColor}`;
+  rectElement.style.backgroundColor = selectedShapeFillColor;
+  rectElement.style.borderRadius = `${selectedBorderRadius}px`;
+  rectElement.style.fontSize = `${selectedTextSize}px`;
+  viewer.appendChild(rectElement);
+});
 
-    let shape_x_y = PDFViewerApplication.pdfViewer._pages[
-      PDFViewerApplication.page - 1
-    ].viewport.convertToPdfPoint(x, y);
+viewer.addEventListener("mousemove", function (e) {
+  if (!isDrawing) return;
 
-    pos_x_pdf = shape_x_y[0];
-    pos_y_pdf = shape_x_y[1];
+  const currentX = e.clientX - viewer.getBoundingClientRect().left;
+  const currentY = e.clientY - viewer.getBoundingClientRect().top;
+  const width = currentX - startX;
+  const height = currentY - startY;
 
-    let shapeId = baseId;
-    current_form_id = shapeId;
+  rectElement.style.width = `${Math.abs(width)}px`;
+  rectElement.style.height = `${Math.abs(height)}px`;
 
-    let shapeWidth = 0;
-    let shapeHeight = 0;
+  rectElement.style.left = `${Math.min(currentX, startX)}px`;
+  rectElement.style.top = `${Math.min(currentY, startY)}px`;
+});
 
-    $("#clear-canvas").click();
-    let canvas = $("#drawing-shape-board canvas")[0];
-    canvas.width = canvas.offsetWidth * ratio;
-    canvas.height = canvas.offsetHeight * ratio;
+viewer.addEventListener("mouseup", function (e) {
+  if (!isDrawing) return;
 
-    plot.initStore();
-    isDrawingShape = false;
-    $(addShapeBtn).removeClass("active_menu");
+  plot.initStore();
+  viewer.style.cursor = 'auto';
 
-    shapeImgData = cropCanvas(canvas);
+  isDrawing = false;
+  isDrawingShape = false;
 
-    shapeWidth = 300;
-    shapeHeight = 150;
+  const finalRect = {
+    left: rectElement.style.left,
+    top: rectElement.style.top,
+    width: rectElement.style.width,
+    height: rectElement.style.height,
+  };
 
-    const shapeImg = document.createElement("img");
-    shapeImg.id = "shapeImg" + shapeId;
-    shapeImg.style.width = "100%";
-    shapeImg.style.height = "100%";
-    shapeImg.src = shapeImgData;
-    shapeImg.style.objectFit = "fill";
+  const editableDiv = document.createElement("div");
+  editableDiv.className = "shapeText";
+  editableDiv.setAttribute("contenteditable", "true");
+  editableDiv.style.position = "absolute";
+  editableDiv.style.width = "100%";
+  editableDiv.style.height = "fit-content";
+  editableDiv.style.display = "flex";
+  editableDiv.style.alignItems = "center";
+  editableDiv.style.justifyContent = "center";
+  editableDiv.style.textAlign = "center";
+  editableDiv.style.fontSize = selectedTextSize;
+  editableDiv.style.color = selectedTextColor;
+  editableDiv.focus();
 
-    const shapeContainer = document.createElement("div");
-    shapeContainer.id = "shape" + shapeId;
-    shapeContainer.className = "shapeContainer";
-    shapeContainer.style.position = "absolute";
-    shapeContainer.style.top = y + "px";
-    shapeContainer.style.left = x + "px";
-    shapeContainer.style.width = shapeWidth + "px";
-    shapeContainer.style.height = shapeHeight + "px";
-    shapeContainer.style.zIndex = standardZIndex;
-    shapeContainer.style.display = "flex";
-    shapeContainer.style.alignItems = "center";
-    shapeContainer.style.justifyContent = "center";
-    shapeContainer.tabIndex = 0;
-    shapeContainer.classList.add("form-fields");
+  rectElement.appendChild(editableDiv);
+  editableDiv.focus();
 
-    // Apply selected styles to the shapeContainer
-    shapeContainer.style.backgroundColor = selectedShapeFillColor;
-    shapeContainer.style.border = `${selectedBorderWeight}px solid ${selectedShapeOutlineColor}`;
-    shapeContainer.style.borderRadius = `${selectedBorderRadius}px`;
-    shapeContainer.style.fontSize = `${selectedTextSize}px`;
+  // addResizeBar(rectElement.id);  
+  enableInteractJS(rectElement.id, SHAPE, baseId);
 
-    // Append contenteditable div to shapeContainer
-    const editableDiv = document.createElement("div");
-    editableDiv.className = "shapeText";
-    editableDiv.setAttribute("contenteditable", "true");
-    editableDiv.style.position = "absolute";
-    editableDiv.style.width = "100%";
-    editableDiv.style.height = "fit-content";
-    editableDiv.style.display = "flex";
-    editableDiv.style.alignItems = "center";
-    editableDiv.style.justifyContent = "center";    
-    editableDiv.style.textAlign = "center";
-    editableDiv.style.fontSize = selectedTextSize;
-    editableDiv.style.color = selectedTextColor;
-    editableDiv.focus();
+  editableDiv.addEventListener("blur", () => {
+    const shapeText = editableDiv.innerHTML.trim();
+    handleShape(
+      parseInt(finalRect.width, 10),
+      parseInt(finalRect.height, 10),
+      viewer.clientWidth,
+      viewer.clientHeight,
+      selectedShapeFillColor,
+      selectedShapeOutlineColor,
+      selectedTextColor,
+      selectedBorderRadius,
+      selectedBorderWeight,
+      selectedTextSize,
+      shapeText
+    );
+  });
 
-    shapeContainer.appendChild(editableDiv);
-    shapeContainer.append(shapeImg);
-    pg.appendChild(shapeContainer);
-    editableDiv.focus();
-    resizeCanvas(shapeContainer.id, SHAPE, shapeId);
+  editableDiv.addEventListener("dblclick", (event) => {
+    current_shape_id = rectElement.id;
+    showTextInput(event, rectElement, editableDiv);
+  });
+});
 
-    editableDiv.addEventListener("blur", () => {
-      shapeText = editableDiv.innerHTML.trim();
-      handleShape(boundingBox.width, boundingBox.height, canvas.width, canvas.height, selectedShapeFillColor, selectedShapeOutlineColor, selectedTextColor, selectedBorderRadius, selectedBorderWeight, selectedTextSize, shapeText);
+function enableInteractJS(elementId, type, currentId) {
+  const element = document.getElementById(elementId);
+  let newX = 0, newY = 0;
+
+  interact(`#${elementId}`)
+    .resizable({
+      edges: { left: ".resize-l", right: ".resize-r", bottom: ".resize-b", top: ".resize-t" },
+      listeners: {
+        move(event) {
+          const target = event.target;
+          let x = (parseFloat(target.getAttribute("data-x")) || 0);
+          let y = (parseFloat(target.getAttribute("data-y")) || 0);
+          x += event.deltaRect.left;
+          y += event.deltaRect.top;
+          target.style.width = `${event.rect.width}px`;
+          target.style.height = `${event.rect.height}px`;
+          target.style.transform = `translate(${x}px, ${y}px)`;
+          target.setAttribute("data-x", x);
+          target.setAttribute("data-y", y);
+          resizeHandler(event.rect.width, event.rect.height, currentId);
+        },
+        end(event) {
+          const target = event.target;
+          let x = (parseFloat(target.getAttribute("data-x")) || 0);
+          let y = (parseFloat(target.getAttribute("data-y")) || 0);
+          target.style.transform = `translate(${x}px, ${y}px)`;
+          target.setAttribute("data-x", x);
+          target.setAttribute("data-y", y);
+          moveEventHandler(event, x, y, currentId);
+        },
+      },
+      modifiers: [
+        interact.modifiers.restrictEdges({ outer: "parent" }),
+        interact.modifiers.restrictSize({ min: { width: 15, height: 15 } }),
+      ],
+      inertia: true,
+      enabled: false // Initially disable resize
+    })
+    .draggable({
+      listeners: {
+        move(event) {
+          const target = event.target;
+          let x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
+          let y = (parseFloat(target.getAttribute("data-y")) || 0) + event.dy;
+          target.style.transform = `translate(${x}px, ${y}px)`;
+          target.setAttribute("data-x", x);
+          target.setAttribute("data-y", y);
+        },
+      },
+      inertia: true,
+      modifiers: [
+        interact.modifiers.restrictRect({
+          restriction: 'parent',
+          endOnly: true
+        })
+      ],
     });
 
-    editableDiv.addEventListener("dblclick", (event) => {
-      current_shape_id = shapeId;
-      showTextInput(event, shapeContainer, editableDiv);
+  element.addEventListener("click", function (e) {
+    interact(`#${elementId}`).resizable({ enabled: true });
+  });
+}
 
-      let istooltipshow = false;
-
-      if (document.getElementById("shape_tooltipbar" + current_shape_id)) {
-        istooltipshow = true;
-      }
-
-      if (isDragging) {
-        isDragging = false;
-      } else {
-        if (!istooltipshow) {
-          let tooltipbar = document.createElement("div");
-          let editBtn = document.createElement("button");
-          editBtn.style.padding = "5px";
-          editBtn.innerHTML = `<i class="fa-solid fa-pen"></i>`;
-          $(editBtn).on("click", function () {
-            let targetShape = form_storage.filter(function (item) {
-              return item.id == parseInt(current_shape_id);
-            });
-            $("#drawing-board-container").css("display", "flex");
-            let targetCtx = canvas.getContext("2d");
-            targetCtx.clearRect(0, 0, canvas.width, canvas.height);
-            let image = new Image();
-            image.src = targetShape[0].imgData;
-
-            image.onload = function () {
-              let centerX = canvas.width / 2 - image.width / 2;
-              let centerY = canvas.height / 2 - image.height / 2;
-              targetCtx.drawImage(image, centerX, centerY);
-            };
-            $("#drawing-shape-create").on("click", function () {
-              shapeImgData = cropCanvas(canvas);
-              shapeWidth = boundingBox.width;
-              shapeHeight = boundingBox.height;
-              $("#drawing-board-container").css("display", "none");
-              shapeImg.src = shapeImgData;
-              handleShape(shapeWidth, shapeHeight, canvas.width, canvas.height, selectedShapeFillColor, selectedShapeOutlineColor, selectedTextColor, selectedBorderRadius, selectedBorderWeight, selectedTextSize, shapeText);
-            });
-          });
-          tooltipbar.append(editBtn);
-          current_form_id = shapeId;
-          addDeleteButton(
-            current_shape_id,
-            tooltipbar,
-            shapeContainer,
-            "shape"
-          );
-        } else {
-          document
-            .getElementById("shape_tooltipbar" + current_shape_id)
-            .remove();
-        }
-      }
-    });
-
-    $("#drawing-shape-create").off("click");
+viewer.addEventListener("click", function (e) {
+  if (!e.target.classList.contains("shapeContainer") && !e.target.classList.contains("resize-point")) {
+    interact(".shapeContainer").resizable({ enabled: false });
   }
 });
 
 function drawShapeFromStorage(formItem) {
   const shapeContainer = document.getElementById(formItem.containerId);
 
-  // Apply styles to the shapeContainer
   shapeContainer.style.backgroundColor = formItem.shapeFillColor;
   shapeContainer.style.border = `${formItem.borderWidth}px solid ${formItem.borderColor}`;
   shapeContainer.style.borderRadius = `${formItem.borderRadius}px`;
@@ -273,10 +289,12 @@ function drawShapeFromStorage(formItem) {
   });
 
   editableDiv.addEventListener("blur", () => {
-    const shapeText = editableDiv.innerHTML.trim(); // Save the text content on blur
-    formItem.shapeText = shapeText; // Update the form_storage item
-    console.log("shapeText on blur:", shapeText); // Debug log
+    const shapeText = editableDiv.innerHTML.trim();
+    formItem.shapeText = shapeText;
   });
+
+  // addResizebar(formItem.containerId);
+  enableInteractJS(formItem.containerId, SHAPE, formItem.id);
 }
 
 function updateText(editableDiv) {
@@ -301,7 +319,6 @@ function showTextInput(event, shapeContainer, editableDiv) {
   editableDiv.style.transform = 'translate(-50%, -50%)';
   editableDiv.focus();
 
-  // Place the caret at the clicked position
   const range = document.caretRangeFromPoint(event.clientX, event.clientY);
   if (range) {
     const selection = window.getSelection();
@@ -309,7 +326,16 @@ function showTextInput(event, shapeContainer, editableDiv) {
     selection.addRange(range);
   }
 
-  // Add event listeners
   editableDiv.addEventListener('blur', () => saveText(editableDiv, shapeContainer), { once: true });
   editableDiv.addEventListener('input', () => updateText(editableDiv, shapeContainer));
 }
+
+$("#viewer").on("click", function (e) {
+  if (isDraft == "true") {
+    if (form_storage && form_storage !== null) {
+      form_storage.forEach((formItem) => {
+        drawShapeFromStorage(formItem);
+      });
+    }
+  }
+});

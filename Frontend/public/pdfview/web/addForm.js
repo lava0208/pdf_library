@@ -2,6 +2,7 @@
 let draw_form_storage;
 let current_form_id = 0;
 let currentMode = null;
+let ratio = Math.max(window.devicePixelRatio || 1, 1);
 
 let checkboxCount = 1,
   radioCount = 1,
@@ -1265,6 +1266,8 @@ const drawFormElement = function () {
           let canvas = $("#drawing-board").find("canvas")[0];
           canvas.width = item.canvasWidth * ratio;
           canvas.height = item.canvasHeight * ratio;
+          // canvas.width = item.canvasWidth;
+          // canvas.height = item.canvasHeight;
           const shapeImg = document.createElement("img");
           shapeImg.id = "shapeImg" + id;
           shapeImg.style.width = "100%";
@@ -1325,12 +1328,6 @@ const drawFormElement = function () {
             } else {
               if (!istooltipshow) {
                 current_form_id = id;
-                addDeleteButton(
-                  current_shape_id,
-                  tooltipbar,
-                  shapeContainer,
-                  "shape"
-                );
               } else {
                 document
                   .getElementById("shape_tooltipbar" + current_shape_id)

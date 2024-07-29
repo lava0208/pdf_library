@@ -475,7 +475,7 @@ body {
 #editorShapeFormatToolbar{
   top: 213px;
   padding: 10px;
-  width: 500px;
+  width: 650px;
   display: flex;
   gap: 7px;
   flex-direction: column;
@@ -2536,16 +2536,18 @@ body.loading .loading-container{
   cursor: pointer;
 }
 
-.shape-dropdown-container{
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 7px;
+.shape-dropdown-container {
+  display: flex;
+  gap: 10px;
+  word-wrap: unset;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 }
 
 div[contenteditable="true"]:focus{
   outline: none;
 }
-
 
 .range-value {
   display: inline-block;
@@ -2562,4 +2564,25 @@ div[contenteditable="true"]:focus{
 #drawing-shape-board canvas{
   width: 300px;
   height: 150px;
+}
+
+#extra-shape-icons {
+  display: flex;
+  gap: 10px;
+  width: 20%;
+  justify-content: center;
+}
+
+#extra-shape-icons i{
+  font-size: 16px;
+  padding: 5px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+#extra-shape-icons i.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: lightgray; 
 }

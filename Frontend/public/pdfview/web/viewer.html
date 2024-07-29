@@ -264,6 +264,24 @@ See https://github.com/adobe-type-tools/cmap-resources
               </a>
             </div>
           </div>
+          <div class="dropdown size-dropdown" id="border-radius-dropdown" type="1">
+            <button class="btn dropdown-toggle d-flex align-items-center" type="button" data-toggle="dropdown" aria-expanded="false">
+              <i class="fa fa-solid fa-border-top-left"></i> <span class="pl-1">Outline Radius</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-start text-center">
+              <input type="range" class="editorParamsSlider" value="0" min="0" max="30" step="1"
+                tabindex="105" />
+            </div>
+          </div>
+          <div class="dropdown size-dropdown" id="border-weight-dropdown" type="2">
+            <button class="btn dropdown-toggle d-flex align-items-center" type="button" data-toggle="dropdown" aria-expanded="false">
+              <i class="fa fa-solid fa-border-top-left"></i> <span class="pl-1">Outline Weight</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-start text-center">
+              <input type="range" class="editorParamsSlider" value="1" min="1" max="10" step="1"
+                tabindex="105" />
+            </div>
+          </div>
           <div class="dropdown" id="text-color-dropdown">
             <button class="btn dropdown-toggle d-flex align-items-center" type="button" data-toggle="dropdown" aria-expanded="false">
               <i class="fa-solid fa-highlighter"></i> <span class="pl-1">Text Color</span>
@@ -289,24 +307,6 @@ See https://github.com/adobe-type-tools/cmap-resources
               </a>
             </div>
           </div>
-          <div class="dropdown size-dropdown" id="border-radius-dropdown" type="1">
-            <button class="btn dropdown-toggle d-flex align-items-center" type="button" data-toggle="dropdown" aria-expanded="false">
-              <i class="fa fa-solid fa-border-top-left"></i> <span class="pl-1">Outline Radius</span>
-            </button>
-            <div class="dropdown-menu dropdown-menu-start text-center">
-              <input type="range" class="editorParamsSlider" value="0" min="0" max="30" step="1"
-                tabindex="105" />
-            </div>
-          </div>
-          <div class="dropdown size-dropdown" id="border-weight-dropdown" type="2">
-            <button class="btn dropdown-toggle d-flex align-items-center" type="button" data-toggle="dropdown" aria-expanded="false">
-              <i class="fa fa-solid fa-border-top-left"></i> <span class="pl-1">Outline Weight</span>
-            </button>
-            <div class="dropdown-menu dropdown-menu-start text-center">
-              <input type="range" class="editorParamsSlider" value="1" min="1" max="10" step="1"
-                tabindex="105" />
-            </div>
-          </div>
           <div class="dropdown size-dropdown" id="text-size-dropdown" type="3">
             <button class="btn dropdown-toggle d-flex align-items-center" type="button" data-toggle="dropdown" aria-expanded="false">
               <i class="fa fa-solid fa-border-top-left"></i> <span class="pl-1">Text Size</span>
@@ -315,6 +315,11 @@ See https://github.com/adobe-type-tools/cmap-resources
               <input type="range" class="editorParamsSlider" value="16" min="10" max="60" step="2"
                 tabindex="105" />
             </div>
+          </div>
+          <div id="extra-shape-icons">
+            <i class="fa-solid fa-bold" id="text-bold"></i>
+            <i class="fa-solid fa-italic" id="text-italic"></i>
+            <i class="fa-solid fa-underline" id="text-underline"></i>
           </div>
         </div>
       </div>

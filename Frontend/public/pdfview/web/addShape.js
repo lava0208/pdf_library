@@ -8,12 +8,15 @@ let startX = 0;
 let startY = 0;
 let rectElement;
 
-let selectedShapeFillColor = 'white'; // Default no fill
-let selectedShapeOutlineColor = 'black'; // Default black outline
-let selectedTextColor = 'black'; // Default black text color
-let selectedBorderRadius = 0; // Default no border radius
+let selectedShapeFillColor = 'white';
+let selectedShapeOutlineColor = 'black';
+let selectedTextColor = 'black';
+let selectedBorderRadius = 0;
 let selectedBorderWeight = 1;
 let selectedTextSize = 16;
+let selectedTextBold = false;
+let selectedTextItalic = false;
+let selectedTextUnderline = false;
 
 $(addShapeBtn).on("click", function () {
   $("#editorShapeFormatToolbar").toggleClass("hidden");
@@ -52,7 +55,19 @@ $(".size-dropdown input").on("input", function () {
   }
 });
 
-const handleShape = function (w, h, canvasWidth, canvasHeight, shapeFillColor, borderColor, textColor, borderRadius, borderWidth, textSize, shapeText) {
+$("#extra-shape-icons i").on("click", function () {
+  $(this).toggleClass("active");
+  var id = $(this).attr("id");
+  if(id === "text-bold"){
+    selectedTextBold = !selectedTextBold;
+  }else if(id === "text-italic"){
+    selectedTextItalic = !selectedTextItalic;
+  }else if(id === "text-underline"){
+    selectedTextUnderline = !selectedTextUnderline;
+  }
+})
+
+const handleShape = function (w, h, canvasWidth, canvasHeight, shapeFillColor, borderColor, textColor, borderRadius, borderWidth, textSize, textBold, textItalic, textUnderline, shapeText) {
   for (let i = 0; i < form_storage.length; i++) {
     if (form_storage[i].id == current_form_id) {
       // form_storage[i].imgData = shapeImgData;
@@ -86,15 +101,15 @@ const handleShape = function (w, h, canvasWidth, canvasHeight, shapeFillColor, b
       yPage: formHeight,
       canvasWidth: canvasWidth,
       canvasHeight: canvasHeight,
-      // canvasWidth: canvasWidth,
-      // canvasHeight: canvasHeight,
-      // imgData: shapeImgData,
       shapeFillColor: shapeFillColor,
       borderColor: borderColor,
       textColor: textColor,
       borderRadius: borderRadius,
       borderWidth: borderWidth,
       textSize: textSize,
+      textBold: textBold,
+      textItalic: textItalic,
+      textUnderline: textUnderline,
       shapeText: shapeText
     });
   }
@@ -125,6 +140,9 @@ viewer.addEventListener("mousedown", function (e) {
   rectElement.style.backgroundColor = selectedShapeFillColor;
   rectElement.style.borderRadius = `${selectedBorderRadius}px`;
   rectElement.style.fontSize = `${selectedTextSize}px`;
+  rectElement.style.fontWeight = selectedTextBold ? "bold" : "normal";
+  rectElement.style.fontStyle = selectedTextItalic ? "italic" : "normal";
+  rectElement.style.textDecoration = selectedTextUnderline ? "underline" : "none";
   viewer.appendChild(rectElement);
 });
 
@@ -194,7 +212,9 @@ viewer.addEventListener("mouseup", function (e) {
   editableDiv.style.justifyContent = "center";
   editableDiv.style.textAlign = "center";
   editableDiv.style.fontSize = selectedTextSize;
+  editableDiv.style.textDecoration = selectedTextUnderline ? "underline " : "";
   editableDiv.style.color = selectedTextColor;
+  
   editableDiv.focus();
 
   rectElement.appendChild(editableDiv);
@@ -215,6 +235,9 @@ viewer.addEventListener("mouseup", function (e) {
       selectedBorderRadius,
       selectedBorderWeight,
       selectedTextSize,
+      selectedTextBold,
+      selectedTextItalic,
+      selectedTextUnderline,
       shapeText
     );
   });
@@ -254,6 +277,31 @@ function enableInteractJS(elementId, type, currentId) {
           target.setAttribute("data-x", x);
           target.setAttribute("data-y", y);
           moveEventHandler(event, x, y, currentId);
+
+          // Call handleShape here
+          const finalRect = {
+            left: parseInt(target.style.left, 10),
+            top: parseInt(target.style.top, 10),
+            width: parseInt(target.style.width, 10),
+            height: parseInt(target.style.height, 10),
+          };
+          const shapeText = target.querySelector('.shapeText').innerHTML.trim();
+          handleShape(
+            finalRect.width,
+            finalRect.height,
+            viewer.clientWidth,
+            viewer.clientHeight,
+            selectedShapeFillColor,
+            selectedShapeOutlineColor,
+            selectedTextColor,
+            selectedBorderRadius,
+            selectedBorderWeight,
+            selectedTextSize,
+            selectedTextBold,
+            selectedTextItalic,
+            selectedTextUnderline,
+            shapeText
+          );
         },
       },
       modifiers: [
@@ -273,8 +321,39 @@ function enableInteractJS(elementId, type, currentId) {
           target.setAttribute("data-x", x);
           target.setAttribute("data-y", y);
         },
-        end() {
-          console.log("elementId************", elementId);
+        end(event) {
+          const target = event.target;
+          let x = (parseFloat(target.getAttribute("data-x")) || 0);
+          let y = (parseFloat(target.getAttribute("data-y")) || 0);
+          target.style.transform = `translate(${x}px, ${y}px)`;
+          target.setAttribute("data-x", x);
+          target.setAttribute("data-y", y);
+          moveEventHandler(event, x, y, currentId);
+
+          // Call handleShape here as well
+          const finalRect = {
+            left: parseInt(target.style.left, 10),
+            top: parseInt(target.style.top, 10),
+            width: parseInt(target.style.width, 10),
+            height: parseInt(target.style.height, 10),
+          };
+          const shapeText = target.querySelector('.shapeText').innerHTML.trim();
+          handleShape(
+            finalRect.width,
+            finalRect.height,
+            viewer.clientWidth,
+            viewer.clientHeight,
+            selectedShapeFillColor,
+            selectedShapeOutlineColor,
+            selectedTextColor,
+            selectedBorderRadius,
+            selectedBorderWeight,
+            selectedTextSize,
+            selectedTextBold,
+            selectedTextItalic,
+            selectedTextUnderline,
+            shapeText
+          );
         },
       },
       inertia: true,
@@ -297,17 +376,33 @@ viewer.addEventListener("click", function (e) {
   }
 });
 
+$("#viewer").on("click", function (e) {
+  if (isDraft === "true") {
+    if (form_storage && form_storage !== null) {
+        form_storage.forEach((formItem) => {
+          if (formItem.form_type === SHAPE){
+            drawShapeFromStorage(formItem);
+            resizeCanvas(formItem.containerId, SIGNATURE, formItem.id);
+          }
+      })
+    }
+  }
+});
+
 function drawShapeFromStorage(formItem) {
   const shapeContainer = document.getElementById(formItem.containerId);
 
   shapeContainer.style.backgroundColor = formItem.shapeFillColor;
   shapeContainer.style.border = `${formItem.borderWidth}px solid ${formItem.borderColor}`;
   shapeContainer.style.borderRadius = `${formItem.borderRadius}px`;
+  shapeContainer.style.fontWeight = formItem.textBold ? "bold" : "normal";
+  shapeContainer.style.fontStyle = formItem.textItalic ? "italic" : "normal";
 
   const editableDiv = shapeContainer.querySelector(".shapeText");
   editableDiv.innerHTML = formItem.shapeText;
   editableDiv.style.fontSize = `${formItem.textSize}px`;
   editableDiv.style.color = formItem.textColor;
+  editableDiv.style.textDecoration = formItem.textUnderline ? "underline " : "";
   editableDiv.focus();
 
   editableDiv.addEventListener("dblclick", (event) => {
@@ -320,7 +415,6 @@ function drawShapeFromStorage(formItem) {
     formItem.shapeText = shapeText;
   });
 
-  // addResizebar(formItem.containerId);  
   enableInteractJS(formItem.containerId, SHAPE, formItem.id);
   drawShapeStyle(formItem);
 }
@@ -328,12 +422,18 @@ function drawShapeFromStorage(formItem) {
 function updateText(editableDiv) {
   editableDiv.style.display = 'block';
   editableDiv.style.textAlign = 'center';
+  editableDiv.style.fontWeight = selectedTextBold ? "bold" : "normal";
+  editableDiv.style.fontStyle = selectedTextItalic ? "italic" : "normal";
+  editableDiv.style.textDecoration = selectedTextUnderline ? "underline" : "none";
 }
 
 function saveText(editableDiv, shapeContainer) {
   updateText(editableDiv, shapeContainer);
   editableDiv.style.display = 'block';
   editableDiv.style.textAlign = 'center';
+  editableDiv.style.fontWeight = selectedTextBold ? "bold" : "normal";
+  editableDiv.style.fontStyle = selectedTextItalic ? "italic" : "normal";
+  editableDiv.style.textDecoration = selectedTextUnderline ? "underline" : "none";
   shapeText = editableDiv.innerHTML.trim();
 }
 
@@ -377,17 +477,13 @@ function drawShapeStyle(item){
   $("#border-radius-dropdown").find("input").val(item.borderRadius)
   $("#border-weight-dropdown").find("input").val(item.borderWidth)
   $("#text-size-dropdown").find("input").val(item.textSize)
-}
-
-$("#viewer").on("click", function (e) {
-  if (isDraft === "true") {
-    if (form_storage && form_storage !== null) {
-        form_storage.forEach((formItem) => {
-          if (formItem.form_type === SHAPE){
-            drawShapeFromStorage(formItem);
-            resizeCanvas(formItem.containerId, SIGNATURE, formItem.id);
-          }
-      })
-    }
+  if(item.textBold){
+    $("#text-bold").addClass("active");
   }
-});
+  if(item.textItalic){
+    $("#text-italic").addClass("active");
+  }
+  if(item.textUnderline){
+    $("#text-underline").addClass("active");
+  }
+}

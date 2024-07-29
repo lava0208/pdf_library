@@ -170,7 +170,6 @@ viewer.addEventListener("mouseup", function (e) {
   const endX = e.clientX - rect.left;
   const endY = e.clientY - rect.top;
 
-  // Ensure the coordinates are from the top-left corner of the rectangle
   const left = Math.min(startX, endX);
   const top = Math.min(startY, endY);
 
@@ -203,7 +202,7 @@ viewer.addEventListener("mouseup", function (e) {
 
   const editableDiv = document.createElement("div");
   editableDiv.className = "shapeText";
-  editableDiv.setAttribute("contenteditable", "true");
+  editableDiv.setAttribute("contenteditable", "false");
   editableDiv.style.position = "absolute";
   editableDiv.style.width = "100%";
   editableDiv.style.height = "fit-content";
@@ -214,11 +213,8 @@ viewer.addEventListener("mouseup", function (e) {
   editableDiv.style.fontSize = selectedTextSize;
   editableDiv.style.textDecoration = selectedTextUnderline ? "underline " : "";
   editableDiv.style.color = selectedTextColor;
-  
-  editableDiv.focus();
 
   rectElement.appendChild(editableDiv);
-  editableDiv.focus();
 
   enableInteractJS(rectElement.id, SHAPE, baseId);
 
@@ -240,6 +236,7 @@ viewer.addEventListener("mouseup", function (e) {
       selectedTextUnderline,
       shapeText
     );
+    editableDiv.setAttribute("contenteditable", "false");
   });
 
   editableDiv.addEventListener("dblclick", (event) => {
@@ -247,7 +244,6 @@ viewer.addEventListener("mouseup", function (e) {
     showTextInput(event, rectElement, editableDiv);
   });
 });
-
 
 function enableInteractJS(elementId, type, currentId) {
   const element = document.getElementById(elementId);
@@ -277,29 +273,22 @@ function enableInteractJS(elementId, type, currentId) {
           target.setAttribute("data-x", x);
           target.setAttribute("data-y", y);
           moveEventHandler(event, x, y, currentId);
-
-          // Call handleShape here
-          const finalRect = {
-            left: parseInt(target.style.left, 10),
-            top: parseInt(target.style.top, 10),
-            width: parseInt(target.style.width, 10),
-            height: parseInt(target.style.height, 10),
-          };
-          const shapeText = target.querySelector('.shapeText').innerHTML.trim();
+          // Call handleShape after the movement ends
+          const shapeText = target.querySelector(".shapeText").innerHTML.trim();
           handleShape(
-            finalRect.width,
-            finalRect.height,
+            parseInt(target.style.width, 10),
+            parseInt(target.style.height, 10),
             viewer.clientWidth,
             viewer.clientHeight,
-            selectedShapeFillColor,
-            selectedShapeOutlineColor,
-            selectedTextColor,
-            selectedBorderRadius,
-            selectedBorderWeight,
-            selectedTextSize,
-            selectedTextBold,
-            selectedTextItalic,
-            selectedTextUnderline,
+            target.style.backgroundColor,
+            target.style.borderColor,
+            target.querySelector(".shapeText").style.color,
+            parseInt(target.style.borderRadius, 10),
+            parseInt(target.style.borderWidth, 10),
+            parseInt(target.querySelector(".shapeText").style.fontSize, 10),
+            target.querySelector(".shapeText").style.fontWeight === "bold",
+            target.querySelector(".shapeText").style.fontStyle === "italic",
+            target.querySelector(".shapeText").style.textDecoration.includes("underline"),
             shapeText
           );
         },
@@ -322,36 +311,23 @@ function enableInteractJS(elementId, type, currentId) {
           target.setAttribute("data-y", y);
         },
         end(event) {
+          // Call handleShape after the movement ends
           const target = event.target;
-          let x = (parseFloat(target.getAttribute("data-x")) || 0);
-          let y = (parseFloat(target.getAttribute("data-y")) || 0);
-          target.style.transform = `translate(${x}px, ${y}px)`;
-          target.setAttribute("data-x", x);
-          target.setAttribute("data-y", y);
-          moveEventHandler(event, x, y, currentId);
-
-          // Call handleShape here as well
-          const finalRect = {
-            left: parseInt(target.style.left, 10),
-            top: parseInt(target.style.top, 10),
-            width: parseInt(target.style.width, 10),
-            height: parseInt(target.style.height, 10),
-          };
-          const shapeText = target.querySelector('.shapeText').innerHTML.trim();
+          const shapeText = target.querySelector(".shapeText").innerHTML.trim();
           handleShape(
-            finalRect.width,
-            finalRect.height,
+            parseInt(target.style.width, 10),
+            parseInt(target.style.height, 10),
             viewer.clientWidth,
             viewer.clientHeight,
-            selectedShapeFillColor,
-            selectedShapeOutlineColor,
-            selectedTextColor,
-            selectedBorderRadius,
-            selectedBorderWeight,
-            selectedTextSize,
-            selectedTextBold,
-            selectedTextItalic,
-            selectedTextUnderline,
+            target.style.backgroundColor,
+            target.style.borderColor,
+            target.querySelector(".shapeText").style.color,
+            parseInt(target.style.borderRadius, 10),
+            parseInt(target.style.borderWidth, 10),
+            parseInt(target.querySelector(".shapeText").style.fontSize, 10),
+            target.querySelector(".shapeText").style.fontWeight === "bold",
+            target.querySelector(".shapeText").style.fontStyle === "italic",
+            target.querySelector(".shapeText").style.textDecoration.includes("underline"),
             shapeText
           );
         },
@@ -367,10 +343,26 @@ function enableInteractJS(elementId, type, currentId) {
 
   element.addEventListener("click", function (e) {
     interact(`#${elementId}`).resizable({ enabled: true });
+    const shapeText = element.querySelector(".shapeText");
+    if (shapeText) {
+      shapeText.setAttribute("contenteditable", "true");
+    }
   });
 }
 
 viewer.addEventListener("click", function (e) {
+  if (e.target.classList.contains("shapeContainer") || e.target.closest(".shapeContainer")) {
+    const shapeContainer = e.target.closest(".shapeContainer");
+    const shapeText = shapeContainer.querySelector(".shapeText");
+    if (shapeText) {
+      shapeText.setAttribute("contenteditable", "true");
+    }
+  } else {
+    document.querySelectorAll(".shapeText").forEach(shapeText => {
+      shapeText.setAttribute("contenteditable", "false");
+    });
+  }
+
   if (!e.target.classList.contains("shapeContainer") && !e.target.classList.contains("resize-point")) {
     interact(".shapeContainer").resizable({ enabled: false });
   }

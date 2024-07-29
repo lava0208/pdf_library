@@ -2202,7 +2202,6 @@ dialog :link {
   font: message-box;
   margin-top: 42px;
   right: -250px;
-  /* Start off-screen */
   background-color: #ffffff;
   border-radius: 2px;
   border-left: 1px solid #adb5bd;
@@ -2211,13 +2210,34 @@ dialog :link {
   opacity: 0.9;
   transition: right 0.3s;
   overflow: auto;
-  /* Add transition for smooth slide animation */
 }
 
 .right-sidebar.active {
   right: 0;
-  /* Slide the sidebar into view */
 }
+
+.shape-right-sidebar{
+  position: fixed;
+  inset-block: 0;
+  width: 200px;
+  z-index: 99999999;
+  font: message-box;
+  margin-top: 42px;
+  right: -250px;
+  background-color: #ffffff;
+  border-radius: 2px;
+  border-left: 1px solid #adb5bd;
+  box-shadow: 1px 3px 3px 0px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  opacity: 0.9;
+  transition: right 0.3s;
+  overflow: auto;
+}
+
+.shape-right-sidebar.active{
+  right: 0;
+}
+
 .show-history {
   position: fixed;
   inset-block: 0;
@@ -2585,4 +2605,40 @@ div[contenteditable="true"]:focus{
   align-items: center;
   justify-content: center;
   background-color: lightgray; 
+}
+
+#shapeToolbar{
+  display: none;
+  align-items: center;
+  background-color: #e2e2e2;
+  box-shadow: var(--toolbar-box-shadow);
+  border-bottom: var(--toolbar-border-bottom);
+  position: relative;
+}
+
+#shapeToolbar #extra-shape-icons{
+  width: auto;
+  margin-left: 10px;
+  gap: 20px;
+}
+
+#shapeIcons, #annotationIcons{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 15px;
+}
+
+#shapeIcons{
+  border-right: 1px solid #412424;
+}
+
+#closeShapeToolbar{
+  position: absolute;
+  right: 10px;
+  top: 5px;
+}
+
+#closeShapeToolbar i{
+  font-size: 20px;
 }

@@ -1,4 +1,3 @@
-const addShapeBtn = document.getElementById("shape_format");
 let isDrawingShape = false;
 let shapeId = baseId;
 
@@ -18,8 +17,30 @@ let selectedTextBold = false;
 let selectedTextItalic = false;
 let selectedTextUnderline = false;
 
-$(addShapeBtn).on("click", function () {
+$("#shape_format").on("click", function () {
   $("#editorShapeFormatToolbar").toggleClass("hidden");
+  
+  // Initialize the styles of editorShapeFormatToolbar
+  $("#shape-fill-dropdown .drawing-color").removeClass("selected");
+  $("#shape-outline-dropdown .drawing-color").removeClass("selected");
+  $("#text-color-dropdown .drawing-color").removeClass("selected");
+  $("#border-radius-dropdown input").val(0);
+  $("#border-weight-dropdown input").val(1);
+  $("#text-size-dropdown input").val(16);
+  $("#text-bold").removeClass("active");
+  $("#text-italic").removeClass("active");
+  $("#text-underline").removeClass("active");
+
+  // Set default values
+  selectedShapeFillColor = 'white';
+  selectedShapeOutlineColor = 'black';
+  selectedTextColor = 'black';
+  selectedBorderRadius = 0;
+  selectedBorderWeight = 1;
+  selectedTextSize = 16;
+  selectedTextBold = false;
+  selectedTextItalic = false;
+  selectedTextUnderline = false;
 });
 
 $(".shape-item").on("click", function () {
@@ -67,55 +88,9 @@ $("#extra-shape-icons i").on("click", function () {
   }
 })
 
-const handleShape = function (w, h, canvasWidth, canvasHeight, shapeFillColor, borderColor, textColor, borderRadius, borderWidth, textSize, textBold, textItalic, textUnderline, shapeText) {
-  for (let i = 0; i < form_storage.length; i++) {
-    if (form_storage[i].id == current_form_id) {
-      // form_storage[i].imgData = shapeImgData;
-      form_storage[i].shapeText = shapeText;
-      return;
-    }
-  }
-  formWidth = w;
-  formHeight = h;
-  let shapeStorage = form_storage.filter(function (item) {
-    return item.form_type == SHAPE;
-  });
-  let count = 0;
-  for (let j = 0; j < shapeStorage.length; j++) {
-    if (form_storage[j].id != current_form_id)
-      count++;
-  }
-  if (count == shapeStorage.length || shapeStorage == null) {
-    form_storage.push({
-      id: baseId,
-      containerId: "shape" + baseId,
-      form_type: SHAPE,
-      page_number: PDFViewerApplication.page,
-      x: pos_x_pdf - 7,
-      y: pos_y_pdf + 7.5,
-      baseX: pos_x_pdf - 7,
-      baseY: pos_y_pdf + 7.5,
-      width: formWidth * 0.75 * 0.8,
-      height: formHeight * 0.75 * 0.8,
-      xPage: formWidth,
-      yPage: formHeight,
-      canvasWidth: canvasWidth,
-      canvasHeight: canvasHeight,
-      shapeFillColor: shapeFillColor,
-      borderColor: borderColor,
-      textColor: textColor,
-      borderRadius: borderRadius,
-      borderWidth: borderWidth,
-      textSize: textSize,
-      textBold: textBold,
-      textItalic: textItalic,
-      textUnderline: textUnderline,
-      shapeText: shapeText
-    });
-  }
-  const date = new Date(Date.now());
-  addHistory(baseId, SHAPE, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "shape");
-};
+$("#closeShapeToolbar").on("click", function () {
+  $("#shapeToolbar").hide();
+})
 
 viewer.addEventListener("mousedown", function (e) {
   if (!isDrawingShape) return;  
@@ -245,6 +220,125 @@ viewer.addEventListener("mouseup", function (e) {
   });
 });
 
+viewer.addEventListener("click", function (e) {
+  if (isDraft === "true") {
+    if (form_storage && form_storage !== null) {
+        form_storage.forEach((formItem) => {
+          if (formItem.form_type === SHAPE){
+            drawShapeFromStorage(formItem);
+            resizeCanvas(formItem.containerId, SIGNATURE, formItem.id);
+          }
+      })
+    }
+  }
+});
+
+viewer.addEventListener("dblclick", function (e) {
+  if (e.target.classList.contains("shapeContainer") || e.target.closest(".shapeContainer")) {
+    $("#shapeToolbar").css("display", "flex");
+
+    const shapeContainer = e.target.closest(".shapeContainer");
+    const shapeText = shapeContainer.querySelector(".shapeText");
+    if (shapeText) {
+      shapeText.setAttribute("contenteditable", "true");
+    }
+
+    // Sync editorShapeFormatToolbar with the selected shape's styles
+    $("#shapeIcons").find("#shape-fill-dropdown .drawing-color").removeClass("selected");
+    $("#shapeIcons").find(`#shape-fill-dropdown .drawing-color`).filter(function () {
+      return $(this).attr('color') === shapeContainer.style.backgroundColor;
+    }).addClass("selected");
+
+    $("#shapeIcons").find("#shape-outline-dropdown .drawing-color").removeClass("selected");
+    $("#shapeIcons").find(`#shape-outline-dropdown .drawing-color`).filter(function () {
+      return $(this).attr('color') === shapeContainer.style.borderColor;
+    }).addClass("selected");
+
+    $("#annotationIcons").find("#text-color-dropdown .drawing-color").removeClass("selected");
+    $("#annotationIcons").find(`#text-color-dropdown .drawing-color`).filter(function () {
+      return $(this).attr('color') === shapeContainer.style.color;
+    }).addClass("selected");
+
+    $("#shapeIcons").find("#border-radius-dropdown input").val(parseInt(shapeContainer.style.borderRadius));
+    $("#shapeIcons").find("#border-weight-dropdown input").val(parseInt(shapeContainer.style.borderWidth));
+    $("#annotationIcons").find("#text-size-dropdown input").val(parseInt(shapeText.style.fontSize));
+
+    if (shapeContainer.style.fontWeight === "bold") {
+      $("#annotationIcons").find("#text-bold").addClass("active");
+    } else {
+      $("#annotationIcons").find("#text-bold").removeClass("active");
+    }
+
+    if (shapeContainer.style.fontStyle === "italic") {
+      $("#annotationIcons").find("#text-italic").addClass("active");
+    } else {
+      $("#annotationIcons").find("#text-italic").removeClass("active");
+    }
+
+    if (shapeText.style.textDecoration.includes("underline")) {
+      $("#annotationIcons").find("#text-underline").addClass("active");
+    } else {
+      $("#annotationIcons").find("#text-underline").removeClass("active");
+    }
+
+  } else {
+    document.querySelectorAll(".shapeText").forEach(shapeText => {
+      shapeText.setAttribute("contenteditable", "false");
+      shapeText.blur();
+    });
+  }
+});
+
+function handleShape(w, h, canvasWidth, canvasHeight, shapeFillColor, borderColor, textColor, borderRadius, borderWidth, textSize, textBold, textItalic, textUnderline, shapeText) {
+  for (let i = 0; i < form_storage.length; i++) {
+    if (form_storage[i].id == current_form_id) {
+      // form_storage[i].imgData = shapeImgData;
+      form_storage[i].shapeText = shapeText;
+      return;
+    }
+  }
+  formWidth = w;
+  formHeight = h;
+  let shapeStorage = form_storage.filter(function (item) {
+    return item.form_type == SHAPE;
+  });
+  let count = 0;
+  for (let j = 0; j < shapeStorage.length; j++) {
+    if (form_storage[j].id != current_form_id)
+      count++;
+  }
+  if (count == shapeStorage.length || shapeStorage == null) {
+    form_storage.push({
+      id: baseId,
+      containerId: "shape" + baseId,
+      form_type: SHAPE,
+      page_number: PDFViewerApplication.page,
+      x: pos_x_pdf - 7,
+      y: pos_y_pdf + 7.5,
+      baseX: pos_x_pdf - 7,
+      baseY: pos_y_pdf + 7.5,
+      width: formWidth * 0.75 * 0.8,
+      height: formHeight * 0.75 * 0.8,
+      xPage: formWidth,
+      yPage: formHeight,
+      canvasWidth: canvasWidth,
+      canvasHeight: canvasHeight,
+      shapeFillColor: shapeFillColor,
+      borderColor: borderColor,
+      textColor: textColor,
+      borderRadius: borderRadius,
+      borderWidth: borderWidth,
+      textSize: textSize,
+      textBold: textBold,
+      textItalic: textItalic,
+      textUnderline: textUnderline,
+      shapeText: shapeText
+    });
+  }
+  const date = new Date(Date.now());
+  addHistory(baseId, SHAPE, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "shape");
+};
+
 function enableInteractJS(elementId, type, currentId) {
   const element = document.getElementById(elementId);
 
@@ -349,37 +443,6 @@ function enableInteractJS(elementId, type, currentId) {
     }
   });
 }
-
-viewer.addEventListener("click", function (e) {
-  if (e.target.classList.contains("shapeContainer") || e.target.closest(".shapeContainer")) {
-    const shapeContainer = e.target.closest(".shapeContainer");
-    const shapeText = shapeContainer.querySelector(".shapeText");
-    if (shapeText) {
-      shapeText.setAttribute("contenteditable", "true");
-    }
-  } else {
-    document.querySelectorAll(".shapeText").forEach(shapeText => {
-      shapeText.setAttribute("contenteditable", "false");
-    });
-  }
-
-  if (!e.target.classList.contains("shapeContainer") && !e.target.classList.contains("resize-point")) {
-    interact(".shapeContainer").resizable({ enabled: false });
-  }
-});
-
-$("#viewer").on("click", function (e) {
-  if (isDraft === "true") {
-    if (form_storage && form_storage !== null) {
-        form_storage.forEach((formItem) => {
-          if (formItem.form_type === SHAPE){
-            drawShapeFromStorage(formItem);
-            resizeCanvas(formItem.containerId, SIGNATURE, formItem.id);
-          }
-      })
-    }
-  }
-});
 
 function drawShapeFromStorage(formItem) {
   const shapeContainer = document.getElementById(formItem.containerId);

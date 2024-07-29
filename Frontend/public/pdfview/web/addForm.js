@@ -143,10 +143,6 @@ const drawFormElement = function () {
     text_storage = [];
   }
 
-  console.log("==== first load data ======");
-  console.log(form_storage);
-  console.log(text_storage);
-
   let checkedCheckboxes = [];
 
   if (form_storage && form_storage !== null) {
@@ -1263,17 +1259,9 @@ const drawFormElement = function () {
           });
           break;
         case SHAPE:
-          let canvas = $("#drawing-board").find("canvas")[0];
+          let canvas = $("#drawing-shape-board").find("canvas")[0];
           canvas.width = item.canvasWidth * ratio;
           canvas.height = item.canvasHeight * ratio;
-          // canvas.width = item.canvasWidth;
-          // canvas.height = item.canvasHeight;
-          const shapeImg = document.createElement("img");
-          shapeImg.id = "shapeImg" + id;
-          shapeImg.style.width = "100%";
-          shapeImg.style.height = "100%";
-          shapeImg.src = item.imgData;
-          shapeImg.style.objectFit = "fill";
 
           const shapeContainer = document.createElement("div");
           shapeContainer.className = "shapeContainer";
@@ -1309,7 +1297,7 @@ const drawFormElement = function () {
           editableDiv.style.color = item.textColor;
           editableDiv.focus();
 
-          shapeContainer.append(shapeImg);
+          // shapeContainer.append(shapeImg);
           shapeContainer.append(editableDiv);
           pg.appendChild(shapeContainer);
           resizeCanvas(shapeContainer.id, SHAPE, id);

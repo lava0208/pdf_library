@@ -8,7 +8,7 @@ let startX = 0;
 let startY = 0;
 let rectElement;
 
-let selectedShapeFillColor = 'transparent'; // Default no fill
+let selectedShapeFillColor = 'white'; // Default no fill
 let selectedShapeOutlineColor = 'black'; // Default black outline
 let selectedTextColor = 'black'; // Default black text color
 let selectedBorderRadius = 0; // Default no border radius
@@ -55,7 +55,7 @@ $(".size-dropdown input").on("input", function () {
 const handleShape = function (w, h, canvasWidth, canvasHeight, shapeFillColor, borderColor, textColor, borderRadius, borderWidth, textSize, shapeText) {
   for (let i = 0; i < form_storage.length; i++) {
     if (form_storage[i].id == current_form_id) {
-      form_storage[i].imgData = shapeImgData;
+      // form_storage[i].imgData = shapeImgData;
       form_storage[i].shapeText = shapeText;
       return;
     }
@@ -74,20 +74,21 @@ const handleShape = function (w, h, canvasWidth, canvasHeight, shapeFillColor, b
     form_storage.push({
       id: baseId,
       containerId: "shape" + baseId,
-      imgId: "shapeImg" + baseId,
       form_type: SHAPE,
       page_number: PDFViewerApplication.page,
-      x: pos_x_pdf,
-      y: pos_y_pdf,
-      baseX: pos_x_pdf,
-      baseY: pos_y_pdf,
+      x: pos_x_pdf - 7,
+      y: pos_y_pdf + 7.5,
+      baseX: pos_x_pdf - 7,
+      baseY: pos_y_pdf + 7.5,
       width: formWidth * 0.75 * 0.8,
       height: formHeight * 0.75 * 0.8,
       xPage: formWidth,
       yPage: formHeight,
       canvasWidth: canvasWidth,
       canvasHeight: canvasHeight,
-      imgData: shapeImgData,
+      // canvasWidth: canvasWidth,
+      // canvasHeight: canvasHeight,
+      // imgData: shapeImgData,
       shapeFillColor: shapeFillColor,
       borderColor: borderColor,
       textColor: textColor,
@@ -144,12 +145,36 @@ viewer.addEventListener("mousemove", function (e) {
 
 viewer.addEventListener("mouseup", function (e) {
   if (!isDrawing) return;
-
-  plot.initStore();
+  
   viewer.style.cursor = 'auto';
+
+  const rect = viewer.getBoundingClientRect();
+  const endX = e.clientX - rect.left;
+  const endY = e.clientY - rect.top;
+
+  // Ensure the coordinates are from the top-left corner of the rectangle
+  const left = Math.min(startX, endX);
+  const top = Math.min(startY, endY);
+
+  let ost = computePageOffset();
+  let x = left + rect.left - ost.left;
+  let y = top + rect.top - ost.top;
+
+  let pageId = String(PDFViewerApplication.page);
+  let pg = document.getElementById(pageId);
+
+  let shape_x_y = PDFViewerApplication.pdfViewer._pages[
+    PDFViewerApplication.page - 1
+  ].viewport.convertToPdfPoint(x, y);
+
+  pos_x_pdf = shape_x_y[0];
+  pos_y_pdf = shape_x_y[1];
 
   isDrawing = false;
   isDrawingShape = false;
+  current_form_id = baseId;
+
+  plot.initStore();
 
   const finalRect = {
     left: rectElement.style.left,
@@ -175,7 +200,6 @@ viewer.addEventListener("mouseup", function (e) {
   rectElement.appendChild(editableDiv);
   editableDiv.focus();
 
-  // addResizeBar(rectElement.id);  
   enableInteractJS(rectElement.id, SHAPE, baseId);
 
   editableDiv.addEventListener("blur", () => {
@@ -201,9 +225,9 @@ viewer.addEventListener("mouseup", function (e) {
   });
 });
 
+
 function enableInteractJS(elementId, type, currentId) {
   const element = document.getElementById(elementId);
-  let newX = 0, newY = 0;
 
   interact(`#${elementId}`)
     .resizable({
@@ -249,6 +273,9 @@ function enableInteractJS(elementId, type, currentId) {
           target.setAttribute("data-x", x);
           target.setAttribute("data-y", y);
         },
+        end() {
+          console.log("elementId************", elementId);
+        },
       },
       inertia: true,
       modifiers: [
@@ -293,8 +320,9 @@ function drawShapeFromStorage(formItem) {
     formItem.shapeText = shapeText;
   });
 
-  // addResizebar(formItem.containerId);
+  // addResizebar(formItem.containerId);  
   enableInteractJS(formItem.containerId, SHAPE, formItem.id);
+  drawShapeStyle(formItem);
 }
 
 function updateText(editableDiv) {
@@ -330,12 +358,36 @@ function showTextInput(event, shapeContainer, editableDiv) {
   editableDiv.addEventListener('input', () => updateText(editableDiv, shapeContainer));
 }
 
+function drawShapeStyle(item){
+  $("#shape-fill-dropdown").find(".drawing-color").each(function(){
+    if($(this).attr("color") == item.shapeFillColor){
+      $(this).addClass("selected");
+    }
+  })
+  $("#shape-outline-dropdown").find(".drawing-color").each(function(){
+    if($(this).attr("color") == item.borderColor){
+      $(this).addClass("selected");
+    }
+  })
+  $("#text-color-dropdown").find(".drawing-color").each(function(){
+    if($(this).attr("color") == item.textColor){
+      $(this).addClass("selected");
+    }
+  })
+  $("#border-radius-dropdown").find("input").val(item.borderRadius)
+  $("#border-weight-dropdown").find("input").val(item.borderWidth)
+  $("#text-size-dropdown").find("input").val(item.textSize)
+}
+
 $("#viewer").on("click", function (e) {
-  if (isDraft == "true") {
+  if (isDraft === "true") {
     if (form_storage && form_storage !== null) {
-      form_storage.forEach((formItem) => {
-        drawShapeFromStorage(formItem);
-      });
+        form_storage.forEach((formItem) => {
+          if (formItem.form_type === SHAPE){
+            drawShapeFromStorage(formItem);
+            resizeCanvas(formItem.containerId, SIGNATURE, formItem.id);
+          }
+      })
     }
   }
 });

@@ -370,14 +370,14 @@ viewer.addEventListener("click", function (e) {
           }
       })
     }
-    if (!e.target.classList.contains("shapeContainer") && !e.target.closest(".shapeContainer")) {
-      document.querySelectorAll(".shapeText").forEach(shapeText => {
-        shapeText.setAttribute("contenteditable", "false");
-        shapeText.blur();
-      });
-      $("#shapeToolbar").hide();
-      $(".shapeContainer.active").removeClass("active");
-    }
+  }
+  if (!e.target.classList.contains("shapeContainer") && !e.target.closest(".shapeContainer")) {
+    document.querySelectorAll(".shapeText").forEach(shapeText => {
+      shapeText.setAttribute("contenteditable", "false");
+      shapeText.blur();
+    });
+    $("#shapeToolbar").hide();
+    $(".shapeContainer.active").removeClass("active");
   }
 });
 

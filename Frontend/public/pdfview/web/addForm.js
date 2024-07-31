@@ -1277,7 +1277,6 @@ const drawFormElement = function () {
           shapeContainer.style.justifyContent = "center";
           shapeContainer.style.backgroundColor = item.shapeFillColor;
           shapeContainer.style.border = `${item.borderWidth} solid ${item.borderColor}`;
-          shapeContainer.style.color = item.textColor;
           shapeContainer.style.borderRadius = item.borderRadius + "px";
           shapeContainer.tabIndex = 0;
           shapeContainer.classList.add("form-fields");
@@ -1291,10 +1290,13 @@ const drawFormElement = function () {
           editableDiv.style.height = "fit-content";
           editableDiv.style.display = "flex";
           editableDiv.style.alignItems = "center";
-          editableDiv.style.justifyContent = "center";    
+          editableDiv.style.justifyContent = "center";
           editableDiv.style.textAlign = "center";
+          editableDiv.style.fontStyle = item.textItalic ? "italic" : "normal";
+          editableDiv.style.fontWeight = item.textBold ? "bold" : "normal";
+          editableDiv.style.textDecoration = item.textUnderline ? "underline" : "none";
           editableDiv.style.fontSize = item.textSize;
-          editableDiv.style.color = item.textColor;
+          editableDiv.style.color = item.textColor;          
           editableDiv.focus();
 
           // shapeContainer.append(shapeImg);
@@ -1510,6 +1512,8 @@ document.addEventListener("DOMContentLoaded", function () {
           form_storage = isDraft == "true" ? [] : isDraft == null || isDraft == "" ? data[0].formData && JSON.parse(data[0].formData) : data.formData && JSON.parse(data.formData);
           clientName = isDraft == null || isDraft == "" ? data[0].name : data.name;
           clientEmail = isDraft == null || isDraft == "" ? data[0].email : data.email;
+
+          console.log(form_storage);
 
           // Handle the retrieved data from the backend
           const dataURI = isDraft ? data.pdfData : data[0].pdfData;

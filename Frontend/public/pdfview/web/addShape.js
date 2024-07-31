@@ -10,9 +10,9 @@ let rectElement;
 let selectedShapeFillColor = 'white';
 let selectedShapeOutlineColor = 'black';
 let selectedTextColor = 'black';
-let selectedBorderRadius = 0;
-let selectedBorderWeight = 1;
-let selectedTextSize = 16;
+let selectedBorderRadius = '0px';
+let selectedBorderWeight = '1px';
+let selectedTextSize = '16px';
 let selectedTextBold = false;
 let selectedTextItalic = false;
 let selectedTextUnderline = false;
@@ -35,9 +35,9 @@ $("#shape_format").on("click", function () {
   selectedShapeFillColor = 'white';
   selectedShapeOutlineColor = 'black';
   selectedTextColor = 'black';
-  selectedBorderRadius = 0;
-  selectedBorderWeight = 1;
-  selectedTextSize = 16;
+  selectedBorderRadius = '0px';
+  selectedBorderWeight = '1px';
+  selectedTextSize = '16px';
   selectedTextBold = false;
   selectedTextItalic = false;
   selectedTextUnderline = false;
@@ -59,38 +59,158 @@ $(".drawing-color").on("click", function () {
   } else if ($(this).closest('#text-color-dropdown').length) {
     selectedTextColor = color;
   }
+
+  const shapeContainer = document.querySelector(".shapeContainer.active");
+  const shapeText = shapeContainer.querySelector(".shapeText");
+  const shapeTextHtml = shapeContainer.querySelector(".shapeText").innerHTML.trim();
+
+  if ($(this).closest('#shape-fill-dropdown').length) {
+    selectedShapeFillColor = color;
+    shapeContainer.style.backgroundColor = color;
+  } else if ($(this).closest('#shape-outline-dropdown').length) {
+    selectedShapeOutlineColor = color;
+    shapeContainer.style.borderColor = color;
+  } else if ($(this).closest('#text-color-dropdown').length) {
+    selectedTextColor = color;
+    shapeText.style.color = color;
+  }
+
+  const finalRect = {
+    left: shapeContainer.style.left,
+    top: shapeContainer.style.top,
+    width: shapeContainer.style.width,
+    height: shapeContainer.style.height,
+  };
+
+  // if(isDraft === "true"){
+    handleShape(
+      selectedShapeFillColor,
+      selectedShapeOutlineColor,
+      selectedTextColor,
+      selectedBorderRadius,
+      selectedBorderWeight,
+      selectedTextSize,
+      selectedTextBold,
+      selectedTextItalic,
+      selectedTextUnderline,
+      shapeTextHtml,
+      parseInt(finalRect.width, 10),
+      parseInt(finalRect.height, 10),
+      viewer.clientWidth,
+      viewer.clientHeight,
+    );
+  // }
 });
 
 $(".size-dropdown input").on("input", function () {
   $(this).next('.range-value').remove();
-  var type = $(this).parents(".size-dropdown").attr("type"); // border radius = 1, border width = 2, text size = 3;
+  const shapeContainer = document.querySelector(".shapeContainer.active");
+  const shapeText = shapeContainer.querySelector(".shapeText");
+  const shapeTextHtml = shapeContainer.querySelector(".shapeText").innerHTML.trim();
+
+  var type = $(this).parents(".size-dropdown").attr("type");
   if (type === "1") {
-    selectedBorderRadius = $(this).val();
-    $(this).after(`<span class="range-value">${selectedBorderRadius}px</span>`);
+    selectedBorderRadius = $(this).val() + "px";
+    shapeContainer.style.borderRadius = `${selectedBorderRadius}`;
+    $(this).after(`<span class="range-value">${selectedBorderRadius}</span>`);
   } else if (type === "2") {
-    selectedBorderWeight = $(this).val();
-    $(this).after(`<span class="range-value">${selectedBorderWeight}px</span>`);
+    selectedBorderWeight = $(this).val() + "px";
+    shapeContainer.style.borderWidth = `${selectedBorderWeight}`;
+    shapeContainer.style.border = `${selectedBorderWeight} solid ${selectedShapeOutlineColor}`;
+    $(this).after(`<span class="range-value">${selectedBorderWeight}</span>`);
   } else {
-    selectedTextSize = $(this).val();
-    $(this).after(`<span class="range-value">${selectedTextSize}px</span>`);
+    selectedTextSize = $(this).val() + "px";
+    shapeText.style.fontSize = `${selectedTextSize}`;
+    $(this).after(`<span class="range-value">${selectedTextSize}</span>`);
   }
+
+  const finalRect = {
+    left: shapeContainer.style.left,
+    top: shapeContainer.style.top,
+    width: shapeContainer.style.width,
+    height: shapeContainer.style.height,
+  };
+
+  handleShape(
+    selectedShapeFillColor,
+    selectedShapeOutlineColor,
+    selectedTextColor,
+    selectedBorderRadius,
+    selectedBorderWeight,
+    selectedTextSize,
+    selectedTextBold,
+    selectedTextItalic,
+    selectedTextUnderline,
+    shapeTextHtml,
+    parseInt(finalRect.width, 10),
+    parseInt(finalRect.height, 10),
+    viewer.clientWidth,
+    viewer.clientHeight,
+  );
 });
 
 $("#extra-shape-icons i").on("click", function () {
   $(this).toggleClass("active");
+  const shapeContainer = document.querySelector(".shapeContainer.active");
+  const shapeText = shapeContainer.querySelector(".shapeText");
+  const shapeTextHtml = shapeContainer.querySelector(".shapeText").innerHTML.trim();
+
   var id = $(this).attr("id");
-  if(id === "text-bold"){
+  if (id === "text-bold") {
     selectedTextBold = !selectedTextBold;
-  }else if(id === "text-italic"){
+    shapeText.style.fontWeight = selectedTextBold ? "bold" : "normal";
+  } else if (id === "text-italic") {
     selectedTextItalic = !selectedTextItalic;
-  }else if(id === "text-underline"){
+    shapeText.style.fontStyle = selectedTextItalic ? "italic" : "normal";
+  } else if (id === "text-underline") {
     selectedTextUnderline = !selectedTextUnderline;
+    shapeText.style.textDecoration = selectedTextUnderline ? "underline" : "none";
   }
-})
+
+  const finalRect = {
+    left: shapeContainer.style.left,
+    top: shapeContainer.style.top,
+    width: shapeContainer.style.width,
+    height: shapeContainer.style.height,
+  };
+
+  handleShape(
+    selectedShapeFillColor,
+    selectedShapeOutlineColor,
+    selectedTextColor,
+    selectedBorderRadius,
+    selectedBorderWeight,
+    selectedTextSize,
+    selectedTextBold,
+    selectedTextItalic,
+    selectedTextUnderline,
+    shapeTextHtml,
+    parseInt(finalRect.width, 10),
+    parseInt(finalRect.height, 10),
+    viewer.clientWidth,
+    viewer.clientHeight,
+  );
+});
 
 $("#closeShapeToolbar").on("click", function () {
   $("#shapeToolbar").hide();
 })
+
+$(document).on("input", ".shapeText", function () {
+  const shapeContainer = $(this).closest(".shapeContainer")[0];
+
+  shapeContainer.style.backgroundColor = selectedShapeFillColor;
+  shapeContainer.style.borderColor = selectedShapeOutlineColor;
+  shapeContainer.style.borderRadius = `${selectedBorderRadius}`;
+  shapeContainer.style.borderWidth = `${selectedBorderWeight}`;
+
+  this.style.color = selectedTextColor;
+  this.style.fontSize = `${selectedTextSize}`;
+  this.style.fontWeight = selectedTextBold ? "bold" : "normal";
+  this.style.fontStyle = selectedTextItalic ? "italic" : "normal";
+  this.style.textDecoration = selectedTextUnderline ? "underline" : "none";
+});
+
 
 viewer.addEventListener("mousedown", function (e) {
   if (!isDrawingShape) return;  
@@ -104,20 +224,21 @@ viewer.addEventListener("mousedown", function (e) {
 
   rectElement = document.createElement("div");
   rectElement.id = "shape" + baseId;
-  rectElement.className = "shapeContainer form-fields";
+  rectElement.className = "shapeContainer form-fields active";
   rectElement.style.display = "flex";
   rectElement.style.alignItems = "center";
   rectElement.style.justifyContent = "center";
   rectElement.style.position = "absolute";
   rectElement.style.left = `${startX}px`;
   rectElement.style.top = `${startY}px`;
-  rectElement.style.border = `${selectedBorderWeight}px solid ${selectedShapeOutlineColor}`;
+  rectElement.style.border = `${selectedBorderWeight} solid ${selectedShapeOutlineColor}`;
   rectElement.style.backgroundColor = selectedShapeFillColor;
-  rectElement.style.borderRadius = `${selectedBorderRadius}px`;
-  rectElement.style.fontSize = `${selectedTextSize}px`;
+  rectElement.style.borderRadius = `${selectedBorderRadius}`;
+  rectElement.style.fontSize = `${selectedTextSize}`;
   rectElement.style.fontWeight = selectedTextBold ? "bold" : "normal";
   rectElement.style.fontStyle = selectedTextItalic ? "italic" : "normal";
   rectElement.style.textDecoration = selectedTextUnderline ? "underline" : "none";
+
   viewer.appendChild(rectElement);
 });
 
@@ -185,21 +306,21 @@ viewer.addEventListener("mouseup", function (e) {
   editableDiv.style.alignItems = "center";
   editableDiv.style.justifyContent = "center";
   editableDiv.style.textAlign = "center";
-  editableDiv.style.fontSize = selectedTextSize;
-  editableDiv.style.textDecoration = selectedTextUnderline ? "underline " : "";
   editableDiv.style.color = selectedTextColor;
+  editableDiv.style.fontSize = selectedTextSize;
+  editableDiv.style.fontWeight = selectedTextBold ? "bold" : "normal";
+  editableDiv.style.fontStyle = selectedTextItalic ? "italic" : "normal";
+  editableDiv.style.textDecoration = selectedTextUnderline ? "underline " : "";
 
   rectElement.appendChild(editableDiv);
 
   enableInteractJS(rectElement.id, SHAPE, baseId);
 
+  $("#shapeToolbar").css("display", "flex");
+  
   editableDiv.addEventListener("blur", () => {
     const shapeText = editableDiv.innerHTML.trim();
     handleShape(
-      parseInt(finalRect.width, 10),
-      parseInt(finalRect.height, 10),
-      viewer.clientWidth,
-      viewer.clientHeight,
       selectedShapeFillColor,
       selectedShapeOutlineColor,
       selectedTextColor,
@@ -209,7 +330,11 @@ viewer.addEventListener("mouseup", function (e) {
       selectedTextBold,
       selectedTextItalic,
       selectedTextUnderline,
-      shapeText
+      shapeText,
+      parseInt(finalRect.width, 10),
+      parseInt(finalRect.height, 10),
+      viewer.clientWidth,
+      viewer.clientHeight,
     );
     editableDiv.setAttribute("contenteditable", "false");
   });
@@ -226,9 +351,17 @@ viewer.addEventListener("click", function (e) {
         form_storage.forEach((formItem) => {
           if (formItem.form_type === SHAPE){
             drawShapeFromStorage(formItem);
-            resizeCanvas(formItem.containerId, SIGNATURE, formItem.id);
+            resizeCanvas(formItem.containerId, SHAPE, formItem.id);
           }
       })
+    }
+    if (!e.target.classList.contains("shapeContainer") && !e.target.closest(".shapeContainer")) {
+      document.querySelectorAll(".shapeText").forEach(shapeText => {
+        shapeText.setAttribute("contenteditable", "false");
+        shapeText.blur();
+      });
+      $("#shapeToolbar").hide();
+      $(".shapeContainer.active").removeClass("active");
     }
   }
 });
@@ -238,61 +371,73 @@ viewer.addEventListener("dblclick", function (e) {
     $("#shapeToolbar").css("display", "flex");
 
     const shapeContainer = e.target.closest(".shapeContainer");
+    $(shapeContainer).addClass("active");
     const shapeText = shapeContainer.querySelector(".shapeText");
     if (shapeText) {
       shapeText.setAttribute("contenteditable", "true");
     }
 
-    // Sync editorShapeFormatToolbar with the selected shape's styles
-    $("#shapeIcons").find("#shape-fill-dropdown .drawing-color").removeClass("selected");
-    $("#shapeIcons").find(`#shape-fill-dropdown .drawing-color`).filter(function () {
+    $("#shape-fill-dropdown .drawing-color").removeClass("selected");
+    $(`#shape-fill-dropdown .drawing-color`).filter(function () {
       return $(this).attr('color') === shapeContainer.style.backgroundColor;
     }).addClass("selected");
 
-    $("#shapeIcons").find("#shape-outline-dropdown .drawing-color").removeClass("selected");
-    $("#shapeIcons").find(`#shape-outline-dropdown .drawing-color`).filter(function () {
+    $("#shape-outline-dropdown .drawing-color").removeClass("selected");
+    $(`#shape-outline-dropdown .drawing-color`).filter(function () {
       return $(this).attr('color') === shapeContainer.style.borderColor;
     }).addClass("selected");
 
-    $("#annotationIcons").find("#text-color-dropdown .drawing-color").removeClass("selected");
-    $("#annotationIcons").find(`#text-color-dropdown .drawing-color`).filter(function () {
+    $("#text-color-dropdown .drawing-color").removeClass("selected");
+    $(`#text-color-dropdown .drawing-color`).filter(function () {
       return $(this).attr('color') === shapeContainer.style.color;
     }).addClass("selected");
 
-    $("#shapeIcons").find("#border-radius-dropdown input").val(parseInt(shapeContainer.style.borderRadius));
-    $("#shapeIcons").find("#border-weight-dropdown input").val(parseInt(shapeContainer.style.borderWidth));
-    $("#annotationIcons").find("#text-size-dropdown input").val(parseInt(shapeText.style.fontSize));
+    $("#border-radius-dropdown input").val(parseInt(shapeContainer.style.borderRadius));
+    $("#border-weight-dropdown input").val(parseInt(shapeContainer.style.borderWidth));
+    $("#text-size-dropdown input").val(parseInt(shapeText.style.fontSize));
 
-    if (shapeContainer.style.fontWeight === "bold") {
-      $("#annotationIcons").find("#text-bold").addClass("active");
+    if (shapeText.style.fontWeight === "bold") {
+      $("#text-bold").addClass("active");
     } else {
-      $("#annotationIcons").find("#text-bold").removeClass("active");
+      $("#text-bold").removeClass("active");
     }
 
-    if (shapeContainer.style.fontStyle === "italic") {
-      $("#annotationIcons").find("#text-italic").addClass("active");
+    if (shapeText.style.fontStyle === "italic") {
+      $("#text-italic").addClass("active");
     } else {
-      $("#annotationIcons").find("#text-italic").removeClass("active");
+      $("#text-italic").removeClass("active");
     }
 
     if (shapeText.style.textDecoration.includes("underline")) {
-      $("#annotationIcons").find("#text-underline").addClass("active");
+      $("#text-underline").addClass("active");
     } else {
-      $("#annotationIcons").find("#text-underline").removeClass("active");
+      $("#text-underline").removeClass("active");
     }
 
-  } else {
-    document.querySelectorAll(".shapeText").forEach(shapeText => {
-      shapeText.setAttribute("contenteditable", "false");
-      shapeText.blur();
-    });
+    selectedShapeFillColor = shapeContainer.style.backgroundColor;
+    selectedShapeOutlineColor = shapeContainer.style.borderColor;
+    selectedBorderRadius = shapeContainer.style.borderRadius;
+    selectedBorderWeight = shapeContainer.style.borderWidth;
+    selectedTextColor = shapeText.style.color;
+    selectedTextSize = shapeText.style.fontSize;
+    selectedTextBold = shapeText.style.fontWeight === "bold" ? true : false;
+    selectedTextItalic = shapeText.style.fontStyle === "italic" ? true : false;
+    selectedTextUnderline = shapeText.style.textDecoration === "underline" ? true : false;
   }
 });
 
-function handleShape(w, h, canvasWidth, canvasHeight, shapeFillColor, borderColor, textColor, borderRadius, borderWidth, textSize, textBold, textItalic, textUnderline, shapeText) {
+function handleShape(shapeFillColor, borderColor, textColor, borderRadius, borderWidth, textSize, textBold, textItalic, textUnderline, shapeText, w, h, canvasWidth, canvasHeight) {
   for (let i = 0; i < form_storage.length; i++) {
     if (form_storage[i].id == current_form_id) {
-      // form_storage[i].imgData = shapeImgData;
+      form_storage[i].shapeFillColor = shapeFillColor;
+      form_storage[i].borderColor = borderColor;
+      form_storage[i].textColor = textColor;
+      form_storage[i].borderRadius = borderRadius;
+      form_storage[i].borderWidth = borderWidth;
+      form_storage[i].textSize = textSize;
+      form_storage[i].textBold = textBold;
+      form_storage[i].textItalic = textItalic;
+      form_storage[i].textUnderline = textUnderline;
       form_storage[i].shapeText = shapeText;
       return;
     }
@@ -360,31 +505,7 @@ function enableInteractJS(elementId, type, currentId) {
           resizeHandler(event.rect.width, event.rect.height, currentId);
         },
         end(event) {
-          const target = event.target;
-          let x = (parseFloat(target.getAttribute("data-x")) || 0);
-          let y = (parseFloat(target.getAttribute("data-y")) || 0);
-          target.style.transform = `translate(${x}px, ${y}px)`;
-          target.setAttribute("data-x", x);
-          target.setAttribute("data-y", y);
-          moveEventHandler(event, x, y, currentId);
-          // Call handleShape after the movement ends
-          const shapeText = target.querySelector(".shapeText").innerHTML.trim();
-          handleShape(
-            parseInt(target.style.width, 10),
-            parseInt(target.style.height, 10),
-            viewer.clientWidth,
-            viewer.clientHeight,
-            target.style.backgroundColor,
-            target.style.borderColor,
-            target.querySelector(".shapeText").style.color,
-            parseInt(target.style.borderRadius, 10),
-            parseInt(target.style.borderWidth, 10),
-            parseInt(target.querySelector(".shapeText").style.fontSize, 10),
-            target.querySelector(".shapeText").style.fontWeight === "bold",
-            target.querySelector(".shapeText").style.fontStyle === "italic",
-            target.querySelector(".shapeText").style.textDecoration.includes("underline"),
-            shapeText
-          );
+          console.log(event);
         },
       },
       modifiers: [
@@ -392,7 +513,7 @@ function enableInteractJS(elementId, type, currentId) {
         interact.modifiers.restrictSize({ min: { width: 15, height: 15 } }),
       ],
       inertia: true,
-      enabled: false // Initially disable resize
+      enabled: false
     })
     .draggable({
       listeners: {
@@ -405,24 +526,23 @@ function enableInteractJS(elementId, type, currentId) {
           target.setAttribute("data-y", y);
         },
         end(event) {
-          // Call handleShape after the movement ends
           const target = event.target;
           const shapeText = target.querySelector(".shapeText").innerHTML.trim();
           handleShape(
+            target.style.backgroundColor,
+            target.style.borderColor,
+            target.querySelector(".shapeText").style.color,
+            target.style.borderRadius,
+            target.style.borderWidth,
+            target.querySelector(".shapeText").style.fontSize,
+            target.querySelector(".shapeText").style.fontWeight === "bold",
+            target.querySelector(".shapeText").style.fontStyle === "italic",
+            target.querySelector(".shapeText").style.textDecoration.includes("underline"),
+            shapeText,
             parseInt(target.style.width, 10),
             parseInt(target.style.height, 10),
             viewer.clientWidth,
             viewer.clientHeight,
-            target.style.backgroundColor,
-            target.style.borderColor,
-            target.querySelector(".shapeText").style.color,
-            parseInt(target.style.borderRadius, 10),
-            parseInt(target.style.borderWidth, 10),
-            parseInt(target.querySelector(".shapeText").style.fontSize, 10),
-            target.querySelector(".shapeText").style.fontWeight === "bold",
-            target.querySelector(".shapeText").style.fontStyle === "italic",
-            target.querySelector(".shapeText").style.textDecoration.includes("underline"),
-            shapeText
           );
         },
       },
@@ -448,15 +568,15 @@ function drawShapeFromStorage(formItem) {
   const shapeContainer = document.getElementById(formItem.containerId);
 
   shapeContainer.style.backgroundColor = formItem.shapeFillColor;
-  shapeContainer.style.border = `${formItem.borderWidth}px solid ${formItem.borderColor}`;
-  shapeContainer.style.borderRadius = `${formItem.borderRadius}px`;
-  shapeContainer.style.fontWeight = formItem.textBold ? "bold" : "normal";
-  shapeContainer.style.fontStyle = formItem.textItalic ? "italic" : "normal";
+  shapeContainer.style.border = `${formItem.borderWidth} solid ${formItem.borderColor}`;
+  shapeContainer.style.borderRadius = `${formItem.borderRadius}`;
 
   const editableDiv = shapeContainer.querySelector(".shapeText");
   editableDiv.innerHTML = formItem.shapeText;
-  editableDiv.style.fontSize = `${formItem.textSize}px`;
   editableDiv.style.color = formItem.textColor;
+  editableDiv.style.fontSize = formItem.textSize;
+  editableDiv.style.fontWeight = formItem.textBold ? "bold" : "normal";
+  editableDiv.style.fontStyle = formItem.textItalic ? "italic" : "normal";
   editableDiv.style.textDecoration = formItem.textUnderline ? "underline " : "";
   editableDiv.focus();
 
@@ -470,8 +590,8 @@ function drawShapeFromStorage(formItem) {
     formItem.shapeText = shapeText;
   });
 
-  enableInteractJS(formItem.containerId, SHAPE, formItem.id);
   drawShapeStyle(formItem);
+  enableInteractJS(formItem.containerId, SHAPE, formItem.id);  
 }
 
 function updateText(editableDiv) {
@@ -480,6 +600,12 @@ function updateText(editableDiv) {
   editableDiv.style.fontWeight = selectedTextBold ? "bold" : "normal";
   editableDiv.style.fontStyle = selectedTextItalic ? "italic" : "normal";
   editableDiv.style.textDecoration = selectedTextUnderline ? "underline" : "none";
+  editableDiv.style.fontSize = selectedTextSize;
+  editableDiv.style.color = selectedTextColor;
+
+  // $("#border-radius-dropdown input").val(parseInt(shapeContainer.style.borderRadius));
+  // $("#border-weight-dropdown input").val(parseInt(shapeContainer.style.borderWidth));
+  // $("#text-size-dropdown input").val(parseInt(shapeText.style.fontSize));
 }
 
 function saveText(editableDiv, shapeContainer) {
@@ -489,7 +615,33 @@ function saveText(editableDiv, shapeContainer) {
   editableDiv.style.fontWeight = selectedTextBold ? "bold" : "normal";
   editableDiv.style.fontStyle = selectedTextItalic ? "italic" : "normal";
   editableDiv.style.textDecoration = selectedTextUnderline ? "underline" : "none";
+  editableDiv.style.fontSize = selectedTextSize;
+  editableDiv.style.color = selectedTextColor;
   shapeText = editableDiv.innerHTML.trim();
+
+  const finalRect = {
+    left: shapeContainer.style.left,
+    top: shapeContainer.style.top,
+    width: shapeContainer.style.width,
+    height: shapeContainer.style.height,
+  };
+
+  handleShape(
+    selectedShapeFillColor,
+    selectedShapeOutlineColor,
+    selectedTextColor,
+    selectedBorderRadius,
+    selectedBorderWeight,
+    selectedTextSize,
+    selectedTextBold,
+    selectedTextItalic,
+    selectedTextUnderline,
+    shapeText,
+    parseInt(finalRect.width, 10),
+    parseInt(finalRect.height, 10),
+    viewer.clientWidth,
+    viewer.clientHeight,
+  );
 }
 
 function showTextInput(event, shapeContainer, editableDiv) {
@@ -529,9 +681,9 @@ function drawShapeStyle(item){
       $(this).addClass("selected");
     }
   })
-  $("#border-radius-dropdown").find("input").val(item.borderRadius)
-  $("#border-weight-dropdown").find("input").val(item.borderWidth)
-  $("#text-size-dropdown").find("input").val(item.textSize)
+  $("#border-radius-dropdown").find("input").val(parseInt(item.borderRadius))
+  $("#border-weight-dropdown").find("input").val(parseInt(item.borderWidth))
+  $("#text-size-dropdown").find("input").val(parseInt(item.textSize))
   if(item.textBold){
     $("#text-bold").addClass("active");
   }

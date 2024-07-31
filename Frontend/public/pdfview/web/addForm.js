@@ -1296,7 +1296,7 @@ const drawFormElement = function () {
           editableDiv.style.fontWeight = item.textBold ? "bold" : "normal";
           editableDiv.style.textDecoration = item.textUnderline ? "underline" : "none";
           editableDiv.style.fontSize = item.textSize;
-          editableDiv.style.color = item.textColor;          
+          editableDiv.style.color = item.textColor;
           editableDiv.focus();
 
           // shapeContainer.append(shapeImg);

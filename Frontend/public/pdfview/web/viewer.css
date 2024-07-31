@@ -474,10 +474,9 @@ body {
 
 #editorShapeFormatToolbar{
   top: 213px;
-  padding: 10px;
-  width: 650px;
+  padding: 10px 15px;
   display: flex;
-  gap: 7px;
+  gap: 20px;
   flex-direction: column;
   align-items: center;
 }
@@ -2547,13 +2546,17 @@ body.loading .loading-container{
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
+  gap: 15px;
 }
 
 .shape-container img{
-  width: 60px;
+  width: 50px;
   border-radius: 10px;
   cursor: pointer;
+}
+
+.shape-container img[type="circle"]{
+  width: 45px;
 }
 
 .shape-dropdown-container {

@@ -45,9 +45,17 @@ $("#shape_format").on("click", function () {
 
 $(".shape-item").on("click", function () {
   baseId++;
+  const shapeType = $(this).attr("type");
   isDrawingShape = true;
   $("#editorShapeFormatToolbar").addClass("hidden");
   viewer.style.cursor = 'crosshair';
+
+  if (shapeType === "circle") {
+    viewer.setAttribute("data-drawing-type", "circle");
+    selectedBorderRadius = "50%";
+  } else {
+    viewer.setAttribute("data-drawing-type", "shape");
+  }
 });
 
 $(".drawing-color").on("click", function () {
@@ -239,6 +247,12 @@ viewer.addEventListener("mousedown", function (e) {
   rectElement.style.fontStyle = selectedTextItalic ? "italic" : "normal";
   rectElement.style.textDecoration = selectedTextUnderline ? "underline" : "none";
 
+  if (viewer.getAttribute("data-drawing-type") === "circle") {
+    rectElement.style.borderRadius = "50%";
+  } else {
+    rectElement.style.borderRadius = `${selectedBorderRadius}`;
+  }
+
   viewer.appendChild(rectElement);
 });
 
@@ -250,8 +264,14 @@ viewer.addEventListener("mousemove", function (e) {
   const width = currentX - startX;
   const height = currentY - startY;
 
-  rectElement.style.width = `${Math.abs(width)}px`;
-  rectElement.style.height = `${Math.abs(height)}px`;
+  if (viewer.getAttribute("data-drawing-type") === "circle") {
+    const size = Math.max(Math.abs(width), Math.abs(height));
+    rectElement.style.width = `${size}px`;
+    rectElement.style.height = `${size}px`;
+  } else {
+    rectElement.style.width = `${Math.abs(width)}px`;
+    rectElement.style.height = `${Math.abs(height)}px`;
+  }
 
   rectElement.style.left = `${Math.min(currentX, startX)}px`;
   rectElement.style.top = `${Math.min(currentY, startY)}px`;
@@ -259,7 +279,7 @@ viewer.addEventListener("mousemove", function (e) {
 
 viewer.addEventListener("mouseup", function (e) {
   if (!isDrawing) return;
-  
+
   viewer.style.cursor = 'auto';
 
   const rect = viewer.getBoundingClientRect();
@@ -317,7 +337,7 @@ viewer.addEventListener("mouseup", function (e) {
   enableInteractJS(rectElement.id, SHAPE, baseId);
 
   $("#shapeToolbar").css("display", "flex");
-  
+
   editableDiv.addEventListener("blur", () => {
     const shapeText = editableDiv.innerHTML.trim();
     handleShape(
@@ -338,12 +358,7 @@ viewer.addEventListener("mouseup", function (e) {
     );
     editableDiv.setAttribute("contenteditable", "false");
   });
-
-  editableDiv.addEventListener("dblclick", (event) => {
-    current_shape_id = rectElement.id;
-    showTextInput(event, rectElement, editableDiv);
-  });
-});
+})
 
 viewer.addEventListener("click", function (e) {
   if (isDraft === "true") {
@@ -602,10 +617,6 @@ function updateText(editableDiv) {
   editableDiv.style.textDecoration = selectedTextUnderline ? "underline" : "none";
   editableDiv.style.fontSize = selectedTextSize;
   editableDiv.style.color = selectedTextColor;
-
-  // $("#border-radius-dropdown input").val(parseInt(shapeContainer.style.borderRadius));
-  // $("#border-weight-dropdown input").val(parseInt(shapeContainer.style.borderWidth));
-  // $("#text-size-dropdown input").val(parseInt(shapeText.style.fontSize));
 }
 
 function saveText(editableDiv, shapeContainer) {

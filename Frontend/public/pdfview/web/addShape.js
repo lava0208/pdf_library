@@ -390,6 +390,7 @@ viewer.addEventListener("dblclick", function (e) {
     const shapeText = shapeContainer.querySelector(".shapeText");
     if (shapeText) {
       shapeText.setAttribute("contenteditable", "true");
+      showTextInput(e, shapeContainer, shapeText);
     }
 
     $("#shape-fill-dropdown .drawing-color").removeClass("selected");

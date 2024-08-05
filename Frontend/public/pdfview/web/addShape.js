@@ -6,6 +6,7 @@ let isDrawing = false;
 let startX = 0;
 let startY = 0;
 let rectElement;
+let shapeType = "shape";
 
 let selectedShapeFillColor = 'white';
 let selectedShapeOutlineColor = 'black';
@@ -45,16 +46,13 @@ $("#shape_format").on("click", function () {
 
 $(".shape-item").on("click", function () {
   baseId++;
-  const shapeType = $(this).attr("type");
+  shapeType = $(this).attr("type");
   isDrawingShape = true;
   $("#editorShapeFormatToolbar").addClass("hidden");
   viewer.style.cursor = 'crosshair';
 
-  if (shapeType === "circle") {
-    viewer.setAttribute("data-drawing-type", "circle");
+  if (shapeType !== "shape") {
     selectedBorderRadius = "50%";
-  } else {
-    viewer.setAttribute("data-drawing-type", "shape");
   }
 });
 
@@ -118,9 +116,11 @@ $(".size-dropdown input").on("input", function () {
 
   var type = $(this).parents(".size-dropdown").attr("type");
   if (type === "1") {
-    selectedBorderRadius = $(this).val() + "px";
-    shapeContainer.style.borderRadius = `${selectedBorderRadius}`;
-    $(this).after(`<span class="range-value">${selectedBorderRadius}</span>`);
+    if(shapeType === "shape"){
+      selectedBorderRadius = $(this).val() + "px";
+      shapeContainer.style.borderRadius = `${selectedBorderRadius}`;
+      $(this).after(`<span class="range-value">${selectedBorderRadius}</span>`);
+    }
   } else if (type === "2") {
     selectedBorderWeight = $(this).val() + "px";
     shapeContainer.style.borderWidth = `${selectedBorderWeight}`;
@@ -247,7 +247,7 @@ viewer.addEventListener("mousedown", function (e) {
   rectElement.style.fontStyle = selectedTextItalic ? "italic" : "normal";
   rectElement.style.textDecoration = selectedTextUnderline ? "underline" : "none";
 
-  if (viewer.getAttribute("data-drawing-type") === "circle") {
+  if (shapeType === "circle") {
     rectElement.style.borderRadius = "50%";
   } else {
     rectElement.style.borderRadius = `${selectedBorderRadius}`;
@@ -264,7 +264,7 @@ viewer.addEventListener("mousemove", function (e) {
   const width = currentX - startX;
   const height = currentY - startY;
 
-  if (viewer.getAttribute("data-drawing-type") === "circle") {
+  if (shapeType === "circle") {
     const size = Math.max(Math.abs(width), Math.abs(height));
     rectElement.style.width = `${size}px`;
     rectElement.style.height = `${size}px`;
@@ -410,7 +410,11 @@ viewer.addEventListener("dblclick", function (e) {
       return $(this).attr('color') === shapeContainer.style.color;
     }).addClass("selected");
 
-    $("#border-radius-dropdown input").val(parseInt(shapeContainer.style.borderRadius));
+    if(shapeType === "shape"){
+      $("#border-radius-dropdown input").val(parseInt(shapeContainer.style.borderRadius));
+    }else{
+      $("#border-radius-dropdown input").val(0);
+    }
     $("#border-weight-dropdown input").val(parseInt(shapeContainer.style.borderWidth));
     $("#text-size-dropdown input").val(parseInt(shapeText.style.fontSize));
 

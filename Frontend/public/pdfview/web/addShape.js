@@ -20,28 +20,8 @@ let selectedTextUnderline = false;
 
 $("#shape_format").on("click", function () {
   $("#editorShapeFormatToolbar").toggleClass("hidden");
-  
-  // Initialize the styles of editorShapeFormatToolbar
-  $("#shape-fill-dropdown .drawing-color").removeClass("selected");
-  $("#shape-outline-dropdown .drawing-color").removeClass("selected");
-  $("#text-color-dropdown .drawing-color").removeClass("selected");
-  $("#border-radius-dropdown input").val(0);
-  $("#border-weight-dropdown input").val(1);
-  $("#text-size-dropdown input").val(16);
-  $("#text-bold").removeClass("active");
-  $("#text-italic").removeClass("active");
-  $("#text-underline").removeClass("active");
 
-  // Set default values
-  selectedShapeFillColor = 'white';
-  selectedShapeOutlineColor = 'black';
-  selectedTextColor = 'black';
-  selectedBorderRadius = '0px';
-  selectedBorderWeight = '1px';
-  selectedTextSize = '16px';
-  selectedTextBold = false;
-  selectedTextItalic = false;
-  selectedTextUnderline = false;
+  initialShapeStyle()
 });
 
 $(".shape-item").on("click", function () {
@@ -279,6 +259,7 @@ viewer.addEventListener("mousemove", function (e) {
 
 viewer.addEventListener("mouseup", function (e) {
   if (!isDrawing) return;
+  initialShapeStyle();
 
   viewer.style.cursor = 'auto';
 
@@ -448,18 +429,34 @@ viewer.addEventListener("dblclick", function (e) {
   }
 });
 
+function initialShapeStyle(){
+  // Initialize the styles of editorShapeFormatToolbar
+  $("#shape-fill-dropdown .drawing-color").removeClass("selected");
+  $("#shape-outline-dropdown .drawing-color").removeClass("selected");
+  $("#text-color-dropdown .drawing-color").removeClass("selected");
+  $("#border-radius-dropdown input").val(0);
+  $("#border-weight-dropdown input").val(1);
+  $("#text-size-dropdown input").val(16);
+  $("#text-bold").removeClass("active");
+  $("#text-italic").removeClass("active");
+  $("#text-underline").removeClass("active");
+
+  // Set default values
+  selectedShapeFillColor = 'white';
+  selectedShapeOutlineColor = 'black';
+  selectedTextColor = 'black';
+  selectedBorderRadius = '0px';
+  selectedBorderWeight = '1px';
+  selectedTextSize = '16px';
+  selectedTextBold = false;
+  selectedTextItalic = false;
+  selectedTextUnderline = false;
+}
+
 function handleShape(shapeFillColor, borderColor, textColor, borderRadius, borderWidth, textSize, textBold, textItalic, textUnderline, shapeText, w, h, canvasWidth, canvasHeight) {
   for (let i = 0; i < form_storage.length; i++) {
     if (form_storage[i].id == current_form_id) {
       
-      form_storage[i].width = w * 0.75 * 0.8;
-      form_storage[i].height = h * 0.75 * 0.8;
-      form_storage[i].xPage = w;
-      form_storage[i].yPage = h;
-      form_storage[i].x = pos_x_pdf - 7;
-      form_storage[i].y = pos_y_pdf + 7.5;
-      form_storage[i].baseX = pos_x_pdf - 7;
-      form_storage[i].baseY = pos_y_pdf + 7.5;
       form_storage[i].shapeFillColor = shapeFillColor;
       form_storage[i].borderColor = borderColor;
       form_storage[i].textColor = textColor;

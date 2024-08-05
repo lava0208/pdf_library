@@ -89,7 +89,6 @@ $(".drawing-color").on("click", function () {
 });
 
 $(".size-dropdown input").on("input", function () {
-  $(this).next('.range-value').remove();
   const shapeContainer = document.querySelector(".shapeContainer.active");
   const shapeText = shapeContainer.querySelector(".shapeText");
   const shapeTextHtml = shapeContainer.querySelector(".shapeText").innerHTML.trim();
@@ -99,17 +98,17 @@ $(".size-dropdown input").on("input", function () {
     if(shapeType === "shape"){
       selectedBorderRadius = $(this).val() + "px";
       shapeContainer.style.borderRadius = `${selectedBorderRadius}`;
-      $(this).after(`<span class="range-value">${selectedBorderRadius}</span>`);
+      $(this).parent().find(".range-value").html(selectedBorderRadius);
     }
   } else if (type === "2") {
     selectedBorderWeight = $(this).val() + "px";
     shapeContainer.style.borderWidth = `${selectedBorderWeight}`;
     shapeContainer.style.border = `${selectedBorderWeight} solid ${selectedShapeOutlineColor}`;
-    $(this).after(`<span class="range-value">${selectedBorderWeight}</span>`);
+    $(this).parent().find(".range-value").html(selectedBorderWeight);
   } else {
     selectedTextSize = $(this).val() + "px";
     shapeText.style.fontSize = `${selectedTextSize}`;
-    $(this).after(`<span class="range-value">${selectedTextSize}</span>`);
+    $(this).parent().find(".range-value").html(selectedTextSize);
   }
 
   const finalRect = {
@@ -342,7 +341,7 @@ viewer.addEventListener("mouseup", function (e) {
 })
 
 viewer.addEventListener("click", function (e) {
-  if (isDraft === "true") {
+  if (isDraft !== "false") {
     if (form_storage && form_storage !== null) {
         form_storage.forEach((formItem) => {
           if (formItem.form_type === SHAPE){
@@ -351,81 +350,85 @@ viewer.addEventListener("click", function (e) {
           }
       })
     }
+    if (!e.target.classList.contains("shapeContainer") && !e.target.closest(".shapeContainer")) {
+      document.querySelectorAll(".shapeText").forEach(shapeText => {
+        shapeText.setAttribute("contenteditable", "false");
+        shapeText.blur();
+      });
+      $("#shapeToolbar").hide();
+      $(".shapeContainer.active").removeClass("active");
+    }
   }else{
-    resizeCanvas("shape" + baseId, SHAPE, baseId);
-  }
-  if (!e.target.classList.contains("shapeContainer") && !e.target.closest(".shapeContainer")) {
     document.querySelectorAll(".shapeText").forEach(shapeText => {
       shapeText.setAttribute("contenteditable", "false");
-      shapeText.blur();
     });
-    $("#shapeToolbar").hide();
-    $(".shapeContainer.active").removeClass("active");
   }
 });
 
 viewer.addEventListener("dblclick", function (e) {
-  if (e.target.classList.contains("shapeContainer") || e.target.closest(".shapeContainer")) {
-    $("#shapeToolbar").css("display", "flex");
-
-    const shapeContainer = e.target.closest(".shapeContainer");
-    $(shapeContainer).addClass("active");
-    const shapeText = shapeContainer.querySelector(".shapeText");
-    if (shapeText) {
-      shapeText.setAttribute("contenteditable", "true");
-      showTextInput(e, shapeContainer, shapeText);
+  if(isDraft !== "false"){
+    if (e.target.classList.contains("shapeContainer") || e.target.closest(".shapeContainer")) {
+      $("#shapeToolbar").css("display", "flex");
+  
+      const shapeContainer = e.target.closest(".shapeContainer");
+      $(shapeContainer).addClass("active");
+      const shapeText = shapeContainer.querySelector(".shapeText");
+      if (shapeText) {
+        shapeText.setAttribute("contenteditable", "true");
+        showTextInput(e, shapeContainer, shapeText);
+      }
+  
+      $("#shape-fill-dropdown .drawing-color").removeClass("selected");
+      $(`#shape-fill-dropdown .drawing-color`).filter(function () {
+        return $(this).attr('color') === shapeContainer.style.backgroundColor;
+      }).addClass("selected");
+  
+      $("#shape-outline-dropdown .drawing-color").removeClass("selected");
+      $(`#shape-outline-dropdown .drawing-color`).filter(function () {
+        return $(this).attr('color') === shapeContainer.style.borderColor;
+      }).addClass("selected");
+  
+      $("#text-color-dropdown .drawing-color").removeClass("selected");
+      $(`#text-color-dropdown .drawing-color`).filter(function () {
+        return $(this).attr('color') === shapeContainer.style.color;
+      }).addClass("selected");
+  
+      if(shapeType === "shape"){
+        $("#border-radius-dropdown input").val(parseInt(shapeContainer.style.borderRadius));
+      }else{
+        $("#border-radius-dropdown input").val(0);
+      }
+      $("#border-weight-dropdown input").val(parseInt(shapeContainer.style.borderWidth));
+      $("#text-size-dropdown input").val(parseInt(shapeText.style.fontSize));
+  
+      if (shapeText.style.fontWeight === "bold") {
+        $("#text-bold").addClass("active");
+      } else {
+        $("#text-bold").removeClass("active");
+      }
+  
+      if (shapeText.style.fontStyle === "italic") {
+        $("#text-italic").addClass("active");
+      } else {
+        $("#text-italic").removeClass("active");
+      }
+  
+      if (shapeText.style.textDecoration.includes("underline")) {
+        $("#text-underline").addClass("active");
+      } else {
+        $("#text-underline").removeClass("active");
+      }
+  
+      selectedShapeFillColor = shapeContainer.style.backgroundColor;
+      selectedShapeOutlineColor = shapeContainer.style.borderColor;
+      selectedBorderRadius = shapeContainer.style.borderRadius;
+      selectedBorderWeight = shapeContainer.style.borderWidth;
+      selectedTextColor = shapeText.style.color;
+      selectedTextSize = shapeText.style.fontSize;
+      selectedTextBold = shapeText.style.fontWeight === "bold" ? true : false;
+      selectedTextItalic = shapeText.style.fontStyle === "italic" ? true : false;
+      selectedTextUnderline = shapeText.style.textDecoration === "underline" ? true : false;
     }
-
-    $("#shape-fill-dropdown .drawing-color").removeClass("selected");
-    $(`#shape-fill-dropdown .drawing-color`).filter(function () {
-      return $(this).attr('color') === shapeContainer.style.backgroundColor;
-    }).addClass("selected");
-
-    $("#shape-outline-dropdown .drawing-color").removeClass("selected");
-    $(`#shape-outline-dropdown .drawing-color`).filter(function () {
-      return $(this).attr('color') === shapeContainer.style.borderColor;
-    }).addClass("selected");
-
-    $("#text-color-dropdown .drawing-color").removeClass("selected");
-    $(`#text-color-dropdown .drawing-color`).filter(function () {
-      return $(this).attr('color') === shapeContainer.style.color;
-    }).addClass("selected");
-
-    if(shapeType === "shape"){
-      $("#border-radius-dropdown input").val(parseInt(shapeContainer.style.borderRadius));
-    }else{
-      $("#border-radius-dropdown input").val(0);
-    }
-    $("#border-weight-dropdown input").val(parseInt(shapeContainer.style.borderWidth));
-    $("#text-size-dropdown input").val(parseInt(shapeText.style.fontSize));
-
-    if (shapeText.style.fontWeight === "bold") {
-      $("#text-bold").addClass("active");
-    } else {
-      $("#text-bold").removeClass("active");
-    }
-
-    if (shapeText.style.fontStyle === "italic") {
-      $("#text-italic").addClass("active");
-    } else {
-      $("#text-italic").removeClass("active");
-    }
-
-    if (shapeText.style.textDecoration.includes("underline")) {
-      $("#text-underline").addClass("active");
-    } else {
-      $("#text-underline").removeClass("active");
-    }
-
-    selectedShapeFillColor = shapeContainer.style.backgroundColor;
-    selectedShapeOutlineColor = shapeContainer.style.borderColor;
-    selectedBorderRadius = shapeContainer.style.borderRadius;
-    selectedBorderWeight = shapeContainer.style.borderWidth;
-    selectedTextColor = shapeText.style.color;
-    selectedTextSize = shapeText.style.fontSize;
-    selectedTextBold = shapeText.style.fontWeight === "bold" ? true : false;
-    selectedTextItalic = shapeText.style.fontStyle === "italic" ? true : false;
-    selectedTextUnderline = shapeText.style.textDecoration === "underline" ? true : false;
   }
 });
 
@@ -586,7 +589,7 @@ function enableInteractJS(elementId, type, currentId) {
   element.addEventListener("click", function (e) {
     interact(`#${elementId}`).resizable({ enabled: true });
     const shapeText = element.querySelector(".shapeText");
-    if (shapeText) {
+    if (shapeText && isDraft !== "false") {
       shapeText.setAttribute("contenteditable", "true");
     }
   });
@@ -606,7 +609,7 @@ function drawShapeFromStorage(formItem) {
   editableDiv.style.fontWeight = formItem.textBold ? "bold" : "normal";
   editableDiv.style.fontStyle = formItem.textItalic ? "italic" : "normal";
   editableDiv.style.textDecoration = formItem.textUnderline ? "underline " : "";
-  editableDiv.focus();
+  // editableDiv.focus();
 
   editableDiv.addEventListener("dblclick", (event) => {
     current_shape_id = formItem.id;

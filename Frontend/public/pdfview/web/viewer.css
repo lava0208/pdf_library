@@ -2573,8 +2573,8 @@ div[contenteditable="true"]:focus{
 }
 
 .range-value {
-  display: inline-block;
-  margin-left: 10px;
+  display: block;
+  text-align: center;
 }
 
 #drawing-shape-board{

@@ -181,6 +181,7 @@ $("#extra-shape-icons i").on("click", function () {
 
 $("#closeShapeToolbar").on("click", function () {
   $("#shapeToolbar").hide();
+  $("#viewerContainer").removeClass("withToolbar");
 })
 
 $(document).on("input", ".shapeText", function () {
@@ -317,6 +318,7 @@ viewer.addEventListener("mouseup", function (e) {
   enableInteractJS(rectElement.id, SHAPE, baseId);
 
   $("#shapeToolbar").css("display", "flex");
+  $("#viewerContainer").addClass("withToolbar");
 
   editableDiv.addEventListener("blur", () => {
     const shapeText = editableDiv.innerHTML.trim();
@@ -356,6 +358,7 @@ viewer.addEventListener("click", function (e) {
         shapeText.blur();
       });
       $("#shapeToolbar").hide();
+      $("#viewerContainer").removeClass("withToolbar");
       $(".shapeContainer.active").removeClass("active");
     }
   }else{
@@ -369,6 +372,7 @@ viewer.addEventListener("dblclick", function (e) {
   if(isDraft !== "false"){
     if (e.target.classList.contains("shapeContainer") || e.target.closest(".shapeContainer")) {
       $("#shapeToolbar").css("display", "flex");
+      $("#viewerContainer").addClass("withToolbar");
   
       const shapeContainer = e.target.closest(".shapeContainer");
       $(shapeContainer).addClass("active");

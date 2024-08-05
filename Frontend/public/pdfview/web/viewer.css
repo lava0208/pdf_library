@@ -302,6 +302,11 @@ body {
   position: absolute;
   inset: 36px 0 0;
   outline: none;
+  margin-top: 5px;
+}
+
+#viewerContainer.withToolbar{
+  margin-top: 40px;
 }
 
 #viewerContainer:not(.pdfPresentationMode) {

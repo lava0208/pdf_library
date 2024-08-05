@@ -370,6 +370,8 @@ viewer.addEventListener("click", function (e) {
           }
       })
     }
+  }else{
+    resizeCanvas("shape" + baseId, SHAPE, baseId);
   }
   if (!e.target.classList.contains("shapeContainer") && !e.target.closest(".shapeContainer")) {
     document.querySelectorAll(".shapeText").forEach(shapeText => {
@@ -445,6 +447,15 @@ viewer.addEventListener("dblclick", function (e) {
 function handleShape(shapeFillColor, borderColor, textColor, borderRadius, borderWidth, textSize, textBold, textItalic, textUnderline, shapeText, w, h, canvasWidth, canvasHeight) {
   for (let i = 0; i < form_storage.length; i++) {
     if (form_storage[i].id == current_form_id) {
+      
+      form_storage[i].width = w * 0.75 * 0.8;
+      form_storage[i].height = h * 0.75 * 0.8;
+      form_storage[i].xPage = w;
+      form_storage[i].yPage = h;
+      form_storage[i].x = pos_x_pdf - 7;
+      form_storage[i].y = pos_y_pdf + 7.5;
+      form_storage[i].baseX = pos_x_pdf - 7;
+      form_storage[i].baseY = pos_y_pdf + 7.5;
       form_storage[i].shapeFillColor = shapeFillColor;
       form_storage[i].borderColor = borderColor;
       form_storage[i].textColor = textColor;

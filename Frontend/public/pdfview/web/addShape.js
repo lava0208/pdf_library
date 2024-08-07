@@ -36,8 +36,8 @@ $(".shape-item").on("click", function () {
   }
 });
 
-$(".drawing-color").on("click", function () {
-  const color = $(this).attr("color");
+$(".shape-colorpicker").on("change", function () {
+  const color = $(this).val();
   if ($(this).closest('#shape-fill-dropdown').length) {
     selectedShapeFillColor = color;
   } else if ($(this).closest('#shape-outline-dropdown').length) {
@@ -381,21 +381,10 @@ viewer.addEventListener("dblclick", function (e) {
       $(shapeContainer).addClass("active");
       
       const shapeText = shapeContainer.querySelector(".shapeText");
-  
-      $("#shape-fill-dropdown .drawing-color").removeClass("selected");
-      $(`#shape-fill-dropdown .drawing-color`).filter(function () {
-        return $(this).attr('color') === shapeContainer.style.backgroundColor;
-      }).addClass("selected");
-  
-      $("#shape-outline-dropdown .drawing-color").removeClass("selected");
-      $(`#shape-outline-dropdown .drawing-color`).filter(function () {
-        return $(this).attr('color') === shapeContainer.style.borderColor;
-      }).addClass("selected");
-  
-      $("#text-color-dropdown .drawing-color").removeClass("selected");
-      $(`#text-color-dropdown .drawing-color`).filter(function () {
-        return $(this).attr('color') === shapeContainer.style.color;
-      }).addClass("selected");
+
+      $("#shape-fill-dropdown").find("input").val(rgbToHex(shapeContainer.style.backgroundColor));
+      $("#shape-outline-dropdown").find("input").val(rgbToHex(shapeContainer.style.borderColor));
+      $("#text-color-dropdown").find("input").val(rgbToHex(shapeText.style.color));
   
       if(shapeType === "shape"){
         $("#border-radius-dropdown input").val(parseInt(shapeContainer.style.borderRadius));
@@ -471,9 +460,9 @@ viewer.addEventListener("dblclick", function (e) {
 
 function initialShapeStyle(){
   // Initialize the styles of editorShapeFormatToolbar
-  $("#shape-fill-dropdown .drawing-color").removeClass("selected");
-  $("#shape-outline-dropdown .drawing-color").removeClass("selected");
-  $("#text-color-dropdown .drawing-color").removeClass("selected");
+  $("#shape-fill-dropdown").find("input").val("#FFFFFF");
+  $("#shape-outline-dropdown").find("input").val("#000000");
+  $("#text-color-dropdown").find("input").val("#000000");
   $("#border-radius-dropdown input").val(0);
   $("#border-weight-dropdown input").val(1);
   $("#text-size-dropdown input").val(16);
@@ -730,30 +719,12 @@ function showTextInput(event, shapeContainer, editableDiv) {
 }
 
 function drawShapeStyle(item){
-  $("#shape-fill-dropdown").find(".drawing-color").each(function(){
-    if($(this).attr("color") == item.shapeFillColor){
-      $(this).addClass("selected");
-    } else {
-      $(this).removeClass("selected");
-    }
-  })
-  $("#shape-outline-dropdown").find(".drawing-color").each(function(){
-    if($(this).attr("color") == item.borderColor){
-      $(this).addClass("selected");
-    } else {
-      $(this).removeClass("selected");
-    }
-  })
-  $("#text-color-dropdown").find(".drawing-color").each(function(){
-    if($(this).attr("color") == item.textColor){
-      $(this).addClass("selected");
-    } else {
-      $(this).removeClass("selected");
-    }
-  })
-  $("#border-radius-dropdown").find("input").val(parseInt(item.borderRadius))
-  $("#border-weight-dropdown").find("input").val(parseInt(item.borderWidth))
-  $("#text-size-dropdown").find("input").val(parseInt(item.textSize))
+  $("#shape-fill-dropdown").find("input").val(item.shapeFillColor);
+  $("#shape-outline-dropdown").find("input").val(item.borderColor);
+  $("#text-color-dropdown").find("input").val(item.textColor);
+  $("#border-radius-dropdown").find("input").val(parseInt(item.borderRadius));
+  $("#border-weight-dropdown").find("input").val(parseInt(item.borderWidth));
+  $("#text-size-dropdown").find("input").val(parseInt(item.textSize));
   if(item.textBold){
     $("#text-bold").addClass("active");
   }
@@ -763,4 +734,13 @@ function drawShapeStyle(item){
   if(item.textUnderline){
     $("#text-underline").addClass("active");
   }
+}
+
+function rgbToHex(rgb) {
+  const rgbArray = rgb.match(/\d+/g);
+  const hex = rgbArray.map(x => {
+    const hex = parseInt(x).toString(16);
+    return hex.length === 1 ? '0' + hex : hex;
+  }).join('');
+  return `#${hex}`;
 }

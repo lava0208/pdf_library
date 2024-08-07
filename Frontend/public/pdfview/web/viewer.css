@@ -2650,3 +2650,11 @@ div[contenteditable="true"]:focus{
 #closeShapeToolbar i{
   font-size: 20px;
 }
+
+.shapeContainer.active{
+  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+}
+
+.shapeText{
+  word-break: break-word;
+}

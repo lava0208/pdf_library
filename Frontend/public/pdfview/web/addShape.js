@@ -347,7 +347,9 @@ viewer.addEventListener("click", function (e) {
     if (form_storage && form_storage !== null) {
         form_storage.forEach((formItem) => {
           if (formItem.form_type === SHAPE){
-            drawShapeFromStorage(formItem);
+            if (formItem.id == current_form_id) {
+              drawShapeFromStorage(formItem);
+            }
             resizeCanvas(formItem.containerId, SHAPE, formItem.id);
           }
       })
@@ -375,12 +377,10 @@ viewer.addEventListener("dblclick", function (e) {
       $("#viewerContainer").addClass("withToolbar");
   
       const shapeContainer = e.target.closest(".shapeContainer");
+      $(".shapeContainer").removeClass("active");
       $(shapeContainer).addClass("active");
+      
       const shapeText = shapeContainer.querySelector(".shapeText");
-      if (shapeText) {
-        shapeText.setAttribute("contenteditable", "true");
-        showTextInput(e, shapeContainer, shapeText);
-      }
   
       $("#shape-fill-dropdown .drawing-color").removeClass("selected");
       $(`#shape-fill-dropdown .drawing-color`).filter(function () {
@@ -399,11 +399,15 @@ viewer.addEventListener("dblclick", function (e) {
   
       if(shapeType === "shape"){
         $("#border-radius-dropdown input").val(parseInt(shapeContainer.style.borderRadius));
+        $("#border-radius-dropdown .range-value").text(shapeContainer.style.borderRadius);
       }else{
         $("#border-radius-dropdown input").val(0);
       }
-      $("#border-weight-dropdown input").val(parseInt(shapeContainer.style.borderWidth));
+      $("#border-weight-dropdown input").val(parseInt(shapeContainer.style.borderWidth));      
       $("#text-size-dropdown input").val(parseInt(shapeText.style.fontSize));
+
+      $("#border-weight-dropdown .range-value").text(shapeContainer.style.borderWidth);
+      $("#text-size-dropdown .range-value").text(shapeText.style.fontSize);
   
       if (shapeText.style.fontWeight === "bold") {
         $("#text-bold").addClass("active");
@@ -432,6 +436,35 @@ viewer.addEventListener("dblclick", function (e) {
       selectedTextBold = shapeText.style.fontWeight === "bold" ? true : false;
       selectedTextItalic = shapeText.style.fontStyle === "italic" ? true : false;
       selectedTextUnderline = shapeText.style.textDecoration === "underline" ? true : false;
+
+      //... add delete button
+      const sId = shapeContainer.id.replace("shape", "");
+      current_form_id = sId;
+
+      let istooltipshow = false;
+      if (
+        document.getElementById("shape_tooltipbar" + current_form_id)
+      ) {
+        istooltipshow = true;
+      }
+      
+      if (isDragging) {
+        isDragging = false;
+      } else {
+        if (!istooltipshow) {
+          let tooltipbar = document.createElement("div");
+          addDeleteButton(
+            current_form_id,
+            tooltipbar,
+            shapeContainer,
+            "shape"
+          );
+        } else {
+          document
+            .getElementById("shape_tooltipbar" + current_shape_id)
+            .remove();
+        }
+      }
     }
   }
 });
@@ -487,7 +520,7 @@ function handleShape(shapeFillColor, borderColor, textColor, borderRadius, borde
     if (form_storage[j].id != current_form_id)
       count++;
   }
-  if (count == shapeStorage.length || shapeStorage == null) {
+  if (baseId !== 0 && count == shapeStorage.length) {
     form_storage.push({
       id: baseId,
       containerId: "shape" + baseId,
@@ -599,7 +632,7 @@ function enableInteractJS(elementId, type, currentId) {
   });
 }
 
-function drawShapeFromStorage(formItem) {
+function drawShapeFromStorage(formItem) {  
   const shapeContainer = document.getElementById(formItem.containerId);
 
   shapeContainer.style.backgroundColor = formItem.shapeFillColor;
@@ -616,7 +649,7 @@ function drawShapeFromStorage(formItem) {
   // editableDiv.focus();
 
   editableDiv.addEventListener("dblclick", (event) => {
-    current_shape_id = formItem.id;
+    // current_form_id = formItem.id;
     showTextInput(event, shapeContainer, editableDiv);
   });
 
@@ -700,16 +733,22 @@ function drawShapeStyle(item){
   $("#shape-fill-dropdown").find(".drawing-color").each(function(){
     if($(this).attr("color") == item.shapeFillColor){
       $(this).addClass("selected");
+    } else {
+      $(this).removeClass("selected");
     }
   })
   $("#shape-outline-dropdown").find(".drawing-color").each(function(){
     if($(this).attr("color") == item.borderColor){
       $(this).addClass("selected");
+    } else {
+      $(this).removeClass("selected");
     }
   })
   $("#text-color-dropdown").find(".drawing-color").each(function(){
     if($(this).attr("color") == item.textColor){
       $(this).addClass("selected");
+    } else {
+      $(this).removeClass("selected");
     }
   })
   $("#border-radius-dropdown").find("input").val(parseInt(item.borderRadius))

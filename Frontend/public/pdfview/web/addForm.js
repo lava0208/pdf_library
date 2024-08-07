@@ -1277,7 +1277,7 @@ const drawFormElement = function () {
           shapeContainer.style.justifyContent = "center";
           shapeContainer.style.backgroundColor = item.shapeFillColor;
           shapeContainer.style.border = `${item.borderWidth} solid ${item.borderColor}`;
-          shapeContainer.style.borderRadius = item.borderRadius + "px";
+          shapeContainer.style.borderRadius = item.borderRadius;
           shapeContainer.tabIndex = 0;
           shapeContainer.classList.add("form-fields");
 
@@ -1306,7 +1306,6 @@ const drawFormElement = function () {
 
           shapeContainer.addEventListener("dblclick", () => {
             current_shape_id = id;
-
             let istooltipshow = false;
 
             if (document.getElementById("shape_tooltipbar" + current_shape_id)) {
@@ -1317,7 +1316,14 @@ const drawFormElement = function () {
               isDragging = false;
             } else {
               if (!istooltipshow) {
+                let tooltipbar = document.createElement("div");
                 current_form_id = id;
+                addDeleteButton(
+                  current_shape_id,
+                  tooltipbar,
+                  shapeContainer,
+                  "shape"
+                );
               } else {
                 document
                   .getElementById("shape_tooltipbar" + current_shape_id)
@@ -1539,6 +1545,9 @@ document.addEventListener("DOMContentLoaded", function () {
             url: URL.createObjectURL(pdfFile),
             originalUrl: pdfFile.name,
           });
+
+          console.log(draw_form_storage);
+          
 
           const checkViewerInterval = setInterval(() => {
             if (PDFViewerApplication.pdfDocument && PDFViewerApplication.pdfDocument.numPages > 0) {
@@ -2921,13 +2930,15 @@ const addDeleteButton = function (currentId, container, object, type) {
   container.id = `${type}_tooltipbar` + currentId;
   container.style.position = "absolute";
   container.style.zIndex = standardZIndex;
-  container.style.top = -10 - parseInt(top) + "px";
+  // container.style.top = -10 - parseInt(top) + "px";
+  container.style.top = "-42px";
   container.style.left = "0px";
   container.style.display = "flex";
   container.style.flexDirection = "row";
   container.style.alignItems = "center";
   container.style.gap = "5px";
-  container.style.height = parseInt(top) + "px";
+  // container.style.height = parseInt(top) + "px";
+  container.style.height = "30px";
   container.classList.add("delete-button");
   let deleteBtn = document.createElement("button");
   deleteBtn.style.padding = "5px";
@@ -2955,9 +2966,9 @@ const addDeleteButton = function (currentId, container, object, type) {
         return comment.id !== parseInt(currentId);
       });
     } else {
-      currentObject = form_storage.find((item) => item.id = currentId);
+      currentObject = form_storage.find((item) => item.id == currentId);
       form_storage = form_storage.filter(function (item) {
-        return item.id !== parseInt(currentId);
+        return item.id != currentId;
       });
     }
     const commentPageDiv = document.getElementById(`page${currentObject.page_number}`);
@@ -3088,7 +3099,7 @@ const submitAction = function () {
 }
 
 // Handle the specified event.
-const eventHandler = async function (e) {
+const eventHandler = async function (e) {  
   baseId++;
   let ost = computePageOffset();
   let x = e.pageX - ost.left;
@@ -4250,6 +4261,39 @@ const eventHandler = async function (e) {
         }
       });
       break;
+    case SHAPE:
+      let shapeId = baseId;
+      shapeContainer.addEventListener("dblclick", () => {        
+        if (!isEditing) {
+          current_shape_id = shapeId;
+          let istooltipshow = false;
+          if (
+            document.getElementById("shape_tooltipbar" + current_shape_id)
+          ) {
+            istooltipshow = true;
+          }
+          
+          if (isDragging) {
+            isDragging = false;
+          } else {
+            if (!istooltipshow) {
+              let tooltipbar = document.createElement("div");
+              current_form_id = shapeId;
+              addDeleteButton(
+                current_shape_id,
+                tooltipbar,
+                shapeContainer,
+                "shape"
+              );
+            } else {
+              document
+                .getElementById("shape_tooltipbar" + current_shape_id)
+                .remove();
+            }
+          }
+        }
+      });
+      break;
     default:
       break;
   }
@@ -4825,6 +4869,7 @@ const changeMode = () => {
   const buttonfields = document.querySelectorAll(".button-field-input");
   const textcontentfields = document.querySelectorAll(".textcontent");
   const signatureImages = document.querySelectorAll(".signatureContainer");
+  const shapeFields = document.querySelectorAll(".shapeContainer");
   if (isEditing) {
     switchEditInsert.innerHTML = `
       <p>Edit Mode</p>
@@ -4857,6 +4902,8 @@ const changeMode = () => {
     buttonfields.forEach((item) => (item.style.display = "none"));
 
     textcontentfields.forEach((item) => { item.contentEditable = "true" });
+
+    shapeFields.forEach((item) => { item.contentEditable = "true" });
 
   } else {
     switchEditInsert.innerHTML = `

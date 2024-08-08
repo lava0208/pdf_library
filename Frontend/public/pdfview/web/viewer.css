@@ -2616,7 +2616,8 @@ div[contenteditable="true"]:focus{
 }
 
 #shapeToolbar{
-  display: none;
+  /* display: none; */
+  display: flex!important;
   align-items: center;
   background-color: #e2e2e2;
   box-shadow: var(--toolbar-box-shadow);
@@ -2657,4 +2658,31 @@ div[contenteditable="true"]:focus{
 
 .shapeText{
   word-break: break-word;
+}
+
+.shape-colorpicker-container{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.shape-colorpicker-container i{
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.font-family-container{
+  display: flex;
+  align-items: center;
+  padding: 3px;
+  margin-bottom: 2px;
+  cursor: pointer;
+}
+
+.font-family-container:hover, .font-family-container.active{
+  background-color: #dddedf;
+}
+
+.font-family-container small{
+  width: 100px;
 }

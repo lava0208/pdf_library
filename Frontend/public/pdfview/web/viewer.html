@@ -573,7 +573,10 @@ See https://github.com/adobe-type-tools/cmap-resources
                   <i class="fa fa-fill"></i>
                 </button>
                 <div class="dropdown-menu">
-                  <input type="color" name="colorPicker" value="#FFFFFF" class="shape-colorpicker">
+                  <div class="shape-colorpicker-container" type="background">
+                    <input type="color" name="colorPicker" value="#FFFFFF" class="shape-colorpicker">
+                    <i class="fa fa-save" class="shape-save"></i>
+                  </div>
                 </div>
               </div>
               <div class="dropdown" id="shape-outline-dropdown">
@@ -581,7 +584,10 @@ See https://github.com/adobe-type-tools/cmap-resources
                   <i class="fa fa-regular fa-square"></i>
                 </button>
                 <div class="dropdown-menu">
-                  <input type="color" name="colorPicker" value="#000000" class="shape-colorpicker">
+                  <div class="shape-colorpicker-container" type="border">
+                    <input type="color" name="colorPicker" value="#000000" class="shape-colorpicker">
+                    <i class="fa fa-save" class="shape-save"></i>
+                  </div>
                 </div>
               </div>
               <div class="dropdown size-dropdown" id="border-radius-dropdown" type="1">
@@ -610,12 +616,49 @@ See https://github.com/adobe-type-tools/cmap-resources
                   <i class="fa fa-fill"></i>
                 </button>
                 <div class="dropdown-menu">
-                  <input type="color" name="colorPicker" value="#000000" class="shape-colorpicker">
+                  <div class="shape-colorpicker-container" type="text">
+                    <input type="color" name="colorPicker" value="#000000" class="shape-colorpicker">
+                    <i class="fa fa-save" class="shape-save"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="dropdown size-dropdown" id="text-family-dropdown">
+                <button class="btn dropdown-toggle d-flex align-items-center" type="button" data-toggle="dropdown" aria-expanded="false">
+                  <i class="fa fa-font"></i>
+                </button>
+                <div class="dropdown-menu">
+                  <div class="font-family-container" family="Courier">
+                    <small>Courier</small><div style="font-family: Courier">Hello</div>
+                  </div>
+                  <div class="font-family-container" family="Helvetica">
+                    <small>Helvetica</small><div style="font-family: Helvetica">Hello</div>
+                  </div>
+                  <div class="font-family-container" family="TimesRoman">
+                    <small>TimesRoman</small><div style="font-family: TimesRoman">Hello</div>
+                  </div>
+                  <div class="font-family-container" family="Arial">
+                    <small>Arial</small><div style="font-family: Arial">Hello</div>
+                  </div>
+                  <div class="font-family-container" family="Calibri">
+                    <small>Calibri</small><div style="font-family: Calibri">Hello</div>
+                  </div>
+                  <div class="font-family-container" family="Consolas">
+                    <small>Consolas</small><div style="font-family: Consolas">Hello</div>
+                  </div>
+                  <div class="font-family-container" family="Georgia">
+                    <small>Georgia</small><div style="font-family: Georgia">Hello</div>
+                  </div>
+                  <div class="font-family-container" family="Tahoma">
+                    <small>Tahoma</small><div style="font-family: Tahoma">Hello</div>
+                  </div>
+                  <div class="font-family-container" family="Verdana">
+                    <small>Verdana</small><div style="font-family: Verdana">Hello</div>
+                  </div>
                 </div>
               </div>
               <div class="dropdown size-dropdown" id="text-size-dropdown" type="3">
                 <button class="btn dropdown-toggle d-flex align-items-center" type="button" data-toggle="dropdown" aria-expanded="false">
-                  <i class="fa-solid fa-font"></i>
+                  <i class="fa fa-text-height"></i>
                 </button>
                 <div class="dropdown-menu">
                   <input type="range" class="editorParamsSlider" value="0" min="0" max="60" step="2" />

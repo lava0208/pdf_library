@@ -208,12 +208,12 @@ See https://github.com/adobe-type-tools/cmap-resources
         </div>
       </div>
 
-      <div class="editorParamsToolbar hidden doorHangerRight" id="editorShapeFormatToolbar">
+      <!-- <div class="editorParamsToolbar hidden doorHangerRight" id="editorShapeFormatToolbar">
         <div class="shape-container">
           <img src="./images/letter-shape.png" alt="shape with letter" class="shape-item" type="shape" />
           <img src="./images/letter-circle.png" alt="circle with letter" class="shape-item" type="circle" />
         </div>
-      </div>
+      </div> -->
 
       <div class="editorParamsToolbar hidden doorHangerRight" id="editorFreeTextParamsToolbar">
         <div class="editorParamsToolbarContainer">
@@ -507,6 +507,9 @@ See https://github.com/adobe-type-tools/cmap-resources
                   data-l10n-id="pdfjs-zoom-in-button">
                   <span data-l10n-id="pdfjs-zoom-in-button-label">Zoom In</span>
                 </button>
+                <div id="shapeToolbarButton">
+                  <img src="./images/toolbarButton-shape.jpg" alt="shape annotation" />
+                </div>
               </div>
             </div>
 
@@ -564,6 +567,13 @@ See https://github.com/adobe-type-tools/cmap-resources
                 <span data-l10n-id="pdfjs-save-button-label">Save</span>
               </button>
             </div>
+          </div>
+          <div id="shapeTypeToolbar" class="hidden">
+            <i class="fa fa-regular fa-square shape-item" style="font-size: 20px;" title="shape annotation" type="shape"></i>
+            <i class="fa fa-regular fa-circle shape-item" style="font-size: 19px;" title="circle annotation" type="circle"></i>
+            <button class="btn" type="button" id="closeShapeTypeToolbar">
+              <i class="fa fa-close"></i>
+            </button>
           </div>
           <div id="shapeToolbar">
             <div id="shapeIcons">
@@ -1443,12 +1453,12 @@ See https://github.com/adobe-type-tools/cmap-resources
       data-l10n-id="pdfjs-editor-stamp-button">
       <span data-l10n-id="pdfjs-editor-stamp-button-label">Add or edit images</span>
     </button>
-    <div class="horizontalToolbarSeparator"></div>
+    <!-- <div class="horizontalToolbarSeparator"></div>
     <p class="toolbarTitle">Add Shapes:</p>
     <button class="menu-button" id="shape_format" title="Shape Format">
       <i class="fa-solid fa-shapes" style="width: 17px"></i>
       <p class="menu-button-item">Shape Format</p>
-    </button>
+    </button> -->
     <!-- <button class="menu-button" id="add_shape" title="Add Shapes">
       <i class="fa-solid fa-shapes" style="width: 17px"></i>
       <p class="menu-button-item">Add Shapes</p>

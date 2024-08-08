@@ -19,8 +19,8 @@ let selectedTextItalic = false;
 let selectedTextUnderline = false;
 let selectedTextFamily = 'Courier';
 
-$("#shape_format").on("click", function () {
-  $("#editorShapeFormatToolbar").toggleClass("hidden");
+$("#shapeToolbarButton").on("click", function () {
+  $("#shapeTypeToolbar").toggleClass("hidden");
 
   initialShapeStyle()
 });
@@ -29,7 +29,7 @@ $(".shape-item").on("click", function () {
   baseId++;
   shapeType = $(this).attr("type");
   isDrawingShape = true;
-  $("#editorShapeFormatToolbar").addClass("hidden");
+  $("#shapeTypeToolbar").addClass("hidden");
   viewer.style.cursor = 'crosshair';
 
   if (shapeType !== "shape") {
@@ -185,6 +185,10 @@ $("#closeShapeToolbar").on("click", function () {
   $("#viewerContainer").removeClass("withToolbar");
 })
 
+$("#closeShapeTypeToolbar").on("click", function () {
+  $("#shapeTypeToolbar").addClass("hidden");
+})
+
 viewer.addEventListener("mousedown", function (e) {
   if (!isDrawingShape) return;  
   
@@ -274,6 +278,9 @@ viewer.addEventListener("mouseup", function (e) {
   isDrawingShape = false;
   current_form_id = baseId;
 
+  console.log("baseId " + baseId);
+  
+
   plot.initStore();
 
   const finalRect = {
@@ -350,6 +357,9 @@ viewer.addEventListener("click", function (e) {
       $("#shapeToolbar").hide();
       $("#viewerContainer").removeClass("withToolbar");
       $(".shapeContainer.active").removeClass("active");
+      if(document.getElementById("shape_tooltipbar" + current_shape_id)){
+        document.getElementById("shape_tooltipbar" + current_shape_id).remove();
+      }      
     }
   }else{
     document.querySelectorAll(".shapeText").forEach(shapeText => {
@@ -360,7 +370,7 @@ viewer.addEventListener("click", function (e) {
 
 viewer.addEventListener("dblclick", function (e) {
   if(isDraft !== "false"){
-    if (e.target.classList.contains("shapeContainer") || e.target.closest(".shapeContainer")) {      
+    if (e.target.classList.contains("shapeContainer") || e.target.closest(".shapeContainer")) {
       $("#shapeToolbar").css("display", "flex");
       $("#viewerContainer").addClass("withToolbar");
   
@@ -427,17 +437,12 @@ viewer.addEventListener("dblclick", function (e) {
       current_form_id = sId;
 
       let istooltipshow = false;
-      if (
-        document.getElementById("shape_tooltipbar" + current_form_id)
-      ) {
-        istooltipshow = true;
-      }
-      
+
       if (isDragging) {
         isDragging = false;
       } else {
         if (!istooltipshow) {
-          let tooltipbar = document.createElement("div");
+          let tooltipbar = document.createElement("div");          
           addDeleteButton(
             current_form_id,
             tooltipbar,
@@ -727,9 +732,6 @@ function showTextInput(event, shapeContainer, editableDiv) {
 }
 
 function drawShapeStyle(item){
-  console.log("============");
-  console.log(item);
-  
   $("#shape-fill-dropdown").find("input").val(item.shapeFillColor);
   $("#shape-outline-dropdown").find("input").val(item.borderColor);
   $("#text-color-dropdown").find("input").val(item.textColor);

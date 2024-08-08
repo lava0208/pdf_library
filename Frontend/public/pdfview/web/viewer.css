@@ -2616,13 +2616,27 @@ div[contenteditable="true"]:focus{
 }
 
 #shapeToolbar{
-  /* display: none; */
-  display: flex!important;
+  display: none;
   align-items: center;
   background-color: #e2e2e2;
   box-shadow: var(--toolbar-box-shadow);
   border-bottom: var(--toolbar-border-bottom);
   position: relative;
+}
+
+#shapeTypeToolbar{
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 10px 15px;  
+  background-color: #e2e2e2;
+  box-shadow: var(--toolbar-box-shadow);
+  border-bottom: var(--toolbar-border-bottom);
+  position: relative;
+}
+
+#shapeTypeToolbar i{
+  cursor: pointer;
 }
 
 #shapeToolbar #extra-shape-icons{
@@ -2642,13 +2656,13 @@ div[contenteditable="true"]:focus{
   border-right: 1px solid #412424;
 }
 
-#closeShapeToolbar{
+#closeShapeToolbar, #closeShapeTypeToolbar{
   position: absolute;
   right: 10px;
   top: 5px;
 }
 
-#closeShapeToolbar i{
+#closeShapeToolbar i, #closeShapeTypeToolbar i{
   font-size: 20px;
 }
 
@@ -2685,4 +2699,24 @@ div[contenteditable="true"]:focus{
 
 .font-family-container small{
   width: 100px;
+}
+
+#shapeToolbarButton{
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;  
+  cursor: pointer;
+  float: left;
+  margin-left: 3px;
+}
+
+#shapeToolbarButton:hover{
+  background-color: #d9d9d9;
+}
+
+#shapeToolbarButton img{
+  height: 15px;
+  object-fit: cover;
 }

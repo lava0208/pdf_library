@@ -1181,7 +1181,7 @@ const drawFormElement = function () {
 
           signatureContainer.addEventListener("dblclick", () => {
             current_form_id = id;
-            if (!isSubmit) {
+            if (!isEditing && !isSubmit) {
               const signature_creator = document.getElementById(SIGNATURE_OPTION);
               signature_creator.style.display = "flex";
               document.getElementById("signature-initial-tab").click();
@@ -1313,29 +1313,31 @@ const drawFormElement = function () {
           resizeCanvas(shapeContainer.id, SHAPE, id);
 
           shapeContainer.addEventListener("dblclick", () => {
-            current_shape_id = id;
-            let istooltipshow = false;
+            if (!isEditing) {
+              current_shape_id = id;
+              let istooltipshow = false;
 
-            if (document.getElementById("shape_tooltipbar" + current_shape_id)) {
-              istooltipshow = true;
-            }
+              if (document.getElementById("shape_tooltipbar" + current_shape_id)) {
+                istooltipshow = true;
+              }
 
-            if (isDragging) {
-              isDragging = false;
-            } else {
-              if (!istooltipshow) {
-                let tooltipbar = document.createElement("div");
-                current_form_id = id;
-                addDeleteButton(
-                  current_shape_id,
-                  tooltipbar,
-                  shapeContainer,
-                  "shape"
-                );
+              if (isDragging) {
+                isDragging = false;
               } else {
-                document
-                  .getElementById("shape_tooltipbar" + current_shape_id)
-                  .remove();
+                if (!istooltipshow) {
+                  let tooltipbar = document.createElement("div");
+                  current_form_id = id;
+                  addDeleteButton(
+                    current_shape_id,
+                    tooltipbar,
+                    shapeContainer,
+                    "shape"
+                  );
+                } else {
+                  document
+                    .getElementById("shape_tooltipbar" + current_shape_id)
+                    .remove();
+                }
               }
             }
           });
@@ -4143,7 +4145,7 @@ const eventHandler = async function (e) {
       });
 
       signatureContainer.addEventListener("dblclick", () => {
-        if (!isSubmit) {
+        if (!isSubmit && !isEditing) {
           const signature_creator = document.getElementById(SIGNATURE_OPTION);
           signature_creator.style.display = "flex";
           document.getElementById("signature-initial-tab").click();

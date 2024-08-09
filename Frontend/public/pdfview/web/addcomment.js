@@ -387,7 +387,7 @@ document.getElementById("viewer").addEventListener("click", (evt) => {
       this.classList.remove("clicked");
     });
     div.addEventListener('dblclick', function() {
-      if (isDraft) {
+      if (isDraft && !isEditing) {
         const textContent = this.querySelector('.textcontent');
         if (textContent.classList.contains('oldtextcontent') && textContent) {
           var divId = $(this).attr("id");

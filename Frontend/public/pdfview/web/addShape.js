@@ -341,7 +341,7 @@ viewer.addEventListener("mouseup", function (e) {
 })
 
 viewer.addEventListener("click", function (e) {
-  if (isDraft !== "false") {
+  if (isDraft !== "false" && !isEditing) {
     if (form_storage && form_storage !== null) {
         form_storage.forEach((formItem) => {
           if (formItem.form_type === SHAPE){
@@ -373,7 +373,7 @@ viewer.addEventListener("click", function (e) {
 });
 
 viewer.addEventListener("dblclick", function (e) {
-  if(isDraft !== "false"){
+  if(isDraft !== "false" && !isEditing){
     if (e.target.classList.contains("shapeContainer") || e.target.closest(".shapeContainer")) {
       $("#shapeToolbar").removeClass("hidden");
       $("#shapeTypeToolbar").addClass("hidden");
@@ -628,7 +628,7 @@ function enableInteractJS(elementId, type, currentId) {
       ],
     });
 
-  element.addEventListener("click", function (e) {
+  element.addEventListener("click", function () {
     interact(`#${elementId}`).resizable({ enabled: true });
     const shapeText = element.querySelector(".shapeText");
     if (shapeText && isDraft !== "false") {

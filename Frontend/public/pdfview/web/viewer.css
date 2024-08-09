@@ -2612,7 +2612,7 @@ div[contenteditable="true"]:focus{
 }
 
 #shapeToolbar{
-  display: none;
+  display: flex;
   align-items: center;
   background-color: #e2e2e2;
   box-shadow: var(--toolbar-box-shadow);

@@ -20,7 +20,9 @@ let selectedTextUnderline = false;
 let selectedTextFamily = 'Courier';
 
 $("#shapeToolbarButton").on("click", function () {
-  $("#shapeTypeToolbar").toggleClass("hidden");
+  $("#shapeTypeToolbar").removeClass("hidden");
+  $("#viewerContainer").addClass("withToolbar");
+  $("#shapeToolbar").addClass("hidden");
 
   initialShapeStyle()
 });
@@ -29,12 +31,14 @@ $(".shape-item").on("click", function () {
   baseId++;
   shapeType = $(this).attr("type");
   isDrawingShape = true;
-  $("#shapeTypeToolbar").addClass("hidden");
   viewer.style.cursor = 'crosshair';
 
   if (shapeType !== "shape") {
     selectedBorderRadius = "50%";
   }
+
+  $("#shapeTypeToolbar").addClass("hidden");
+  $("#viewerContainer").removeClass("withToolbar");
 });
 
 $(".shape-colorpicker").on("change", function () {
@@ -181,12 +185,13 @@ $("#text-family-dropdown .font-family-container").on("click", function () {
 });
 
 $("#closeShapeToolbar").on("click", function () {
-  $("#shapeToolbar").hide();
+  $("#shapeToolbar").addClass("hidden");
   $("#viewerContainer").removeClass("withToolbar");
 })
 
 $("#closeShapeTypeToolbar").on("click", function () {
   $("#shapeTypeToolbar").addClass("hidden");
+  $("#viewerContainer").removeClass("withToolbar");
 })
 
 viewer.addEventListener("mousedown", function (e) {
@@ -280,9 +285,6 @@ viewer.addEventListener("mouseup", function (e) {
   current_form_id = baseId;
   current_shape_id = baseId;
 
-  console.log("baseId " + baseId);
-  
-
   plot.initStore();
 
   const finalRect = {
@@ -355,7 +357,8 @@ viewer.addEventListener("click", function (e) {
         shapeText.setAttribute("contenteditable", "false");
         shapeText.blur();
       });
-      $("#shapeToolbar").hide();
+      $("#shapeToolbar").addClass("hidden");
+      $("#shapeTypeToolbar").addClass("hidden");
       $("#viewerContainer").removeClass("withToolbar");
       $(".shapeContainer.active").removeClass("active");
       if(document.getElementById("shape_tooltipbar" + current_shape_id)){
@@ -372,7 +375,8 @@ viewer.addEventListener("click", function (e) {
 viewer.addEventListener("dblclick", function (e) {
   if(isDraft !== "false"){
     if (e.target.classList.contains("shapeContainer") || e.target.closest(".shapeContainer")) {
-      $("#shapeToolbar").css("display", "flex");
+      $("#shapeToolbar").removeClass("hidden");
+      $("#shapeTypeToolbar").addClass("hidden");
       $("#viewerContainer").addClass("withToolbar");
   
       const shapeContainer = e.target.closest(".shapeContainer");

@@ -249,6 +249,7 @@ viewer.addEventListener("mousemove", function (e) {
 
 viewer.addEventListener("mouseup", function (e) {
   if (!isDrawing) return;
+
   initialShapeStyle();
 
   viewer.style.cursor = 'auto';
@@ -277,6 +278,7 @@ viewer.addEventListener("mouseup", function (e) {
   isDrawing = false;
   isDrawingShape = false;
   current_form_id = baseId;
+  current_shape_id = baseId;
 
   console.log("baseId " + baseId);
   
@@ -333,7 +335,6 @@ viewer.addEventListener("mouseup", function (e) {
       viewer.clientWidth,
       viewer.clientHeight,
     );
-    editableDiv.setAttribute("contenteditable", "false");
   });
 })
 
@@ -379,6 +380,10 @@ viewer.addEventListener("dblclick", function (e) {
       $(shapeContainer).addClass("active");
       
       const shapeText = shapeContainer.querySelector(".shapeText");
+
+      shapeContainer.addEventListener("dblclick", (e) => {
+        showTextInput(e, shapeContainer, shapeText);
+      });
 
       $("#shape-fill-dropdown").find("input").val(rgbToHex(shapeContainer.style.backgroundColor));
       $("#shape-outline-dropdown").find("input").val(rgbToHex(shapeContainer.style.borderColor));
@@ -485,8 +490,6 @@ function initialShapeStyle(){
 }
 
 function handleShape(shapeFillColor, borderColor, textColor, borderRadius, borderWidth, textSize, textBold, textItalic, textUnderline, textFamily, shapeText, w, h, canvasWidth, canvasHeight) {
-  console.log("textFamily " + textFamily);
-  
   for (let i = 0; i < form_storage.length; i++) {
     if (form_storage[i].id == current_form_id) {
       
@@ -645,7 +648,6 @@ function drawShapeFromStorage(formItem) {
   editableDiv.style.fontStyle = formItem.textItalic ? "italic" : "normal";
   editableDiv.style.textDecoration = formItem.textUnderline ? "underline " : "";
   editableDiv.style.fontFamily = formItem.textFamily;
-  // editableDiv.focus();
 
   editableDiv.addEventListener("dblclick", (event) => {
     // current_form_id = formItem.id;

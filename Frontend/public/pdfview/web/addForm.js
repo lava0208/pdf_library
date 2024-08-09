@@ -135,6 +135,13 @@ const generalUserMode = function () {
 const drawFormElement = function () {
   form_storage = draw_form_storage;
 
+  if(isDraft == "true"){
+    var last_form = form_storage[form_storage.length - 1];
+    if(last_form){
+      baseId = last_form.id;
+    }
+  }
+
   if(form_storage == undefined){
     form_storage = [];
   };
@@ -3100,7 +3107,7 @@ const submitAction = function () {
 }
 
 // Handle the specified event.
-const eventHandler = async function (e) {  
+const eventHandler = async function (e) {
   baseId++;
   let ost = computePageOffset();
   let x = e.pageX - ost.left;
@@ -3165,7 +3172,7 @@ const eventHandler = async function (e) {
 
       checkbox.addEventListener("dblclick", () => {
         if (!isEditing) {
-          current_checkbox_id = checkboxId;
+          current_checkbox_id = checkboxId;          
           let istooltipshow = false;
           if (
             document.getElementById("checkbox_tooltipbar" + current_checkbox_id)
@@ -4264,6 +4271,8 @@ const eventHandler = async function (e) {
       break;
     case SHAPE:
       let shapeId = baseId;
+      console.log("shapeId " + shapeId);
+      
       shapeContainer.addEventListener("dblclick", () => {        
         if (!isEditing) {
           current_shape_id = shapeId;

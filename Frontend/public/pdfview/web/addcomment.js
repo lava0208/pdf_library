@@ -82,43 +82,44 @@ const handleBold = function () {
   const boldBtn = document.getElementById("text-bold");
   if (isBold) {
     if (boldBtn) {
-      boldBtn.classList.remove("text-weight-button-focused");
+      boldBtn.classList.remove("active");
     }
     document.getElementById(current_text_content_id).classList.remove("bold-text");
     isBold = false;
   } else {
     if (boldBtn) {
-      boldBtn.classList.add("text-weight-button-focused");
+      boldBtn.classList.add("active");
     }
     document.getElementById(current_text_content_id).classList.add("bold-text");
     isBold = true;
   }
-  console.log("isBold " + isBold);
-  saveTextContent();
+  // saveTextContent();
 };
 const handleItalic = function () {
   const italicBtn = document.getElementById("text-italic");
   if (isItalic) {
     if (italicBtn) {
-      italicBtn.classList.remove("text-weight-button-focused");
+      italicBtn.classList.remove("active");
     }
     document.getElementById(current_text_content_id).classList.remove("italic-text");
     isItalic = false;
   } else {
     if (italicBtn) {
-      italicBtn.classList.add("text-weight-button-focused");
+      italicBtn.classList.add("active");
     }
     document.getElementById(current_text_content_id).classList.add("italic-text");
     isItalic = true;
   }
-  saveTextContent();
+  // saveTextContent();
 };
 
 const addBoldItalicEvent = function () {
-  const boldBtn = document.getElementById("text-bold");
-  const italicBtn = document.getElementById("text-italic");
-  boldBtn.addEventListener("click", handleBold);
-  italicBtn.addEventListener("click", handleItalic);
+  $("#text-bold").click(function(){
+    handleBold();
+  })
+  $("#text-italic").click(function(){
+    handleItalic();
+  })
 };
 
 document.addEventListener("keydown", function (event) {
@@ -137,10 +138,10 @@ const removeBoldItalicEvent = function () {
   boldBtn.removeEventListener("click", handleBold);
   italicBtn.removeEventListener("click", handleItalic);
   if (isBold) {
-    boldBtn.classList.remove("text-weight-button-focused");
+    boldBtn.classList.remove("active");
   }
   if (isItalic) {
-    italicBtn.classList.remove("text-weight-button-focused");
+    italicBtn.classList.remove("active");
   }
   (isBold = false), (isItalic = false);
 };
@@ -166,7 +167,7 @@ const saveTextContent = function () {
       }
       prevElement = element;
     }
-  } 
+  }
 
   for (let i = 0; i < text_storage.length; i++) {
     if (text_storage[i].id == current_text_num_id) {
@@ -389,7 +390,12 @@ document.getElementById("viewer").addEventListener("click", (evt) => {
       if (isDraft) {
         const textContent = this.querySelector('.textcontent');
         if (textContent.classList.contains('oldtextcontent') && textContent) {
-          textContent.setAttribute("contentEditable", "true");
+          var divId = $(this).attr("id");
+          if(!divId.includes("date")){
+            textContent.setAttribute("contentEditable", "true");
+          }
+          
+          // isTextModeOn = true;
           // resizeCanvas(
           //   this.id, 
           //   textContent,
@@ -433,7 +439,7 @@ document.getElementById("viewer").addEventListener("click", (evt) => {
     newText.classList.add("textcontent");
     newText.oninput = function () {
       current_text_num_id = textContentId;
-      saveTextContent();
+      // saveTextContent();
     }
     newText.addEventListener('keydown', function (e) {
       if (e.key === 'Enter') {
@@ -449,7 +455,8 @@ document.getElementById("viewer").addEventListener("click", (evt) => {
     container.style.left = mouse_x + "px";
     container.style.width = "fit-content";
     container.style.height = "fit-content";
-    container.style.zIndex = 1;
+    // container.style.zIndex = 1;
+    container.style.zIndex = 150;
     container.tabIndex = 0;
     container.classList.add("textfield-content");
     container.append(newText);
@@ -461,7 +468,7 @@ document.getElementById("viewer").addEventListener("click", (evt) => {
         container.style.height = height + "px";
         textContentSize.x = width;
         textContentSize.y = height;
-        saveTextContent();
+        // saveTextContent();
       }
     });
 
@@ -479,13 +486,17 @@ document.getElementById("viewer").addEventListener("click", (evt) => {
       "text-content"
     );
 
-    addBoldItalicEvent();
+    newText.style.fontFamily = $("#text-content-font-style").val();
+    newText.style.fontSize = $("#text-content-font-size").val() + "px";
+    newText.style.color = $("#text-content-color").val();    
 
-    newText.style.fontFamily = document.getElementById("text-content-font-style") && document.getElementById("text-content-font-style").value;
-    newText.style.fontSize = document.getElementById("text-content-font-size") && document.getElementById("text-content-font-size").value + "px";
-    // newText.style.fontFamily = document.getElementById("toolbar-font-style") && document.getElementById("toolbar-font-style").value;
-    // newText.style.fontSize = document.getElementById("toolbar-font-size") && document.getElementById("toolbar-font-size").value + "px";
-    newText.style.color = document.getElementById("text-content-color") && document.getElementById("text-content-color").value;
+    $("#text-bold").click(function(){
+      handleBold();
+    })
+
+    $("#text-italic").click(function(){
+      handleItalic();
+    })
 
     $(document).on('change', '#text-content-font-style', function() {
       $('#' + current_text_content_id).css('font-family', $(this).val());
@@ -515,44 +526,41 @@ document.getElementById("viewer").addEventListener("click", (evt) => {
     })
 
     $(document).on('dblclick', '.textcontent', function() {
-      const $this = $(this);
-      const text = $this.text();
-      const classes = $(this).attr('class').replace('textcontent', '').trim();
-      const $input = $('<input>', {
-        type: 'text',
-        value: text,
-        class: 'inputcontent ' + classes,
-        css: {
-          width: '100%',
-          height: 'fit-content',
-          fontFamily: $this.css('font-family'),
-          fontSize: $this.css('font-size'),
-          color: $this.css('color'),
-          cursor: 'move'
-        }
-      });
-    
-      $this.parent().addClass("dblclicked");
-      $this.css('z-index', 1);
-      $this.parent().css("z-index", standardZIndex);
-    
-      $input.on('blur', function() {
-        const newText = $input.val();
-        $this.text(newText).css('display', 'block');
-        $input.replaceWith($this);
-        $this.parent().removeClass("dblclicked");
-        $('.textfield-content').css('z-index', 1);
-        $this.parent().css("z-index", 1);
-      });
-    
-      $this.replaceWith($input);
-
-      // Focus on the last character
-      const inputLength = $input.val().length;
-      $input.focus().get(0).setSelectionRange(inputLength, inputLength);
+      var textType = $(this).attr("type");
+      if(textType !== "date"){
+        const $this = $(this);
+        const text = $this.text();
+        const classes = $(this).attr('class').replace('textcontent', '').trim();
+        const $input = $('<input>', {
+          type: 'text',
+          value: text,
+          class: 'inputcontent ' + classes,
+          css: {
+            width: '100%',
+            height: 'fit-content',
+            fontFamily: $this.css('font-family'),
+            fontSize: $this.css('font-size'),
+            color: $this.css('color'),
+            cursor: 'move'
+          }
+        });
+      
+        $this.parent().addClass("dblclicked");
+      
+        $input.on('blur', function() {
+          const newText = $input.val();
+          $this.text(newText).css('display', 'block');
+          $input.replaceWith($this);
+          $this.parent().removeClass("dblclicked");
+        });
+      
+        $this.replaceWith($input);
+  
+        // Focus on the last character
+        const inputLength = $input.val().length;
+        $input.focus().get(0).setSelectionRange(inputLength, inputLength); 
+      }
     });
-    
-    
 
     const textEventHandler = function () {
       if (!isEditing) {
@@ -581,11 +589,11 @@ document.getElementById("viewer").addEventListener("click", (evt) => {
                   option = showOption(TEXT_CONTENT_OPTION, element.xPage / 2 - 180, 15);
                 }
                 (isBold = element.isBold), (isItalic = element.isItalic);
-                addBoldItalicEvent();
+                // addBoldItalicEvent();
                 if (isBold)
-                  document.getElementById("text-bold").classList.add("text-weight-button-focused");
+                  document.getElementById("text-bold").classList.add("active");
                 if (isItalic)
-                  document.getElementById("text-italic").classList.add("text-weight-button-focused");
+                  document.getElementById("text-italic").classList.add("active");
                 if(document.getElementById("text-content-font-style")){
                   document.getElementById("text-content-font-style").value = element.regularFontStyle;
                 }
@@ -697,8 +705,8 @@ const handleChange = () => {
 };
 
 function adjustZIndex(that){
-  $(".textfield-content").css('z-index', 1);
-  $(that).parents(".textfield-content").css("z-index", standardZIndex);
+  $(".textfield-content").css('z-index', 150);
+  $(that).parents(".textfield-content").css("z-index", 150);
 }
 
 function add_txt_comment() {

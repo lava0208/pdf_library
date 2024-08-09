@@ -1428,72 +1428,12 @@ const drawFontSize = function () {
   })
 }
 
-//... Change Font Size Event
-$(document).on("change", "#toolbar-font-size", function () {
-  if ($(".freeTextEditor").hasClass("selectedEditor")) {
-    let value = $(this).val() == "" || $(this).val() == null ? 12 : $(this).val();
-    let size = value + "px";
-    let fontSize = `calc(value + "px"} * var(--scale-factor))`;
-    $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").attr("size", size);
-    $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").css("font-size", fontSize);
-  }
-})
-
-//... Change Font Family Event
-$(document).on("change", "#toolbar-font-style", function () {
-  if ($(".freeTextEditor").hasClass("selectedEditor")) {
-    let fontFamily = $(this).val();
-    $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").css("font-family", fontFamily);
-  }
-})
-
-//... Get Font Detail of Selected Text
-$(document).on("click", ".freeTextEditor", function () {
-  if (isOpenSubmitDocument) {
-    return false
-  }
-
-  let size = $(this).find(".internal[role='textbox']").attr("size");
-  let fontFamily = $(this).find(".internal[role='textbox']").css("font-family");
-  let fontWeight = $(this).find(".internal[role='textbox']").css("font-weight");
-  let fontStyle = $(this).find(".internal[role='textbox']").css("font-style");
-  let fontUnderline = $(this).find(".internal[role='textbox']").css("font-underline");
-
-  // var calcSize = fontSize / var(--scale-factor);
-
-  toolbar.find(`#toolbar-font-size option[pixel="${size}"]`).prop("selected", true);
-  toolbar.find(`#toolbar-font-style option[value="${fontFamily}"]`).prop("selected", true);
-
-  if (fontWeight == 700) {
-    toolbar.find("#text-bold").addClass("active")
-  } else {
-    toolbar.find("#text-bold").removeClass("active")
-  }
-  if (fontStyle == "italic") {
-    toolbar.find("#text-italic").addClass("active")
-  } else {
-    toolbar.find("#text-italic").removeClass("active")
-  }
-  if (fontUnderline == "underline") {
-    toolbar.find("#text-underline").addClass("active")
-  } else {
-    toolbar.find("#text-underline").removeClass("active")
-  }
-})
-
 //... Change Font Style Event
 $(document).on("click", ".text-weight-button", function () {
   if ($(this).hasClass("active")) {
     $(this).removeClass("active");
   } else {
     $(this).addClass("active");
-  }
-  if ($(".freeTextEditor").hasClass("selectedEditor")) {
-    let fontWeight = toolbar.find("#text-bold").hasClass("active") ? 700 : 500;
-    let fontStyle = toolbar.find("#text-italic").hasClass("active") ? "italic" : "";
-    let fontUnderline = toolbar.find("#text-underline").hasClass("active") ? "underline" : "none";
-    $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").css({ "font-weight": fontWeight, "font-style": fontStyle, "text-decoration": fontUnderline });
-    // $(".freeTextEditor.selectedEditor").find(".internal[role='textbox']").css({ "font-style": fontStyle });
   }
 })
 
@@ -2208,7 +2148,7 @@ const showOption = function (id, x, y) {
     if (isOptionPane) fieldOption.style.display = "flex";
     else fieldOption.style.display = "none";
 
-    fieldOption.style.top = y + "px";
+    fieldOption.style.top = `${y + 5}` + "px";
     fieldOption.style.left = x + "px";
 
     return fieldOption;

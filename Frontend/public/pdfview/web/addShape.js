@@ -105,13 +105,13 @@ $("#extra-shape-icons i").on("click", function () {
   const shapeTextHtml = shapeContainer.querySelector(".shapeText").innerHTML.trim();
 
   var id = $(this).attr("id");
-  if (id === "text-bold") {
+  if (id === "shape-text-bold") {
     selectedTextBold = !selectedTextBold;
     shapeText.style.fontWeight = selectedTextBold ? "bold" : "normal";
-  } else if (id === "text-italic") {
+  } else if (id === "shape-text-italic") {
     selectedTextItalic = !selectedTextItalic;
     shapeText.style.fontStyle = selectedTextItalic ? "italic" : "normal";
-  } else if (id === "text-underline") {
+  } else if (id === "shape-text-underline") {
     selectedTextUnderline = !selectedTextUnderline;
     shapeText.style.textDecoration = selectedTextUnderline ? "underline" : "none";
   }
@@ -406,21 +406,21 @@ viewer.addEventListener("dblclick", function (e) {
       $("#text-size-dropdown .range-value").text(shapeText.style.fontSize);
   
       if (shapeText.style.fontWeight === "bold") {
-        $("#text-bold").addClass("active");
+        $("#shape-text-bold").addClass("active");
       } else {
-        $("#text-bold").removeClass("active");
+        $("#shape-text-bold").removeClass("active");
       }
   
       if (shapeText.style.fontStyle === "italic") {
-        $("#text-italic").addClass("active");
+        $("#shape-text-italic").addClass("active");
       } else {
-        $("#text-italic").removeClass("active");
+        $("#shape-text-italic").removeClass("active");
       }
   
       if (shapeText.style.textDecoration.includes("underline")) {
-        $("#text-underline").addClass("active");
+        $("#shape-text-underline").addClass("active");
       } else {
-        $("#text-underline").removeClass("active");
+        $("#shape-text-underline").removeClass("active");
       }
 
       if (shapeText.style.fontFamily && shapeText.style.fontFamily !== "") {
@@ -476,9 +476,9 @@ function initialShapeStyle(){
   $("#border-radius-dropdown input").val(0);
   $("#border-weight-dropdown input").val(1);
   $("#text-size-dropdown input").val(16);
-  $("#text-bold").removeClass("active");
-  $("#text-italic").removeClass("active");
-  $("#text-underline").removeClass("active");
+  $("#shape-text-bold").removeClass("active");
+  $("#shape-text-italic").removeClass("active");
+  $("#shape-text-underline").removeClass("active");
 
   // Set default values
   selectedShapeFillColor = 'rgb(255, 255, 255)';
@@ -745,13 +745,13 @@ function drawShapeStyle(item){
   $("#border-weight-dropdown").find("input").val(parseInt(item.borderWidth));
   $("#text-size-dropdown").find("input").val(parseInt(item.textSize));
   if(item.textBold){
-    $("#text-bold").addClass("active");
+    $("#shape-text-bold").addClass("active");
   }
   if(item.textItalic){
-    $("#text-italic").addClass("active");
+    $("#shape-text-italic").addClass("active");
   }
   if(item.textUnderline){
-    $("#text-underline").addClass("active");
+    $("#shape-text-underline").addClass("active");
   }
   if(item.textFamily !== ""){
     $(`.font-family-container[family='${item.textFamily}']`).addClass("active");

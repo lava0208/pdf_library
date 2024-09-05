@@ -21,6 +21,7 @@ let initialX, initialY;
 
 let isBold = false;
 let isItalic = false;
+let isUnderline = false;
 //////////
 
 const getPageWidth = async function () {
@@ -112,6 +113,22 @@ const handleItalic = function () {
   }
   // saveTextContent();
 };
+const handleUnderline = function () {
+  const underlineBtn = document.getElementById("text-underline");
+  if (isUnderline) {
+    if (underlineBtn) {
+      underlineBtn.classList.remove("active");
+    }
+    document.getElementById(current_text_content_id).classList.remove("underline-text");
+    isUnderline = false;
+  } else {
+    if (underlineBtn) {
+      underlineBtn.classList.add("active");
+    }
+    document.getElementById(current_text_content_id).classList.add("underline-text");
+    isUnderline = true;
+  }
+};
 
 const addBoldItalicEvent = function () {
   $("#text-bold").click(function(){
@@ -119,6 +136,9 @@ const addBoldItalicEvent = function () {
   })
   $("#text-italic").click(function(){
     handleItalic();
+  })
+  $("#text-underline").click(function(){
+    handleUnderline();
   })
 };
 
@@ -135,15 +155,20 @@ document.addEventListener("keydown", function (event) {
 const removeBoldItalicEvent = function () {
   const boldBtn = document.getElementById("text-bold");
   const italicBtn = document.getElementById("text-italic");
+  const underlineBtn = document.getElementById("text-underline");
   boldBtn.removeEventListener("click", handleBold);
   italicBtn.removeEventListener("click", handleItalic);
+  underlineBtn.removeEventListener("click", handleUnderline);
   if (isBold) {
     boldBtn.classList.remove("active");
   }
   if (isItalic) {
     italicBtn.classList.remove("active");
   }
-  (isBold = false), (isItalic = false);
+  if (isUnderline) {
+    underlineBtn.classList.remove("active");
+  }
+  (isBold = false), (isItalic = false), (isUnderline = false);
 };
 
 const saveTextContent = function () {
@@ -178,6 +203,7 @@ const saveTextContent = function () {
       text_storage[i].text = resultArray;
       text_storage[i].isBold = isBold;
       text_storage[i].isItalic = isItalic;
+      text_storage[i].isUnderline = isUnderline;
       text_storage[i].width = textContentSize.x * 0.75 * 0.75;
       text_storage[i].height = textContentSize.y * 0.75 * 0.75;
       text_storage[i].xPage = textContentSize.x;
@@ -205,6 +231,7 @@ const saveTextContent = function () {
       regularFontStyle: regularFont,
       isBold: isBold,
       isItalic: isItalic,
+      isUnderline: isUnderline,
       fontSize: fontSize,
       baseFontSize: fontSize,
       textColor: textColor,
@@ -498,6 +525,10 @@ document.getElementById("viewer").addEventListener("click", (evt) => {
       handleItalic();
     })
 
+    $("#text-underline").click(function(){
+      handleUnderline();
+    })
+
     $(document).on('change', '#text-content-font-style', function() {
       $('#' + current_text_content_id).css('font-family', $(this).val());
       adjustZIndex($(this));
@@ -588,12 +619,14 @@ document.getElementById("viewer").addEventListener("click", (evt) => {
                 } else {
                   option = showOption(TEXT_CONTENT_OPTION, element.xPage / 2 - 180, 15);
                 }
-                (isBold = element.isBold), (isItalic = element.isItalic);
+                (isBold = element.isBold), (isItalic = element.isItalic), (isUnderline = element.isUnderline);
                 // addBoldItalicEvent();
                 if (isBold)
                   document.getElementById("text-bold").classList.add("active");
                 if (isItalic)
                   document.getElementById("text-italic").classList.add("active");
+                if (isUnderline)
+                  document.getElementById("text-underline").classList.add("active");
                 if(document.getElementById("text-content-font-style")){
                   document.getElementById("text-content-font-style").value = element.regularFontStyle;
                 }

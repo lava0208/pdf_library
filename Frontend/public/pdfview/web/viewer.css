@@ -1835,7 +1835,7 @@ dialog :link {
 .form-style-weight {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 5px;
   cursor: pointer;
 }
 
@@ -2079,6 +2079,7 @@ dialog :link {
   z-index: 102;
   border-radius: 2px;
   cursor: pointer;
+  border: 1px solid transparent;
 }
 
 .text-weight-button.active {
@@ -2092,6 +2093,10 @@ dialog :link {
 
 .italic-text {
   font-style: italic;
+}
+
+.underline-text {
+  text-decoration: underline;
 }
 
 .formToolsContainer {

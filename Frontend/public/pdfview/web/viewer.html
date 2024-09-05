@@ -21,47 +21,52 @@ Adobe CMap resources are covered by their own copyright but the same license:
 See https://github.com/adobe-type-tools/cmap-resources
 -->
 <html dir="ltr" mozdisallowselectionprint>
+  <head>
+    <meta charset="utf-8" />
+    <!--#if GENERIC || CHROME-->
+    <meta name="google" content="notranslate" />
+    <!--#endif-->
+    <title>PDF.js viewer</title>
 
-<head>
-  <meta charset="utf-8" />
-  <!--#if GENERIC || CHROME-->
-  <meta name="google" content="notranslate" />
-  <!--#endif-->
-  <title>PDF.js viewer</title>
+    <!--#if MOZCENTRAL-->
+    <!--#include viewer-snippet-firefox-extension.html-->
+    <!--#elif CHROME-->
+    <!--#include viewer-snippet-chrome-extension.html-->
+    <!--#else-->
+    <!--#include viewer-snippet.html-->
+    <!--#endif-->
 
-  <!--#if MOZCENTRAL-->
-  <!--#include viewer-snippet-firefox-extension.html-->
-  <!--#elif CHROME-->
-  <!--#include viewer-snippet-chrome-extension.html-->
-  <!--#else-->
-  <!--#include viewer-snippet.html-->
-  <!--#endif-->
+    <!--#if MOZCENTRAL-->
+    <!--<link rel="stylesheet" href="resource://pdf.js/web/viewer.css">-->
+    <!--<link rel="localization" href="toolkit/pdfviewer/viewer.ftl"/>-->
+    <!--#else-->
+    <link rel="stylesheet" href="viewer.css" />
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
 
-  <!--#if MOZCENTRAL-->
-  <!--<link rel="stylesheet" href="resource://pdf.js/web/viewer.css">-->
-  <!--<link rel="localization" href="toolkit/pdfviewer/viewer.ftl"/>-->
-  <!--#else-->
-  <link rel="stylesheet" href="viewer.css" />
-  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="css/signature-pad.css" />
+    <link rel="stylesheet" href="css/signature-font.css" />
+    <link rel="stylesheet" href="css/share-document.css" />
+    <link rel="stylesheet" href="css/index.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"
+    />
 
-  <link rel="stylesheet" href="css/signature-pad.css" />
-  <link rel="stylesheet" href="css/signature-font.css" />
-  <link rel="stylesheet" href="css/share-document.css" />
-  <link rel="stylesheet" href="css/index.css" />
-  <link rel="stylesheet" href="css/styles.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />  
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script> -->
+    <!--#endif-->
 
-  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script> -->
-  <!--#endif-->
+    <!--#if MOZCENTRAL-->
+    <!--<script src="resource://pdf.js/web/viewer.mjs" type="module"></script>-->
+    <!--#elif !MOZCENTRAL-->
+    <!--<script src="viewer.mjs" type="module"></script>-->
+    <!--#elif /* Development mode. */-->
 
-  <!--#if MOZCENTRAL-->
-  <!--<script src="resource://pdf.js/web/viewer.mjs" type="module"></script>-->
-  <!--#elif !MOZCENTRAL-->
-  <!--<script src="viewer.mjs" type="module"></script>-->
-  <!--#elif /* Development mode. */-->
-
-  <script type="importmap">
+    <script type="importmap">
       {
         "imports": {
           "pdfjs/": "../src/",
@@ -97,425 +102,895 @@ See https://github.com/adobe-type-tools/cmap-resources
       }
     </script>
 
-  <!--#endif-->
-</head>
+    <!--#endif-->
+  </head>
 
-<body tabindex="1">
-  <div id="outerContainer">
-    <div id="show-history" class="show-history">
-  
-    </div>
-    <div id="sidebarContainer">
-      
-      <div id="toolbarSidebar">
-        <div id="toolbarSidebarLeft">
-          <div id="sidebarViewButtons" class="splitToolbarButton toggled" role="radiogroup">
-            <button id="viewThumbnail" class="toolbarButton toggled" title="Show Thumbnails" tabindex="2"
-              data-l10n-id="pdfjs-thumbs-button" role="radio" aria-checked="true" aria-controls="thumbnailView">
-              <span data-l10n-id="pdfjs-thumbs-button-label">Thumbnails</span>
-            </button>
-            <button id="viewOutline" class="toolbarButton"
-              title="Show Document Outline (double-click to expand/collapse all items)" tabindex="3"
-              data-l10n-id="pdfjs-document-outline-button" role="radio" aria-checked="false"
-              aria-controls="outlineView">
-              <span data-l10n-id="pdfjs-document-outline-button-label">Document Outline</span>
-            </button>
-            <button id="viewAttachments" class="toolbarButton" title="Show Attachments" tabindex="4"
-              data-l10n-id="pdfjs-attachments-button" role="radio" aria-checked="false" aria-controls="attachmentsView">
-              <span data-l10n-id="pdfjs-attachments-button-label">Attachments</span>
-            </button>
-            <button id="viewLayers" class="toolbarButton"
-              title="Show Layers (double-click to reset all layers to the default state)" tabindex="5"
-              data-l10n-id="pdfjs-layers-button" role="radio" aria-checked="false" aria-controls="layersView">
-              <span data-l10n-id="pdfjs-layers-button-label">Layers</span>
-            </button>
+  <body tabindex="1">
+    <div id="outerContainer">
+      <div id="show-history" class="show-history"></div>
+      <div id="sidebarContainer">
+        <div id="toolbarSidebar">
+          <div id="toolbarSidebarLeft">
+            <div
+              id="sidebarViewButtons"
+              class="splitToolbarButton toggled"
+              role="radiogroup"
+            >
+              <button
+                id="viewThumbnail"
+                class="toolbarButton toggled"
+                title="Show Thumbnails"
+                tabindex="2"
+                data-l10n-id="pdfjs-thumbs-button"
+                role="radio"
+                aria-checked="true"
+                aria-controls="thumbnailView"
+              >
+                <span data-l10n-id="pdfjs-thumbs-button-label">Thumbnails</span>
+              </button>
+              <button
+                id="viewOutline"
+                class="toolbarButton"
+                title="Show Document Outline (double-click to expand/collapse all items)"
+                tabindex="3"
+                data-l10n-id="pdfjs-document-outline-button"
+                role="radio"
+                aria-checked="false"
+                aria-controls="outlineView"
+              >
+                <span data-l10n-id="pdfjs-document-outline-button-label"
+                  >Document Outline</span
+                >
+              </button>
+              <button
+                id="viewAttachments"
+                class="toolbarButton"
+                title="Show Attachments"
+                tabindex="4"
+                data-l10n-id="pdfjs-attachments-button"
+                role="radio"
+                aria-checked="false"
+                aria-controls="attachmentsView"
+              >
+                <span data-l10n-id="pdfjs-attachments-button-label"
+                  >Attachments</span
+                >
+              </button>
+              <button
+                id="viewLayers"
+                class="toolbarButton"
+                title="Show Layers (double-click to reset all layers to the default state)"
+                tabindex="5"
+                data-l10n-id="pdfjs-layers-button"
+                role="radio"
+                aria-checked="false"
+                aria-controls="layersView"
+              >
+                <span data-l10n-id="pdfjs-layers-button-label">Layers</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="toolbarSidebarRight">
+            <div id="outlineOptionsContainer">
+              <div class="verticalToolbarSeparator"></div>
+              <button
+                id="currentOutlineItem"
+                class="toolbarButton"
+                disabled="disabled"
+                title="Find Current Outline Item"
+                tabindex="6"
+                data-l10n-id="pdfjs-current-outline-item-button"
+              >
+                <span data-l10n-id="pdfjs-current-outline-item-button-label"
+                  >Current Outline Item</span
+                >
+              </button>
+            </div>
+          </div>
+        </div>
+        <div id="sidebarContent">
+          <div id="thumbnailView"></div>
+          <div id="outlineView" class="hidden"></div>
+          <div id="attachmentsView" class="hidden"></div>
+          <div id="layersView" class="hidden"></div>
+        </div>
+        <div id="sidebarResizer"></div>
+      </div>
+
+      <!-- sidebarContainer -->
+
+      <div id="mainContainer">
+        <div class="findbar hidden doorHanger" id="findbar">
+          <div id="findbarInputContainer">
+            <span class="loadingInput end">
+              <input
+                id="findInput"
+                class="toolbarField"
+                title="Find"
+                placeholder="Find in document…"
+                tabindex="91"
+                data-l10n-id="pdfjs-find-input"
+                aria-invalid="false"
+              />
+            </span>
+            <div class="splitToolbarButton">
+              <button
+                id="findPrevious"
+                class="toolbarButton"
+                title="Find the previous occurrence of the phrase"
+                tabindex="92"
+                data-l10n-id="pdfjs-find-previous-button"
+              >
+                <span data-l10n-id="pdfjs-find-previous-button-label"
+                  >Previous</span
+                >
+              </button>
+              <div class="splitToolbarButtonSeparator"></div>
+              <button
+                id="findNext"
+                class="toolbarButton"
+                title="Find the next occurrence of the phrase"
+                tabindex="93"
+                data-l10n-id="pdfjs-find-next-button"
+              >
+                <span data-l10n-id="pdfjs-find-next-button-label">Next</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="findbarOptionsOneContainer">
+            <input
+              type="checkbox"
+              id="findHighlightAll"
+              class="toolbarField"
+              tabindex="94"
+            />
+            <label
+              for="findHighlightAll"
+              class="toolbarLabel"
+              data-l10n-id="pdfjs-find-highlight-checkbox"
+              >Highlight All</label
+            >
+            <input
+              type="checkbox"
+              id="findMatchCase"
+              class="toolbarField"
+              tabindex="95"
+            />
+            <label
+              for="findMatchCase"
+              class="toolbarLabel"
+              data-l10n-id="pdfjs-find-match-case-checkbox-label"
+              >Match Case</label
+            >
+          </div>
+
+          <div id="findbarOptionsTwoContainer">
+            <input
+              type="checkbox"
+              id="findMatchDiacritics"
+              class="toolbarField"
+              tabindex="96"
+            />
+            <label
+              for="findMatchDiacritics"
+              class="toolbarLabel"
+              data-l10n-id="pdfjs-find-match-diacritics-checkbox-label"
+              >Match Diacritics</label
+            >
+            <input
+              type="checkbox"
+              id="findEntireWord"
+              class="toolbarField"
+              tabindex="97"
+            />
+            <label
+              for="findEntireWord"
+              class="toolbarLabel"
+              data-l10n-id="pdfjs-find-entire-word-checkbox-label"
+              >Whole Words</label
+            >
+          </div>
+
+          <div id="findbarMessageContainer" aria-live="polite">
+            <span id="findResultsCount" class="toolbarLabel"></span>
+            <span id="findMsg" class="toolbarLabel"></span>
+          </div>
+        </div>
+        <!-- findbar -->
+
+        <div
+          class="editorParamsToolbar hidden doorHangerRight"
+          id="editorHighlightParamsToolbar"
+        >
+          <div
+            id="highlightParamsToolbarContainer"
+            class="editorParamsToolbarContainer"
+          >
+            <div id="editorHighlightColorPicker" class="colorPicker">
+              <span
+                id="highlightColorPickerLabel"
+                class="editorParamsLabel"
+                data-l10n-id="pdfjs-editor-highlight-colorpicker-label"
+                >Highlight color</span
+              >
+            </div>
           </div>
         </div>
 
-        <div id="toolbarSidebarRight">
-          <div id="outlineOptionsContainer">
-            <div class="verticalToolbarSeparator"></div>
-            <button id="currentOutlineItem" class="toolbarButton" disabled="disabled" title="Find Current Outline Item"
-              tabindex="6" data-l10n-id="pdfjs-current-outline-item-button">
-              <span data-l10n-id="pdfjs-current-outline-item-button-label">Current Outline Item</span>
-            </button>
-          </div>
-        </div>
-        
-      </div>
-      <div id="sidebarContent">
-        <div id="thumbnailView"></div>
-        <div id="outlineView" class="hidden"></div>
-        <div id="attachmentsView" class="hidden"></div>
-        <div id="layersView" class="hidden"></div>
-      </div>
-      <div id="sidebarResizer"></div>
-    </div>
-    
-    <!-- sidebarContainer -->
-
-    <div id="mainContainer">
-      <div class="findbar hidden doorHanger" id="findbar">
-        <div id="findbarInputContainer">
-          <span class="loadingInput end">
-            <input id="findInput" class="toolbarField" title="Find" placeholder="Find in document…" tabindex="91"
-              data-l10n-id="pdfjs-find-input" aria-invalid="false" />
-          </span>
-          <div class="splitToolbarButton">
-            <button id="findPrevious" class="toolbarButton" title="Find the previous occurrence of the phrase"
-              tabindex="92" data-l10n-id="pdfjs-find-previous-button">
-              <span data-l10n-id="pdfjs-find-previous-button-label">Previous</span>
-            </button>
-            <div class="splitToolbarButtonSeparator"></div>
-            <button id="findNext" class="toolbarButton" title="Find the next occurrence of the phrase" tabindex="93"
-              data-l10n-id="pdfjs-find-next-button">
-              <span data-l10n-id="pdfjs-find-next-button-label">Next</span>
-            </button>
-          </div>
-        </div>
-
-        <div id="findbarOptionsOneContainer">
-          <input type="checkbox" id="findHighlightAll" class="toolbarField" tabindex="94" />
-          <label for="findHighlightAll" class="toolbarLabel" data-l10n-id="pdfjs-find-highlight-checkbox">Highlight
-            All</label>
-          <input type="checkbox" id="findMatchCase" class="toolbarField" tabindex="95" />
-          <label for="findMatchCase" class="toolbarLabel" data-l10n-id="pdfjs-find-match-case-checkbox-label">Match
-            Case</label>
-        </div>
-
-        <div id="findbarOptionsTwoContainer">
-          <input type="checkbox" id="findMatchDiacritics" class="toolbarField" tabindex="96" />
-          <label for="findMatchDiacritics" class="toolbarLabel"
-            data-l10n-id="pdfjs-find-match-diacritics-checkbox-label">Match Diacritics</label>
-          <input type="checkbox" id="findEntireWord" class="toolbarField" tabindex="97" />
-          <label for="findEntireWord" class="toolbarLabel" data-l10n-id="pdfjs-find-entire-word-checkbox-label">Whole
-            Words</label>
-        </div>
-
-        <div id="findbarMessageContainer" aria-live="polite">
-          <span id="findResultsCount" class="toolbarLabel"></span>
-          <span id="findMsg" class="toolbarLabel"></span>
-        </div>
-      </div>
-      <!-- findbar -->
-
-      <div class="editorParamsToolbar hidden doorHangerRight" id="editorHighlightParamsToolbar">
-        <div id="highlightParamsToolbarContainer" class="editorParamsToolbarContainer">
-          <div id="editorHighlightColorPicker" class="colorPicker">
-            <span id="highlightColorPickerLabel" class="editorParamsLabel"
-              data-l10n-id="pdfjs-editor-highlight-colorpicker-label">Highlight color</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- <div class="editorParamsToolbar hidden doorHangerRight" id="editorShapeFormatToolbar">
+        <!-- <div class="editorParamsToolbar hidden doorHangerRight" id="editorShapeFormatToolbar">
         <div class="shape-container">
           <img src="./images/letter-shape.png" alt="shape with letter" class="shape-item" type="shape" />
           <img src="./images/letter-circle.png" alt="circle with letter" class="shape-item" type="circle" />
         </div>
       </div> -->
 
-      <div class="editorParamsToolbar hidden doorHangerRight" id="editorFreeTextParamsToolbar">
-        <div class="editorParamsToolbarContainer">
-          <div class="editorParamsSetter">
-            <label for="editorFreeTextColor" class="editorParamsLabel"
-              data-l10n-id="pdfjs-editor-free-text-color-input">Color</label>
-            <input type="color" id="editorFreeTextColor" class="editorParamsColor" tabindex="102" />
-          </div>
-          <div class="editorParamsSetter">
-            <label for="editorFreeTextFontSize" class="editorParamsLabel"
-              data-l10n-id="pdfjs-editor-free-text-size-input">Size</label>
-            <input type="range" id="editorFreeTextFontSize" class="editorParamsSlider" value="10" min="5" max="100"
-              step="1" tabindex="103" style="display: none;" />
-            <select id="toolbar-font-size" class="form-field-input" style="width: 50%; font-size: 12px;"></select>
-          </div>
-          <div class="editorParamsSetter">
-            <label for="toolbar-font-style" class="editorParamsLabel">Font Family</label>
-            <select id="toolbar-font-style" class="form-field-input" style="width: 50%; font-size: 12px;"></select>
-          </div>
-          <!-- <div class="editorParamsSetter">
-            <label class="editorParamsLabel">Font Style</label>
-            <div class="align-container">
-              <div id="text-bold" class="text-weight-button">
-                <i class="fa-solid fa-bold"></i>
-              </div>
-              <div id="text-italic" class="text-weight-button">
-                <i class="fa-solid fa-italic"></i>
-              </div>
-              <div id="text-underline" class="text-weight-button">
-                <i class="fa fa-solid fa-underline"></i>
-              </div>
+        <div
+          class="editorParamsToolbar hidden doorHangerRight"
+          id="editorFreeTextParamsToolbar"
+        >
+          <div class="editorParamsToolbarContainer">
+            <div class="editorParamsSetter">
+              <label
+                for="editorFreeTextColor"
+                class="editorParamsLabel"
+                data-l10n-id="pdfjs-editor-free-text-color-input"
+                >Color</label
+              >
+              <input
+                type="color"
+                id="editorFreeTextColor"
+                class="editorParamsColor"
+                tabindex="102"
+              />
             </div>
-          </div> -->
+            <div class="editorParamsSetter">
+              <label
+                for="editorFreeTextFontSize"
+                class="editorParamsLabel"
+                data-l10n-id="pdfjs-editor-free-text-size-input"
+                >Size</label
+              >
+              <input
+                type="range"
+                id="editorFreeTextFontSize"
+                class="editorParamsSlider"
+                value="10"
+                min="5"
+                max="100"
+                step="1"
+                tabindex="103"
+                style="display: none"
+              />
+              <select
+                id="toolbar-font-size"
+                class="form-field-input"
+                style="width: 50%; font-size: 12px"
+              ></select>
+            </div>
+            <div class="editorParamsSetter">
+              <label for="toolbar-font-style" class="editorParamsLabel"
+                >Font Family</label
+              >
+              <select
+                id="toolbar-font-style"
+                class="form-field-input"
+                style="width: 50%; font-size: 12px"
+              ></select>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div class="editorParamsToolbar hidden doorHangerRight" id="editorInkParamsToolbar">
-        <div class="editorParamsToolbarContainer">
-          <div class="editorParamsSetter">
-            <label for="editorInkColor" class="editorParamsLabel"
-              data-l10n-id="pdfjs-editor-ink-color-input">Color</label>
-            <input type="color" id="editorInkColor" class="editorParamsColor" tabindex="104" />
-          </div>
-          <div class="editorParamsSetter">
-            <label for="editorInkThickness" class="editorParamsLabel"
-              data-l10n-id="pdfjs-editor-ink-thickness-input">Thickness</label>
-            <input type="range" id="editorInkThickness" class="editorParamsSlider" value="1" min="1" max="20" step="1"
-              tabindex="105" />
-          </div>
-          <div class="editorParamsSetter">
-            <label for="editorInkOpacity" class="editorParamsLabel"
-              data-l10n-id="pdfjs-editor-ink-opacity-input">Opacity</label>
-            <input type="range" id="editorInkOpacity" class="editorParamsSlider" value="100" min="1" max="100" step="1"
-              tabindex="106" />
+        <div
+          class="editorParamsToolbar hidden doorHangerRight"
+          id="editorInkParamsToolbar"
+        >
+          <div class="editorParamsToolbarContainer">
+            <div class="editorParamsSetter">
+              <label
+                for="editorInkColor"
+                class="editorParamsLabel"
+                data-l10n-id="pdfjs-editor-ink-color-input"
+                >Color</label
+              >
+              <input
+                type="color"
+                id="editorInkColor"
+                class="editorParamsColor"
+                tabindex="104"
+              />
+            </div>
+            <div class="editorParamsSetter">
+              <label
+                for="editorInkThickness"
+                class="editorParamsLabel"
+                data-l10n-id="pdfjs-editor-ink-thickness-input"
+                >Thickness</label
+              >
+              <input
+                type="range"
+                id="editorInkThickness"
+                class="editorParamsSlider"
+                value="1"
+                min="1"
+                max="20"
+                step="1"
+                tabindex="105"
+              />
+            </div>
+            <div class="editorParamsSetter">
+              <label
+                for="editorInkOpacity"
+                class="editorParamsLabel"
+                data-l10n-id="pdfjs-editor-ink-opacity-input"
+                >Opacity</label
+              >
+              <input
+                type="range"
+                id="editorInkOpacity"
+                class="editorParamsSlider"
+                value="100"
+                min="1"
+                max="100"
+                step="1"
+                tabindex="106"
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="editorParamsToolbar hidden doorHangerRight" id="editorStampParamsToolbar">
-        <div class="editorParamsToolbarContainer">
-          <button id="editorStampAddImage" class="secondaryToolbarButton" title="Add image" tabindex="107"
-            data-l10n-id="pdfjs-editor-stamp-add-image-button">
-            <span class="editorParamsLabel" data-l10n-id="pdfjs-editor-stamp-add-image-button-label">Add image</span>
-          </button>
-        </div>
-      </div>
-
-      <div id="secondaryToolbar" class="secondaryToolbar hidden doorHangerRight">
-        <div id="secondaryToolbarButtonContainer">
-          <button id="presentationMode" class="secondaryToolbarButton" title="Switch to Presentation Mode" tabindex="54"
-            data-l10n-id="pdfjs-presentation-mode-button">
-            <span data-l10n-id="pdfjs-presentation-mode-button-label">Presentation Mode</span>
-          </button>
-
-          <a href="#" id="viewBookmark" class="secondaryToolbarButton" title="Current Page (View URL from Current Page)"
-            tabindex="55" data-l10n-id="pdfjs-bookmark-button">
-            <span data-l10n-id="pdfjs-bookmark-button-label">Current Page</span>
-          </a>
-
-          <div id="viewBookmarkSeparator" class="horizontalToolbarSeparator"></div>
-
-          <button id="firstPage" class="secondaryToolbarButton" title="Go to First Page" tabindex="56"
-            data-l10n-id="pdfjs-first-page-button">
-            <span data-l10n-id="pdfjs-first-page-button-label">Go to First Page</span>
-          </button>
-          <button id="lastPage" class="secondaryToolbarButton" title="Go to Last Page" tabindex="57"
-            data-l10n-id="pdfjs-last-page-button">
-            <span data-l10n-id="pdfjs-last-page-button-label">Go to Last Page</span>
-          </button>
-
-          <div class="horizontalToolbarSeparator"></div>
-
-          <button id="pageRotateCw" class="secondaryToolbarButton" title="Rotate Clockwise" tabindex="58"
-            data-l10n-id="pdfjs-page-rotate-cw-button">
-            <span data-l10n-id="pdfjs-page-rotate-cw-button-label">Rotate Clockwise</span>
-          </button>
-          <button id="pageRotateCcw" class="secondaryToolbarButton" title="Rotate Counterclockwise" tabindex="59"
-            data-l10n-id="pdfjs-page-rotate-ccw-button">
-            <span data-l10n-id="pdfjs-page-rotate-ccw-button-label">Rotate Counterclockwise</span>
-          </button>
-
-          <div class="horizontalToolbarSeparator"></div>
-
-          <div id="cursorToolButtons" role="radiogroup">
-            <button id="cursorSelectTool" class="secondaryToolbarButton toggled" title="Enable Text Selection Tool"
-              tabindex="60" data-l10n-id="pdfjs-cursor-text-select-tool-button" role="radio" aria-checked="true">
-              <span data-l10n-id="pdfjs-cursor-text-select-tool-button-label">Text Selection Tool</span>
-            </button>
-            <button id="cursorHandTool" class="secondaryToolbarButton" title="Enable Hand Tool" tabindex="61"
-              data-l10n-id="pdfjs-cursor-hand-tool-button" role="radio" aria-checked="false">
-              <span data-l10n-id="pdfjs-cursor-hand-tool-button-label">Hand Tool</span>
-            </button>
-          </div>
-
-          <div class="horizontalToolbarSeparator"></div>
-
-          <div id="scrollModeButtons" role="radiogroup">
-            <button id="scrollPage" class="secondaryToolbarButton" title="Use Page Scrolling" tabindex="62"
-              data-l10n-id="pdfjs-scroll-page-button" role="radio" aria-checked="false">
-              <span data-l10n-id="pdfjs-scroll-page-button-label">Page Scrolling</span>
-            </button>
-            <button id="scrollVertical" class="secondaryToolbarButton toggled" title="Use Vertical Scrolling"
-              tabindex="63" data-l10n-id="pdfjs-scroll-vertical-button" role="radio" aria-checked="true">
-              <span data-l10n-id="pdfjs-scroll-vertical-button-label">Vertical Scrolling</span>
-            </button>
-            <button id="scrollHorizontal" class="secondaryToolbarButton" title="Use Horizontal Scrolling" tabindex="64"
-              data-l10n-id="pdfjs-scroll-horizontal-button" role="radio" aria-checked="false">
-              <span data-l10n-id="pdfjs-scroll-horizontal-button-label">Horizontal Scrolling</span>
-            </button>
-            <button id="scrollWrapped" class="secondaryToolbarButton" title="Use Wrapped Scrolling" tabindex="65"
-              data-l10n-id="pdfjs-scroll-wrapped-button" role="radio" aria-checked="false">
-              <span data-l10n-id="pdfjs-scroll-wrapped-button-label">Wrapped Scrolling</span>
-            </button>
-          </div>
-
-          <div class="horizontalToolbarSeparator"></div>
-
-          <div id="spreadModeButtons" role="radiogroup">
-            <button id="spreadNone" class="secondaryToolbarButton toggled" title="Do not join page spreads"
-              tabindex="66" data-l10n-id="pdfjs-spread-none-button" role="radio" aria-checked="true">
-              <span data-l10n-id="pdfjs-spread-none-button-label">No Spreads</span>
-            </button>
-            <button id="spreadOdd" class="secondaryToolbarButton"
-              title="Join page spreads starting with odd-numbered pages" tabindex="67"
-              data-l10n-id="pdfjs-spread-odd-button" role="radio" aria-checked="false">
-              <span data-l10n-id="pdfjs-spread-odd-button-label">Odd Spreads</span>
-            </button>
-            <button id="spreadEven" class="secondaryToolbarButton"
-              title="Join page spreads starting with even-numbered pages" tabindex="68"
-              data-l10n-id="pdfjs-spread-even-button" role="radio" aria-checked="false">
-              <span data-l10n-id="pdfjs-spread-even-button-label">Even Spreads</span>
+        <div
+          class="editorParamsToolbar hidden doorHangerRight"
+          id="editorStampParamsToolbar"
+        >
+          <div class="editorParamsToolbarContainer">
+            <button
+              id="editorStampAddImage"
+              class="secondaryToolbarButton"
+              title="Add image"
+              tabindex="107"
+              data-l10n-id="pdfjs-editor-stamp-add-image-button"
+            >
+              <span
+                class="editorParamsLabel"
+                data-l10n-id="pdfjs-editor-stamp-add-image-button-label"
+                >Add image</span
+              >
             </button>
           </div>
         </div>
-      </div>
-      <!-- secondaryToolbar -->
-      <div class="listMenu" id="main-menu" tabindex="0">
-        <button id="secondaryOpenFile" class="secondaryToolbarButton" title="Open File" tabindex="51"
-          data-l10n-id="pdfjs-open-file-button">
-          <span data-l10n-id="pdfjs-print-button-label">Open File</span>
-        </button>
-        <button class="menu-button" id="pdfEditorButton" title="PDF Editor">
-          <i class="far fa-file"></i>
-          <p class="menu-button-item">Pdf Editor</p>
-        </button>
-        <button id="secondaryPrint" class="secondaryToolbarButton" title="Print" tabindex="52"
-          data-l10n-id="pdfjs-print-button">
-          <span data-l10n-id="pdfjs-print-button-label">Print</span>
-        </button>
-        <button class="menu-button" id="secondarySaveFile" title="Save" onclick="setDocumentAsPDF()">
-          <i class="far fa-floppy-disk"></i>
-          <p class="menu-button-item">Save</p>
-        </button>        
-        <button class="menu-button hidden" id="pdfViewerButton" title="PDF Viewer">
-          <i class="far fa-file"></i>
-          <p class="menu-button-item">Pdf Viewer</p>
-        </button>
-        <button class="menu-button" id="saveDraftButton" title="Save As Draft" onclick="saveDoc()">
-          <i class="far fa-file-pdf"></i>
-          <p class="menu-button-item">Save As Draft</p>
-        </button>
-        <button class="menu-button hidden" id="deleteDraftButton" title="Save As Draft" onclick="deleteDoc()">
-          <i class="fa fa-trash"></i>
-          <p class="menu-button-item">Delete</p>
-        </button>
-      </div>
 
-      <div class="toolbar">
-        <div id="toolbarContainer" style="height: 36px; padding-top: 5px">
-          <div id="toolbarViewer">
-            <div id="toolbarViewerLeft">
-              <div class="toolbarButtonSpacer"></div>
-              <button class="menuBtn" id="menubtn">
-                <i class="fas fa-bars"></i>
-              </button>
-              <div class="toolbarButtonSpacer"></div>
-              <div class="splitToolbarButtonSeparator"></div>
-              <div class="toolbarButtonSpacer"></div>
-              <button id="sidebarToggle" class="toolbarButton" title="Toggle Sidebar" tabindex="11"
-                data-l10n-id="pdfjs-toggle-sidebar-button" aria-expanded="false" aria-controls="sidebarContainer">
-                <span data-l10n-id="pdfjs-toggle-sidebar-button-label">Toggle Sidebar</span>
-              </button>
-              <!-- <div class="toolbarButtonSpacer"></div> -->
-              <!-- <div class="splitToolbarButtonSeparator"></div> -->
-              <button id="secondaryToolbarToggle" class="toolbarButton" title="Tools" tabindex="43"
-                data-l10n-id="pdfjs-tools-button" aria-expanded="false" aria-controls="secondaryToolbar">
-                <span data-l10n-id="pdfjs-tools-button-label">Tools</span>
-              </button>
-              <div class="toolbarButtonSpacer"></div>
-              <div class="splitToolbarButtonSeparator"></div>
-              <div class="toolbarButtonSpacer"></div>
-              <button id="viewFind" class="toolbarButton" title="Find in Document" tabindex="12"
-                data-l10n-id="pdfjs-findbar-button" aria-expanded="false" aria-controls="findbar">
-                <span data-l10n-id="pdfjs-findbar-button-label">Find</span>
-              </button>
-              <div class="toolbarButtonSpacer"></div>
-              <span class="loadingInput start">
-                <input type="number" id="pageNumber" class="toolbarField" title="Page" value="1" min="1" tabindex="15"
-                  data-l10n-id="pdfjs-page-input" autocomplete="off" />
-              </span>
-              <span id="numPages" class="toolbarLabel" style="display: none"></span>
+        <div
+          id="secondaryToolbar"
+          class="secondaryToolbar hidden doorHangerRight"
+        >
+          <div id="secondaryToolbarButtonContainer">
+            <button
+              id="presentationMode"
+              class="secondaryToolbarButton"
+              title="Switch to Presentation Mode"
+              tabindex="54"
+              data-l10n-id="pdfjs-presentation-mode-button"
+            >
+              <span data-l10n-id="pdfjs-presentation-mode-button-label"
+                >Presentation Mode</span
+              >
+            </button>
 
-              <div class="splitToolbarButton hiddenSmallView">
-                <button class="toolbarButton" title="Previous Page" id="previous" tabindex="13"
-                  data-l10n-id="pdfjs-previous-button">
-                  <span data-l10n-id="pdfjs-previous-button-label">Previous</span>
-                </button>
-                <button class="toolbarButton" title="Next Page" id="next" tabindex="14"
-                  data-l10n-id="pdfjs-next-button">
-                  <span data-l10n-id="pdfjs-next-button-label">Next</span>
-                </button>
-              </div>
+            <a
+              href="#"
+              id="viewBookmark"
+              class="secondaryToolbarButton"
+              title="Current Page (View URL from Current Page)"
+              tabindex="55"
+              data-l10n-id="pdfjs-bookmark-button"
+            >
+              <span data-l10n-id="pdfjs-bookmark-button-label"
+                >Current Page</span
+              >
+            </a>
+
+            <div
+              id="viewBookmarkSeparator"
+              class="horizontalToolbarSeparator"
+            ></div>
+
+            <button
+              id="firstPage"
+              class="secondaryToolbarButton"
+              title="Go to First Page"
+              tabindex="56"
+              data-l10n-id="pdfjs-first-page-button"
+            >
+              <span data-l10n-id="pdfjs-first-page-button-label"
+                >Go to First Page</span
+              >
+            </button>
+            <button
+              id="lastPage"
+              class="secondaryToolbarButton"
+              title="Go to Last Page"
+              tabindex="57"
+              data-l10n-id="pdfjs-last-page-button"
+            >
+              <span data-l10n-id="pdfjs-last-page-button-label"
+                >Go to Last Page</span
+              >
+            </button>
+
+            <div class="horizontalToolbarSeparator"></div>
+
+            <button
+              id="pageRotateCw"
+              class="secondaryToolbarButton"
+              title="Rotate Clockwise"
+              tabindex="58"
+              data-l10n-id="pdfjs-page-rotate-cw-button"
+            >
+              <span data-l10n-id="pdfjs-page-rotate-cw-button-label"
+                >Rotate Clockwise</span
+              >
+            </button>
+            <button
+              id="pageRotateCcw"
+              class="secondaryToolbarButton"
+              title="Rotate Counterclockwise"
+              tabindex="59"
+              data-l10n-id="pdfjs-page-rotate-ccw-button"
+            >
+              <span data-l10n-id="pdfjs-page-rotate-ccw-button-label"
+                >Rotate Counterclockwise</span
+              >
+            </button>
+
+            <div class="horizontalToolbarSeparator"></div>
+
+            <div id="cursorToolButtons" role="radiogroup">
+              <button
+                id="cursorSelectTool"
+                class="secondaryToolbarButton toggled"
+                title="Enable Text Selection Tool"
+                tabindex="60"
+                data-l10n-id="pdfjs-cursor-text-select-tool-button"
+                role="radio"
+                aria-checked="true"
+              >
+                <span data-l10n-id="pdfjs-cursor-text-select-tool-button-label"
+                  >Text Selection Tool</span
+                >
+              </button>
+              <button
+                id="cursorHandTool"
+                class="secondaryToolbarButton"
+                title="Enable Hand Tool"
+                tabindex="61"
+                data-l10n-id="pdfjs-cursor-hand-tool-button"
+                role="radio"
+                aria-checked="false"
+              >
+                <span data-l10n-id="pdfjs-cursor-hand-tool-button-label"
+                  >Hand Tool</span
+                >
+              </button>
             </div>
 
-            <div id="toolbarViewerLeft">
-              <span id="scaleSelectContainer" class="dropdownToolbarButton">
-                <select id="scaleSelect" title="Zoom" tabindex="23" data-l10n-id="pdfjs-zoom-select"
-                  style="width: 100px">
-                  <option id="pageAutoOption" title="" value="auto"
-                    data-l10n-id="pdfjs-page-scale-auto">
-                    Auto
-                  </option>
-                  <option id="pageActualOption" title="" value="page-actual" data-l10n-id="pdfjs-page-scale-actual">
-                    Actual
-                  </option>
-                  <option id="pageFitOption" title="" value="page-fit" data-l10n-id="pdfjs-page-scale-fit">
-                    Fit
-                  </option>
-                  <option id="pageWidthOption" title="" value="page-width" data-l10n-id="pdfjs-page-scale-width">
-                    Width
-                  </option>
-                  <option id="customScaleOption" title="" value="custom" disabled="disabled" hidden="true"
-                    data-l10n-id="pdfjs-page-scale-percent" data-l10n-args='{ "scale": 0 }'>
-                    0%
-                  </option>
-                  <option title="" value="0.5" data-l10n-id="pdfjs-page-scale-percent" data-l10n-args='{ "scale": 50 }'>
-                    50%
-                  </option>
-                  <option title="" value="0.75" data-l10n-id="pdfjs-page-scale-percent"
-                    data-l10n-args='{ "scale": 75 }'>
-                    75%
-                  </option>
-                  <option title="" value="1" selected="selected" data-l10n-id="pdfjs-page-scale-percent" data-l10n-args='{ "scale": 100 }'>
-                    100%
-                  </option>
-                  <option title="" value="1.25" data-l10n-id="pdfjs-page-scale-percent"
-                    data-l10n-args='{ "scale": 125 }'>
-                    125%
-                  </option>
-                  <option title="" value="1.5" data-l10n-id="pdfjs-page-scale-percent"
-                    data-l10n-args='{ "scale": 150 }'>
-                    150%
-                  </option>
-                  <option title="" value="2" data-l10n-id="pdfjs-page-scale-percent" data-l10n-args='{ "scale": 200 }'>
-                    200%
-                  </option>
-                  <option title="" value="3" data-l10n-id="pdfjs-page-scale-percent" data-l10n-args='{ "scale": 300 }'>
-                    300%
-                  </option>
-                  <option title="" value="4" data-l10n-id="pdfjs-page-scale-percent" data-l10n-args='{ "scale": 400 }'>
-                    400%
-                  </option>
-                </select>
-              </span>
-              <div class="splitToolbarButton">
-                <button id="zoomOut" class="toolbarButton" title="Zoom Out" tabindex="21"
-                  data-l10n-id="pdfjs-zoom-out-button">
-                  <span data-l10n-id="pdfjs-zoom-out-button-label">Zoom Out</span>
+            <div class="horizontalToolbarSeparator"></div>
+
+            <div id="scrollModeButtons" role="radiogroup">
+              <button
+                id="scrollPage"
+                class="secondaryToolbarButton"
+                title="Use Page Scrolling"
+                tabindex="62"
+                data-l10n-id="pdfjs-scroll-page-button"
+                role="radio"
+                aria-checked="false"
+              >
+                <span data-l10n-id="pdfjs-scroll-page-button-label"
+                  >Page Scrolling</span
+                >
+              </button>
+              <button
+                id="scrollVertical"
+                class="secondaryToolbarButton toggled"
+                title="Use Vertical Scrolling"
+                tabindex="63"
+                data-l10n-id="pdfjs-scroll-vertical-button"
+                role="radio"
+                aria-checked="true"
+              >
+                <span data-l10n-id="pdfjs-scroll-vertical-button-label"
+                  >Vertical Scrolling</span
+                >
+              </button>
+              <button
+                id="scrollHorizontal"
+                class="secondaryToolbarButton"
+                title="Use Horizontal Scrolling"
+                tabindex="64"
+                data-l10n-id="pdfjs-scroll-horizontal-button"
+                role="radio"
+                aria-checked="false"
+              >
+                <span data-l10n-id="pdfjs-scroll-horizontal-button-label"
+                  >Horizontal Scrolling</span
+                >
+              </button>
+              <button
+                id="scrollWrapped"
+                class="secondaryToolbarButton"
+                title="Use Wrapped Scrolling"
+                tabindex="65"
+                data-l10n-id="pdfjs-scroll-wrapped-button"
+                role="radio"
+                aria-checked="false"
+              >
+                <span data-l10n-id="pdfjs-scroll-wrapped-button-label"
+                  >Wrapped Scrolling</span
+                >
+              </button>
+            </div>
+
+            <div class="horizontalToolbarSeparator"></div>
+
+            <div id="spreadModeButtons" role="radiogroup">
+              <button
+                id="spreadNone"
+                class="secondaryToolbarButton toggled"
+                title="Do not join page spreads"
+                tabindex="66"
+                data-l10n-id="pdfjs-spread-none-button"
+                role="radio"
+                aria-checked="true"
+              >
+                <span data-l10n-id="pdfjs-spread-none-button-label"
+                  >No Spreads</span
+                >
+              </button>
+              <button
+                id="spreadOdd"
+                class="secondaryToolbarButton"
+                title="Join page spreads starting with odd-numbered pages"
+                tabindex="67"
+                data-l10n-id="pdfjs-spread-odd-button"
+                role="radio"
+                aria-checked="false"
+              >
+                <span data-l10n-id="pdfjs-spread-odd-button-label"
+                  >Odd Spreads</span
+                >
+              </button>
+              <button
+                id="spreadEven"
+                class="secondaryToolbarButton"
+                title="Join page spreads starting with even-numbered pages"
+                tabindex="68"
+                data-l10n-id="pdfjs-spread-even-button"
+                role="radio"
+                aria-checked="false"
+              >
+                <span data-l10n-id="pdfjs-spread-even-button-label"
+                  >Even Spreads</span
+                >
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- secondaryToolbar -->
+        <div class="listMenu" id="main-menu" tabindex="0">
+          <button
+            id="secondaryOpenFile"
+            class="secondaryToolbarButton"
+            title="Open File"
+            tabindex="51"
+            data-l10n-id="pdfjs-open-file-button"
+          >
+            <span data-l10n-id="pdfjs-print-button-label">Open File</span>
+          </button>
+          <button class="menu-button" id="pdfEditorButton" title="PDF Editor">
+            <i class="far fa-file"></i>
+            <p class="menu-button-item">Pdf Editor</p>
+          </button>
+          <button
+            id="secondaryPrint"
+            class="secondaryToolbarButton"
+            title="Print"
+            tabindex="52"
+            data-l10n-id="pdfjs-print-button"
+          >
+            <span data-l10n-id="pdfjs-print-button-label">Print</span>
+          </button>
+          <button
+            class="menu-button"
+            id="secondarySaveFile"
+            title="Save"
+            onclick="setDocumentAsPDF()"
+          >
+            <i class="far fa-floppy-disk"></i>
+            <p class="menu-button-item">Save</p>
+          </button>
+          <button
+            class="menu-button hidden"
+            id="pdfViewerButton"
+            title="PDF Viewer"
+          >
+            <i class="far fa-file"></i>
+            <p class="menu-button-item">Pdf Viewer</p>
+          </button>
+          <button
+            class="menu-button"
+            id="saveDraftButton"
+            title="Save As Draft"
+            onclick="saveDoc()"
+          >
+            <i class="far fa-file-pdf"></i>
+            <p class="menu-button-item">Save As Draft</p>
+          </button>
+          <button
+            class="menu-button hidden"
+            id="deleteDraftButton"
+            title="Save As Draft"
+            onclick="deleteDoc()"
+          >
+            <i class="fa fa-trash"></i>
+            <p class="menu-button-item">Delete</p>
+          </button>
+        </div>
+
+        <div class="toolbar">
+          <div id="toolbarContainer" style="height: 36px; padding-top: 5px">
+            <div id="toolbarViewer">
+              <div id="toolbarViewerLeft">
+                <div class="toolbarButtonSpacer"></div>
+                <button class="menuBtn" id="menubtn">
+                  <i class="fas fa-bars"></i>
                 </button>
-                <button id="zoomIn" class="toolbarButton" title="Zoom In" tabindex="22"
-                  data-l10n-id="pdfjs-zoom-in-button">
-                  <span data-l10n-id="pdfjs-zoom-in-button-label">Zoom In</span>
+                <div class="toolbarButtonSpacer"></div>
+                <div class="splitToolbarButtonSeparator"></div>
+                <div class="toolbarButtonSpacer"></div>
+                <button
+                  id="sidebarToggle"
+                  class="toolbarButton"
+                  title="Toggle Sidebar"
+                  tabindex="11"
+                  data-l10n-id="pdfjs-toggle-sidebar-button"
+                  aria-expanded="false"
+                  aria-controls="sidebarContainer"
+                >
+                  <span data-l10n-id="pdfjs-toggle-sidebar-button-label"
+                    >Toggle Sidebar</span
+                  >
                 </button>
-                <div id="shapeToolbarButton">
-                  <img src="./images/toolbarButton-shape.jpg" alt="shape annotation" />
+                <!-- <div class="toolbarButtonSpacer"></div> -->
+                <!-- <div class="splitToolbarButtonSeparator"></div> -->
+                <button
+                  id="secondaryToolbarToggle"
+                  class="toolbarButton"
+                  title="Tools"
+                  tabindex="43"
+                  data-l10n-id="pdfjs-tools-button"
+                  aria-expanded="false"
+                  aria-controls="secondaryToolbar"
+                >
+                  <span data-l10n-id="pdfjs-tools-button-label">Tools</span>
+                </button>
+                <div class="toolbarButtonSpacer"></div>
+                <div class="splitToolbarButtonSeparator"></div>
+                <div class="toolbarButtonSpacer"></div>
+                <button
+                  id="viewFind"
+                  class="toolbarButton"
+                  title="Find in Document"
+                  tabindex="12"
+                  data-l10n-id="pdfjs-findbar-button"
+                  aria-expanded="false"
+                  aria-controls="findbar"
+                >
+                  <span data-l10n-id="pdfjs-findbar-button-label">Find</span>
+                </button>
+                <div class="toolbarButtonSpacer"></div>
+                <span class="loadingInput start">
+                  <input
+                    type="number"
+                    id="pageNumber"
+                    class="toolbarField"
+                    title="Page"
+                    value="1"
+                    min="1"
+                    tabindex="15"
+                    data-l10n-id="pdfjs-page-input"
+                    autocomplete="off"
+                  />
+                </span>
+                <span
+                  id="numPages"
+                  class="toolbarLabel"
+                  style="display: none"
+                ></span>
+
+                <div class="splitToolbarButton hiddenSmallView">
+                  <button
+                    class="toolbarButton"
+                    title="Previous Page"
+                    id="previous"
+                    tabindex="13"
+                    data-l10n-id="pdfjs-previous-button"
+                  >
+                    <span data-l10n-id="pdfjs-previous-button-label"
+                      >Previous</span
+                    >
+                  </button>
+                  <button
+                    class="toolbarButton"
+                    title="Next Page"
+                    id="next"
+                    tabindex="14"
+                    data-l10n-id="pdfjs-next-button"
+                  >
+                    <span data-l10n-id="pdfjs-next-button-label">Next</span>
+                  </button>
                 </div>
               </div>
-            </div>
 
-            <div id="toolbarViewerRight">
-              <div id="editorModeButtons" class="splitToolbarButton toggled annotationToolsContainer" role="radiogroup">
-                <!-- <button
+              <div id="toolbarViewerLeft">
+                <span id="scaleSelectContainer" class="dropdownToolbarButton">
+                  <select
+                    id="scaleSelect"
+                    title="Zoom"
+                    tabindex="23"
+                    data-l10n-id="pdfjs-zoom-select"
+                    style="width: 100px"
+                  >
+                    <option
+                      id="pageAutoOption"
+                      title=""
+                      value="auto"
+                      data-l10n-id="pdfjs-page-scale-auto"
+                    >
+                      Auto
+                    </option>
+                    <option
+                      id="pageActualOption"
+                      title=""
+                      value="page-actual"
+                      data-l10n-id="pdfjs-page-scale-actual"
+                    >
+                      Actual
+                    </option>
+                    <option
+                      id="pageFitOption"
+                      title=""
+                      value="page-fit"
+                      data-l10n-id="pdfjs-page-scale-fit"
+                    >
+                      Fit
+                    </option>
+                    <option
+                      id="pageWidthOption"
+                      title=""
+                      value="page-width"
+                      data-l10n-id="pdfjs-page-scale-width"
+                    >
+                      Width
+                    </option>
+                    <option
+                      id="customScaleOption"
+                      title=""
+                      value="custom"
+                      disabled="disabled"
+                      hidden="true"
+                      data-l10n-id="pdfjs-page-scale-percent"
+                      data-l10n-args='{ "scale": 0 }'
+                    >
+                      0%
+                    </option>
+                    <option
+                      title=""
+                      value="0.5"
+                      data-l10n-id="pdfjs-page-scale-percent"
+                      data-l10n-args='{ "scale": 50 }'
+                    >
+                      50%
+                    </option>
+                    <option
+                      title=""
+                      value="0.75"
+                      data-l10n-id="pdfjs-page-scale-percent"
+                      data-l10n-args='{ "scale": 75 }'
+                    >
+                      75%
+                    </option>
+                    <option
+                      title=""
+                      value="1"
+                      selected="selected"
+                      data-l10n-id="pdfjs-page-scale-percent"
+                      data-l10n-args='{ "scale": 100 }'
+                    >
+                      100%
+                    </option>
+                    <option
+                      title=""
+                      value="1.25"
+                      data-l10n-id="pdfjs-page-scale-percent"
+                      data-l10n-args='{ "scale": 125 }'
+                    >
+                      125%
+                    </option>
+                    <option
+                      title=""
+                      value="1.5"
+                      data-l10n-id="pdfjs-page-scale-percent"
+                      data-l10n-args='{ "scale": 150 }'
+                    >
+                      150%
+                    </option>
+                    <option
+                      title=""
+                      value="2"
+                      data-l10n-id="pdfjs-page-scale-percent"
+                      data-l10n-args='{ "scale": 200 }'
+                    >
+                      200%
+                    </option>
+                    <option
+                      title=""
+                      value="3"
+                      data-l10n-id="pdfjs-page-scale-percent"
+                      data-l10n-args='{ "scale": 300 }'
+                    >
+                      300%
+                    </option>
+                    <option
+                      title=""
+                      value="4"
+                      data-l10n-id="pdfjs-page-scale-percent"
+                      data-l10n-args='{ "scale": 400 }'
+                    >
+                      400%
+                    </option>
+                  </select>
+                </span>
+                <div class="splitToolbarButton">
+                  <button
+                    id="zoomOut"
+                    class="toolbarButton"
+                    title="Zoom Out"
+                    tabindex="21"
+                    data-l10n-id="pdfjs-zoom-out-button"
+                  >
+                    <span data-l10n-id="pdfjs-zoom-out-button-label"
+                      >Zoom Out</span
+                    >
+                  </button>
+                  <button
+                    id="zoomIn"
+                    class="toolbarButton"
+                    title="Zoom In"
+                    tabindex="22"
+                    data-l10n-id="pdfjs-zoom-in-button"
+                  >
+                    <span data-l10n-id="pdfjs-zoom-in-button-label"
+                      >Zoom In</span
+                    >
+                  </button>
+                  <div id="shapeToolbarButton">
+                    <img
+                      src="./images/toolbarButton-shape.jpg"
+                      alt="shape annotation"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div id="toolbarViewerRight">
+                <div
+                  id="editorModeButtons"
+                  class="splitToolbarButton toggled annotationToolsContainer"
+                  role="radiogroup"
+                >
+                  <!-- <button
                     id="editorHighlight"
                     class="toolbarButton"
                     disabled="disabled"
@@ -530,602 +1005,949 @@ See https://github.com/adobe-type-tools/cmap-resources
                       >Highlight</span
                     >
                   </button> -->
-              </div>
-              <div id="toolbarViewerRight" class="formToolsContainer">
-                <button class="second_toolbar_button hidden" id="editorFreeText" title="Add Text">
-                  <i class="fa-solid far fa-i" style="font-size: 18px; color: #535353"></i>
-                </button>
-                <!-- <button class="second_toolbar_button hidden" id="add_comment_mode" title="Add Comment">
+                </div>
+                <div id="toolbarViewerRight" class="formToolsContainer">
+                  <button
+                    class="second_toolbar_button hidden"
+                    id="editorFreeText"
+                    title="Add Text"
+                  >
+                    <i
+                      class="fa-solid far fa-i"
+                      style="font-size: 18px; color: #535353"
+                    ></i>
+                  </button>
+                  <!-- <button class="second_toolbar_button hidden" id="add_comment_mode" title="Add Comment">
                   <i class="fa-solid fa-comment" style="font-size: 20px; color: #535353"></i>
                 </button> -->
-                <button class="second_toolbar_button" title="Share Link" onclick="shareLink()" id="shareDocument">
-                  <i class="fa-solid fa-share-nodes" style="font-size: 20px; color: #535353"></i>
-                </button>
-                <button class="second_toolbar_button" title="Show History" onclick="showHistory()" id="showHistory">
-                  <i class="fa-brands fa-stack-exchange" style="font-size: 20px; color: #535353"></i>
-                </button>
-                <button class="second_toolbar_button" title="Open Toolbar" onclick="openToolbar()" id="penIcon">
-                  <i class="fas fa-pen-nib fa-lg" style="font-size: 20px; color: #535353"></i>
-                </button>
-              </div>
-              <div id="submitDocument" class="submit-document" onclick="submitDocument()">
-                Submit Document
-              </div>
+                  <button
+                    class="second_toolbar_button"
+                    title="Share Link"
+                    onclick="shareLink()"
+                    id="shareDocument"
+                  >
+                    <i
+                      class="fa-solid fa-share-nodes"
+                      style="font-size: 20px; color: #535353"
+                    ></i>
+                  </button>
+                  <button
+                    class="second_toolbar_button"
+                    title="Show History"
+                    onclick="showHistory()"
+                    id="showHistory"
+                  >
+                    <i
+                      class="fa-brands fa-stack-exchange"
+                      style="font-size: 20px; color: #535353"
+                    ></i>
+                  </button>
+                  <button
+                    class="second_toolbar_button"
+                    title="Open Toolbar"
+                    onclick="openToolbar()"
+                    id="penIcon"
+                  >
+                    <i
+                      class="fas fa-pen-nib fa-lg"
+                      style="font-size: 20px; color: #535353"
+                    ></i>
+                  </button>
+                </div>
+                <div
+                  id="submitDocument"
+                  class="submit-document"
+                  onclick="submitDocument()"
+                >
+                  Submit Document
+                </div>
 
-              <button id="secondaryDownload" class="toolbarButton visibleMediumView" title="Save" tabindex="53"
-                data-l10n-id="pdfjs-save-button" style="display: none">
-                <span data-l10n-id="pdfjs-save-button-label">Save</span>
+                <button
+                  id="secondaryDownload"
+                  class="toolbarButton visibleMediumView"
+                  title="Save"
+                  tabindex="53"
+                  data-l10n-id="pdfjs-save-button"
+                  style="display: none"
+                >
+                  <span data-l10n-id="pdfjs-save-button-label">Save</span>
+                </button>
+
+                <button
+                  id="print"
+                  class="toolbarButton hiddenMediumView"
+                  title="Print"
+                  tabindex="41"
+                  style="display: none"
+                  data-l10n-id="pdfjs-print-button"
+                >
+                  <span data-l10n-id="pdfjs-print-button-label">Print</span>
+                </button>
+
+                <button
+                  id="download"
+                  style="display: none"
+                  class="toolbarButton hiddenMediumView"
+                  title="Save"
+                  tabindex="42"
+                  data-l10n-id="pdfjs-save-button"
+                >
+                  <span data-l10n-id="pdfjs-save-button-label">Save</span>
+                </button>
+              </div>
+            </div>
+            <div id="shapeTypeToolbar" class="hidden">
+              <i
+                class="fa fa-regular fa-square shape-item"
+                style="font-size: 20px"
+                title="shape annotation"
+                type="shape"
+              ></i>
+              <i
+                class="fa fa-regular fa-circle shape-item"
+                style="font-size: 19px"
+                title="circle annotation"
+                type="circle"
+              ></i>
+              <button class="btn" type="button" id="closeShapeTypeToolbar">
+                <i class="fa fa-close"></i>
               </button>
-
-              <button id="print" class="toolbarButton hiddenMediumView" title="Print" tabindex="41"
-                style="display: none" data-l10n-id="pdfjs-print-button">
-                <span data-l10n-id="pdfjs-print-button-label">Print</span>
+            </div>
+            <div id="shapeToolbar" class="hidden">
+              <div id="shapeIcons">
+                <h5>Shape</h5>
+                <div class="dropdown" id="shape-fill-dropdown">
+                  <button
+                    class="btn dropdown-toggle d-flex align-items-center"
+                    type="button"
+                    data-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <i class="fa fa-fill"></i>
+                  </button>
+                  <div class="dropdown-menu">
+                    <div class="shape-colorpicker-container" type="background">
+                      <input
+                        type="color"
+                        name="colorPicker"
+                        value="#FFFFFF"
+                        class="shape-colorpicker"
+                      />
+                      <i class="fa fa-save" class="shape-save"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="dropdown" id="shape-outline-dropdown">
+                  <button
+                    class="btn dropdown-toggle d-flex align-items-center"
+                    type="button"
+                    data-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <i class="fa fa-regular fa-square"></i>
+                  </button>
+                  <div class="dropdown-menu">
+                    <div class="shape-colorpicker-container" type="border">
+                      <input
+                        type="color"
+                        name="colorPicker"
+                        value="#000000"
+                        class="shape-colorpicker"
+                      />
+                      <i class="fa fa-save" class="shape-save"></i>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="dropdown size-dropdown"
+                  id="border-radius-dropdown"
+                  type="1"
+                >
+                  <button
+                    class="btn dropdown-toggle d-flex align-items-center"
+                    type="button"
+                    data-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <i class="fa-solid fa-arrow-up-9-1"></i>
+                  </button>
+                  <div class="dropdown-menu">
+                    <input
+                      type="range"
+                      class="editorParamsSlider"
+                      value="0"
+                      min="0"
+                      max="30"
+                      step="1"
+                    />
+                    <span class="range-value"></span>
+                  </div>
+                </div>
+                <div
+                  class="dropdown size-dropdown"
+                  id="border-weight-dropdown"
+                  type="2"
+                >
+                  <button
+                    class="btn dropdown-toggle d-flex align-items-center"
+                    type="button"
+                    data-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <i class="fa-solid fa-border-top-left"></i>
+                  </button>
+                  <div class="dropdown-menu">
+                    <input
+                      type="range"
+                      class="editorParamsSlider"
+                      value="1"
+                      min="0"
+                      max="10"
+                      step="1"
+                    />
+                    <span class="range-value"></span>
+                  </div>
+                </div>
+              </div>
+              <div id="annotationIcons">
+                <h5>Annotation</h5>
+                <div class="dropdown" id="text-color-dropdown">
+                  <button
+                    class="btn dropdown-toggle d-flex align-items-center"
+                    type="button"
+                    data-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <i class="fa fa-fill"></i>
+                  </button>
+                  <div class="dropdown-menu">
+                    <div class="shape-colorpicker-container" type="text">
+                      <input
+                        type="color"
+                        name="colorPicker"
+                        value="#000000"
+                        class="shape-colorpicker"
+                      />
+                      <i class="fa fa-save" class="shape-save"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="dropdown size-dropdown" id="text-family-dropdown">
+                  <button
+                    class="btn dropdown-toggle d-flex align-items-center"
+                    type="button"
+                    data-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <i class="fa fa-font"></i>
+                  </button>
+                  <div class="dropdown-menu">
+                    <div class="font-family-container" family="Courier">
+                      <small>Courier</small>
+                      <div style="font-family: Courier">Hello</div>
+                    </div>
+                    <div class="font-family-container" family="Helvetica">
+                      <small>Helvetica</small>
+                      <div style="font-family: Helvetica">Hello</div>
+                    </div>
+                    <div class="font-family-container" family="TimesRoman">
+                      <small>TimesRoman</small>
+                      <div style="font-family: TimesRoman">Hello</div>
+                    </div>
+                    <div class="font-family-container" family="Arial">
+                      <small>Arial</small>
+                      <div style="font-family: Arial">Hello</div>
+                    </div>
+                    <div class="font-family-container" family="Calibri">
+                      <small>Calibri</small>
+                      <div style="font-family: Calibri">Hello</div>
+                    </div>
+                    <div class="font-family-container" family="Consolas">
+                      <small>Consolas</small>
+                      <div style="font-family: Consolas">Hello</div>
+                    </div>
+                    <div class="font-family-container" family="Georgia">
+                      <small>Georgia</small>
+                      <div style="font-family: Georgia">Hello</div>
+                    </div>
+                    <div class="font-family-container" family="Tahoma">
+                      <small>Tahoma</small>
+                      <div style="font-family: Tahoma">Hello</div>
+                    </div>
+                    <div class="font-family-container" family="Verdana">
+                      <small>Verdana</small>
+                      <div style="font-family: Verdana">Hello</div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="dropdown size-dropdown"
+                  id="text-size-dropdown"
+                  type="3"
+                >
+                  <button
+                    class="btn dropdown-toggle d-flex align-items-center"
+                    type="button"
+                    data-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <i class="fa fa-text-height"></i>
+                  </button>
+                  <div class="dropdown-menu">
+                    <input
+                      type="range"
+                      class="editorParamsSlider"
+                      value="0"
+                      min="0"
+                      max="60"
+                      step="2"
+                    />
+                    <span class="range-value"></span>
+                  </div>
+                </div>
+                <div id="extra-shape-icons">
+                  <i class="fa-solid fa-bold" id="shape-text-bold"></i>
+                  <i class="fa-solid fa-italic" id="shape-text-italic"></i>
+                  <i
+                    class="fa-solid fa-underline"
+                    id="shape-text-underline"
+                  ></i>
+                </div>
+              </div>
+              <button class="btn" type="button" id="closeShapeToolbar">
+                <i class="fa fa-close"></i>
               </button>
+            </div>
+            <div id="loadingBar">
+              <div class="progress">
+                <div class="glimmer"></div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-              <button id="download" style="display: none" class="toolbarButton hiddenMediumView" title="Save"
-                tabindex="42" data-l10n-id="pdfjs-save-button">
-                <span data-l10n-id="pdfjs-save-button-label">Save</span>
+        <div id="viewerContainer" tabindex="0">
+          <div id="viewer" class="pdfViewer"></div>
+          <div id="drawing-shape-board">
+            <canvas class="shape-canvas"></canvas>
+          </div>
+        </div>
+      </div>
+      <!-- mainContainer -->
+
+      <div id="dialogContainer">
+        <dialog id="passwordDialog">
+          <div class="row">
+            <label
+              for="password"
+              id="passwordText"
+              data-l10n-id="pdfjs-password-label"
+              >Enter the password to open this PDF file:</label
+            >
+          </div>
+          <div class="row">
+            <input type="password" id="password" class="toolbarField" />
+          </div>
+          <div class="buttonRow">
+            <button id="passwordCancel" class="dialogButton">
+              <span data-l10n-id="pdfjs-password-cancel-button">Cancel</span>
+            </button>
+            <button id="passwordSubmit" class="dialogButton">
+              <span data-l10n-id="pdfjs-password-ok-button">OK</span>
+            </button>
+          </div>
+        </dialog>
+        <dialog id="documentPropertiesDialog">
+          <div class="row">
+            <span
+              id="fileNameLabel"
+              data-l10n-id="pdfjs-document-properties-file-name"
+              >File name:</span
+            >
+            <p id="fileNameField" aria-labelledby="fileNameLabel">-</p>
+          </div>
+          <div class="row">
+            <span
+              id="fileSizeLabel"
+              data-l10n-id="pdfjs-document-properties-file-size"
+              >File size:</span
+            >
+            <p id="fileSizeField" aria-labelledby="fileSizeLabel">-</p>
+          </div>
+          <div class="separator"></div>
+          <div class="row">
+            <span id="titleLabel" data-l10n-id="pdfjs-document-properties-title"
+              >Title:</span
+            >
+            <p id="titleField" aria-labelledby="titleLabel">-</p>
+          </div>
+          <div class="row">
+            <span
+              id="authorLabel"
+              data-l10n-id="pdfjs-document-properties-author"
+              >Author:</span
+            >
+            <p id="authorField" aria-labelledby="authorLabel">-</p>
+          </div>
+          <div class="row">
+            <span
+              id="subjectLabel"
+              data-l10n-id="pdfjs-document-properties-subject"
+              >Subject:</span
+            >
+            <p id="subjectField" aria-labelledby="subjectLabel">-</p>
+          </div>
+          <div class="row">
+            <span
+              id="keywordsLabel"
+              data-l10n-id="pdfjs-document-properties-keywords"
+              >Keywords:</span
+            >
+            <p id="keywordsField" aria-labelledby="keywordsLabel">-</p>
+          </div>
+          <div class="row">
+            <span
+              id="creationDateLabel"
+              data-l10n-id="pdfjs-document-properties-creation-date"
+              >Creation Date:</span
+            >
+            <p id="creationDateField" aria-labelledby="creationDateLabel">-</p>
+          </div>
+          <div class="row">
+            <span
+              id="modificationDateLabel"
+              data-l10n-id="pdfjs-document-properties-modification-date"
+              >Modification Date:</span
+            >
+            <p
+              id="modificationDateField"
+              aria-labelledby="modificationDateLabel"
+            >
+              -
+            </p>
+          </div>
+          <div class="row">
+            <span
+              id="creatorLabel"
+              data-l10n-id="pdfjs-document-properties-creator"
+              >Creator:</span
+            >
+            <p id="creatorField" aria-labelledby="creatorLabel">-</p>
+          </div>
+          <div class="separator"></div>
+          <div class="row">
+            <span
+              id="producerLabel"
+              data-l10n-id="pdfjs-document-properties-producer"
+              >PDF Producer:</span
+            >
+            <p id="producerField" aria-labelledby="producerLabel">-</p>
+          </div>
+          <div class="row">
+            <span
+              id="versionLabel"
+              data-l10n-id="pdfjs-document-properties-version"
+              >PDF Version:</span
+            >
+            <p id="versionField" aria-labelledby="versionLabel">-</p>
+          </div>
+          <div class="row">
+            <span
+              id="pageCountLabel"
+              data-l10n-id="pdfjs-document-properties-page-count"
+              >Page Count:</span
+            >
+            <p id="pageCountField" aria-labelledby="pageCountLabel">-</p>
+          </div>
+          <div class="row">
+            <span
+              id="pageSizeLabel"
+              data-l10n-id="pdfjs-document-properties-page-size"
+              >Page Size:</span
+            >
+            <p id="pageSizeField" aria-labelledby="pageSizeLabel">-</p>
+          </div>
+          <div class="separator"></div>
+          <div class="row">
+            <span
+              id="linearizedLabel"
+              data-l10n-id="pdfjs-document-properties-linearized"
+              >Fast Web View:</span
+            >
+            <p id="linearizedField" aria-labelledby="linearizedLabel">-</p>
+          </div>
+          <div class="buttonRow">
+            <button id="documentPropertiesClose" class="dialogButton">
+              <span data-l10n-id="pdfjs-document-properties-close-button"
+                >Close</span
+              >
+            </button>
+          </div>
+        </dialog>
+        <dialog
+          id="altTextDialog"
+          aria-labelledby="dialogLabel"
+          aria-describedby="dialogDescription"
+        >
+          <div id="altTextContainer">
+            <div id="overallDescription">
+              <span
+                id="dialogLabel"
+                data-l10n-id="pdfjs-editor-alt-text-dialog-label"
+                class="title"
+                >Choose an option</span
+              >
+              <span
+                id="dialogDescription"
+                data-l10n-id="pdfjs-editor-alt-text-dialog-description"
+              >
+                Alt text (alternative text) helps when people can’t see the
+                image or when it doesn’t load.
+              </span>
+            </div>
+            <div id="addDescription">
+              <div class="radio">
+                <div class="radioButton">
+                  <input
+                    type="radio"
+                    id="descriptionButton"
+                    name="altTextOption"
+                    tabindex="0"
+                    aria-describedby="descriptionAreaLabel"
+                    checked
+                  />
+                  <label
+                    for="descriptionButton"
+                    data-l10n-id="pdfjs-editor-alt-text-add-description-label"
+                    >Add a description</label
+                  >
+                </div>
+                <div class="radioLabel">
+                  <span
+                    id="descriptionAreaLabel"
+                    data-l10n-id="pdfjs-editor-alt-text-add-description-description"
+                  >
+                    Aim for 1-2 sentences that describe the subject, setting, or
+                    actions.
+                  </span>
+                </div>
+              </div>
+              <div class="descriptionArea">
+                <textarea
+                  id="descriptionTextarea"
+                  placeholder="For example, “A young man sits down at a table to eat a meal”"
+                  aria-labelledby="descriptionAreaLabel"
+                  data-l10n-id="pdfjs-editor-alt-text-textarea"
+                  tabindex="0"
+                ></textarea>
+              </div>
+            </div>
+            <div id="markAsDecorative">
+              <div class="radio">
+                <div class="radioButton">
+                  <input
+                    type="radio"
+                    id="decorativeButton"
+                    name="altTextOption"
+                    aria-describedby="decorativeLabel"
+                  />
+                  <label
+                    for="decorativeButton"
+                    data-l10n-id="pdfjs-editor-alt-text-mark-decorative-label"
+                    >Mark as decorative</label
+                  >
+                </div>
+                <div class="radioLabel">
+                  <span
+                    id="decorativeLabel"
+                    data-l10n-id="pdfjs-editor-alt-text-mark-decorative-description"
+                  >
+                    This is used for ornamental images, like borders or
+                    watermarks.
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div id="buttons">
+              <button id="altTextCancel" tabindex="0">
+                <span data-l10n-id="pdfjs-editor-alt-text-cancel-button"
+                  >Cancel</span
+                >
+              </button>
+              <button id="altTextSave" tabindex="0">
+                <span data-l10n-id="pdfjs-editor-alt-text-save-button"
+                  >Save</span
+                >
               </button>
             </div>
           </div>
-          <div id="shapeTypeToolbar" class="hidden">
-            <i class="fa fa-regular fa-square shape-item" style="font-size: 20px;" title="shape annotation" type="shape"></i>
-            <i class="fa fa-regular fa-circle shape-item" style="font-size: 19px;" title="circle annotation" type="circle"></i>
-            <button class="btn" type="button" id="closeShapeTypeToolbar">
-              <i class="fa fa-close"></i>
+        </dialog>
+        <!--#if !MOZCENTRAL-->
+        <dialog id="printServiceDialog" style="min-width: 200px">
+          <div class="row">
+            <span data-l10n-id="pdfjs-print-progress-message"
+              >Preparing document for printing…</span
+            >
+          </div>
+          <div class="row">
+            <progress value="0" max="100"></progress>
+            <span
+              data-l10n-id="pdfjs-print-progress-percent"
+              data-l10n-args='{ "progress": 0 }'
+              class="relative-progress"
+              >0%</span
+            >
+          </div>
+          <div class="buttonRow">
+            <button id="printCancel" class="dialogButton">
+              <span data-l10n-id="pdfjs-print-progress-close-button"
+                >Cancel</span
+              >
             </button>
           </div>
-          <div id="shapeToolbar" class="hidden">
-            <div id="shapeIcons">
-              <h5>Shape</h5>
-              <div class="dropdown" id="shape-fill-dropdown">
-                <button class="btn dropdown-toggle d-flex align-items-center" type="button" data-toggle="dropdown" aria-expanded="false">
-                  <i class="fa fa-fill"></i>
-                </button>
-                <div class="dropdown-menu">
-                  <div class="shape-colorpicker-container" type="background">
-                    <input type="color" name="colorPicker" value="#FFFFFF" class="shape-colorpicker">
-                    <i class="fa fa-save" class="shape-save"></i>
-                  </div>
-                </div>
-              </div>
-              <div class="dropdown" id="shape-outline-dropdown">
-                <button class="btn dropdown-toggle d-flex align-items-center" type="button" data-toggle="dropdown" aria-expanded="false">
-                  <i class="fa fa-regular fa-square"></i>
-                </button>
-                <div class="dropdown-menu">
-                  <div class="shape-colorpicker-container" type="border">
-                    <input type="color" name="colorPicker" value="#000000" class="shape-colorpicker">
-                    <i class="fa fa-save" class="shape-save"></i>
-                  </div>
-                </div>
-              </div>
-              <div class="dropdown size-dropdown" id="border-radius-dropdown" type="1">
-                <button class="btn dropdown-toggle d-flex align-items-center" type="button" data-toggle="dropdown" aria-expanded="false">
-                  <i class="fa-solid fa-arrow-up-9-1"></i>
-                </button>
-                <div class="dropdown-menu">
-                  <input type="range" class="editorParamsSlider" value="0" min="0" max="30" step="1" />
-                  <span class="range-value"></span>
-                </div>
-              </div>
-              <div class="dropdown size-dropdown" id="border-weight-dropdown" type="2">
-                <button class="btn dropdown-toggle d-flex align-items-center" type="button" data-toggle="dropdown" aria-expanded="false">
-                  <i class="fa-solid fa-border-top-left"></i>
-                </button>
-                <div class="dropdown-menu">
-                  <input type="range" class="editorParamsSlider" value="1" min="0" max="10" step="1" />
-                  <span class="range-value"></span>
-                </div>
-              </div>
-            </div>
-            <div id="annotationIcons">
-              <h5>Annotation</h5>
-              <div class="dropdown" id="text-color-dropdown">
-                <button class="btn dropdown-toggle d-flex align-items-center" type="button" data-toggle="dropdown" aria-expanded="false">
-                  <i class="fa fa-fill"></i>
-                </button>
-                <div class="dropdown-menu">
-                  <div class="shape-colorpicker-container" type="text">
-                    <input type="color" name="colorPicker" value="#000000" class="shape-colorpicker">
-                    <i class="fa fa-save" class="shape-save"></i>
-                  </div>
-                </div>
-              </div>
-              <div class="dropdown size-dropdown" id="text-family-dropdown">
-                <button class="btn dropdown-toggle d-flex align-items-center" type="button" data-toggle="dropdown" aria-expanded="false">
-                  <i class="fa fa-font"></i>
-                </button>
-                <div class="dropdown-menu">
-                  <div class="font-family-container" family="Courier">
-                    <small>Courier</small><div style="font-family: Courier">Hello</div>
-                  </div>
-                  <div class="font-family-container" family="Helvetica">
-                    <small>Helvetica</small><div style="font-family: Helvetica">Hello</div>
-                  </div>
-                  <div class="font-family-container" family="TimesRoman">
-                    <small>TimesRoman</small><div style="font-family: TimesRoman">Hello</div>
-                  </div>
-                  <div class="font-family-container" family="Arial">
-                    <small>Arial</small><div style="font-family: Arial">Hello</div>
-                  </div>
-                  <div class="font-family-container" family="Calibri">
-                    <small>Calibri</small><div style="font-family: Calibri">Hello</div>
-                  </div>
-                  <div class="font-family-container" family="Consolas">
-                    <small>Consolas</small><div style="font-family: Consolas">Hello</div>
-                  </div>
-                  <div class="font-family-container" family="Georgia">
-                    <small>Georgia</small><div style="font-family: Georgia">Hello</div>
-                  </div>
-                  <div class="font-family-container" family="Tahoma">
-                    <small>Tahoma</small><div style="font-family: Tahoma">Hello</div>
-                  </div>
-                  <div class="font-family-container" family="Verdana">
-                    <small>Verdana</small><div style="font-family: Verdana">Hello</div>
-                  </div>
-                </div>
-              </div>
-              <div class="dropdown size-dropdown" id="text-size-dropdown" type="3">
-                <button class="btn dropdown-toggle d-flex align-items-center" type="button" data-toggle="dropdown" aria-expanded="false">
-                  <i class="fa fa-text-height"></i>
-                </button>
-                <div class="dropdown-menu">
-                  <input type="range" class="editorParamsSlider" value="0" min="0" max="60" step="2" />
-                  <span class="range-value"></span>
-                </div>
-              </div>
-              <div id="extra-shape-icons">
-                <i class="fa-solid fa-bold" id="shape-text-bold"></i>
-                <i class="fa-solid fa-italic" id="shape-text-italic"></i>
-                <i class="fa-solid fa-underline" id="shape-text-underline"></i>
-              </div>
-            </div>
-            <button class="btn" type="button" id="closeShapeToolbar">
-              <i class="fa fa-close"></i>
-            </button>
-          </div>
-          <div id="loadingBar">
-            <div class="progress">
-              <div class="glimmer"></div>
-            </div>
-          </div>
-        </div>
+        </dialog>
+        <!--#endif-->
+        <!--#if CHROME-->
+        <!--#include viewer-snippet-chrome-overlays.html-->
+        <!--#endif-->
       </div>
+      <!-- dialogContainer -->
+    </div>
+    <!-- outerContainer -->
+    <div id="printContainer"></div>
 
-      <div id="viewerContainer" tabindex="0">
-        <div id="viewer" class="pdfViewer"></div>
-        <div id="drawing-shape-board">
-          <canvas class="shape-canvas"></canvas>
+    <div id="comment_control_panel" class="comment-control-panel">
+      <div class="comment-control-header">
+        <div class="comment-control-header-text">
+          <p id="panel_title">Add Comment</p>
         </div>
       </div>
+      <div class="comment-control-content">
+        <div class="comment-input-container">
+          Title: <input id="comment_title" class="comment-input" type="text" />
+        </div>
+        <div class="comment-input-container">
+          Text: <input id="comment_text" class="comment-input" type="text" />
+        </div>
+      </div>
+      <div id="add_comment" class="add-comment">OK</div>
     </div>
-    <!-- mainContainer -->
 
-    <div id="dialogContainer">
-      <dialog id="passwordDialog">
-        <div class="row">
-          <label for="password" id="passwordText" data-l10n-id="pdfjs-password-label">Enter the password to open this
-            PDF file:</label>
-        </div>
-        <div class="row">
-          <input type="password" id="password" class="toolbarField" />
-        </div>
-        <div class="buttonRow">
-          <button id="passwordCancel" class="dialogButton">
-            <span data-l10n-id="pdfjs-password-cancel-button">Cancel</span>
-          </button>
-          <button id="passwordSubmit" class="dialogButton">
-            <span data-l10n-id="pdfjs-password-ok-button">OK</span>
-          </button>
-        </div>
-      </dialog>
-      <dialog id="documentPropertiesDialog">
-        <div class="row">
-          <span id="fileNameLabel" data-l10n-id="pdfjs-document-properties-file-name">File name:</span>
-          <p id="fileNameField" aria-labelledby="fileNameLabel">-</p>
-        </div>
-        <div class="row">
-          <span id="fileSizeLabel" data-l10n-id="pdfjs-document-properties-file-size">File size:</span>
-          <p id="fileSizeField" aria-labelledby="fileSizeLabel">-</p>
-        </div>
-        <div class="separator"></div>
-        <div class="row">
-          <span id="titleLabel" data-l10n-id="pdfjs-document-properties-title">Title:</span>
-          <p id="titleField" aria-labelledby="titleLabel">-</p>
-        </div>
-        <div class="row">
-          <span id="authorLabel" data-l10n-id="pdfjs-document-properties-author">Author:</span>
-          <p id="authorField" aria-labelledby="authorLabel">-</p>
-        </div>
-        <div class="row">
-          <span id="subjectLabel" data-l10n-id="pdfjs-document-properties-subject">Subject:</span>
-          <p id="subjectField" aria-labelledby="subjectLabel">-</p>
-        </div>
-        <div class="row">
-          <span id="keywordsLabel" data-l10n-id="pdfjs-document-properties-keywords">Keywords:</span>
-          <p id="keywordsField" aria-labelledby="keywordsLabel">-</p>
-        </div>
-        <div class="row">
-          <span id="creationDateLabel" data-l10n-id="pdfjs-document-properties-creation-date">Creation Date:</span>
-          <p id="creationDateField" aria-labelledby="creationDateLabel">-</p>
-        </div>
-        <div class="row">
-          <span id="modificationDateLabel" data-l10n-id="pdfjs-document-properties-modification-date">Modification
-            Date:</span>
-          <p id="modificationDateField" aria-labelledby="modificationDateLabel">
-            -
-          </p>
-        </div>
-        <div class="row">
-          <span id="creatorLabel" data-l10n-id="pdfjs-document-properties-creator">Creator:</span>
-          <p id="creatorField" aria-labelledby="creatorLabel">-</p>
-        </div>
-        <div class="separator"></div>
-        <div class="row">
-          <span id="producerLabel" data-l10n-id="pdfjs-document-properties-producer">PDF Producer:</span>
-          <p id="producerField" aria-labelledby="producerLabel">-</p>
-        </div>
-        <div class="row">
-          <span id="versionLabel" data-l10n-id="pdfjs-document-properties-version">PDF Version:</span>
-          <p id="versionField" aria-labelledby="versionLabel">-</p>
-        </div>
-        <div class="row">
-          <span id="pageCountLabel" data-l10n-id="pdfjs-document-properties-page-count">Page Count:</span>
-          <p id="pageCountField" aria-labelledby="pageCountLabel">-</p>
-        </div>
-        <div class="row">
-          <span id="pageSizeLabel" data-l10n-id="pdfjs-document-properties-page-size">Page Size:</span>
-          <p id="pageSizeField" aria-labelledby="pageSizeLabel">-</p>
-        </div>
-        <div class="separator"></div>
-        <div class="row">
-          <span id="linearizedLabel" data-l10n-id="pdfjs-document-properties-linearized">Fast Web View:</span>
-          <p id="linearizedField" aria-labelledby="linearizedLabel">-</p>
-        </div>
-        <div class="buttonRow">
-          <button id="documentPropertiesClose" class="dialogButton">
-            <span data-l10n-id="pdfjs-document-properties-close-button">Close</span>
-          </button>
-        </div>
-      </dialog>
-      <dialog id="altTextDialog" aria-labelledby="dialogLabel" aria-describedby="dialogDescription">
-        <div id="altTextContainer">
-          <div id="overallDescription">
-            <span id="dialogLabel" data-l10n-id="pdfjs-editor-alt-text-dialog-label" class="title">Choose an
-              option</span>
-            <span id="dialogDescription" data-l10n-id="pdfjs-editor-alt-text-dialog-description">
-              Alt text (alternative text) helps when people can’t see the
-              image or when it doesn’t load.
-            </span>
-          </div>
-          <div id="addDescription">
-            <div class="radio">
-              <div class="radioButton">
-                <input type="radio" id="descriptionButton" name="altTextOption" tabindex="0"
-                  aria-describedby="descriptionAreaLabel" checked />
-                <label for="descriptionButton" data-l10n-id="pdfjs-editor-alt-text-add-description-label">Add a
-                  description</label>
-              </div>
-              <div class="radioLabel">
-                <span id="descriptionAreaLabel" data-l10n-id="pdfjs-editor-alt-text-add-description-description">
-                  Aim for 1-2 sentences that describe the subject, setting, or
-                  actions.
-                </span>
-              </div>
-            </div>
-            <div class="descriptionArea">
-              <textarea id="descriptionTextarea"
-                placeholder="For example, “A young man sits down at a table to eat a meal”"
-                aria-labelledby="descriptionAreaLabel" data-l10n-id="pdfjs-editor-alt-text-textarea"
-                tabindex="0"></textarea>
-            </div>
-          </div>
-          <div id="markAsDecorative">
-            <div class="radio">
-              <div class="radioButton">
-                <input type="radio" id="decorativeButton" name="altTextOption" aria-describedby="decorativeLabel" />
-                <label for="decorativeButton" data-l10n-id="pdfjs-editor-alt-text-mark-decorative-label">Mark as
-                  decorative</label>
-              </div>
-              <div class="radioLabel">
-                <span id="decorativeLabel" data-l10n-id="pdfjs-editor-alt-text-mark-decorative-description">
-                  This is used for ornamental images, like borders or
-                  watermarks.
-                </span>
-              </div>
-            </div>
-          </div>
-          <div id="buttons">
-            <button id="altTextCancel" tabindex="0">
-              <span data-l10n-id="pdfjs-editor-alt-text-cancel-button">Cancel</span>
-            </button>
-            <button id="altTextSave" tabindex="0">
-              <span data-l10n-id="pdfjs-editor-alt-text-save-button">Save</span>
-            </button>
+    <div id="id_form_options">
+      <!-- Checkbox Option -->
+      <div id="checkbox-option" class="checkbox-option">
+        <div class="checkbox-option-header">
+          <div class="checkbox-option-header-text">
+            <h4>Checkbox Field Properties</h4>
           </div>
         </div>
-      </dialog>
-      <!--#if !MOZCENTRAL-->
-      <dialog id="printServiceDialog" style="min-width: 200px">
-        <div class="row">
-          <span data-l10n-id="pdfjs-print-progress-message">Preparing document for printing…</span>
-        </div>
-        <div class="row">
-          <progress value="0" max="100"></progress>
-          <span data-l10n-id="pdfjs-print-progress-percent" data-l10n-args='{ "progress": 0 }'
-            class="relative-progress">0%</span>
-        </div>
-        <div class="buttonRow">
-          <button id="printCancel" class="dialogButton">
-            <span data-l10n-id="pdfjs-print-progress-close-button">Cancel</span>
-          </button>
-        </div>
-      </dialog>
-      <!--#endif-->
-      <!--#if CHROME-->
-      <!--#include viewer-snippet-chrome-overlays.html-->
-      <!--#endif-->
-    </div>
-    <!-- dialogContainer -->
-  </div>
-  <!-- outerContainer -->
-  <div id="printContainer"></div>
-
-  <div id="comment_control_panel" class="comment-control-panel">
-    <div class="comment-control-header">
-      <div class="comment-control-header-text">
-        <p id="panel_title">Add Comment</p>
-      </div>
-    </div>
-    <div class="comment-control-content">
-      <div class="comment-input-container">
-        Title: <input id="comment_title" class="comment-input" type="text" />
-      </div>
-      <div class="comment-input-container">
-        Text: <input id="comment_text" class="comment-input" type="text" />
-      </div>
-    </div>
-    <div id="add_comment" class="add-comment">OK</div>
-  </div>
-
-  <div id="id_form_options">
-    <!-- Checkbox Option -->
-    <div id="checkbox-option" class="checkbox-option">
-      <div class="checkbox-option-header">
-        <div class="checkbox-option-header-text">
-          <h4>Checkbox Field Properties</h4>
-        </div>
-      </div>
-      <div class="checkbox-option-content">
-        <div class="form-input">
-          <div>
-            <span>Form Field Name*</span>
-          </div>
-          <div class="form-field-input-container">
-            <input id="checkbox-field-input-name" class="form-field-input" type="text" />
-          </div>
-        </div>
-        <div class="form-input">
-          <div>
-            <span>Label*</span>
-          </div>
-          <div class="form-field-input-container">
-            <input id="checkbox-label" class="form-field-input" type="text" />
-          </div>
-        </div>
-        <div class="form-input">
-          <div>
-            <span>Value*</span>
-          </div>
-          <div class="form-field-input-container">
-            <input id="checkbox-value" class="form-field-input" type="text" />
-          </div>
-        </div>
-        <div class="form-style-container">
-          <div class="form-style-name">
-            <span style="font-size: 18px;">Background Color</span>
-          </div>
-          <input type="color" id="checkbox-background-color" name="colorPicker" value="#FFFFFF" class="form-field-input" />
-        </div>
-      </div>
-      <div id="checkbox-save-button" class="checkbox-option-footer">
-        <div class="form-save-button">Save</div>
-      </div>
-    </div>
-    <!-- Radio Group Option -->
-    <div id="radio-button-option" class="checkbox-option">
-      <div class="checkbox-option-header">
-        <div class="checkbox-option-header-text">
-          <h4>Radio Field Properties</h4>
-        </div>
-      </div>
-      <div class="checkbox-option-content">
-        <div class="form-input">
-          <div>
-            <span>Form Field Name*</span>
-          </div>
-          <div class="form-field-input-container">
-            <input id="radio-field-input-name" class="form-field-input" type="text" />
+        <div class="checkbox-option-content">
+          <div class="form-input">
             <div>
-              <span style="font-size: 24px"><i class="fa-solid fa-triangle-exclamation"></i></span>
-              <span style="font-size: 14px">To group the radio buttons, make sure they have the same form
-                field names</span>
+              <span>Form Field Name*</span>
+            </div>
+            <div class="form-field-input-container">
+              <input
+                id="checkbox-field-input-name"
+                class="form-field-input"
+                type="text"
+              />
             </div>
           </div>
+          <div class="form-input">
+            <div>
+              <span>Label*</span>
+            </div>
+            <div class="form-field-input-container">
+              <input id="checkbox-label" class="form-field-input" type="text" />
+            </div>
+          </div>
+          <div class="form-input">
+            <div>
+              <span>Value*</span>
+            </div>
+            <div class="form-field-input-container">
+              <input id="checkbox-value" class="form-field-input" type="text" />
+            </div>
+          </div>
+          <div class="form-style-container">
+            <div class="form-style-name">
+              <span style="font-size: 18px">Background Color</span>
+            </div>
+            <input
+              type="color"
+              id="checkbox-background-color"
+              name="colorPicker"
+              value="#FFFFFF"
+              class="form-field-input"
+            />
+          </div>
         </div>
-        <div class="form-input">
-          <div>
-            <span>Label*</span>
-          </div>
-          <div class="form-field-input-container">
-            <input id="radio-label" class="form-field-input" type="text" />
-          </div>
-        </div>
-        <div class="form-input">
-          <div>
-            <span>Value*</span>
-          </div>
-          <div class="form-field-input-container">
-            <input id="radio-value" class="form-field-input" type="text" />
-          </div>
-        </div>
-        <div class="form-style-container">
-          <div class="form-style-name">
-            <span style="font-size: 18px;">Background Color</span>
-          </div>
-          <input type="color" id="radio-background-color" name="colorPicker" value="#FFFFFF" class="form-field-input" />
+        <div id="checkbox-save-button" class="checkbox-option-footer">
+          <div class="form-save-button">Save</div>
         </div>
       </div>
-      <div id="radio-save-button" class="checkbox-option-footer">
-        <div class="form-save-button">Save</div>
-      </div>
-    </div>
-    <!-- TextField Option -->
-    <div id="text-field-option" class="checkbox-option">
-      <div class="checkbox-option-header">
-        <div class="checkbox-option-header-text">
-          <h4>Text Field Properties</h4>
-        </div>
-      </div>
-      <div class="checkbox-option-content">
-        <div class="form-input">
-          <div>
-            <span>Form Field Name*</span>
-          </div>
-          <div class="form-field-input-container">
-            <input id="text-field-input-name" class="form-field-input" type="text" />
+      <!-- Radio Group Option -->
+      <div id="radio-button-option" class="checkbox-option">
+        <div class="checkbox-option-header">
+          <div class="checkbox-option-header-text">
+            <h4>Radio Field Properties</h4>
           </div>
         </div>
-        <div class="form-input">
-          <div>
-            <span>Text Style</span>
-          </div>
-          <div class="form-field-input-container">
-            <div class="form-style-container">
-              <div class="form-style-name">
-                <i class="fa fa-font"></i>
-                <span>Font</span>
-              </div>
-              <select id="text-font-style" class="form-field-input"></select>
+        <div class="checkbox-option-content">
+          <div class="form-input">
+            <div>
+              <span>Form Field Name*</span>
             </div>
-            <div class="form-style-container">
-              <div class="form-style-name">
-                <i class="fa fa-text-height"></i>
-                <span>Font Size</span>
-              </div>
-              <select id="text-font-size" class="form-field-input"></select>
-            </div>
-            <div class="form-style-container">
-              <div class="form-style-name">
-                <i class="fa fa-fill"></i>
-                <span>Color</span>
-              </div>
-              <input type="color" id="text-font-color" name="colorPicker" class="form-field-input" />
-            </div>
-            <div class="form-style-container">
-              <div class="form-style-name">
-                <i class="fa fa-fill"></i>
-                <span>Background Color</span>
-              </div>
-              <input type="color" id="text-font-background-color" name="colorPicker" value="#FFFFFF" class="form-field-input" />
-            </div>
-            <div class="form-style-container">
-              <div class="form-style-name">
-                <i class="fa fa-align-left"></i>
-                <span>Alignment</span>
-              </div>
+            <div class="form-field-input-container">
+              <input
+                id="radio-field-input-name"
+                class="form-field-input"
+                type="text"
+              />
               <div>
-                <form class="align-container">
-                  <label for="text-left" class="align-button">
-                    <input type="radio" id="text-left" name="text-field" value="left" hidden />
-                    <i class="fa fa-align-left"></i>
-                  </label>
-                  <label for="text-center" class="align-button">
-                    <input type="radio" id="text-center" name="text-field" value="center" hidden />
-                    <i class="fa fa-align-center"></i>
-                  </label>
-                  <label for="text-right" class="align-button">
-                    <input type="radio" id="text-right" name="text-field" value="right" hidden />
-                    <i class="fa fa-align-right"></i>
-                  </label>
-                </form>
+                <span style="font-size: 24px"
+                  ><i class="fa-solid fa-triangle-exclamation"></i
+                ></span>
+                <span style="font-size: 14px"
+                  >To group the radio buttons, make sure they have the same form
+                  field names</span
+                >
               </div>
             </div>
           </div>
+          <div class="form-input">
+            <div>
+              <span>Label*</span>
+            </div>
+            <div class="form-field-input-container">
+              <input id="radio-label" class="form-field-input" type="text" />
+            </div>
+          </div>
+          <div class="form-input">
+            <div>
+              <span>Value*</span>
+            </div>
+            <div class="form-field-input-container">
+              <input id="radio-value" class="form-field-input" type="text" />
+            </div>
+          </div>
+          <div class="form-style-container">
+            <div class="form-style-name">
+              <span style="font-size: 18px">Background Color</span>
+            </div>
+            <input
+              type="color"
+              id="radio-background-color"
+              name="colorPicker"
+              value="#FFFFFF"
+              class="form-field-input"
+            />
+          </div>
+        </div>
+        <div id="radio-save-button" class="checkbox-option-footer">
+          <div class="form-save-button">Save</div>
         </div>
       </div>
-      <div id="text-save-button" class="checkbox-option-footer">
-        <div class="form-save-button">Save</div>
-      </div>
-    </div>
-    <!-- Combobox Option -->
-    <div id="combo-option" class="checkbox-option">
-      <div class="checkbox-option-header">
-        <div class="checkbox-option-header-text">
-          <h4>Combobox Field Properties</h4>
+      <!-- TextField Option -->
+      <div id="text-field-option" class="checkbox-option">
+        <div class="checkbox-option-header">
+          <div class="checkbox-option-header-text">
+            <h4>Text Field Properties</h4>
+          </div>
+        </div>
+        <div class="checkbox-option-content">
+          <div class="form-input">
+            <div>
+              <span>Form Field Name*</span>
+            </div>
+            <div class="form-field-input-container">
+              <input
+                id="text-field-input-name"
+                class="form-field-input"
+                type="text"
+              />
+            </div>
+          </div>
+          <div class="form-input">
+            <div>
+              <span>Text Style</span>
+            </div>
+            <div class="form-field-input-container">
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <i class="fa fa-font"></i>
+                  <span>Font</span>
+                </div>
+                <select id="text-font-style" class="form-field-input"></select>
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <i class="fa fa-text-height"></i>
+                  <span>Font Size</span>
+                </div>
+                <select id="text-font-size" class="form-field-input"></select>
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <i class="fa fa-fill"></i>
+                  <span>Color</span>
+                </div>
+                <input
+                  type="color"
+                  id="text-font-color"
+                  name="colorPicker"
+                  class="form-field-input"
+                />
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <i class="fa fa-fill"></i>
+                  <span>Background Color</span>
+                </div>
+                <input
+                  type="color"
+                  id="text-font-background-color"
+                  name="colorPicker"
+                  value="#FFFFFF"
+                  class="form-field-input"
+                />
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <i class="fa fa-align-left"></i>
+                  <span>Alignment</span>
+                </div>
+                <div>
+                  <form class="align-container">
+                    <label for="text-left" class="align-button">
+                      <input
+                        type="radio"
+                        id="text-left"
+                        name="text-field"
+                        value="left"
+                        hidden
+                      />
+                      <i class="fa fa-align-left"></i>
+                    </label>
+                    <label for="text-center" class="align-button">
+                      <input
+                        type="radio"
+                        id="text-center"
+                        name="text-field"
+                        value="center"
+                        hidden
+                      />
+                      <i class="fa fa-align-center"></i>
+                    </label>
+                    <label for="text-right" class="align-button">
+                      <input
+                        type="radio"
+                        id="text-right"
+                        name="text-field"
+                        value="right"
+                        hidden
+                      />
+                      <i class="fa fa-align-right"></i>
+                    </label>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="text-save-button" class="checkbox-option-footer">
+          <div class="form-save-button">Save</div>
         </div>
       </div>
-      <div class="checkbox-option-content" style="height: 280px">
-        <div class="form-input">
-          <div>
-            <span>Form Field Name*</span>
-          </div>
-          <div class="form-field-input-container">
-            <input id="combo-input-name" class="form-field-input" type="text" />
+      <!-- Combobox Option -->
+      <div id="combo-option" class="checkbox-option">
+        <div class="checkbox-option-header">
+          <div class="checkbox-option-header-text">
+            <h4>Combobox Field Properties</h4>
           </div>
         </div>
-        <div class="combobox-options">
-          <div class="combobox-options-content">
-            <span>Options</span>
-          </div>
-          <div id="option-content"></div>
-          <div class="combobox-options-content">
-            <input id="option-description" type="text" class="form-field-input-combo"
-              placeholder="Enter description here" />
-          </div>
-          <div id="add-option" class="combobox-add-option">
-            <u>Add Option</u>
-          </div>
-          <div>
-            <span style="font-size: 24px"><i class="fa-solid fa-triangle-exclamation"></i></span>
-            <span style="font-size: 14px">Option's name must be unique.</span>
-          </div>
-        </div>
-        <div class="form-input">
-          <div>
-            <span>Text Style</span>
-          </div>
-          <div class="form-field-input-container">
-            <div class="form-style-container">
-              <div class="form-style-name">
-                <i class="fa fa-font"></i>
-                <span>Font</span>
-              </div>
-              <select id="combo-font-style" class="form-field-input"></select>
+        <div class="checkbox-option-content" style="height: 280px">
+          <div class="form-input">
+            <div>
+              <span>Form Field Name*</span>
             </div>
-            <div class="form-style-container">
-              <div class="form-style-name">
-                <i class="fa fa-text-height"></i>
-                <span>Font Size</span>
-              </div>
-              <select id="combo-font-size" class="form-field-input"></select>
+            <div class="form-field-input-container">
+              <input
+                id="combo-input-name"
+                class="form-field-input"
+                type="text"
+              />
             </div>
-            <div class="form-style-container">
-              <div class="form-style-name">
-                <i class="fa fa-fill"></i>
-                <span>Color</span>
-              </div>
-              <input type="color" id="combo-font-color" name="colorPicker" class="form-field-input" />
+          </div>
+          <div class="combobox-options">
+            <div class="combobox-options-content">
+              <span>Options</span>
             </div>
-            <div class="form-style-container">
-              <div class="form-style-name">
-                <i class="fa fa-fill"></i>
-                <span>Background Color</span>
-              </div>
-              <input type="color" id="combo-font-background-color" name="colorPicker" value="#FFFFFF" class="form-field-input" />
+            <div id="option-content"></div>
+            <div class="combobox-options-content">
+              <input
+                id="option-description"
+                type="text"
+                class="form-field-input-combo"
+                placeholder="Enter description here"
+              />
             </div>
-            <!-- <div class="form-style-container">
+            <div id="add-option" class="combobox-add-option">
+              <u>Add Option</u>
+            </div>
+            <div>
+              <span style="font-size: 24px"
+                ><i class="fa-solid fa-triangle-exclamation"></i
+              ></span>
+              <span style="font-size: 14px">Option's name must be unique.</span>
+            </div>
+          </div>
+          <div class="form-input">
+            <div>
+              <span>Text Style</span>
+            </div>
+            <div class="form-field-input-container">
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <i class="fa fa-font"></i>
+                  <span>Font</span>
+                </div>
+                <select id="combo-font-style" class="form-field-input"></select>
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <i class="fa fa-text-height"></i>
+                  <span>Font Size</span>
+                </div>
+                <select id="combo-font-size" class="form-field-input"></select>
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <i class="fa fa-fill"></i>
+                  <span>Color</span>
+                </div>
+                <input
+                  type="color"
+                  id="combo-font-color"
+                  name="colorPicker"
+                  class="form-field-input"
+                />
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <i class="fa fa-fill"></i>
+                  <span>Background Color</span>
+                </div>
+                <input
+                  type="color"
+                  id="combo-font-background-color"
+                  name="colorPicker"
+                  value="#FFFFFF"
+                  class="form-field-input"
+                />
+              </div>
+              <!-- <div class="form-style-container">
             <div class="form-style-name">
               <i class="fa fa-align-left"></i>
               <span>Alignment</span>
@@ -1147,80 +1969,101 @@ See https://github.com/adobe-type-tools/cmap-resources
               </form>
             </div>
           </div> -->
+            </div>
           </div>
+        </div>
+        <div id="combo-save-button" class="checkbox-option-footer">
+          <div class="form-save-button">Save</div>
         </div>
       </div>
-      <div id="combo-save-button" class="checkbox-option-footer">
-        <div class="form-save-button">Save</div>
-      </div>
-    </div>
-    <!-- Listbox Option -->
-    <div id="list-option" class="checkbox-option">
-      <div class="checkbox-option-header">
-        <div class="checkbox-option-header-text">
-          <h4>Listbox Field Properties</h4>
-        </div>
-      </div>
-      <div class="checkbox-option-content" style="height: 280px">
-        <div class="form-input">
-          <div>
-            <span>Form Field Name*</span>
-          </div>
-          <div class="form-field-input-container">
-            <input id="list-input-name" class="form-field-input" type="text" />
+      <!-- Listbox Option -->
+      <div id="list-option" class="checkbox-option">
+        <div class="checkbox-option-header">
+          <div class="checkbox-option-header-text">
+            <h4>Listbox Field Properties</h4>
           </div>
         </div>
-        <div class="combobox-options">
-          <div class="combobox-options-content">
-            <span>Options</span>
-          </div>
-          <div id="option-content-list"></div>
-          <div class="combobox-options-content">
-            <input id="option-description-list" type="text" class="form-field-input-combo"
-              placeholder="Enter description here" />
-          </div>
-          <div id="add-option-list" class="combobox-add-option">
-            <u>Add Option</u>
-          </div>
-          <div>
-            <span style="font-size: 24px"><i class="fa-solid fa-triangle-exclamation"></i></span>
-            <span style="font-size: 14px">Option's name must be unique.</span>
-          </div>
-        </div>
-        <div class="form-input">
-          <div>
-            <span>Text Style</span>
-          </div>
-          <div class="form-field-input-container">
-            <div class="form-style-container">
-              <div class="form-style-name">
-                <i class="fa fa-font"></i>
-                <span>Font</span>
-              </div>
-              <select id="list-font-style" class="form-field-input"></select>
+        <div class="checkbox-option-content" style="height: 280px">
+          <div class="form-input">
+            <div>
+              <span>Form Field Name*</span>
             </div>
-            <div class="form-style-container">
-              <div class="form-style-name">
-                <i class="fa fa-text-height"></i>
-                <span>Font Size</span>
-              </div>
-              <select id="list-font-size" class="form-field-input"></select>
+            <div class="form-field-input-container">
+              <input
+                id="list-input-name"
+                class="form-field-input"
+                type="text"
+              />
             </div>
-            <div class="form-style-container">
-              <div class="form-style-name">
-                <i class="fa fa-fill"></i>
-                <span>Color</span>
-              </div>
-              <input type="color" id="list-font-color" name="colorPicker" class="form-field-input" />
+          </div>
+          <div class="combobox-options">
+            <div class="combobox-options-content">
+              <span>Options</span>
             </div>
-            <div class="form-style-container">
-              <div class="form-style-name">
-                <i class="fa fa-fill"></i>
-                <span>Background Color</span>
-              </div>
-              <input type="color" id="list-font-background-color" name="colorPicker" value="#FFFFFF" class="form-field-input" />
+            <div id="option-content-list"></div>
+            <div class="combobox-options-content">
+              <input
+                id="option-description-list"
+                type="text"
+                class="form-field-input-combo"
+                placeholder="Enter description here"
+              />
             </div>
-            <!-- <div class="form-style-container">
+            <div id="add-option-list" class="combobox-add-option">
+              <u>Add Option</u>
+            </div>
+            <div>
+              <span style="font-size: 24px"
+                ><i class="fa-solid fa-triangle-exclamation"></i
+              ></span>
+              <span style="font-size: 14px">Option's name must be unique.</span>
+            </div>
+          </div>
+          <div class="form-input">
+            <div>
+              <span>Text Style</span>
+            </div>
+            <div class="form-field-input-container">
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <i class="fa fa-font"></i>
+                  <span>Font</span>
+                </div>
+                <select id="list-font-style" class="form-field-input"></select>
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <i class="fa fa-text-height"></i>
+                  <span>Font Size</span>
+                </div>
+                <select id="list-font-size" class="form-field-input"></select>
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <i class="fa fa-fill"></i>
+                  <span>Color</span>
+                </div>
+                <input
+                  type="color"
+                  id="list-font-color"
+                  name="colorPicker"
+                  class="form-field-input"
+                />
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <i class="fa fa-fill"></i>
+                  <span>Background Color</span>
+                </div>
+                <input
+                  type="color"
+                  id="list-font-background-color"
+                  name="colorPicker"
+                  value="#FFFFFF"
+                  class="form-field-input"
+                />
+              </div>
+              <!-- <div class="form-style-container">
             <div class="form-style-name">
               <i class="fa fa-align-left"></i>
               <span>Alignment</span>
@@ -1242,571 +2085,783 @@ See https://github.com/adobe-type-tools/cmap-resources
               </form>
             </div>
           </div> -->
-          </div>
-        </div>
-      </div>
-      <div id="list-save-button" class="checkbox-option-footer">
-        <div class="form-save-button">Save</div>
-      </div>
-    </div>
-    <!-- Button Option -->
-    <div id="button-field-option" class="checkbox-option">
-      <div class="checkbox-option-header">
-        <div class="checkbox-option-header-text">
-          <h4>Button Properties</h4>
-        </div>
-      </div>
-      <div class="checkbox-option-content" style="height: 280px">
-        <div class="form-input">
-          <div>
-            <span>Form Field Name*</span>
-          </div>
-          <div class="form-field-input-container">
-            <input id="button-field-input-name" class="form-field-input" type="text" />
-          </div>
-          <div>
-            <span>Button Text</span>
-          </div>
-          <div class="form-field-input-container">
-            <input id="button-text" class="form-field-input" type="text" />
-          </div>
-        </div>
-        <div class="form-input">
-          <div>
-            <span>Text Style</span>
-          </div>
-          <div class="form-field-input-container">
-            <div class="form-style-container">
-              <div class="form-style-name">
-                <i class="fa fa-font"></i>
-                <span>Font</span>
-              </div>
-              <select id="button-font-style" class="form-field-input"></select>
-            </div>
-            <div class="form-style-container">
-              <div class="form-style-name">
-                <i class="fa fa-text-height"></i>
-                <span>Font Size</span>
-              </div>
-              <select id="button-font-size" class="form-field-input"></select>
-            </div>
-            <div class="form-style-container">
-              <div class="form-style-name">
-                <i class="fa fa-fill"></i>
-                <span>Color</span>
-              </div>
-              <input type="color" id="button-font-color" name="colorPicker" class="form-field-input" />
             </div>
           </div>
-          <div class="form-style-container">
-            <div class="form-style-name">
-              <i class="fa fa-fill"></i>
-              <span>Background Color</span>
+        </div>
+        <div id="list-save-button" class="checkbox-option-footer">
+          <div class="form-save-button">Save</div>
+        </div>
+      </div>
+      <!-- Button Option -->
+      <div id="button-field-option" class="checkbox-option">
+        <div class="checkbox-option-header">
+          <div class="checkbox-option-header-text">
+            <h4>Button Properties</h4>
+          </div>
+        </div>
+        <div class="checkbox-option-content" style="height: 280px">
+          <div class="form-input">
+            <div>
+              <span>Form Field Name*</span>
             </div>
-            <input type="color" id="button-font-background-color" name="colorPicker" value="#FFFFFF" class="form-field-input" />
-          </div>
-        </div>
-        <div class="form-input">
-          <div>
-            <span>Button Action</span>
-          </div>
-          <div class="form-field-input-container">
-            <select id="button-field-input-action" class="form-field-input">
-              <option value="submit">Submit</option>
-              <option value="reset">Reset</option>
-              <option value="no_action">No Action</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div id="button-save-button" class="checkbox-option-footer">
-        <div class="form-save-button">Save</div>
-      </div>
-    </div>
-    <!-- Text Content -->
-    <div id="text-content-option" class="checkbox-option" style="height: auto">
-      <div class="checkbox-option-header">
-        <div class="checkbox-option-header-text">
-          <h4>Text Properties</h4>
-        </div>
-      </div>
-      <div class="checkbox-option-content">
-        <div class="form-input">
-          <div class="form-field-input-container">
-            <div class="form-style-container">
-              <div class="form-style-name">
-                <i class="fa fa-font"></i>
-                <span>Font</span>
-              </div>
-              <select id="text-content-font-style" class="form-field-input" style="width: 50%"></select>
+            <div class="form-field-input-container">
+              <input
+                id="button-field-input-name"
+                class="form-field-input"
+                type="text"
+              />
             </div>
-            <div class="form-style-container">
-              <div class="form-style-name">
-                <i class="fa fa-text-height"></i>
-                <span>Font Size</span>
-              </div>
-              <div style="
-                    display: flex;
-                    justify-content: space-between;
-                    width: 50%;
-                  ">
-                <div class="form-style-weight">
-                  <div id="text-bold" class="text-weight-button">
-                    <i class="fa-solid fa-bold"></i>
-                  </div>
-                  <div id="text-italic" class="text-weight-button">
-                    <i class="fa-solid fa-italic"></i>
-                  </div>
+            <div>
+              <span>Button Text</span>
+            </div>
+            <div class="form-field-input-container">
+              <input id="button-text" class="form-field-input" type="text" />
+            </div>
+          </div>
+          <div class="form-input">
+            <div>
+              <span>Text Style</span>
+            </div>
+            <div class="form-field-input-container">
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <i class="fa fa-font"></i>
+                  <span>Font</span>
                 </div>
-                <select id="text-content-font-size" class="form-field-input"></select>
+                <select
+                  id="button-font-style"
+                  class="form-field-input"
+                ></select>
               </div>
-            </div>
-            <div class="form-style-container">
-              <div class="form-style-name">
-                <i class="fa fa-fill"></i>
-                <span>Color</span>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <i class="fa fa-text-height"></i>
+                  <span>Font Size</span>
+                </div>
+                <select id="button-font-size" class="form-field-input"></select>
               </div>
-              <input type="color" id="text-content-color" name="colorPicker" class="form-field-input" />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id="text-content-save-button" class="checkbox-option-footer">
-        <div class="form-save-button">Save</div>
-      </div>
-    </div>
-    <!-- DateField Option -->
-    <div id="date-option" class="checkbox-option">
-      <div class="checkbox-option-header">
-        <div class="checkbox-option-header-text">
-          <h4>Date Field Properties</h4>
-        </div>
-      </div>
-      <div class="checkbox-option-content">
-        <div class="form-input">
-          <div>
-            <span>Form Field Name*</span>
-          </div>
-          <div class="form-field-input-container">
-            <input id="date-input-name" class="form-field-input" type="text" />
-          </div>
-        </div>
-        <div class="form-input">
-          <div>
-            <span>Text Style</span>
-          </div>
-          <div class="form-field-input-container">
-            <div class="form-style-container">
-              <div class="form-style-name">
-                <i class="fa fa-font"></i>
-                <span>Font</span>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <i class="fa fa-fill"></i>
+                  <span>Color</span>
+                </div>
+                <input
+                  type="color"
+                  id="button-font-color"
+                  name="colorPicker"
+                  class="form-field-input"
+                />
               </div>
-              <select id="date-font-style" class="form-field-input"></select>
-            </div>
-            <div class="form-style-container">
-              <div class="form-style-name">
-                <i class="fa fa-text-height"></i>
-                <span>Font Size</span>
-              </div>
-              <select id="date-font-size" class="form-field-input"></select>
-            </div>
-            <div class="form-style-container">
-              <div class="form-style-name">
-                <i class="fa fa-fill"></i>
-                <span>Color</span>
-              </div>
-              <input type="color" id="date-font-color" name="colorPicker" class="form-field-input" />
             </div>
             <div class="form-style-container">
               <div class="form-style-name">
                 <i class="fa fa-fill"></i>
                 <span>Background Color</span>
               </div>
-              <input type="color" id="date-font-background-color" name="colorPicker" value="#FFFFFF" class="form-field-input" />
+              <input
+                type="color"
+                id="button-font-background-color"
+                name="colorPicker"
+                value="#FFFFFF"
+                class="form-field-input"
+              />
+            </div>
+          </div>
+          <div class="form-input">
+            <div>
+              <span>Button Action</span>
+            </div>
+            <div class="form-field-input-container">
+              <select id="button-field-input-action" class="form-field-input">
+                <option value="submit">Submit</option>
+                <option value="reset">Reset</option>
+                <option value="no_action">No Action</option>
+              </select>
             </div>
           </div>
         </div>
+        <div id="button-save-button" class="checkbox-option-footer">
+          <div class="form-save-button">Save</div>
+        </div>
       </div>
-      <div id="date-save-button" class="checkbox-option-footer">
-        <div class="form-save-button">Save</div>
+      <!-- Text Content -->
+      <div
+        id="text-content-option"
+        class="checkbox-option"
+        style="height: auto"
+      >
+        <div class="checkbox-option-header">
+          <div class="checkbox-option-header-text">
+            <h4>Text Properties</h4>
+          </div>
+        </div>
+        <div class="checkbox-option-content">
+          <div class="form-input">
+            <div class="form-field-input-container">
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <i class="fa fa-font"></i>
+                  <span>Font</span>
+                </div>
+                <select
+                  id="text-content-font-style"
+                  class="form-field-input"
+                  style="width: 50%"
+                ></select>
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <i class="fa fa-text-height"></i>
+                  <span>Font Size</span>
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    width: 50%;
+                  "
+                >
+                  <div class="form-style-weight">
+                    <div id="text-bold" class="text-weight-button">
+                      <i class="fa-solid fa-bold"></i>
+                    </div>
+                    <div id="text-italic" class="text-weight-button">
+                      <i class="fa-solid fa-italic"></i>
+                    </div>
+                    <div id="text-underline" class="text-weight-button">
+                      <i class="fa-solid fa-underline"></i>
+                    </div>
+                  </div>
+                  <select
+                    id="text-content-font-size"
+                    class="form-field-input"
+                  ></select>
+                </div>
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <i class="fa fa-fill"></i>
+                  <span>Color</span>
+                </div>
+                <input
+                  type="color"
+                  id="text-content-color"
+                  name="colorPicker"
+                  class="form-field-input"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="text-content-save-button" class="checkbox-option-footer">
+          <div class="form-save-button">Save</div>
+        </div>
+      </div>
+      <!-- DateField Option -->
+      <div id="date-option" class="checkbox-option">
+        <div class="checkbox-option-header">
+          <div class="checkbox-option-header-text">
+            <h4>Date Field Properties</h4>
+          </div>
+        </div>
+        <div class="checkbox-option-content">
+          <div class="form-input">
+            <div>
+              <span>Form Field Name*</span>
+            </div>
+            <div class="form-field-input-container">
+              <input
+                id="date-input-name"
+                class="form-field-input"
+                type="text"
+              />
+            </div>
+          </div>
+          <div class="form-input">
+            <div>
+              <span>Text Style</span>
+            </div>
+            <div class="form-field-input-container">
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <i class="fa fa-font"></i>
+                  <span>Font</span>
+                </div>
+                <select id="date-font-style" class="form-field-input"></select>
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <i class="fa fa-text-height"></i>
+                  <span>Font Size</span>
+                </div>
+                <select id="date-font-size" class="form-field-input"></select>
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <i class="fa fa-fill"></i>
+                  <span>Color</span>
+                </div>
+                <input
+                  type="color"
+                  id="date-font-color"
+                  name="colorPicker"
+                  class="form-field-input"
+                />
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <i class="fa fa-fill"></i>
+                  <span>Background Color</span>
+                </div>
+                <input
+                  type="color"
+                  id="date-font-background-color"
+                  name="colorPicker"
+                  value="#FFFFFF"
+                  class="form-field-input"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="date-save-button" class="checkbox-option-footer">
+          <div class="form-save-button">Save</div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="right-sidebar">
-    <div id="switchEditInsert" class="switch-edit-insert" onclick="changeMode()">
-      <p>Edit Mode</p>
-      <i class="fa fa-toggle-off"></i>
-    </div>
-    <p class="toolbarTitle">Annotations:</p>
-    <button id="editorHighlight" class="secondaryToolbarButton" disabled="disabled" title="Highlight" role="radio"
-      aria-checked="false" aria-controls="editorHighlightParamsToolbar" tabindex="31"
-      data-l10n-id="pdfjs-editor-highlight-button">
-      <span data-l10n-id="pdfjs-editor-highlight-button-label">Highlight</span>
-    </button>
-    <button id="editorInk" class="secondaryToolbarButton" disabled="disabled" title="Draw" role="radio"
-      aria-checked="false" aria-controls="editorInkParamsToolbar" tabindex="33" data-l10n-id="pdfjs-editor-ink-button"
-      style="display: none;">
-      <span data-l10n-id="pdfjs-editor-ink-button-label">Draw</span>
-    </button>
-    <button id="editorStamp" class="secondaryToolbarButton" disabled="disabled" title="Add or edit images" role="radio"
-      aria-checked="false" aria-controls="editorStampParamsToolbar" tabindex="34"
-      data-l10n-id="pdfjs-editor-stamp-button">
-      <span data-l10n-id="pdfjs-editor-stamp-button-label">Add or edit images</span>
-    </button>
-    <!-- <div class="horizontalToolbarSeparator"></div>
+    <div class="right-sidebar">
+      <div
+        id="switchEditInsert"
+        class="switch-edit-insert"
+        onclick="changeMode()"
+      >
+        <p>Edit Mode</p>
+        <i class="fa fa-toggle-off"></i>
+      </div>
+      <p class="toolbarTitle">Annotations:</p>
+      <button
+        id="editorHighlight"
+        class="secondaryToolbarButton"
+        disabled="disabled"
+        title="Highlight"
+        role="radio"
+        aria-checked="false"
+        aria-controls="editorHighlightParamsToolbar"
+        tabindex="31"
+        data-l10n-id="pdfjs-editor-highlight-button"
+      >
+        <span data-l10n-id="pdfjs-editor-highlight-button-label"
+          >Highlight</span
+        >
+      </button>
+      <button
+        id="editorInk"
+        class="secondaryToolbarButton"
+        disabled="disabled"
+        title="Draw"
+        role="radio"
+        aria-checked="false"
+        aria-controls="editorInkParamsToolbar"
+        tabindex="33"
+        data-l10n-id="pdfjs-editor-ink-button"
+        style="display: none"
+      >
+        <span data-l10n-id="pdfjs-editor-ink-button-label">Draw</span>
+      </button>
+      <button
+        id="editorStamp"
+        class="secondaryToolbarButton"
+        disabled="disabled"
+        title="Add or edit images"
+        role="radio"
+        aria-checked="false"
+        aria-controls="editorStampParamsToolbar"
+        tabindex="34"
+        data-l10n-id="pdfjs-editor-stamp-button"
+      >
+        <span data-l10n-id="pdfjs-editor-stamp-button-label"
+          >Add or edit images</span
+        >
+      </button>
+      <!-- <div class="horizontalToolbarSeparator"></div>
     <p class="toolbarTitle">Add Shapes:</p>
     <button class="menu-button" id="shape_format" title="Shape Format">
       <i class="fa-solid fa-shapes" style="width: 17px"></i>
       <p class="menu-button-item">Shape Format</p>
     </button> -->
-    <!-- <button class="menu-button" id="add_shape" title="Add Shapes">
+      <!-- <button class="menu-button" id="add_shape" title="Add Shapes">
       <i class="fa-solid fa-shapes" style="width: 17px"></i>
       <p class="menu-button-item">Add Shapes</p>
     </button> -->
-    <div class="horizontalToolbarSeparator"></div>
-    <p class="toolbarTitle">Comments:</p>
-    <button class="menu-button" id="add_text" title="Add Text">
-      <i class="far fa-i" style="width: 17px"></i>
-      <p class="menu-button-item">Add Text</p>
-    </button>
-    <button class="menu-button" id="add_comment_mode" title="Add Comment">
-      <i class="far fa-comment"></i>
-      <p class="menu-button-item">Add Comment</p>
-    </button>
-    <div class="horizontalToolbarSeparator"></div>
-    <p class="toolbarTitle">Form Fields:</p>
-    <button class="menu-button" id="add_form_check" title="Add checkbox" onclick="addForm(CHECKBOX)">
-      <i class="fa-sharp fa-regular fa-square-check" style="width: 17px"></i>
-      <p class="menu-button-item">CheckBox</p>
-    </button>
-    <button class="menu-button" id="add_form_radio" title="Add radio button" onclick="addForm(RADIO)">
-      <i class="fa-regular fa-circle-dot" style="width: 17px"></i>
-      <p class="menu-button-item">Radio</p>
-    </button>
-    <button class="menu-button" id="add_form_text" title="Add textfield" onclick="addForm(TEXTFIELD)">
-      <i class="fa fa-font" style="width: 17px"></i>
-      <p class="menu-button-item">TextField</p>
-    </button>
-    <button class="menu-button" id="add_form_combo" title="Add combobox" onclick="addForm(COMBOBOX)">
-      <i class="fa fa-caret-down" style="width: 17px"></i>
-      <p class="menu-button-item">Combobox</p>
-    </button>
-    <button class="menu-button" id="add_form_list" title="Add list" onclick="addForm(LIST)">
-      <i class="fa fa-list" aria-hidden="true" style="width: 17px"></i>
-      <p class="menu-button-item">List</p>
-    </button>
-    <button class="menu-button" id="add_form_date" title="Add date" onclick="addForm(DATE)">
-      <i class="fa-regular fa-calendar-days" style="width: 17px"></i>
-      <p class="menu-button-item">Date</p>
-    </button>
-    <button class="menu-button" id="add_form_signature" title="Add Signature" onclick="addForm(SIGNATURE)">
-      <i class="fa-solid fa-signature" style="width: 17px"></i>
-      <p class="menu-button-item">Signature</p>
-    </button>
-    <button class="menu-button" id="add_form_button" title="Add button" onclick="addForm(BUTTON)">
-      <i class="fa fa-toggle-off" style="width: 17px"></i>
-      <p class="menu-button-item">Button</p>
-    </button>
-    <p class="toolbarTitle">Fluttern:</p>
-    <button class="menu-button" id="add_form_download" title="Flatten and Download PDF" onclick="flatten()">
-      <i class="fa-sharp fa-solid fa-download" style="width: 17px"></i>
-      <p class="menu-button-item">Fluttern</p>
-    </button>
-  </div>
+      <div class="horizontalToolbarSeparator"></div>
+      <p class="toolbarTitle">Comments:</p>
+      <button class="menu-button" id="add_text" title="Add Text">
+        <i class="far fa-i" style="width: 17px"></i>
+        <p class="menu-button-item">Add Text</p>
+      </button>
+      <button class="menu-button" id="add_comment_mode" title="Add Comment">
+        <i class="far fa-comment"></i>
+        <p class="menu-button-item">Add Comment</p>
+      </button>
+      <div class="horizontalToolbarSeparator"></div>
+      <p class="toolbarTitle">Form Fields:</p>
+      <button
+        class="menu-button"
+        id="add_form_check"
+        title="Add checkbox"
+        onclick="addForm(CHECKBOX)"
+      >
+        <i class="fa-sharp fa-regular fa-square-check" style="width: 17px"></i>
+        <p class="menu-button-item">CheckBox</p>
+      </button>
+      <button
+        class="menu-button"
+        id="add_form_radio"
+        title="Add radio button"
+        onclick="addForm(RADIO)"
+      >
+        <i class="fa-regular fa-circle-dot" style="width: 17px"></i>
+        <p class="menu-button-item">Radio</p>
+      </button>
+      <button
+        class="menu-button"
+        id="add_form_text"
+        title="Add textfield"
+        onclick="addForm(TEXTFIELD)"
+      >
+        <i class="fa fa-font" style="width: 17px"></i>
+        <p class="menu-button-item">TextField</p>
+      </button>
+      <button
+        class="menu-button"
+        id="add_form_combo"
+        title="Add combobox"
+        onclick="addForm(COMBOBOX)"
+      >
+        <i class="fa fa-caret-down" style="width: 17px"></i>
+        <p class="menu-button-item">Combobox</p>
+      </button>
+      <button
+        class="menu-button"
+        id="add_form_list"
+        title="Add list"
+        onclick="addForm(LIST)"
+      >
+        <i class="fa fa-list" aria-hidden="true" style="width: 17px"></i>
+        <p class="menu-button-item">List</p>
+      </button>
+      <button
+        class="menu-button"
+        id="add_form_date"
+        title="Add date"
+        onclick="addForm(DATE)"
+      >
+        <i class="fa-regular fa-calendar-days" style="width: 17px"></i>
+        <p class="menu-button-item">Date</p>
+      </button>
+      <button
+        class="menu-button"
+        id="add_form_signature"
+        title="Add Signature"
+        onclick="addForm(SIGNATURE)"
+      >
+        <i class="fa-solid fa-signature" style="width: 17px"></i>
+        <p class="menu-button-item">Signature</p>
+      </button>
+      <button
+        class="menu-button"
+        id="add_form_button"
+        title="Add button"
+        onclick="addForm(BUTTON)"
+      >
+        <i class="fa fa-toggle-off" style="width: 17px"></i>
+        <p class="menu-button-item">Button</p>
+      </button>
+      <p class="toolbarTitle">Fluttern:</p>
+      <button
+        class="menu-button"
+        id="add_form_download"
+        title="Flatten and Download PDF"
+        onclick="flatten()"
+      >
+        <i class="fa-sharp fa-solid fa-download" style="width: 17px"></i>
+        <p class="menu-button-item">Fluttern</p>
+      </button>
+    </div>
 
-  <div id="signature-creator" onselectstart="return false" class="signature-container">
-    <div id="signature-pad" class="signature-pad">
-      <div class="signature-heading">
-        <h4>Create New Signature</h4>
-        <span id="signature-close" class="signature-close">&times;</span>
-      </div>
-      <div class="signature-option">
-        <button class="tablink tablink-active" onclick="switchSignMethod(event, DRAW)" id="signature-initial-tab">
-          Draw
-        </button>
-        <button class="tablink" onclick="switchSignMethod(event, TYPE)">
-          Type
-        </button>
-        <button class="tablink" onclick="switchSignMethod(event, UPLOAD)">
-          Upload
-        </button>
-        <button class="tablink" onclick="switchSignMethod(event, PROFILE)">
-          Profile
-        </button>
-      </div>
-      <hr class="signature-hr" />
-      <div id="signature-draw-body" class="signature-pad--body signature-tab-content" style="display: flex">
-        <canvas></canvas>
-      </div>
-      <div id="signature-draw-footer" class="signature-pad--footer signature-tab-content" style="display: flex">
-        <div class="description">Please sign above</div>
+    <div
+      id="signature-creator"
+      onselectstart="return false"
+      class="signature-container"
+    >
+      <div id="signature-pad" class="signature-pad">
+        <div class="signature-heading">
+          <h4>Create New Signature</h4>
+          <span id="signature-close" class="signature-close">&times;</span>
+        </div>
+        <div class="signature-option">
+          <button
+            class="tablink tablink-active"
+            onclick="switchSignMethod(event, DRAW)"
+            id="signature-initial-tab"
+          >
+            Draw
+          </button>
+          <button class="tablink" onclick="switchSignMethod(event, TYPE)">
+            Type
+          </button>
+          <button class="tablink" onclick="switchSignMethod(event, UPLOAD)">
+            Upload
+          </button>
+          <button class="tablink" onclick="switchSignMethod(event, PROFILE)">
+            Profile
+          </button>
+        </div>
+        <hr class="signature-hr" />
+        <div
+          id="signature-draw-body"
+          class="signature-pad--body signature-tab-content"
+          style="display: flex"
+        >
+          <canvas></canvas>
+        </div>
+        <div
+          id="signature-draw-footer"
+          class="signature-pad--footer signature-tab-content"
+          style="display: flex"
+        >
+          <div class="description">Please sign above</div>
 
-        <div class="signature-pad--actions">
-          <button type="button" class="button clear" data-action="clear">
-            Clear
-          </button>
-          <button type="button" class="button" data-action="undo">
-            Undo
-          </button>
-          <!-- <button type="button" class="button" data-action="change-color">Change color</button> -->
+          <div class="signature-pad--actions">
+            <button type="button" class="button clear" data-action="clear">
+              Clear
+            </button>
+            <button type="button" class="button" data-action="undo">
+              Undo
+            </button>
+            <!-- <button type="button" class="button" data-action="change-color">Change color</button> -->
+            <div class="signature-color-picker">
+              <div>
+                <span>Color</span>
+              </div>
+              <div>
+                <input
+                  type="color"
+                  id="signature-draw-color"
+                  data-action="change-color"
+                  name="signature-color"
+                />
+              </div>
+            </div>
+            <button type="button" class="button" data-action="change-width">
+              Change width
+            </button>
+            <button type="button" class="button save" data-action="save-png">
+              Save as PNG
+            </button>
+            <button type="button" class="button save" data-action="save-jpg">
+              Save as JPG
+            </button>
+            <button type="button" class="button save" data-action="save-svg">
+              Save as SVG
+            </button>
+            <button
+              type="button"
+              class="button save"
+              data-action="save-svg-with-background"
+            >
+              Save as SVG with background
+            </button>
+          </div>
+        </div>
+        <div id="signature-type-body" class="signature-tab-content">
+          <canvas
+            id="signature-type-canvas"
+            style="touch-action: none; user-select: none"
+          ></canvas>
+        </div>
+        <div id="signature-type-footer" class="signature-tab-content">
+          <div>
+            <select id="signature-type-font"></select>
+          </div>
           <div class="signature-color-picker">
             <div>
               <span>Color</span>
             </div>
             <div>
-              <input type="color" id="signature-draw-color" data-action="change-color" name="signature-color" />
+              <input
+                type="color"
+                id="signature-type-color"
+                name="signature-color"
+              />
             </div>
           </div>
-          <button type="button" class="button" data-action="change-width">
-            Change width
-          </button>
-          <button type="button" class="button save" data-action="save-png">
-            Save as PNG
-          </button>
-          <button type="button" class="button save" data-action="save-jpg">
-            Save as JPG
-          </button>
-          <button type="button" class="button save" data-action="save-svg">
-            Save as SVG
-          </button>
-          <button type="button" class="button save" data-action="save-svg-with-background">
-            Save as SVG with background
-          </button>
+          <input
+            type="text"
+            id="signature-type-text"
+            class="signature-type-text"
+            name="signature-type-text"
+          />
         </div>
-      </div>
-      <div id="signature-type-body" class="signature-tab-content">
-        <canvas id="signature-type-canvas" style="touch-action: none; user-select: none"></canvas>
-      </div>
-      <div id="signature-type-footer" class="signature-tab-content">
-        <div>
-          <select id="signature-type-font"></select>
+        <div id="signature-upload-body" class="signature-tab-content">
+          <div id="drop-area">
+            <p>Drag & Drop images here</p>
+            <input
+              type="file"
+              id="signature-image-input"
+              class="custom-file-input"
+              accept="image/*"
+            />
+          </div>
+          <div id="image-preview"></div>
         </div>
-        <div class="signature-color-picker">
-          <div>
-            <span>Color</span>
+        <div id="signature-upload-footer" class="signature-tab-content"></div>
+        <div id="signature-profile-body" class="signature-tab-content">
+          <div id="profile-image-preview"></div>
+        </div>
+        <div id="signature-profile-footer" class="signature-tab-content">
+          <label for="signature-profile-image-input">
+            <i class="fa fa-upload"></i> Upload file
+            <input
+              type="file"
+              id="signature-profile-image-input"
+              class="custom-file-input hidden"
+              accept="image/*"
+            />
+          </label>
+        </div>
+        <hr class="signature-hr" />
+        <div
+          class="signature-footer signature-pad--actions"
+          style="float: right"
+        >
+          <div class="signature-color-picker">
+            <div>
+              <span>Background Color</span>
+            </div>
+            <div>
+              <input
+                type="color"
+                id="signature-font-background-color"
+                value="#ffffff"
+                data-action="change-color"
+                name="signature-color"
+              />
+            </div>
           </div>
           <div>
-            <input type="color" id="signature-type-color" name="signature-color" />
+            <button id="signature-close-button" class="button">Close</button>
+            <button id="signature-create" class="button">Create</button>
           </div>
-        </div>
-        <input type="text" id="signature-type-text" class="signature-type-text" name="signature-type-text" />
-      </div>
-      <div id="signature-upload-body" class="signature-tab-content">
-        <div id="drop-area">
-          <p>Drag & Drop images here</p>
-          <input type="file" id="signature-image-input" class="custom-file-input" accept="image/*" />
-        </div>
-        <div id="image-preview"></div>
-      </div>
-      <div id="signature-upload-footer" class="signature-tab-content"></div>
-      <div id="signature-profile-body" class="signature-tab-content">
-        <div id="profile-image-preview"></div>
-      </div>
-      <div id="signature-profile-footer" class="signature-tab-content">
-        <label for="signature-profile-image-input">
-          <i class="fa fa-upload"></i> Upload file
-          <input type="file" id="signature-profile-image-input" class="custom-file-input hidden" accept="image/*" />
-        </label>
-      </div>
-      <hr class="signature-hr" />
-      <div class="signature-footer signature-pad--actions" style="float: right">
-        <div class="signature-color-picker">
-          <div>
-            <span>Background Color</span>
-          </div>
-          <div>
-            <input type="color" id="signature-font-background-color" value="#ffffff" data-action="change-color" name="signature-color" />
-          </div>
-        </div>
-        <div>
-          <button id="signature-close-button" class="button">Close</button>
-          <button id="signature-create" class="button">Create</button>
         </div>
       </div>
     </div>
-  </div>
 
-  <div id="drawing-board-container" class="signature-container">
-    <div id="drawing-board-pad" class="signature-pad">
-      <div class="signature-heading">
-        <h4>Add New Shapes</h4>
-        <span id="drawing-board-close" class="signature-close">&times;</span>
-      </div>
-      <!-- top action bar -->
-      <div id="action-bar">
-        <!-- group 1: tools -->
-        <div class="action-group">
-          <div id="actions">
-            <div class="action">
-              <button id="clear-canvas">clear canvas</button>
+    <div id="drawing-board-container" class="signature-container">
+      <div id="drawing-board-pad" class="signature-pad">
+        <div class="signature-heading">
+          <h4>Add New Shapes</h4>
+          <span id="drawing-board-close" class="signature-close">&times;</span>
+        </div>
+        <!-- top action bar -->
+        <div id="action-bar">
+          <!-- group 1: tools -->
+          <div class="action-group">
+            <div id="actions">
+              <div class="action">
+                <button id="clear-canvas">clear canvas</button>
+              </div>
             </div>
           </div>
-        </div>
-        <!-- group 2: tools -->
-        <div class="action-group">
-          <!-- tools -->
-          <div class="drawing-tools">
-            <!-- pencil -->
-            <div class="drawing-tool active" id="pencil">
-              <img src="./images/pencil.png" alt="pencil" />
+          <!-- group 2: tools -->
+          <div class="action-group">
+            <!-- tools -->
+            <div class="drawing-tools">
+              <!-- pencil -->
+              <div class="drawing-tool active" id="pencil">
+                <img src="./images/pencil.png" alt="pencil" />
+              </div>
+              <!-- brush -->
+              <div class="drawing-tool" id="brush">
+                <img src="./images/brush.png" alt="brush" />
+              </div>
+              <!-- eraser -->
+              <!-- TODO: https://github.com/GDSC-IIIT-Kalyani/Plot/issues/17 -->
+              <div class="drawing-tool" id="eraser">
+                <img src="./images/eraser.png" alt="eraser" />
+              </div>
+              <!-- bucket -->
+              <div class="drawing-tool" id="bucket">
+                <img src="./images/bucket.svg" alt="bucket" />
+              </div>
+              <div class="drawing-tool" id="text">
+                <img
+                  src="./images/toolbarButton-editorFreeText.svg"
+                  alt="text"
+                />
+              </div>
             </div>
-            <!-- brush -->
-            <div class="drawing-tool" id="brush">
-              <img src="./images/brush.png" alt="brush" />
-            </div>
-            <!-- eraser -->
-            <!-- TODO: https://github.com/GDSC-IIIT-Kalyani/Plot/issues/17 -->
-            <div class="drawing-tool" id="eraser">
-              <img src="./images/eraser.png" alt="eraser" />
-            </div>
-            <!-- bucket -->
-            <div class="drawing-tool" id="bucket">
-              <img src="./images/bucket.svg" alt="bucket" />
-            </div>
-            <div class="drawing-tool" id="text">
-              <img src="./images/toolbarButton-editorFreeText.svg" alt="text" />
-            </div>
+            <!-- group title -->
+            <p class="title">tools</p>
           </div>
-          <!-- group title -->
-          <p class="title">tools</p>
-        </div>
-        <!-- group 3: shapes -->
-        <div class="action-group">
-          <!-- shapes -->
-          <div class="drawing-tools">
-            <!-- Straight -->
-            <div class="drawing-tool" id="straight">
-              <img src="./images/straight.svg" alt="straight" />
+          <!-- group 3: shapes -->
+          <div class="action-group">
+            <!-- shapes -->
+            <div class="drawing-tools">
+              <!-- Straight -->
+              <div class="drawing-tool" id="straight">
+                <img src="./images/straight.svg" alt="straight" />
+              </div>
+              <!-- rectangle -->
+              <div class="drawing-tool" id="rectangle">
+                <img src="./images/rectangle.svg" alt="rectangle" />
+              </div>
+              <!-- circle -->
+              <div class="drawing-tool" id="circle">
+                <img src="./images/circle.svg" alt="circle" />
+              </div>
+              <div class="drawing-tool" id="triangle">
+                <img src="./images/triangle.svg" alt="triangle" />
+              </div>
             </div>
-            <!-- rectangle -->
-            <div class="drawing-tool" id="rectangle">
-              <img src="./images/rectangle.svg" alt="rectangle" />
-            </div>
-            <!-- circle -->
-            <div class="drawing-tool" id="circle">
-              <img src="./images/circle.svg" alt="circle" />
-            </div>
-            <div class="drawing-tool" id="triangle">
-              <img src="./images/triangle.svg" alt="triangle" />
-            </div>
+            <!-- group title -->
+            <p class="title">shapes</p>
           </div>
-          <!-- group title -->
-          <p class="title">shapes</p>
-        </div>
-        <!-- group 4: colors -->
-        <div class="action-group">
-          <!-- colors -->
-          <div id="colors-wrapper">
-            <div id="colors">
-              <div class="drawing-color"></div>
-              <div class="drawing-color selected"></div>
-              <div class="drawing-color"></div>
-              <div class="drawing-color"></div>
+          <!-- group 4: colors -->
+          <div class="action-group">
+            <!-- colors -->
+            <div id="colors-wrapper">
+              <div id="colors">
+                <div class="drawing-color"></div>
+                <div class="drawing-color selected"></div>
+                <div class="drawing-color"></div>
+                <div class="drawing-color"></div>
+              </div>
+              <div id="color-picker-wrapper">
+                <input type="color" id="color-picker" value="#04a9f7" />
+              </div>
             </div>
-            <div id="color-picker-wrapper">
-              <input type="color" id="color-picker" value="#04a9f7" />
-            </div>
+            <!-- group title -->
+            <p class="title">colors</p>
           </div>
-          <!-- group title -->
-          <p class="title">colors</p>
+          <div class="action-group">
+            <input
+              type="range"
+              id="brush-width-slider"
+              min="1"
+              max="30"
+              value="2"
+              disabled
+            />
+            <!-- group title -->
+            <p class="title">thickness</p>
+          </div>
         </div>
-        <div class="action-group">
-          <input type="range" id="brush-width-slider" min="1" max="30" value="2" disabled />
-          <!-- group title -->
-          <p class="title">thickness</p>
+        <hr class="signature-hr" />
+        <!-- drawing-board -->
+        <div
+          id="drawing-board"
+          class="signature-pad--body"
+          style="display: flex"
+        >
+          <canvas style="touch-action: none; user-select: none"></canvas>
         </div>
-      </div>
-      <hr class="signature-hr" />
-      <!-- drawing-board -->
-      <div id="drawing-board" class="signature-pad--body" style="display: flex">
-        <canvas style="touch-action: none; user-select: none"></canvas>
-      </div>
-      <hr class="signature-hr" />
-      <div class="signature-footer signature-pad--actions" style="float: right">
-        <div></div>
-        <button id="drawing-shape-create" class="button">Create</button>
+        <hr class="signature-hr" />
+        <div
+          class="signature-footer signature-pad--actions"
+          style="float: right"
+        >
+          <div></div>
+          <button id="drawing-shape-create" class="button">Create</button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div id="share-document-container" class="share-document-container">
-    <div class="share-document-pad">
-      <div class="share-document-heading">
-        <h3>Share this document</h3>
-        <span id="share-document-close" class="share-document-close">&times;</span>
-      </div>
-      <div class="share-document-content">
-        <div class="share-document-sender">
-          <p>Name *:</p>
-          <input id="share-document-sender-name" type="text">
+    <div id="share-document-container" class="share-document-container">
+      <div class="share-document-pad">
+        <div class="share-document-heading">
+          <h3>Share this document</h3>
+          <span id="share-document-close" class="share-document-close"
+            >&times;</span
+          >
         </div>
-        <div class="share-document-sender">
-          <p>Email *:</p>
-          <div>
-            <select id="email-input" multiple="multiple" style="width: 100%"></select>
-            <small id="email-feedback"></small>
+        <div class="share-document-content">
+          <div class="share-document-sender">
+            <p>Name *:</p>
+            <input id="share-document-sender-name" type="text" />
+          </div>
+          <div class="share-document-sender">
+            <p>Email *:</p>
+            <div>
+              <select
+                id="email-input"
+                multiple="multiple"
+                style="width: 100%"
+              ></select>
+              <small id="email-feedback"></small>
+            </div>
+          </div>
+          <div class="share-document-sender" style="display: none">
+            <p>Email *:</p>
+            <div>
+              <input id="share-document-sender-email" type="email" />
+              <span id="share-document-sender-email-check"></span>
+            </div>
+          </div>
+          <div class="share-document-sender">
+            <p>Description:</p>
+            <textarea id="share-document-sender-description"></textarea>
           </div>
         </div>
-        <div class="share-document-sender" style="display: none;">
-          <p>Email *:</p>
-          <div>
-            <input id="share-document-sender-email" type="email">
-            <span id="share-document-sender-email-check"></span>
-          </div>
+        <div class="share-document-footer">
+          <div id="share-document-send" class="share-document-send">Send</div>
         </div>
-        <div class="share-document-sender">
-          <p>Description:</p>
-          <textarea id="share-document-sender-description"></textarea>
-        </div>
-      </div>
-      <div class="share-document-footer">
-        <div id="share-document-send" class="share-document-send">Send</div>
       </div>
     </div>
-  </div>
 
-  <div class="loading-container">
-    <img src="./images/loading-icon.gif" class="img-fluid bg-img" />
-  </div>
-  
-  <script>
-    localStorage.setItem(
-      "modifiedContent",
-      document.getElementById("id_form_options").innerHTML
-    );
-    localStorage.setItem(
-      "modifiedContentDrawingShape",
-      document.getElementById("drawing-board-container").innerHTML
-    );
-  </script>
-  
-  <script src="viewer.js" type="module"></script>
-  <script src="pdfAnnotate.js"></script>
-  <!--#if GENERIC-->
-  <input type="file" id="fileInput" class="hidden" />
-  <script src="js/jquery-3.6.0.min.js"></script>
-  <script src="js/bootstrap.min.js"></script>
-  <script src="js/select2.min.js"></script>
-  <script src="js/pdf.min.js" defer></script>
-  <script src="jQuery.print.js"></script>
-  <script src="font.js"></script>
-  <script src="const.js"></script>
-  <script src="global.js"></script>
-  <script src="addComment.js"></script>
-  <script src="addForm.js"></script>
-  <script src="FormDOM.js"></script>
-  <script src="addShape.js"></script>
-  <script src="shareDocument.js"></script>
-  <script src="annotationHistory.js"></script>
-  <script src="manageDocument.js"></script>
-  <script src="js/signature_pad.umd.js"></script>
-  <script src="js/signature_app.js"></script>
-  <script src="js/utils.js" defer></script>
-  <script src="js/app.js" defer></script>
-  <script src="js/index.js" defer></script>
-  <script src="js/custom.js" defer></script>  
-  <script src="js/pdf-lib.js"></script>
-  <script src="js/interact.min.js"></script>
-  <script src="js/fontkit.umd.min.js"></script>
-  <!--#endif-->
-</body>
+    <div class="loading-container">
+      <img src="./images/loading-icon.gif" class="img-fluid bg-img" />
+    </div>
+
+    <script>
+      localStorage.setItem(
+        "modifiedContent",
+        document.getElementById("id_form_options").innerHTML
+      );
+      localStorage.setItem(
+        "modifiedContentDrawingShape",
+        document.getElementById("drawing-board-container").innerHTML
+      );
+    </script>
+
+    <script src="viewer.js" type="module"></script>
+    <script src="pdfAnnotate.js"></script>
+    <!--#if GENERIC-->
+    <input type="file" id="fileInput" class="hidden" />
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/select2.min.js"></script>
+    <script src="js/pdf.min.js" defer></script>
+    <script src="jQuery.print.js"></script>
+    <script src="font.js"></script>
+    <script src="const.js"></script>
+    <script src="global.js"></script>
+    <script src="addComment.js"></script>
+    <script src="addForm.js"></script>
+    <script src="FormDOM.js"></script>
+    <script src="addShape.js"></script>
+    <script src="shareDocument.js"></script>
+    <script src="annotationHistory.js"></script>
+    <script src="manageDocument.js"></script>
+    <script src="js/signature_pad.umd.js"></script>
+    <script src="js/signature_app.js"></script>
+    <script src="js/utils.js" defer></script>
+    <script src="js/app.js" defer></script>
+    <script src="js/index.js" defer></script>
+    <script src="js/custom.js" defer></script>
+    <script src="js/pdf-lib.js"></script>
+    <script src="js/interact.min.js"></script>
+    <script src="js/fontkit.umd.min.js"></script>
+    <!--#endif-->
+  </body>
+</html>

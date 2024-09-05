@@ -1399,6 +1399,7 @@ const drawFormElement = function () {
       newText.style.fontFamily = item.regularFontStyle;
       newText.style.fontWeight = item.isBold ? "bold" : "";
       newText.style.fontStyle = item.isItalic ? "italic" : "";
+      newText.style.textDecoration = item.isUnderline ? "underline" : "none";
       newText.style.fontSize = `${item.fontSize}px`;
       newText.style.color = item.textColor;
     })
@@ -1770,6 +1771,7 @@ const handleText = function (e) {
           form_storage[i].align = alignValue;
           form_storage[i].isBold = isBold;
           form_storage[i].isItalic = isItalic;
+          form_storage[i].isUnderline = isUnderline;
           form_storage[i].regularFontStyle = regularFont;
           
           form_storage[i].textBackgroundColor = textBackgroundColor;
@@ -1816,6 +1818,7 @@ const handleText = function (e) {
       regularFontStyle: regularFont,
       isBold: isBold,
       isItalic: isItalic,
+      isUnderline: isUnderline,
       fontSize: fontSize,
       textColor: textColor,
 

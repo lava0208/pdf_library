@@ -249,7 +249,6 @@ class FreeTextEditor extends AnnotationEditor {
   }
 
   #updateFontSize(fontSize) {
-    console.log("fontSize " + fontSize);
     
     const setFontsize = size => {
       this.editorDiv.style.fontSize = `calc(${size}px * var(--scale-factor))`;
@@ -299,14 +298,11 @@ class FreeTextEditor extends AnnotationEditor {
 
   //... custom toolbar text
   #updateFontFamily(fontFamily) {
-    console.log("fontFamily " + fontFamily);
     const setFontfamily = style => {
       this.editorDiv.style.fontFamily = style;
       this.#fontFamily = style;
-      console.log("family" + this.#fontFamily);
     };
     const savedFontfamily = this.#fontFamily;
-    console.log("savedFontfamily " + savedFontfamily);
     this.addCommands({
       cmd: () => {
         setFontfamily(fontFamily);
@@ -633,10 +629,6 @@ class FreeTextEditor extends AnnotationEditor {
     //... custom toolbar text
     style.fontFamily = this.#fontFamily;
 
-    console.log("========== 5 ===========");
-    console.log("fontSize", this.#fontSize)
-    console.log("fontFamily", this.#fontFamily)
-
     this.div.append(this.editorDiv);
 
     this.overlayDiv = document.createElement("div");
@@ -787,21 +779,7 @@ class FreeTextEditor extends AnnotationEditor {
       };
     }
     const editor = super.deserialize(data, parent, uiManager);
-    
-    //...
-    editor.#fontSize = Math.round(data.fontSize);
-    editor.#color = Util.makeHexColor(...data.color);
-
-    //... custom toolbar text
-    editor.#fontFamily = data.fontFamily;
-
-    console.log("=== 6 ===");
-    console.log(data.fontSize);
-    console.log(data.fontFamily);
-
-    editor.#content = FreeTextEditor.#deserializeContent(data.value);
     editor.annotationElementId = data.id || null;
-    editor.#initialData = initialData;
 
     return editor;
   }
@@ -842,8 +820,6 @@ class FreeTextEditor extends AnnotationEditor {
       structTreeParentId: this._structTreeParentId,
     };
 
-    console.log("======== serialized ========");
-    console.log(serialized);
 
     if (isForCopying) {
       // Don't add the id when copying because the pasted editor mustn't be

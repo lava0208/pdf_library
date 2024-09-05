@@ -174,11 +174,8 @@ const removeBoldItalicEvent = function () {
 const saveTextContent = function () {
   fontStyle = generateFontName("text-content-font-style");
   fontSize = document.getElementById("text-content-font-size") && parseInt(document.getElementById("text-content-font-size").value);
-  // fontStyle = generateFontName("toolbar-font-style");
-  // fontSize = document.getElementById("toolbar-font-size") && parseInt(document.getElementById("toolbar-font-size").value);
   textColor = document.getElementById("text-content-color") && document.getElementById("text-content-color").value;
   const regularFont = document.getElementById("text-content-font-style") && document.getElementById("text-content-font-style").value;
-  // const regularFont = document.getElementById("toolbar-font-style") && document.getElementById("toolbar-font-style").value;
   let text, lines;
   const resultArray = [];
   let prevElement = null;

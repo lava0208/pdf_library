@@ -2192,12 +2192,22 @@ class PDFViewer {
       let width = that.getNumber($(this).css("width")) || $(this).width();
       let height = that.getNumber($(this).css("height")) || $(this).height();
       
-      if(id.includes("checkbox") || id.includes("radio") || id.includes("button") || id.includes("list") || id.includes("signature") || id.includes("shape")){
+      if(id.includes("checkbox") || id.includes("radio") || id.includes("text") || id.includes("button") || id.includes("list") || id.includes("signature") || id.includes("shape")){
         that.originals[id] = { top, left, width, height }
       } else{
         let fontSize = that.getNumber($(this).find("input, select").css("font-size"));
         that.originals[id] = { top, left, width, height, fontSize };
       }
+    });
+    $(".text-content").each(function () {
+      let id = $(this).attr("id");      
+      let top = that.getNumber($(this).css("top"));
+      let left = that.getNumber($(this).css("left"));
+      let width = that.getNumber($(this).css("width")) || $(this).width();
+      let height = that.getNumber($(this).css("height")) || $(this).height();
+      let fontSize = that.getNumber($(this).find(".textcontent").css("font-size"));
+      
+      that.originals[id] = { top, left, width, height, fontSize };
     });
   }
 
@@ -2220,7 +2230,22 @@ class PDFViewer {
       } else{
         let updateFontSize = original.fontSize * scale + "px";
         $(this).find("input, select").css("font-size", updateFontSize);
-      }      
+      }
+    });
+    $(".text-content").each(function () {
+      let id = $(this).attr("id");
+      let original = that.originals[id];
+
+      let updateWidth = original.width * scale + "px";
+      let updateHeight = original.height * scale + "px";
+      let updateTop = original.top * scale + "px";
+      let updateLeft = original.left * scale + "px";
+  
+      $(this).css({ width: updateWidth, height: updateHeight, top: updateTop, left: updateLeft });
+
+      let updateFontSize = original.fontSize * scale + "px";
+      
+      $(this).find(".textcontent").css("font-size", updateFontSize);
     });
   }
 

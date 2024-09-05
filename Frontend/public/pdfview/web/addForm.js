@@ -1386,6 +1386,7 @@ const drawFormElement = function () {
       newText.id = item.textContentId;
 
       const container = document.createElement("div");
+      container.classList.add("text-content");
       container.id = item.containerId;
       container.style.position = "absolute";
       container.style.top = y + "px";
@@ -1470,8 +1471,6 @@ document.addEventListener("DOMContentLoaded", function () {
           clientName = isDraft == null || isDraft == "" ? data[0].name : data.name;
           clientEmail = isDraft == null || isDraft == "" ? data[0].email : data.email;
 
-          console.log(form_storage);
-
           // Handle the retrieved data from the backend
           const dataURI = isDraft ? data.pdfData : data[0].pdfData;
           const base64Data = dataURI.split(',')[1];
@@ -1497,7 +1496,9 @@ document.addEventListener("DOMContentLoaded", function () {
             originalUrl: pdfFile.name,
           });
 
+          console.log("=============");          
           console.log(draw_form_storage);
+          console.log(text_storage);
           
 
           const checkViewerInterval = setInterval(() => {
@@ -4247,7 +4248,6 @@ const eventHandler = async function (e) {
       break;
     case SHAPE:
       let shapeId = baseId;
-      console.log("shapeId " + shapeId);
       
       shapeContainer.addEventListener("dblclick", () => {        
         if (!isEditing) {
@@ -4806,7 +4806,6 @@ async function addFormElements() {
     });
   }
   if (text_storage && text_storage.length != 0) {
-    comboDiv
     await Promise.all(
       text_storage.map(async (text_item) => {
         const fontName = text_item.fontStyle;
@@ -4832,7 +4831,7 @@ async function addFormElements() {
           y: text_item.y - text_item.height,
           font: customFont,
           size: text_item.fontSize,
-          color: PDFLib.rgb(r, g, b),
+          color: hexToRgbNew(text_item.textColor),
           lineHeight: 10,
           // wordBreaks: true,
         });

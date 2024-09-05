@@ -2716,3 +2716,17 @@ div[contenteditable="true"]:focus{
   height: 15px;
   object-fit: cover;
 }
+
+.line {
+  position: absolute;
+  background-color: #3c97fe;
+  z-index: 1000;
+}
+
+.horizontal-line {
+  height: 2px;
+}
+
+.vertical-line {
+  width: 2px;
+}

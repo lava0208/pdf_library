@@ -596,6 +596,7 @@ function enableInteractJS(elementId, type, currentId) {
           target.style.transform = `translate(${x}px, ${y}px)`;
           target.setAttribute("data-x", x);
           target.setAttribute("data-y", y);
+          drawCrossLines(target);
         },
         end(event) {
           const target = event.target;
@@ -617,6 +618,7 @@ function enableInteractJS(elementId, type, currentId) {
             viewer.clientWidth,
             viewer.clientHeight,
           );
+          $(".horizontal-line, .vertical-line").remove();
         },
       },
       inertia: true,

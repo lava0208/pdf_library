@@ -2579,6 +2579,8 @@ const resizeCanvas = function (id, type, currentId, optionId) {
             // update the position attributes
             target.setAttribute("data-x", newX);
             target.setAttribute("data-y", newY);
+
+            drawCrossLines(target);
           }
         },
         end(event) {
@@ -2587,11 +2589,40 @@ const resizeCanvas = function (id, type, currentId, optionId) {
             var x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
             var y = (parseFloat(target.getAttribute("data-y")) || 0) + event.dy;
             moveEventHandler(event, newX, newY, currentId);
+            $(".horizontal-line, .vertical-line").remove();
           }
         },
       },
     });
 };
+
+function drawCrossLines(target) {
+  $(".horizontal-line, .vertical-line").remove();
+
+  const rect = target.getBoundingClientRect();
+  const scrollTop = $(window).scrollTop();
+  const scrollLeft = $(window).scrollLeft();
+  const windowHeight = $(window).height();
+  const windowWidth = $(window).width();
+
+  const $horizontalLine = $('<div>').addClass('line horizontal-line');
+  $horizontalLine.css({
+    'top': `${rect.top + scrollTop}px`, // Y-coordinate of the element relative to the document
+    'left': '0px',
+    'width': `${windowWidth + scrollLeft}px`,
+    'height': '2px'
+  });
+  $('body').append($horizontalLine);
+
+  const $verticalLine = $('<div>').addClass('line vertical-line');
+  $verticalLine.css({
+    'left': `${rect.left + scrollLeft}px`, // X-coordinate of the element relative to the document
+    'top': '0px',
+    'height': `${windowHeight + scrollTop}px`,
+    'width': '2px'
+  });
+  $('body').append($verticalLine);
+}
 
 const saveFormElementByClick = function () {
   const elementsToRemove = [

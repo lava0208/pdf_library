@@ -657,35 +657,6 @@ document.getElementById("add_text").addEventListener("click", (e) => {
   handleChange();
 });
 
-$(document).on("click", "#editorFreeText", function(){
-  $("#add_comment_mode").removeClass("active_menu")
-  comment_control.style.display = "none";
-  isAddCommentModeOn = false;
-
-  if($("#add_comment_mode").hasClass("active_menu")){
-    $(this).trigger("click");
-  }
-})
-
-$(document).on("click", "#add_comment_mode", function(){
-  if($("#editorFreeText").hasClass("toggled")){
-    $("#editorFreeText").trigger("click");
-    $(this).removeClass("active_menu");
-    comment_control.style.display = "none";
-    isAddCommentModeOn = false;
-  }
-  
-  if(!isAddCommentModeOn){
-    $(this).addClass("active_menu");
-    isAddCommentModeOn = true;
-  }else{
-    $(this).removeClass("active_menu");
-    comment_control.style.display = "none";
-    isAddCommentModeOn = false;
-  }
-})
-
-
 const handleChange = () => {
   let addText = document.getElementById("add_text");
   let addComment = document.getElementById("add_comment_mode");

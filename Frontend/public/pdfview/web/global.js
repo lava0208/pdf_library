@@ -6,9 +6,6 @@ const openToolbar = () => {
 
     $("#add_comment_mode").removeClass("active_menu");
     $("#comment_control_panel").hide();
-    if($("#editorFreeText").hasClass("toggled")){
-        $("#editorFreeText").trigger("click");
-    }
 };
 
 function extractNumbersAsString(str) {

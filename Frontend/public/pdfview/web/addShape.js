@@ -378,6 +378,7 @@ viewer.addEventListener("dblclick", function (e) {
       $("#shapeToolbar").removeClass("hidden");
       $("#shapeTypeToolbar").addClass("hidden");
       $("#viewerContainer").addClass("withToolbar");
+      $(".right-sidebar").removeClass("active");
   
       const shapeContainer = e.target.closest(".shapeContainer");
       $(".shapeContainer").removeClass("active");

@@ -20,6 +20,7 @@ const signatureTypeText = document.getElementById("signature-type-text");
 const signatureTypeColor = document.getElementById("signature-type-color");
 const dropArea = document.getElementById("drop-area");
 const fileInput = document.getElementById("signature-image-input");
+const photoInput = document.getElementById("photo-input");
 
 //...
 const profileFileInput = document.getElementById("signature-profile-image-input");
@@ -27,6 +28,7 @@ const profileFiles = [];
 const signatureProfileColor = document.getElementById("signature-profile-color");
 
 const imagePreview = document.getElementById("image-preview");
+const photoPreview = document.getElementById("photo-preview");
 const signaturePad = new SignaturePad(canvas, {
   // It's Necessary to use an opaque color when saving image as JPEG;
   // this option can be omitted if only saving as PNG or SVG
@@ -186,7 +188,6 @@ function handleSignatureType() {
 handleSignatureType();
 
 function handleSignatureImageInput() {
-  // Prevent default behaviors
   if (dropArea) {
     ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
       dropArea.addEventListener(eventName, preventDefaults, false);
@@ -202,8 +203,19 @@ function handleSignatureImageInput() {
 
     dropArea.addEventListener("drop", handleDrop, false);
   }
+
+  // Handle signature input
   if (fileInput) {
-    fileInput.addEventListener("change", handleFileUpload, false);
+    fileInput.addEventListener("change", function() {
+      handleFileUpload("sign");
+    }, false);
+  }
+
+  // Handle photo input
+  if (photoInput) {    
+    photoInput.addEventListener("change", function() {
+      handleFileUpload("photo");
+    }, false);
   }
 
   function preventDefaults(e) {
@@ -224,31 +236,44 @@ function handleSignatureImageInput() {
     const files = dt.files;
     handleFiles(files[0]);
   }
-  function handleFileUpload() {
-    const selectedFile = fileInput.files[0];
+
+  function handleFileUpload(type) {
+    let selectedFile;
+    
+    if(type === "sign") {
+      selectedFile = fileInput.files[0];
+    } else if(type === "photo") {
+      selectedFile = photoInput.files[0];
+    }
+
     if (selectedFile) {
-      handleFiles(selectedFile);
+      handleFiles(selectedFile, type);
     }
   }
 
-  //...
-  function handleFiles(file) {
-    previewImage(file);
+  function handleFiles(file, type) {
+    previewImage(file, type);
   }
 
-  function previewImage(file) {
+  function previewImage(file, type) {
     const reader = new FileReader();
-
+    
     reader.onload = function (e) {
       const image = new Image();
       image.src = e.target.result;
-      imagePreview.innerHTML = "";
       image.style.width = '100%';
       image.style.height = '100%';
-      imagePreview.appendChild(image);
+
+      if(type === "sign") {
+        imagePreview.innerHTML = "";  // Clear existing preview
+        imagePreview.appendChild(image);
+      } else if(type === "photo") {
+        photoPreview.innerHTML = "";  // Clear existing preview
+        photoPreview.appendChild(image);
+      }
     };
 
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(file);  // Read the file as Data URL
   }
 }
 

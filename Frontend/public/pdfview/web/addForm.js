@@ -50,8 +50,9 @@ let current_date_id = 0;
 let current_date_content_id = 0;
 let current_signature_id = 0;
 let current_shape_id = 0;
+let current_photo_id = 0;
 
-let signatureImgData, shapeImgData;
+let signatureImgData, shapeImgData, photoData;
 
 let boundingBox;
 
@@ -1149,7 +1150,6 @@ const drawFormElement = function () {
             if (!isEditing) {
               current_signature_id = id;
 
-
               let istooltipshow = false;
 
               if (
@@ -1252,7 +1252,7 @@ const drawFormElement = function () {
                   signatureImg.style.width = "100%";
                   signatureImg.style.height = "100%";
                   signatureImg.src = imgData;
-                  signatureImg.style.objectFit = "contain";
+                  signatureImg.style.objectFit = "cover";
 
                   //... background color
                   // signatureImg.style.backgroundColor = document.getElementById("signature-font-background-color").value;
@@ -1342,6 +1342,99 @@ const drawFormElement = function () {
             }
           });
           $("#drawing-shape-create").off("click");
+          break;
+        case PHOTO:
+          const photoContainer = document.createElement("div");
+          photoContainer.className = "photoContainer";
+          photoContainer.id = "photo" + id;
+          addPhotoElementStyle(photoContainer, y, x, width, height);
+          photoContainer.style.display = "flex";
+          photoContainer.style.alignItems = "center";
+          photoContainer.style.justifyContent = "center";
+          photoContainer.style.userSelect = "none";
+          photoContainer.style.color = "white";
+          photoContainer.style.minHeight = "40px";
+          photoContainer.textContent = "Double click to upload image!";
+
+          if (item.photoData) {
+            if (item.photoData.includes("data:image/png;base64")) {
+              createAndAppendPhotoImage(item.photoData, photoContainer, id);
+            } else {
+              imageUrlToBase64(item.photoData)
+                .then(async base64 => {
+                  createAndAppendPhotoImage(base64, photoContainer, id);
+                })
+            }
+          }
+
+          pg.appendChild(photoContainer);
+
+          current_photo_id = id;
+
+          resizeCanvas(photoContainer.id, PHOTO, id);
+          photoContainer.addEventListener("click", () => {
+            if (!isEditing) {
+              current_photo_id = id;
+
+              let istooltipshow = false;
+
+              if (
+                document.getElementById("photo_tooltipbar" + current_photo_id)
+              ) {
+                istooltipshow = true;
+              }
+
+              if (isDragging) {
+                isDragging = false;
+              } else {
+                if (!istooltipshow) {
+                  let tooltipbar = document.createElement("div");
+                  current_form_id = id;
+                  addDeleteButton(
+                    current_photo_id,
+                    tooltipbar,
+                    photoContainer,
+                    "photo"
+                  );
+                } else {
+                  document
+                    .getElementById("photo_tooltipbar" + current_photo_id)
+                    .remove();
+                }
+              }
+            }
+          });
+
+          photoContainer.addEventListener("dblclick", () => {
+            current_form_id = id;
+            if (!isEditing && !isSubmit) {
+              const image_creator = document.getElementById(PHOTO_OPTION);
+              image_creator.style.display = "flex";
+              document.getElementById("photo-close").onclick = function () {
+                image_creator.style.display = "none";
+              };
+              document.getElementById("photo-close-button").onclick = function () {
+                image_creator.style.display = "none";
+              };
+
+              document.getElementById("photo-create").onclick = function () {
+                image_creator.style.display = "none";
+                const file = document.getElementById("photo-input")
+                  .files[0];
+                if (file) {
+                  const reader = new FileReader();
+                  reader.onload = function (e) {
+                    photoData = e.target.result;
+                    handlePhoto();
+                    createAndAppendPhotoImage(photoData);
+                  };
+                  reader.readAsDataURL(file);
+                } else {
+                  alert("Please select an image file.");
+                }
+              };
+            }
+          });
           break;
         default:
           break;
@@ -2420,15 +2513,177 @@ const handleSignature = function () {
     const date = new Date(Date.now());
     addHistory(baseId, SIGNATURE, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "signature");
   }
+
+  console.log("***** signature **********");
+  console.log(form_storage);
+};
+
+const handlePhoto = function () {
+  for (let i = 0; i < form_storage.length; i++) {
+    if (
+      form_storage[i].id == current_form_id
+    ) {
+      form_storage[i].photoData = photoData;
+      if(photoData != "" && photoData != undefined){
+        getImgHeight(photoData).then(function(e){
+          form_storage[i].width = e.width * 0.3;
+          form_storage[i].height = e.height * 0.3;
+        })
+      }
+      break;
+    }
+  }
+
+  let imageStorage = form_storage.filter(function (item) {
+    return item.form_type == PHOTO;
+  });
+  let count = 0;
+  for (let j = 0; j < imageStorage.length; j++) {
+    if (
+      imageStorage[j].id != current_form_id
+    )
+      count++;
+  }
+
+  if (baseId !== 0 && (count == imageStorage.length || imageStorage == null)) {
+    form_storage.push({
+      id: baseId,
+      containerId: "photo" + baseId,
+      form_type: PHOTO,
+      page_number: PDFViewerApplication.page,
+      x: pos_x_pdf,
+      y: pos_y_pdf,
+      baseX: pos_x_pdf,
+      baseY: pos_y_pdf,
+      width: formWidth * 0.75 * 0.8,
+      height: formHeight * 0.75 * 0.8,
+      xPage: formWidth,
+      yPage: formHeight,
+      photoData: photoData,
+    });
+    const date = new Date(Date.now());
+    addHistory(baseId, PHOTO, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "photo");
+  }
+  console.log("***************");
+  console.log(form_storage);
+  
 };
 
 // Resize and move canvas using Interact.js library.
-const resizeCanvas = function (id, type, currentId, optionId) {
+const resizeCanvas = function (id, type, currentId, optionId) {  
   let newX = 0,
     newY = 0;
 
   DrawType = type;
   const interactInstance = interact(`#${id}`)
+
+  if (type === PHOTO) {
+    interactInstance.draggable({
+      listeners: {
+        move(event) {
+          if (!isEditing) {
+            var target = event.target;
+            // keep the dragged position in the data-x/data-y attributes
+            var x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
+            var y = (parseFloat(target.getAttribute("data-y")) || 0) + event.dy;
+            if (DrawType === RADIO) {
+              form_storage.map(function (item) {
+                if (item.id === parseInt(currentId)) {
+                  if (item.data.baseX && item.data.baseY) {
+                    let posXpdf = item.data.baseX + x * 0.75 * 0.8;
+                    let posYpdf =
+                      item.data.baseY - y * 0.75 * 0.8 - item.data.height;
+                    if (posXpdf < 0) {
+                      newX = 0 - item.data.baseX / 0.75 / 0.8;
+                    } else if (posXpdf + item.data.width >= pageWidth) {
+                      newX =
+                        (pageWidth - item.data.width - item.data.baseX) /
+                        0.75 /
+                        0.8;
+                    } else newX = x;
+                    if (posYpdf < 0) {
+                      newY = (item.data.baseY - item.data.height) / 0.75 / 0.8;
+                    } else if (posYpdf + item.data.height >= pageHeight) {
+                      newY = (item.data.baseY - pageHeight) / 0.75 / 0.8;
+                    } else newY = y;
+                  }
+                }
+              });
+            } else if (DrawType === TEXT_CONTENT) {
+              text_storage.map(function (item) {
+                if (item.id === parseInt(currentId)) {
+                  let posXpdf = item.baseX + x * 0.75 * 0.8;
+                  let posYpdf = item.baseY - y * 0.75 * 0.8 - item.height;
+                  if (posXpdf < 0) {
+                    newX = 0 - item.baseX / 0.75 / 0.8;
+                  } else if (posXpdf + item.width >= pageWidth) {
+                    newX = (pageWidth - item.width - item.baseX) / 0.75 / 0.8;
+                  } else newX = x;
+                  if (posYpdf < 0) {
+                    newY = (item.baseY - item.height) / 0.75 / 0.8;
+                  } else if (posYpdf + item.height >= pageHeight) {
+                    newY = (item.baseY - pageHeight) / 0.75 / 0.8;
+                  } else newY = y;
+                }
+              });
+            } else if (DrawType === COMMENT) {
+              comment_storage.map(function (item) {
+                if (item.id === parseInt(currentId)) {
+                  let posXpdf = item.baseX + x * 0.75 * 0.8;
+                  let posYpdf = item.baseY - y * 0.75 * 0.8 - item.height;
+                  if (posXpdf < 0) {
+                    newX = 0 - item.baseX / 0.75 / 0.8;
+                  } else if (posXpdf + item.width >= pageWidth) {
+                    newX = (pageWidth - item.width - item.baseX) / 0.75 / 0.8;
+                  } else newX = x;
+                  if (posYpdf < 0) {
+                    newY = (item.baseY - item.height) / 0.75 / 0.8;
+                  } else if (posYpdf + item.height >= pageHeight) {
+                    newY = (item.baseY - pageHeight) / 0.75 / 0.8;
+                  } else newY = y;
+                }
+              });
+            } else {
+              form_storage.map(function (item) {
+                if (item.id === parseInt(currentId)) {
+                  let posXpdf = item.baseX + x * 0.75 * 0.8;
+                  let posYpdf = item.baseY - y * 0.75 * 0.8 - item.height;
+                  if (posXpdf < 0) {
+                    newX = 0 - item.baseX / 0.75 / 0.8;
+                  } else if (posXpdf + item.width >= pageWidth) {
+                    newX = (pageWidth - item.width - item.baseX) / 0.75 / 0.8;
+                  } else newX = x;
+                  if (posYpdf < 0) {
+                    newY = (item.baseY - item.height) / 0.75 / 0.8;
+                  } else if (posYpdf + item.height >= pageHeight) {
+                    newY = (item.baseY - pageHeight) / 0.75 / 0.8;
+                  } else newY = y;
+                }
+              });
+            }
+            // translate the element
+            target.style.transform = "translate(" + newX + "px, " + newY + "px)";
+
+            // update the position attributes
+            target.setAttribute("data-x", newX);
+            target.setAttribute("data-y", newY);
+
+            drawCrossLines(target);
+          }
+        },
+        end(event) {
+          if (!isEditing) {
+            const target = event.target;
+            var x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
+            var y = (parseFloat(target.getAttribute("data-y")) || 0) + event.dy;
+            moveEventHandler(event, newX, newY, currentId);
+            $(".horizontal-line, .vertical-line").remove();
+          }
+        },
+      },
+    });
+  }else{
+    interactInstance
     .resizable({
       // resize from all edges and corners
       edges: {
@@ -2598,6 +2853,7 @@ const resizeCanvas = function (id, type, currentId, optionId) {
         },
       },
     });
+  }
 };
 
 function drawCrossLines(target) {
@@ -2638,10 +2894,11 @@ const saveFormElementByClick = function () {
     document.getElementById(`button_tooltipbar${current_form_id}`),
     document.getElementById(`date_tooltipbar${current_form_id}`),
     document.getElementById(`text-content_tooltipbar${current_text_num_id}`),
-    document.getElementById(`shape_tooltipbar${current_form_id}`)
+    document.getElementById(`shape_tooltipbar${current_form_id}`),
+    document.getElementById(`photo_tooltipbar${current_form_id}`)
   ];
-  const optionElements = [checkboxOption, radioOption, textFieldOption, comboOption, listOption, buttonOption, dateOption, textContentOption];
-  const handlers = [handleCheckbox, handleRadio, handleText, handleCombo, handleList, handleButton, handleDate, handleTextContent];
+  const optionElements = [checkboxOption, radioOption, textFieldOption, comboOption, listOption, buttonOption, dateOption, textContentOption, photoOption];
+  const handlers = [handleCheckbox, handleRadio, handleText, handleCombo, handleList, handleButton, handleDate, handleTextContent, handlePhoto];
 
   for (let i = 0; i < optionElements.length; i++) {
     if (window.getComputedStyle(optionElements[i]).getPropertyValue('display') !== "none") {
@@ -2757,7 +3014,7 @@ document.getElementById("viewer").addEventListener("mousedown", function (event)
         setTimeout(() => {
           currentObject.parentElement.style.zIndex = selectedZIndex;
         }, 200);
-      } else if (currentFormType === SIGNATURE || currentFormType === SHAPE) {
+      } else if (currentFormType === SIGNATURE || currentFormType === SHAPE || currentFormType === PHOTO) {
         if (currentObject.tagName === "IMG") {
           if (!currentObject.parentElement.querySelector("#topLeft")) addResizebar(currentObject.parentElement.id);
           currentObject.parentElement.style.zIndex = selectedZIndex;
@@ -3005,6 +3262,19 @@ const addSignatureElementStyle = function (object, top, left, width, minHeight) 
   object.style.left = left + "px";
   object.style.width = width + "px";
   object.style.minHeight = minHeight + "px";
+  object.style.background = "#3C97FE";
+  object.style.zIndex = standardZIndex;
+  object.tabIndex = 0;
+  object.style.borderRadius = "3px";
+  object.classList.add("form-fields");
+};
+
+const addPhotoElementStyle = function (object, top, left, width, minHeight) {
+  object.style.position = "absolute";
+  object.style.top = top + "px";
+  object.style.left = left + "px";
+  object.style.width = width + "px";
+  object.style.height = minHeight + "px";
   object.style.background = "#3C97FE";
   object.style.zIndex = standardZIndex;
   object.tabIndex = 0;
@@ -4146,6 +4416,7 @@ const eventHandler = async function (e) {
       current_signature_id = signatureId;
 
       resizeCanvas(signatureContainer.id, SIGNATURE, signatureId);
+      
       signatureContainer.addEventListener("click", () => {
         if (!isEditing) {
           current_signature_id = signatureId;
@@ -4280,6 +4551,110 @@ const eventHandler = async function (e) {
         }
       });
       break;
+    case PHOTO:
+      removePhoto();
+      let image_x_y = PDFViewerApplication.pdfViewer._pages[
+        PDFViewerApplication.page - 1
+      ].viewport.convertToPdfPoint(x, y);
+
+      pos_x_pdf = image_x_y[0];
+      pos_y_pdf = image_x_y[1];
+
+      let photoId = baseId;
+      current_form_id = photoId;
+
+      formWidth = 250;
+      formHeight = 100;
+
+      const photoContainer = document.createElement("div");
+      photoContainer.id = "photo" + photoId;
+      photoContainer.className = "photoContainer";
+
+      //...
+      addPhotoElementStyle(
+        photoContainer,
+        topPos,
+        leftPos,
+        formWidth,
+        formHeight
+      );
+      photoContainer.style.display = "flex";
+      photoContainer.style.alignItems = "center";
+      photoContainer.style.justifyContent = "center";
+      photoContainer.style.userSelect = "none";
+      photoContainer.style.color = "white";
+      photoContainer.style.minHeight = "40px";
+      photoContainer.textContent = "Double click to upload image!";
+
+      pg.appendChild(photoContainer);
+      handlePhoto();
+
+      current_photo_id = photoId;
+
+      resizeCanvas(photoContainer.id, PHOTO, photoId);
+
+      photoContainer.addEventListener("click", () => {
+        if (!isEditing) {
+          current_photo_id = photoId;
+
+          let istooltipshow = false;
+
+          if (
+            document.getElementById("photo_tooltipbar" + current_photo_id)
+          ) {
+            istooltipshow = true;
+          }
+
+          if (isDragging) {
+            isDragging = false;
+          } else {
+            if (!istooltipshow) {
+              let tooltipbar = document.createElement("div");
+              current_form_id = photoId;
+              addDeleteButton(
+                current_photo_id,
+                tooltipbar,
+                photoContainer,
+                "photo"
+              );
+            } else {
+              document
+                .getElementById("photo_tooltipbar" + current_photo_id)
+                .remove();
+            }
+          }
+        }
+      });
+
+      photoContainer.addEventListener("dblclick", () => {        
+        if (!isSubmit && !isEditing) {
+          const image_creator = document.getElementById(PHOTO_OPTION);
+          image_creator.style.display = "flex";
+          document.getElementById("photo-close").onclick = function () {
+            image_creator.style.display = "none";
+          };
+          document.getElementById("photo-close-button").onclick = function () {
+            image_creator.style.display = "none";
+          };
+
+          document.getElementById("photo-create").onclick = function () {
+            const file = document.getElementById("photo-input").files[0];
+            image_creator.style.display = "none";
+            if (file) {
+              const reader = new FileReader();
+              reader.onload = function (e) {
+                photoData = e.target.result;
+                handlePhoto();
+                createAndAppendPhotoImage(photoData, photoContainer, photoId);
+              };
+              reader.readAsDataURL(file);
+            } else {
+              alert("Please select an image file.");
+            }
+          };
+        }
+      });
+      break;
     default:
       break;
   }
@@ -4292,10 +4667,22 @@ function createAndAppendImage(imgData, container, id) {
   signatureImg.style.width = "100%";
   signatureImg.style.height = "100%";
   signatureImg.src = imgData;
-  signatureImg.style.objectFit = "contain";
+  signatureImg.style.objectFit = "cover";
   container.textContent = "";
   container.append(signatureImg);
   resizeCanvas(container.id, SIGNATURE, id);
+}
+
+function createAndAppendPhotoImage(photoData, container, id) {
+  const img = document.createElement("img");
+  img.className = "photo";
+  img.style.width = "100%";
+  img.style.height = "100%";
+  img.src = photoData;
+  img.style.objectFit = "cover";
+  container.textContent = "";
+  container.append(img);
+  resizeCanvas(container.id, PHOTO, id);
 }
 
 function getBoundingBox(canvas) {
@@ -4792,13 +5179,39 @@ async function addFormElements() {
           }
           break;
         case SHAPE:
-          const shapeImage = await pdfDoc.embedPng(form_item.imgData);
+          const shapeImage = await pdfDoc.embedPng(form_item.photoData);
           page.drawImage(shapeImage, {
             x: form_item.x,
             y: form_item.y - form_item.height,
             width: form_item.width,
             height: form_item.height,
           });
+          break;
+        case PHOTO:
+          if (form_item.photoData != undefined) {
+            await embedImage(form_item, pdfDoc, page);
+          }else{
+            page.drawRectangle({
+              x: form_item.x,
+              y: form_item.y - form_item.height,
+              width: form_item.width,
+              height: form_item.height
+            });
+
+            const text = "Double click to upload image!";
+            const fontSize = 9;
+            const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+            const textWidth = font.widthOfTextAtSize(text, fontSize);
+            const textX = form_item.x + (form_item.width - textWidth) / 2;
+            const textY = form_item.y - form_item.height + (form_item.height - fontSize) / 2;
+
+            page.drawText(text, {
+              x: textX,
+              y: textY,
+              size: fontSize,
+              color: hexToRgbNew("#000000"),
+            });
+          }
           break;
         default:
           break;

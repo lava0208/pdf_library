@@ -2383,6 +2383,15 @@ See https://github.com/adobe-type-tools/cmap-resources
           >Add or edit images</span
         >
       </button>
+      <button
+        class="menu-button"
+        id="add_image"
+        title="Add Photo/Image"
+        onclick="addForm(PHOTO)"
+      >
+        <i class="fa-solid fa-image" style="width: 17px"></i>
+        <p class="menu-button-item">Add Photo / Image</p>
+      </button>
       <!-- <div class="horizontalToolbarSeparator"></div>
     <p class="toolbarTitle">Add Shapes:</p>
     <button class="menu-button" id="shape_format" title="Shape Format">
@@ -2652,6 +2661,40 @@ See https://github.com/adobe-type-tools/cmap-resources
           <div>
             <button id="signature-close-button" class="button">Close</button>
             <button id="signature-create" class="button">Create</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="photo-creator"
+      onselectstart="return false"
+      class="signature-container"
+    >
+      <div id="signature-pad" class="signature-pad">
+        <div class="signature-heading">
+          <h4>Upload Photo / Image</h4>
+          <span id="photo-close" class="signature-close">&times;</span>
+        </div>
+        <div id="signature-upload-body" class="d-flex">
+          <div id="drop-area">
+            <p>Drag & Drop images here</p>
+            <input
+              type="file"
+              id="photo-input"
+              class="custom-file-input"
+              accept="image/*"
+            />
+          </div>
+          <div id="photo-preview"></div>
+        </div>
+        <div id="signature-upload-footer"></div>
+        <div
+          class="signature-footer signature-pad--actions"
+        >
+          <div style="margin-left: auto;">
+            <button id="photo-close-button" class="button">Close</button>
+            <button id="photo-create" class="button">Create</button>
           </div>
         </div>
       </div>

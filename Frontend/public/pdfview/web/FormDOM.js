@@ -7,6 +7,7 @@ const handleFormModeChange = () => {
   let button = document.getElementById("add_form_button");
   let date = document.getElementById("add_form_date");
   let sign = document.getElementById("add_form_signature");
+  let image = document.getElementById("add_image");
   if (isCheckbox) {
     checkbox.classList.add("active_menu");
   } else {
@@ -46,6 +47,11 @@ const handleFormModeChange = () => {
     sign.classList.add("active_menu");
   } else {
     sign.classList.remove("active_menu");
+  }
+  if (isPhoto) {
+    image.classList.add("active_menu");
+  } else {
+    image.classList.remove("active_menu");
   }
 };
 
@@ -148,6 +154,18 @@ const addForm = function (mode) {
         handleFormModeChange();
       }
       break;
+    case PHOTO:
+      if (isPhoto) {
+        removeEventListener();
+        isPhoto = false;
+        handleFormModeChange();
+      } else {
+        addEventListener();
+        Format();
+        isPhoto = true;
+        handleFormModeChange();
+      }
+      break;
     default:
       break;
   }
@@ -198,6 +216,11 @@ const removeDate = function () {
 };
 const removeSignature = function () {
   isSignature = false;
+  removeEventListener();
+  handleFormModeChange();
+};
+const removePhoto = function () {
+  isPhoto = false;
   removeEventListener();
   handleFormModeChange();
 };

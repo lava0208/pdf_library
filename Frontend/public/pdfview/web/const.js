@@ -1,8 +1,8 @@
 /* Basic Config */
-const BASE_SERVER_URL = "https://pdf-vision.com";
-const BASE_URL = "https://pdf-vision.com:8081";
-// const BASE_SERVER_URL = "https://127.0.0.1";
-// const BASE_URL = "https://127.0.0.1:8081";
+// const BASE_SERVER_URL = "https://pdf-vision.com";
+// const BASE_URL = "https://pdf-vision.com:8081";
+const BASE_SERVER_URL = "https://127.0.0.1";
+const BASE_URL = "https://127.0.0.1:8081";
 const USERNAME = localStorage.getItem('username');
 
 /*
@@ -32,7 +32,8 @@ const CHECKBOX = 1,
     DATE = 8,
     COMMENT = 9,
     SIGNATURE = 10,
-    SHAPE = 11;
+    SHAPE = 11,
+    PHOTO = 12;
 
 let isCheckbox = false,
     isRadioButton = false,
@@ -41,7 +42,8 @@ let isCheckbox = false,
     isList = false,
     isButton = false,
     isDate = false,
-    isSignature = false;
+    isSignature = false,
+    isPhoto = false;
 
 /* All Constants for option panal ids of each form elements */
 
@@ -54,6 +56,7 @@ const BUTTON_OPTION = "button-field-option";
 const TEXT_CONTENT_OPTION = "text-content-option";
 const DATE_OPTION = "date-option";
 const SIGNATURE_OPTION = "signature-creator";
+const PHOTO_OPTION = "photo-creator";
 
 const optionIdArray = [CHECKBOX_OPTION, RADIO_OPTION, TEXTFIELD_OPTION, COMBOBOX_OPTION, LIST_OPTION, BUTTON_OPTION, TEXT_CONTENT_OPTION, DATE_OPTION];
 
@@ -65,6 +68,7 @@ const listOption = document.getElementById(LIST_OPTION);
 const buttonOption = document.getElementById(BUTTON_OPTION);
 const dateOption = document.getElementById(DATE_OPTION);
 const textContentOption = document.getElementById(TEXT_CONTENT_OPTION);
+const photoOption = document.getElementById(PHOTO_OPTION);
 
 /* Elements for calling main toolbox of right pane */
 

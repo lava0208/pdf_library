@@ -138,6 +138,9 @@ const addHistory = function (id, type, username, date, page, typeString) {
                 case COMMENT:
                     annotationType.innerHTML = `<i class="fa-solid fa-comment-dots"></i>`;
                     break;
+                case PHOTO:
+                    annotationType.innerHTML = `<i class="fa-solid fa-image"></i>`;
+                    break;
                 default:
                     break;
             }

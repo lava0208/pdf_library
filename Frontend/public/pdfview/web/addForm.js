@@ -1227,10 +1227,10 @@ const drawFormElement = function () {
                     const reader = new FileReader();
                     reader.onload = function (e) {
                       signatureImgData = e.target.result;
-                      handleSignature();
                       createAndAppendImage(signatureImgData);
                     };
                     reader.readAsDataURL(file);
+                    handleSignature();
                   } else {
                     alert("Please select an image file.");
                   }
@@ -2513,9 +2513,6 @@ const handleSignature = function () {
     const date = new Date(Date.now());
     addHistory(baseId, SIGNATURE, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "signature");
   }
-
-  console.log("***** signature **********");
-  console.log(form_storage);
 };
 
 const handlePhoto = function () {

@@ -141,6 +141,9 @@ const addHistory = function (id, type, username, date, page, typeString) {
                 case PHOTO:
                     annotationType.innerHTML = `<i class="fa-solid fa-image"></i>`;
                     break;
+                case NUMBERFIELD:
+                    annotationType.innerHTML = `<i class="fa fa-solid fa-5"></i>`;
+                    break;
                 default:
                     break;
             }
@@ -441,7 +444,7 @@ const addHistory = function (id, type, username, date, page, typeString) {
                 });
                 addReply.style.display = "flex";
                 if (historyMainPart.hasChildNodes()) historyComment.style.display = "flex";
-                if (type !== TEXTFIELD && type !== TEXT_CONTENT) replyInput.focus();
+                if (type !== TEXTFIELD && type !== TEXT_CONTENT && type !== NUMBERFIELD) replyInput.focus();
                 removeAllResizeBar();
                 const focusItem = document.getElementById(`${typeString}${id}`);
                 if (focusItem && !focusItem.querySelector("#topLeft")) addResizebar(focusItem.id);
@@ -1077,7 +1080,7 @@ const getDocList = async function (id) {
                         });
                         addReply.style.display = "flex";
                         if (historyMainPart.hasChildNodes()) historyComment.style.display = "flex";
-                        if (type !== TEXTFIELD && type !== TEXT_CONTENT) replyInput.focus();
+                        if (type !== TEXTFIELD && type !== TEXT_CONTENT && type !== NUMBERFIELD) replyInput.focus();
                         removeAllResizeBar();
                     });
                     pageDiv.appendChild(historyDiv);

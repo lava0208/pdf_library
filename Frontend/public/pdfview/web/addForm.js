@@ -10,7 +10,8 @@ let checkboxCount = 1,
   comboCount = 1,
   listCount = 1,
   buttonCount = 1,
-  datefieldCount = 1;
+  datefieldCount = 1,
+  numberfieldCount = 1;
 
 let comboboxOptionCount = 0;
 let listboxOptionCount = 0;
@@ -163,6 +164,7 @@ const drawFormElement = function () {
     let tmpListCount = 1;
     let tmpButtonCount = 1;
     let tmpDatefieldCount = 1;
+    let tmpNumberfieldCount = 1;
 
     form_storage.forEach((item) => {
       let id = item.id;
@@ -182,6 +184,8 @@ const drawFormElement = function () {
         tmpButtonCount++;
       } else if (item.form_type === 8) {
         tmpDatefieldCount++;
+      } else if (item.form_type === 13) {
+        tmpNumberfieldCount++;
       }
 
       if (item.form_type != RADIO) {
@@ -1436,6 +1440,112 @@ const drawFormElement = function () {
             }
           });
           break;
+        case NUMBERFIELD:
+          let numberDiv = document.createElement("div");
+          numberDiv.id = "number" + id;
+          addFormElementStyle(numberDiv, y, x, width, height);
+
+          let numberElement = document.createElement("input");
+          numberElement.classList.add("number-field-input");
+          numberElement.style.display = "none";
+          numberElement.addEventListener("input", function () {
+            current_form_id = id;
+            handleNumber();
+          });
+
+          if(item.initialValue !== ""){
+            numberElement.value = item.initialValue;
+          }
+
+          numberDiv.append(numberElement);
+
+          pg.appendChild(numberDiv);
+
+          showOptionAndResizebar(
+            NUMBERFIELD_OPTION,
+            numberDiv,
+            width,
+            height,
+            "number"
+          );
+
+          current_number_id = id;
+          const numberfieldAlign = document.querySelectorAll(
+            'input[type=radio][name="number-field"]'
+          );
+          numberfieldAlign.forEach(function (radio) {
+            radio.addEventListener("change", handleRadioSelection);
+          });
+          numberDiv.addEventListener("dblclick", () => {
+            if (!isEditing) {
+              current_number_id = id;
+
+              let isnumbertooltipshow = false;
+
+              if (document.getElementById("number_tooltipbar" + current_number_id)) {
+                isnumbertooltipshow = true;
+              }
+
+              if (isDragging) {
+                isDragging = false;
+              } else {
+                if (!isnumbertooltipshow) {
+                  let tooltipbar = document.createElement("div");
+                  current_form_id = id;
+
+                  form_storage.map((element) => {
+                    if (element.id == id) {
+                      document.getElementById("number-field-input-name").value =
+                        element.form_field_name;
+                      isOptionPane = true;
+                      option = showOption(
+                        NUMBERFIELD_OPTION,
+                        element.xPage / 2 - 180,
+                        element.yPage + 15
+                      );
+                      document.getElementById("number-font-style").value =
+                        element.fontStyle;
+                      document.getElementById("number-font-size").value =
+                        element.fontSize;
+                      document.getElementById("number-font-color").value =
+                        element.textColor;
+
+                      //... background color
+                      document.getElementById("number-font-background-color").value =
+                        element.textBackgroundColor;
+
+                      let selected = element.align;
+                      if (selected == ALIGN_LEFT)
+                        document.getElementById("number-left").checked = true;
+                      if (selected == ALIGN_CENTER)
+                        document.getElementById("number-center").checked = true;
+                      if (selected == ALIGN_RIGHT)
+                        document.getElementById("number-right").checked = true;
+                      numberDiv.append(option);
+                    }
+                  });
+
+                  document
+                    .getElementById("number-save-button")
+                    .addEventListener("click", handleNumber);
+
+                  addDeleteButton(current_number_id, tooltipbar, numberDiv, "number");
+                } else {
+                  document
+                    .getElementById("number_tooltipbar" + current_number_id)
+                    .remove();
+                }
+              }
+            }
+          });
+
+          document.getElementById(NUMBERFIELD_OPTION).style.display = "none";
+
+          document
+            .getElementById("number-save-button")
+            .addEventListener("click", handleNumber);
+          resizeCanvas(numberDiv.id, NUMBERFIELD, id, NUMBERFIELD_OPTION);
+          break;
         default:
           break;
       }
@@ -1449,6 +1559,7 @@ const drawFormElement = function () {
     listCount = tmpListCount;
     datefieldCount = tmpDatefieldCount;
     buttonCount = tmpButtonCount;
+    numberfieldCount = tmpNumberfieldCount;
   }
 
   if (text_storage  && text_storage !== null) {
@@ -1588,12 +1699,7 @@ document.addEventListener("DOMContentLoaded", function () {
             url: URL.createObjectURL(pdfFile),
             originalUrl: pdfFile.name,
           });
-
-          console.log("=============");          
-          console.log(draw_form_storage);
-          console.log(text_storage);
           
-
           const checkViewerInterval = setInterval(() => {
             if (PDFViewerApplication.pdfDocument && PDFViewerApplication.pdfDocument.numPages > 0) {
               // If the document is loaded, call the drawFormElement function
@@ -1836,7 +1942,7 @@ const handleRadio = function (e) {
 };
 // When click "Save" button, save the information of TextField element.
 
-const handleText = function (e) {
+const handleText = function (e) {  
   isOptionPane = false;
   if (document.getElementById(TEXTFIELD_OPTION)) document.getElementById(TEXTFIELD_OPTION).style.display = "none";
   if (e) e.stopPropagation();
@@ -2561,9 +2667,113 @@ const handlePhoto = function () {
     const date = new Date(Date.now());
     addHistory(baseId, PHOTO, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "photo");
   }
-  console.log("***************");
-  console.log(form_storage);
+};
+
+const handleNumber = function (e) {
+  isOptionPane = false;
+  if (document.getElementById(NUMBERFIELD_OPTION)) document.getElementById(NUMBERFIELD_OPTION).style.display = "none";
+  if (e) e.stopPropagation();
+  const formFieldName = document.getElementById("number-field-input-name") && document.getElementById("number-field-input-name").value;
+  fontStyle = generateFontName("number-font-style");
+  fontSize = document.getElementById("number-font-size") && parseInt(document.getElementById("number-font-size").value);
+  const regularFont = document.getElementById("number-font-style") && document.getElementById("number-font-style").value;
+  textColor = document.getElementById("number-font-color") && document.getElementById("number-font-color").value;
+
+  //... background color
+  textBackgroundColor = document.getElementById("number-font-background-color") && document.getElementById("number-font-background-color").value;
+
+  let initialValue = "";
+  const currentFormText = document.getElementById(`number${current_form_id}`);
+  if (currentFormText) {
+    initialValue = currentFormText.querySelector(".number-field-input").value;
+  }
+
+  for (let i = 0; i < form_storage.length; i++) {
+    if (form_storage[i].id == current_form_id) {
+      if (!isEditing) {
+        if (!isOpenEmailPdf) {
+          form_storage[i].fontStyle = fontStyle;
+          form_storage[i].fontSize = fontSize;
+          form_storage[i].textColor = textColor;
+          form_storage[i].align = alignValue;
+          form_storage[i].isBold = isBold;
+          form_storage[i].isItalic = isItalic;
+          form_storage[i].isUnderline = isUnderline;
+          form_storage[i].regularFontStyle = regularFont;
+          
+          form_storage[i].textBackgroundColor = textBackgroundColor;
+          form_storage[i].form_field_name = formFieldName;
   
+          //... handle track
+          handleTrack(form_storage[i].id, formFieldName);
+          break;
+        } else {
+          form_storage[i].initialValue = initialValue;
+        }
+      } else {
+        form_storage[i].initialValue = initialValue;
+      }
+    }
+  }
+
+  let count = 0;
+
+  for (let j = 0; j < form_storage.length; j++) {
+    if (
+      form_storage[j].form_field_name != formFieldName &&
+      form_storage[j].id != current_form_id
+    )
+      count++;
+  }
+
+  // if (baseId !== 0 && (count == form_storage.length || form_storage == null)) {
+  if (baseId !== 0 && count == form_storage.length) {
+    form_storage.push({
+      id: baseId,
+      containerId: "number" + baseId,
+      form_type: NUMBERFIELD,
+      form_field_name: formFieldName,
+      initialValue: initialValue,
+      page_number: PDFViewerApplication.page,
+      x: pos_x_pdf,
+      y: pos_y_pdf,
+      baseX: pos_x_pdf,
+      baseY: pos_y_pdf,
+      width: formWidth * 0.75 * 0.8,
+      height: formHeight * 0.75 * 0.8,
+      fontStyle: fontStyle,
+      regularFontStyle: regularFont,
+      isBold: isBold,
+      isItalic: isItalic,
+      isUnderline: isUnderline,
+      fontSize: fontSize,
+      textColor: textColor,
+
+      //... background color
+      textBackgroundColor: textBackgroundColor,
+
+      align: alignValue,
+      xPage: formWidth,
+      yPage: formHeight,
+      isReadOnly: false,
+    });
+
+    fontStyle = "";
+    fontSize = 12;
+    textColor = "";
+
+    //... background color
+    textBackgroundColor = "";
+
+    alignValue = 0;
+    const date = new Date(Date.now());
+    addHistory(baseId, NUMBERFIELD, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "number");
+  }
+
+  document
+    .getElementById("number-save-button")
+    .removeEventListener("click", handleNumber);
+  removeBoldItalicEvent();
 };
 
 // Resize and move canvas using Interact.js library.
@@ -2894,8 +3104,8 @@ const saveFormElementByClick = function () {
     document.getElementById(`shape_tooltipbar${current_form_id}`),
     document.getElementById(`photo_tooltipbar${current_form_id}`)
   ];
-  const optionElements = [checkboxOption, radioOption, textFieldOption, comboOption, listOption, buttonOption, dateOption, textContentOption, photoOption];
-  const handlers = [handleCheckbox, handleRadio, handleText, handleCombo, handleList, handleButton, handleDate, handleTextContent, handlePhoto];
+  const optionElements = [checkboxOption, radioOption, textFieldOption, comboOption, listOption, buttonOption, dateOption, textContentOption, photoOption, numberFieldOption];
+  const handlers = [handleCheckbox, handleRadio, handleText, handleCombo, handleList, handleButton, handleDate, handleTextContent, handlePhoto, handleNumber];
 
   for (let i = 0; i < optionElements.length; i++) {
     if (window.getComputedStyle(optionElements[i]).getPropertyValue('display') !== "none") {
@@ -2964,7 +3174,7 @@ const handleComment = function (id, type) {
   });
   document.getElementById(`addReply${baseId}`).style.display = "flex";
   if (document.getElementById(`historyMainPart${baseId}`).hasChildNodes()) document.getElementById(`historyComment${baseId}`).style.display = "flex";
-  if (type !== TEXTFIELD && type !== TEXT_CONTENT) {
+  if (type !== TEXTFIELD && type !== TEXT_CONTENT && type !== NUMBERFIELD) {
     document.getElementById(`replyInput${baseId}`).focus();
   }
 }
@@ -3312,7 +3522,6 @@ const submitAction = function () {
         // toTransparent(currentItem.querySelector(".checkmark-radio"));
         break;
       case TEXTFIELD:
-        // toTransparent(currentItem.querySelector(".text-field-input"));
         currentItem.querySelector(".text-field-input").disabled = true;
         break;
       case COMBOBOX:
@@ -3339,6 +3548,9 @@ const submitAction = function () {
         break;
       case BUTTON:
         currentItem.remove();
+        break;
+      case NUMBERFIELD:
+        currentItem.querySelector(".number-field-input").disabled = true;
         break;
       default:
         break;
@@ -4652,6 +4864,129 @@ const eventHandler = async function (e) {
         }
       });
       break;
+    case NUMBERFIELD:
+      removeNumber();
+
+      let number_x_y = PDFViewerApplication.pdfViewer._pages[
+        PDFViewerApplication.page - 1
+      ].viewport.convertToPdfPoint(x, y);
+
+      pos_x_pdf = number_x_y[0];
+      pos_y_pdf = number_x_y[1];
+
+      let numberId = baseId;
+      current_form_id = numberId;
+
+      formWidth = 300;
+      formHeight = 40;
+
+      let numberDiv = document.createElement("div");
+      numberDiv.id = "number" + numberId;
+      addFormElementStyle(numberDiv, topPos, leftPos, formWidth, formHeight);
+
+      let numberElement = document.createElement("input");
+      numberElement.classList.add("number-field-input");
+      numberElement.style.display = "none";
+      numberElement.addEventListener("input", function () {
+        current_form_id = numberId;
+        handleNumber();
+      });
+
+      numberDiv.append(numberElement);
+
+      pg.appendChild(numberDiv);
+
+      // Show TextField OptionPane
+      showOptionAndResizebar(
+        NUMBERFIELD_OPTION,
+        numberDiv,
+        formWidth,
+        formHeight,
+        "number"
+      );
+      const numberfieldAlign = document.querySelectorAll(
+        'input[type=radio][name="number-field"]'
+      );
+      numberfieldAlign.forEach(function (radio) {
+        radio.addEventListener("change", handleRadioSelection);
+      });
+      document.getElementById(
+        "number-field-input-name"
+      ).value = `Number Form Field ${numberfieldCount++}`;
+
+      current_number_id = numberId;
+
+      numberDiv.addEventListener("dblclick", () => {
+        if (!isEditing) {
+          current_number_id = numberId;
+
+          let isnumbertooltipshow = false;
+
+          if (document.getElementById("number_tooltipbar" + current_number_id)) {
+            isnumbertooltipshow = true;
+          }
+
+          if (isDragging) {
+            isDragging = false;
+          } else {
+            if (!isnumbertooltipshow) {
+              let tooltipbar = document.createElement("div");
+              current_form_id = numberId;
+
+              form_storage.map((element) => {
+                if (element.id == numberId) {
+                  document.getElementById("number-field-input-name").value =
+                    element.form_field_name;
+                  isOptionPane = true;
+                  option = showOption(
+                    NUMBERFIELD_OPTION,
+                    element.xPage / 2 - 180,
+                    element.yPage + 15
+                  );
+                  document.getElementById("number-font-style").value =
+                    element.fontStyle;
+                  document.getElementById("number-font-size").value =
+                    element.fontSize;
+                  document.getElementById("number-font-color").value =
+                    element.textColor;
+
+                  //... background color
+                  document.getElementById("number-font-background-color").value =
+                    element.textBackgroundColor;
+
+                  let selected = element.align;
+                  if (selected == ALIGN_LEFT)
+                    document.getElementById("number-left").checked = true;
+                  if (selected == ALIGN_CENTER)
+                    document.getElementById("number-center").checked = true;
+                  if (selected == ALIGN_RIGHT)
+                    document.getElementById("number-right").checked = true;
+                  numberDiv.append(option);
+                }
+              });
+
+              document
+                .getElementById("number-save-button")
+                .addEventListener("click", handleNumber);
+
+              addDeleteButton(current_number_id, tooltipbar, numberDiv, "number");
+            } else {
+              document
+                .getElementById("number_tooltipbar" + current_number_id)
+                .remove();
+            }
+          }
+        }
+      });
+
+      handleNumber();
+
+      document
+        .getElementById("number-save-button")
+        .addEventListener("click", handleNumber);
+      resizeCanvas(numberDiv.id, NUMBERFIELD, numberId, NUMBERFIELD_OPTION);
+
+      break;
     default:
       break;
   }
@@ -5210,6 +5545,45 @@ async function addFormElements() {
             });
           }
           break;
+        case NUMBERFIELD:
+          const numberValue = form_item.initialValue !== undefined ? form_item.initialValue : "";
+          if (!form_item.isReadOnly) {
+            textfieldForm = form.createTextField(form_item.form_field_name);
+            textfieldForm.setText(numberValue);
+            textfieldForm.addToPage(page, {
+              x: form_item.x,
+              y: form_item.y - form_item.height,
+              width: form_item.width,
+              height: form_item.height,
+              size: form_item.fontSize,
+              textColor: hexToRgbNew(form_item.textColor),
+              backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
+              borderColor: hexToRgbNew(form_item.textBackgroundColor),
+            });
+            textfieldForm.setFontSize(form_item.fontSize);
+            textfieldForm.updateAppearances(customFont);
+            // textfieldForm.defaultUpdateAppearances(customFont);
+          } else {
+            page.drawRectangle({
+              x: form_item.x,
+              y: form_item.y - form_item.height,
+              width: form_item.width,
+              height: form_item.height,
+              color: hexToRgbNew(form_item.textBackgroundColor),
+              borderColor: hexToRgbNew(form_item.textBackgroundColor),
+            });
+
+            const textY = form_item.y - form_item.height / 2 - form_item.fontSize / 3;
+
+            page.drawText(numberValue, {
+              x: form_item.x,
+              y: textY,
+              size: form_item.fontSize,
+              color: hexToRgbNew(form_item.textColor),
+              font: customFont
+            });
+          }
+          break;
         default:
           break;
       }
@@ -5265,6 +5639,8 @@ const changeMode = () => {
   const textcontentfields = document.querySelectorAll(".textcontent");
   const signatureImages = document.querySelectorAll(".signatureContainer");
   const shapeFields = document.querySelectorAll(".shapeContainer");
+  const photoFields = document.querySelectorAll(".photoContainer");
+  const numberfields = document.querySelectorAll(".number-field-input");
   if (isEditing) {
     switchEditInsert.innerHTML = `
       <p>Edit Mode</p>
@@ -5299,6 +5675,8 @@ const changeMode = () => {
     textcontentfields.forEach((item) => { item.contentEditable = "true" });
 
     shapeFields.forEach((item) => { item.contentEditable = "true" });
+
+    numberfields.forEach((item) => (item.style.display = "none"));
 
   } else {
     switchEditInsert.innerHTML = `
@@ -5474,7 +5852,6 @@ const changeMode = () => {
         })
       }
     })
-
     //... Enable all button fields
     textcontentfields.forEach((item) => {
       item.contentEditable = "false";
@@ -5497,6 +5874,42 @@ const changeMode = () => {
             item.style.backgroundColor = formItem.textBackgroundColor;
           }
         })
+      }
+    });
+    photoFields.forEach((item) => {
+      item.contentEditable = "false";
+      if (form_storage  && form_storage !== null) {
+        form_storage.forEach((formItem) => {
+          let formId = item.id.replace("photo", "");
+          if (formItem.id == formId) {
+            item.style.backgroundColor = formItem.textBackgroundColor;
+          }
+        })
+      }
+    });
+    // Enable all text field to input
+    numberfields.forEach((item) => {
+      item.style.display = "block";
+      if (form_storage  && form_storage !== null) {
+        form_storage.forEach((formItem) => {
+          let formId = item.parentNode.id.replace("number", "");
+          if (formItem.id == formId) {
+            // if(formItem.isBold) item.style.fontWeight = "bold";
+            // else item.style.fontWeight = "normal";
+            // if(formItem.isItalic) item.style.fontStyle = "italic";
+            // else item.style.fontStyle = "normal";
+            item.style.fontSize = formItem.fontSize + "px";
+            item.style.color = formItem.textColor;
+            item.style.fontFamily = formItem.fontStyle;
+            if (formItem.align == 0) item.style.textAlign = "left";
+            else if (formItem.align == 1) item.style.textAlign = "center";
+            else if (formItem.align == 2) item.style.textAlign = "right";
+
+            //... background color
+            item.style.backgroundColor = formItem.textBackgroundColor;
+            item.style.border = "none";
+          }
+        });
       }
     });
   }

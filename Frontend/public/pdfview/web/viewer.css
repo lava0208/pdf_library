@@ -2374,14 +2374,14 @@ dialog :link {
 }
 
 /* Text Field */
-.text-field-input {
+.text-field-input, .number-field-input {
   width: 100%;
   height: 100%;
   outline: none;
   border: 1px solid #3C97FE;
 }
 
-.text-field-input:focus {
+.text-field-input:focus, .number-field-input:focus {
   outline: none;
   border: 1px solid #3C97FE;
 }

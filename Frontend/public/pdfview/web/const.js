@@ -34,6 +34,7 @@ const CHECKBOX = 1,
     SIGNATURE = 10,
     SHAPE = 11,
     PHOTO = 12;
+    NUMBERFIELD = 13;
 
 let isCheckbox = false,
     isRadioButton = false,
@@ -43,7 +44,8 @@ let isCheckbox = false,
     isButton = false,
     isDate = false,
     isSignature = false,
-    isPhoto = false;
+    isPhoto = false,
+    isNumberField = false;
 
 /* All Constants for option panal ids of each form elements */
 
@@ -57,8 +59,9 @@ const TEXT_CONTENT_OPTION = "text-content-option";
 const DATE_OPTION = "date-option";
 const SIGNATURE_OPTION = "signature-creator";
 const PHOTO_OPTION = "photo-creator";
+const NUMBERFIELD_OPTION = "number-field-option";
 
-const optionIdArray = [CHECKBOX_OPTION, RADIO_OPTION, TEXTFIELD_OPTION, COMBOBOX_OPTION, LIST_OPTION, BUTTON_OPTION, TEXT_CONTENT_OPTION, DATE_OPTION];
+const optionIdArray = [CHECKBOX_OPTION, RADIO_OPTION, TEXTFIELD_OPTION, COMBOBOX_OPTION, LIST_OPTION, BUTTON_OPTION, TEXT_CONTENT_OPTION, DATE_OPTION, NUMBERFIELD_OPTION];
 
 const checkboxOption = document.getElementById(CHECKBOX_OPTION);
 const radioOption = document.getElementById(RADIO_OPTION);
@@ -69,6 +72,7 @@ const buttonOption = document.getElementById(BUTTON_OPTION);
 const dateOption = document.getElementById(DATE_OPTION);
 const textContentOption = document.getElementById(TEXT_CONTENT_OPTION);
 const photoOption = document.getElementById(PHOTO_OPTION);
+const numberFieldOption = document.getElementById(NUMBERFIELD_OPTION);
 
 /* Elements for calling main toolbox of right pane */
 

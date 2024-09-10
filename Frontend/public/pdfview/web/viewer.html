@@ -2328,6 +2328,117 @@ See https://github.com/adobe-type-tools/cmap-resources
           <div class="form-save-button">Save</div>
         </div>
       </div>
+      <!-- NumberField Option -->
+      <div id="number-field-option" class="checkbox-option">
+        <div class="checkbox-option-header">
+          <div class="checkbox-option-header-text">
+            <h4>Number Field Properties</h4>
+          </div>
+        </div>
+        <div class="checkbox-option-content">
+          <div class="form-input">
+            <div>
+              <span>Form Field Name*</span>
+            </div>
+            <div class="form-field-input-container">
+              <input
+                id="number-field-input-name"
+                class="form-field-input"
+                type="text"
+              />
+            </div>
+          </div>
+          <div class="form-input">
+            <div>
+              <span>Number Style</span>
+            </div>
+            <div class="form-field-input-container">
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <i class="fa fa-font"></i>
+                  <span>Font</span>
+                </div>
+                <select id="number-font-style" class="form-field-input"></select>
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <i class="fa fa-text-height"></i>
+                  <span>Font Size</span>
+                </div>
+                <select id="number-font-size" class="form-field-input"></select>
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <i class="fa fa-fill"></i>
+                  <span>Color</span>
+                </div>
+                <input
+                  type="color"
+                  id="number-font-color"
+                  name="colorPicker"
+                  class="form-field-input"
+                />
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <i class="fa fa-fill"></i>
+                  <span>Background Color</span>
+                </div>
+                <input
+                  type="color"
+                  id="number-font-background-color"
+                  name="colorPicker"
+                  value="#FFFFFF"
+                  class="form-field-input"
+                />
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <i class="fa fa-align-left"></i>
+                  <span>Alignment</span>
+                </div>
+                <div>
+                  <form class="align-container">
+                    <label for="text-left" class="align-button">
+                      <input
+                        type="radio"
+                        id="number-left"
+                        name="text-field"
+                        value="left"
+                        hidden
+                      />
+                      <i class="fa fa-align-left"></i>
+                    </label>
+                    <label for="text-center" class="align-button">
+                      <input
+                        type="radio"
+                        id="number-center"
+                        name="text-field"
+                        value="center"
+                        hidden
+                      />
+                      <i class="fa fa-align-center"></i>
+                    </label>
+                    <label for="text-right" class="align-button">
+                      <input
+                        type="radio"
+                        id="number-right"
+                        name="text-field"
+                        value="right"
+                        hidden
+                      />
+                      <i class="fa fa-align-right"></i>
+                    </label>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="number-save-button" class="checkbox-option-footer">
+          <div class="form-save-button">Save</div>
+        </div>
+      </div>
     </div>
     <div class="right-sidebar">
       <div
@@ -2440,6 +2551,15 @@ See https://github.com/adobe-type-tools/cmap-resources
       >
         <i class="fa fa-font" style="width: 17px"></i>
         <p class="menu-button-item">TextField</p>
+      </button>
+      <button
+        class="menu-button"
+        id="add_form_number"
+        title="Add numberfield"
+        onclick="addForm(NUMBERFIELD)"
+      >
+        <i class="fa fa-5 fa-solid" style="width: 17px"></i>
+        <p class="menu-button-item">NumberField</p>
       </button>
       <button
         class="menu-button"

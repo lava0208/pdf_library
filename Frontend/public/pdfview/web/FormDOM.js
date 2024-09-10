@@ -8,6 +8,7 @@ const handleFormModeChange = () => {
   let date = document.getElementById("add_form_date");
   let sign = document.getElementById("add_form_signature");
   let image = document.getElementById("add_image");
+  let number = document.getElementById("add_form_number");
   if (isCheckbox) {
     checkbox.classList.add("active_menu");
   } else {
@@ -52,6 +53,11 @@ const handleFormModeChange = () => {
     image.classList.add("active_menu");
   } else {
     image.classList.remove("active_menu");
+  }
+  if (isNumberField) {
+    number.classList.add("active_menu");
+  } else {
+    number.classList.remove("active_menu");
   }
 };
 
@@ -166,8 +172,20 @@ const addForm = function (mode) {
         handleFormModeChange();
       }
       break;
-    default:
+    case NUMBERFIELD:
+      if (isNumberField) {
+        removeEventListener();
+        isNumberField = false;
+        handleFormModeChange();
+      } else {
+        addEventListener();
+        Format();
+        isNumberField = true;
+        handleFormModeChange();
+      }
       break;
+  default:
+    break;
   }
 };
 
@@ -224,6 +242,11 @@ const removePhoto = function () {
   removeEventListener();
   handleFormModeChange();
 };
+const removeNumber = function () {
+  isNumberField = false;
+  removeEventListener();
+  handleFormModeChange();
+};
 
 const Format = () => {
   isCheckbox = false;
@@ -234,4 +257,5 @@ const Format = () => {
   isButton = false;
   isDate = false;
   isSignature = false;
+  isNumberField = false;
 };

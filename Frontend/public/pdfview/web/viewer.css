@@ -2386,6 +2386,15 @@ dialog :link {
   border: 1px solid #3C97FE;
 }
 
+.form-fields input{
+  border-radius: 3px;
+}
+
+.number-field-input{
+  min-width: 35px;
+  border-radius: 0!important;
+}
+
 /* Combobox Field */
 .combobox-field-input {
   width: 100%;
@@ -2734,4 +2743,18 @@ div[contenteditable="true"]:focus{
 
 .vertical-line {
   width: 2px;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
+}
+
+#count{
+  width: 50px;
+  text-align: center;
+  padding: 7px;
 }

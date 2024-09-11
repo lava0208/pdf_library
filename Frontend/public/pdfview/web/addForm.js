@@ -1445,21 +1445,20 @@ const drawFormElement = function () {
           numberDiv.id = "number" + id;
           addFormElementStyle(numberDiv, y, x, width, height);
 
-          let numberElement = document.createElement("input");
-          numberElement.classList.add("number-field-input");
-          numberElement.style.display = "none";
-          numberElement.addEventListener("input", function () {
-            current_form_id = id;
-            handleNumber();
-          });
-
-          if(item.initialValue !== ""){
-            numberElement.value = item.initialValue;
-          }
-
-          numberDiv.append(numberElement);
+          manageNumField(parseInt(item.count), numberDiv);
 
           pg.appendChild(numberDiv);
+
+          if(item.count !== ""){
+            document.getElementById("count").value = item.count;
+          }
+
+          if(item.initialValue !== ""){
+            var initialValueArr = item.initialValue.split("");
+            $(".number-field-input").each(function(i){
+              $(this).val(initialValueArr[i])
+            })
+          }
 
           showOptionAndResizebar(
             NUMBERFIELD_OPTION,
@@ -1513,6 +1512,8 @@ const drawFormElement = function () {
                       //... background color
                       document.getElementById("number-font-background-color").value =
                         element.textBackgroundColor;
+                      
+                      document.getElementById("count").value = element.count;
 
                       let selected = element.align;
                       if (selected == ALIGN_LEFT)
@@ -1524,10 +1525,6 @@ const drawFormElement = function () {
                       numberDiv.append(option);
                     }
                   });
-
-                  document
-                    .getElementById("number-save-button")
-                    .addEventListener("click", handleNumber);
 
                   addDeleteButton(current_number_id, tooltipbar, numberDiv, "number");
                 } else {
@@ -1541,10 +1538,40 @@ const drawFormElement = function () {
 
           document.getElementById(NUMBERFIELD_OPTION).style.display = "none";
 
-          document
-            .getElementById("number-save-button")
-            .addEventListener("click", handleNumber);
+          document.getElementById("number-save-button").addEventListener("click", function() {
+            handleNumber();
+            const count = parseInt(document.getElementById("count").value);
+            if (!isNaN(count)) {
+              manageNumField(count, numberDiv);
+            }
+          });
+
           resizeCanvas(numberDiv.id, NUMBERFIELD, id, NUMBERFIELD_OPTION);
+
+          // Update manageNumField to append inputs to numberDiv
+          function manageNumField(count, numberDiv){
+            numberDiv.style.width = width * count + "px";
+            $(".number-field-input").remove();
+            for (let i = 1; i <= count; i++) {
+              let numberElement = document.createElement("input");
+              numberElement.classList.add("number-field-input");
+              numberElement.type = "number";
+              numberElement.min = "1";
+              numberElement.max = "9";
+              numberElement.style.display = "none";
+              numberElement.addEventListener("input", function () {
+                if (numberElement.value < 1) {
+                  numberElement.value = null;
+                } else if (numberElement.value > 9) {
+                  numberElement.value = null;
+                }
+              });
+        
+              // Append the input to the numberDiv
+              numberDiv.appendChild(numberElement);
+            }
+          }
+
           break;
         default:
           break;
@@ -1773,6 +1800,7 @@ function handleRadioSelection(event) {
   if (selectedRadioButton.checked) {
     selectedAlign = selectedRadioButton.value;
     groupNameAlign = selectedRadioButton.name;
+    
     if (selectedAlign == "left") {
       alignValue = ALIGN_LEFT;
     } else if (selectedAlign == "center") {
@@ -1951,6 +1979,15 @@ const handleText = function (e) {
   fontSize = document.getElementById("text-font-size") && parseInt(document.getElementById("text-font-size").value);
   const regularFont = document.getElementById("text-font-style") && document.getElementById("text-font-style").value;
   textColor = document.getElementById("text-font-color") && document.getElementById("text-font-color").value;
+
+  var selectedAlign = document.querySelector('input[type=radio][name="text-field"]:checked') && document.querySelector('input[type=radio][name="text-field"]:checked').value;
+  if (selectedAlign == "left") {
+    alignValue = ALIGN_LEFT;
+  } else if (selectedAlign == "center") {
+    alignValue = ALIGN_CENTER;
+  } else if (selectedAlign == "right") {
+    alignValue = ALIGN_RIGHT;
+  }
 
   //... background color
   textBackgroundColor = document.getElementById("text-font-background-color") && document.getElementById("text-font-background-color").value;
@@ -2679,14 +2716,32 @@ const handleNumber = function (e) {
   const regularFont = document.getElementById("number-font-style") && document.getElementById("number-font-style").value;
   textColor = document.getElementById("number-font-color") && document.getElementById("number-font-color").value;
 
+  var selectedAlign = document.querySelector('input[type=radio][name="number-field"]:checked') && document.querySelector('input[type=radio][name="number-field"]:checked').value;
+  if (selectedAlign == "left") {
+    alignValue = ALIGN_LEFT;
+  } else if (selectedAlign == "center") {
+    alignValue = ALIGN_CENTER;
+  } else if (selectedAlign == "right") {
+    alignValue = ALIGN_RIGHT;
+  }
+
+  const numberCount = document.getElementById("count") && document.getElementById("count").value;
+
   //... background color
   textBackgroundColor = document.getElementById("number-font-background-color") && document.getElementById("number-font-background-color").value;
 
   let initialValue = "";
   const currentFormText = document.getElementById(`number${current_form_id}`);
+  
   if (currentFormText) {
-    initialValue = currentFormText.querySelector(".number-field-input").value;
+    $('.number-field-input').each(function() {
+      var val = $(this).val() === "" ? "-" : $(this).val();
+      initialValue = initialValue + val;
+    });
   }
+
+  formWidth = 30;
+  formHeight = 40;
 
   for (let i = 0; i < form_storage.length; i++) {
     if (form_storage[i].id == current_form_id) {
@@ -2700,9 +2755,10 @@ const handleNumber = function (e) {
           form_storage[i].isItalic = isItalic;
           form_storage[i].isUnderline = isUnderline;
           form_storage[i].regularFontStyle = regularFont;
-          
           form_storage[i].textBackgroundColor = textBackgroundColor;
           form_storage[i].form_field_name = formFieldName;
+          form_storage[i].count = numberCount;
+          form_storage[i].initialValue = initialValue;
   
           //... handle track
           handleTrack(form_storage[i].id, formFieldName);
@@ -2727,7 +2783,7 @@ const handleNumber = function (e) {
   }
 
   // if (baseId !== 0 && (count == form_storage.length || form_storage == null)) {
-  if (baseId !== 0 && count == form_storage.length) {
+  if (baseId !== 0 && count == form_storage.length) {    
     form_storage.push({
       id: baseId,
       containerId: "number" + baseId,
@@ -2751,6 +2807,7 @@ const handleNumber = function (e) {
 
       //... background color
       textBackgroundColor: textBackgroundColor,
+      count: numberCount,
 
       align: alignValue,
       xPage: formWidth,
@@ -2765,7 +2822,6 @@ const handleNumber = function (e) {
     //... background color
     textBackgroundColor = "";
 
-    alignValue = 0;
     const date = new Date(Date.now());
     addHistory(baseId, NUMBERFIELD, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "number");
   }
@@ -3102,7 +3158,8 @@ const saveFormElementByClick = function () {
     document.getElementById(`date_tooltipbar${current_form_id}`),
     document.getElementById(`text-content_tooltipbar${current_text_num_id}`),
     document.getElementById(`shape_tooltipbar${current_form_id}`),
-    document.getElementById(`photo_tooltipbar${current_form_id}`)
+    document.getElementById(`photo_tooltipbar${current_form_id}`),
+    document.getElementById(`number_tooltipbar${current_form_id}`)
   ];
   const optionElements = [checkboxOption, radioOption, textFieldOption, comboOption, listOption, buttonOption, dateOption, textContentOption, photoOption, numberFieldOption];
   const handlers = [handleCheckbox, handleRadio, handleText, handleCombo, handleList, handleButton, handleDate, handleTextContent, handlePhoto, handleNumber];
@@ -3449,7 +3506,7 @@ const resetCanvas = function () {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 };
 
-const addFormElementStyle = function (object, top, left, width, height) {
+const addFormElementStyle = function (object, top, left, width, height, borderRadius="0") {  
   object.style.position = "absolute";
   object.style.top = top + "px";
   object.style.left = left + "px";
@@ -3458,7 +3515,7 @@ const addFormElementStyle = function (object, top, left, width, height) {
   object.style.background = "#3C97FE";
   object.style.zIndex = standardZIndex;
   object.tabIndex = 0;
-  object.style.borderRadius = "3px";
+  object.style.borderRadius = borderRadius == "0" ? "0px" : "3px";
   object.classList.add("form-fields");
 };
 
@@ -4877,22 +4934,14 @@ const eventHandler = async function (e) {
       let numberId = baseId;
       current_form_id = numberId;
 
-      formWidth = 300;
-      formHeight = 40;
+      let numberFormWidth = 30;
+      let numberFormHeight = 40;
 
       let numberDiv = document.createElement("div");
       numberDiv.id = "number" + numberId;
-      addFormElementStyle(numberDiv, topPos, leftPos, formWidth, formHeight);
-
-      let numberElement = document.createElement("input");
-      numberElement.classList.add("number-field-input");
-      numberElement.style.display = "none";
-      numberElement.addEventListener("input", function () {
-        current_form_id = numberId;
-        handleNumber();
-      });
-
-      numberDiv.append(numberElement);
+      addFormElementStyle(numberDiv, topPos, leftPos, numberFormWidth, numberFormHeight, "0");
+    
+      manageNumField(1, numberDiv);
 
       pg.appendChild(numberDiv);
 
@@ -4900,8 +4949,8 @@ const eventHandler = async function (e) {
       showOptionAndResizebar(
         NUMBERFIELD_OPTION,
         numberDiv,
-        formWidth,
-        formHeight,
+        numberFormWidth,
+        numberFormHeight,
         "number"
       );
       const numberfieldAlign = document.querySelectorAll(
@@ -4954,6 +5003,8 @@ const eventHandler = async function (e) {
                   document.getElementById("number-font-background-color").value =
                     element.textBackgroundColor;
 
+                  document.getElementById("count").value = element.count;
+
                   let selected = element.align;
                   if (selected == ALIGN_LEFT)
                     document.getElementById("number-left").checked = true;
@@ -4965,10 +5016,6 @@ const eventHandler = async function (e) {
                 }
               });
 
-              document
-                .getElementById("number-save-button")
-                .addEventListener("click", handleNumber);
-
               addDeleteButton(current_number_id, tooltipbar, numberDiv, "number");
             } else {
               document
@@ -4979,13 +5026,46 @@ const eventHandler = async function (e) {
         }
       });
 
-      handleNumber();
+      // handleNumber();
 
-      document
-        .getElementById("number-save-button")
-        .addEventListener("click", handleNumber);
+      document.getElementById("number-save-button").addEventListener("click", function() {
+        handleNumber();
+        const count = parseInt(document.getElementById("count").value);
+        if (!isNaN(count)) {
+          manageNumField(count, numberDiv);
+        }
+      });
+
+      document.getElementById("count").addEventListener("input", function () {
+        const countValue = parseInt(this.value);
+        manageNumField(countValue, numberDiv);    
+      });
+
       resizeCanvas(numberDiv.id, NUMBERFIELD, numberId, NUMBERFIELD_OPTION);
-
+    
+      // Update manageNumField to append inputs to numberDiv
+      function manageNumField(count, numberDiv){
+        numberDiv.style.width = numberFormWidth * count + "px";
+        $(".number-field-input").remove();
+        for (let i = 1; i <= count; i++) {          
+          let numberElement = document.createElement("input");
+          numberElement.classList.add("number-field-input");
+          numberElement.type = "number";
+          numberElement.min = "1";
+          numberElement.max = "9";
+          numberElement.style.display = "none";
+          numberElement.addEventListener("input", function () {
+            if (numberElement.value < 1) {
+              numberElement.value = null;
+            } else if (numberElement.value > 9) {
+              numberElement.value = null;
+            }
+          });
+    
+          // Append the input to the numberDiv
+          numberDiv.appendChild(numberElement);
+        }
+      }
       break;
     default:
       break;
@@ -5653,6 +5733,7 @@ const changeMode = () => {
 
     formfields.forEach((item) => {
       item.style.background = "#3C97FE";
+      item.style.flexDirection = "column";
     });
 
     // Disable all checkbox and radiobutton field to input
@@ -5693,7 +5774,14 @@ const changeMode = () => {
       if (item.querySelector(".delete-button")) item.querySelector(".delete-button").remove();
       item.style.background = "white";
       item.style.border = "1px solid #3C97FE";
+
+      if(item.id.includes("number")){
+        item.style.display = "flex";
+        item.style.flexDirection = "row";
+        item.style.border = "none";
+      }
     });
+    
     // Enable all checkbox and radio field to input
     checkfields.forEach((item) => {
       item.style.display = "flex";
@@ -5890,6 +5978,7 @@ const changeMode = () => {
     // Enable all text field to input
     numberfields.forEach((item) => {
       item.style.display = "block";
+      $("#number-field-option").hide();
       if (form_storage  && form_storage !== null) {
         form_storage.forEach((formItem) => {
           let formId = item.parentNode.id.replace("number", "");
@@ -5904,10 +5993,11 @@ const changeMode = () => {
             if (formItem.align == 0) item.style.textAlign = "left";
             else if (formItem.align == 1) item.style.textAlign = "center";
             else if (formItem.align == 2) item.style.textAlign = "right";
+            // item.style.textAlign = "center";
 
             //... background color
             item.style.backgroundColor = formItem.textBackgroundColor;
-            item.style.border = "none";
+            // item.style.border = "none";
           }
         });
       }

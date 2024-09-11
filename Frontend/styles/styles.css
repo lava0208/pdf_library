@@ -9689,15 +9689,15 @@ button.bg-dark:hover {
   white-space: nowrap
 }
 
-.text-left {
+.text-left, .number-left {
   text-align: left !important
 }
 
-.text-right {
+.text-right, .number-right {
   text-align: right !important
 }
 
-.text-center {
+.text-center, .number-center {
   text-align: center !important
 }
 

@@ -133,6 +133,9 @@ const generalUserMode = function () {
       }
     }
   }
+  if(isOpenEmailPdf){
+    searchFormButton.style.display = "flex";
+  }
 }
 
 const drawFormElement = function () {
@@ -221,7 +224,7 @@ const drawFormElement = function () {
           addFormElementStyle(checkbox, y, x, width, height);
           let checkmark = document.createElement("div");
           checkmark.style.display = 'none';
-          checkmark.classList.add("checkmark");
+          checkmark.classList.add("checkmark", "form-container");
           checkbox.classList.add("checkbox");
           checkbox.appendChild(checkmark);
 
@@ -329,11 +332,11 @@ const drawFormElement = function () {
           radio.classList.add("radio-container");
           let inputRadio = document.createElement("input");
           inputRadio.type = "radio";
-          inputRadio.classList.add('radioinputchild');
+          inputRadio.classList.add('radioinputchild', 'form-container');
           inputRadio.name = item.data.option;
 
           let spanElement = document.createElement("span");
-          spanElement.classList.add("checkmark-radio");
+          spanElement.classList.add("checkmark-radio", "form-container");
           inputRadio.style.display = "none";
           spanElement.style.display = "none";
 
@@ -425,7 +428,7 @@ const drawFormElement = function () {
           addFormElementStyle(textDiv, y, x, width, height);
 
           let inputElement = document.createElement("input");
-          inputElement.classList.add("text-field-input");
+          inputElement.classList.add("text-field-input", "form-container");
           inputElement.style.display = "none";
           inputElement.addEventListener("input", function () {
             current_form_id = id;
@@ -531,7 +534,7 @@ const drawFormElement = function () {
           addFormElementStyle(comboDiv, y, x, width, height);
 
           let selectElement = document.createElement("select");
-          selectElement.classList.add("combobox-field-input");
+          selectElement.classList.add("combobox-field-input", "form-container");
           selectElement.style.display = "none";
           selectElement.addEventListener("change", function (e) {
             current_form_id = id;
@@ -693,7 +696,7 @@ const drawFormElement = function () {
 
           let dropList = document.createElement("div");
           dropList.style.display = "none";
-          dropList.classList.add("list-field-input");
+          dropList.classList.add("list-field-input", "form-container");
 
           listDiv.append(dropList);
 
@@ -847,7 +850,7 @@ const drawFormElement = function () {
           addFormElementStyle(buttonDiv, y, x, width, height);
 
           let buttonAction = document.createElement("div");
-          buttonAction.classList.add("button-field-input");
+          buttonAction.classList.add("button-field-input", "form-container");
           buttonAction.style.display = "none";
           buttonAction.addEventListener("click", function (event) {
             let parentElement = event.target.parentNode;
@@ -1110,14 +1113,14 @@ const drawFormElement = function () {
           break;
         case SIGNATURE:
           const signatureContainer = document.createElement("div");
-          signatureContainer.className = "signatureContainer";
+          signatureContainer.className = "signatureContainer", "form-container";
           signatureContainer.id = "signature" + id;
           addFormElementStyle(signatureContainer, y, x, width, height);
           signatureContainer.style.display = "flex";
           signatureContainer.style.alignItems = "center";
           signatureContainer.style.justifyContent = "center";
           signatureContainer.style.userSelect = "none";
-          signatureContainer.style.color = "white";
+          signatureContainer.style.color = "black";
           signatureContainer.style.minHeight = "40px";
           signatureContainer.textContent = "Double Click to sign here!";
 
@@ -1448,6 +1451,11 @@ const drawFormElement = function () {
 
           manageNumField(parseInt(item.count), numberDiv);
 
+          $(document).on("change", ".number-field-input", function(){
+            current_form_id = id;
+            handleNumber();
+          })
+
           pg.appendChild(numberDiv);
 
           if(item.count !== ""){
@@ -1555,7 +1563,7 @@ const drawFormElement = function () {
             $(".number-field-input").remove();
             for (let i = 1; i <= count; i++) {
               let numberElement = document.createElement("input");
-              numberElement.classList.add("number-field-input");
+              numberElement.classList.add("number-field-input", "form-container");
               numberElement.type = "number";
               numberElement.min = "1";
               numberElement.max = "9";
@@ -1571,6 +1579,7 @@ const drawFormElement = function () {
               // Append the input to the numberDiv
               numberDiv.appendChild(numberElement);
             }
+            handleNumber();
           }
 
           break;
@@ -1638,7 +1647,9 @@ const drawFormElement = function () {
     })
   }
   generalUserMode();
-  searchForm();
+  if(!isSubmit){
+    searchForm();
+  }  
 }
 
 //... Draw font family
@@ -2731,7 +2742,7 @@ const handleNumber = function (e) {
   textBackgroundColor = document.getElementById("number-font-background-color") && document.getElementById("number-font-background-color").value;
 
   let initialValue = "";
-  const currentFormText = document.getElementById(`number${current_form_id}`);
+  const currentFormText = document.getElementById(`number${current_form_id}`);  
   
   if (currentFormText) {
     $('.number-field-input').each(function() {
@@ -3607,7 +3618,9 @@ const submitAction = function () {
         currentItem.remove();
         break;
       case NUMBERFIELD:
-        currentItem.querySelector(".number-field-input").disabled = true;
+        currentItem.querySelectorAll(".number-field-input").forEach(function(input) {
+          input.disabled = true;
+        });
         break;
       default:
         break;
@@ -3658,7 +3671,7 @@ const eventHandler = async function (e) {
         formHeight
       );
       let checkmark = document.createElement("div");
-      checkmark.classList.add("checkmark");
+      checkmark.classList.add("checkmark", "form-container");
       checkmark.style.display = 'none';
       checkbox.classList.add("checkbox");
       checkbox.appendChild(checkmark);
@@ -3770,11 +3783,11 @@ const eventHandler = async function (e) {
 
       let inputRadio = document.createElement("input");
       inputRadio.type = "radio";
-      inputRadio.classList.add('radioinputchild');
+      inputRadio.classList.add('radioinputchild', 'form-container');
       inputRadio.name = `Radio Group Form Field ${radioId}`;
 
       let spanElement = document.createElement("span");
-      spanElement.classList.add("checkmark-radio");
+      spanElement.classList.add("checkmark-radio", "form-container");
 
       inputRadio.style.display = "none";
       spanElement.style.display = "none";
@@ -3881,7 +3894,7 @@ const eventHandler = async function (e) {
       addFormElementStyle(textDiv, topPos, leftPos, formWidth, formHeight);
 
       let inputElement = document.createElement("input");
-      inputElement.classList.add("text-field-input");
+      inputElement.classList.add("text-field-input", "form-container");
       inputElement.style.display = "none";
       inputElement.addEventListener("input", function () {
         current_form_id = textId;
@@ -4005,7 +4018,7 @@ const eventHandler = async function (e) {
       addFormElementStyle(comboDiv, topPos, leftPos, formWidth, formHeight);
 
       let selectElement = document.createElement("select");
-      selectElement.classList.add("combobox-field-input");
+      selectElement.classList.add("combobox-field-input", "form-container");
       selectElement.style.display = "none";
       selectElement.addEventListener("change", function () {
         current_form_id = comboId;
@@ -4180,7 +4193,7 @@ const eventHandler = async function (e) {
 
       let dropList = document.createElement("div");
       dropList.style.display = "none";
-      dropList.classList.add("list-field-input");
+      dropList.classList.add("list-field-input", "form-container");
 
       listDiv.append(dropList);
 
@@ -4359,7 +4372,7 @@ const eventHandler = async function (e) {
       );
 
       let buttonAction = document.createElement("div");
-      buttonAction.classList.add("button-field-input");
+      buttonAction.classList.add("button-field-input", "form-container");
       buttonAction.style.display = "none";
       buttonAction.addEventListener("click", function (event) {
         let parentElement = event.target.parentNode;
@@ -4658,7 +4671,7 @@ const eventHandler = async function (e) {
 
       const signatureContainer = document.createElement("div");
       signatureContainer.id = "signature" + signatureId;
-      signatureContainer.className = "signatureContainer";
+      signatureContainer.className = "signatureContainer", "form-container";
 
       //...
       addSignatureElementStyle(
@@ -4672,7 +4685,7 @@ const eventHandler = async function (e) {
       signatureContainer.style.alignItems = "center";
       signatureContainer.style.justifyContent = "center";
       signatureContainer.style.userSelect = "none";
-      signatureContainer.style.color = "white";
+      signatureContainer.style.color = "black";
       signatureContainer.style.minHeight = "40px";
       signatureContainer.textContent = "Double Click to sign here!";
 
@@ -5049,7 +5062,7 @@ const eventHandler = async function (e) {
         $(".number-field-input").remove();
         for (let i = 1; i <= count; i++) {          
           let numberElement = document.createElement("input");
-          numberElement.classList.add("number-field-input");
+          numberElement.classList.add("number-field-input", "form-container");
           numberElement.type = "number";
           numberElement.min = "1";
           numberElement.max = "9";
@@ -5627,43 +5640,54 @@ async function addFormElements() {
           break;
         case NUMBERFIELD:
           const numberValue = form_item.initialValue !== undefined ? form_item.initialValue : "";
-          if (!form_item.isReadOnly) {
-            textfieldForm = form.createTextField(form_item.form_field_name);
-            textfieldForm.setText(numberValue);
-            textfieldForm.addToPage(page, {
-              x: form_item.x,
-              y: form_item.y - form_item.height,
-              width: form_item.width,
-              height: form_item.height,
-              size: form_item.fontSize,
-              textColor: hexToRgbNew(form_item.textColor),
-              backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
-              borderColor: hexToRgbNew(form_item.textBackgroundColor),
-            });
-            textfieldForm.setFontSize(form_item.fontSize);
-            textfieldForm.updateAppearances(customFont);
-            // textfieldForm.defaultUpdateAppearances(customFont);
-          } else {
-            page.drawRectangle({
-              x: form_item.x,
-              y: form_item.y - form_item.height,
-              width: form_item.width,
-              height: form_item.height,
-              color: hexToRgbNew(form_item.textBackgroundColor),
-              borderColor: hexToRgbNew(form_item.textBackgroundColor),
-            });
+          const numberArr = numberValue.split("");
+          const squareWidth = 30;
+          const squareHeight = 40;
+          const borderWidth = 1;
 
-            const textY = form_item.y - form_item.height / 2 - form_item.fontSize / 3;
+          numberArr.forEach(function (item, index) {
+            const digitX = form_item.x + (index * squareWidth);
 
-            page.drawText(numberValue, {
-              x: form_item.x,
-              y: textY,
-              size: form_item.fontSize,
-              color: hexToRgbNew(form_item.textColor),
-              font: customFont
-            });
-          }
+            if (!form_item.isReadOnly) {
+              textfieldForm = form.createTextField(form_item.form_field_name + "_" + index);
+              textfieldForm.setText(item);
+              textfieldForm.addToPage(page, {
+                x: digitX,
+                y: form_item.y - squareHeight,
+                width: squareWidth - borderWidth * 1,
+                height: squareHeight - borderWidth * 1,
+                size: form_item.fontSize,
+                textColor: hexToRgbNew(form_item.textColor),
+                backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
+                borderColor: hexToRgbNew("#000000"),
+                borderWidth: borderWidth
+              });
+              textfieldForm.setFontSize(form_item.fontSize);
+              textfieldForm.updateAppearances(customFont);
+            } else {
+              page.drawRectangle({
+                x: digitX,
+                y: form_item.y - squareHeight,
+                width: squareWidth,
+                height: squareHeight,
+                color: hexToRgbNew(form_item.textBackgroundColor),
+                borderColor: hexToRgbNew("#000000"),
+                borderWidth: borderWidth
+              });
+
+              const textY = form_item.y - squareHeight / 2 - form_item.fontSize / 3;
+
+              page.drawText(item, {
+                x: digitX + (squareWidth / 2) - (form_item.fontSize / 4),
+                y: textY,
+                size: form_item.fontSize,
+                color: hexToRgbNew(form_item.textColor),
+                font: customFont
+              });
+            }
+          });
           break;
+
         default:
           break;
       }
@@ -6142,13 +6166,11 @@ function searchForm() {
   if (formFields.length > 0) {
     function updateResizebar() {
       formFields.forEach(field => {
-        const fieldId = field.id;
-        removeResizebar(fieldId);
+        field.classList.remove('active');
       });
 
       if (formFields[active_form_index]) {
-        const currentFieldId = formFields[active_form_index].id;
-        addResizebar(currentFieldId);
+        formFields[active_form_index].classList.add('active');
       }
     }
 

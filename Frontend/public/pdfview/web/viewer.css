@@ -2649,7 +2649,7 @@ div[contenteditable="true"]:focus{
   position: relative;
 }
 
-#shapeTypeToolbar i{
+#shapeTypeToolbar .shape-item{
   cursor: pointer;
 }
 

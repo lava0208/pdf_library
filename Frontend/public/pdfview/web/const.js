@@ -83,6 +83,7 @@ const sidebar = document.querySelector(".right-sidebar");
 const shareDocumentButton = document.getElementById("shareDocument");
 const submitDocumentButton = document.getElementById("submitDocument");
 const showHistoryButton = document.getElementById("showHistory");
+const shapeToolbarButton = document.getElementById("shapeToolbarButton");
 const addTextButton = document.getElementById("editorFreeText");
 const addCommentButton = document.getElementById("add_comment_mode");
 const searchFormButton = document.getElementById("search-form");

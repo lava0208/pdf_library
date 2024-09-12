@@ -33,8 +33,10 @@ $(".shape-item").on("click", function () {
   isDrawingShape = true;
   viewer.style.cursor = 'crosshair';
 
-  if (shapeType !== "shape") {
+  if (shapeType === "circle") {
     selectedBorderRadius = "50%";
+  } else if(shapeType === "shape") {
+    selectedBorderRadius = "0px";
   }
 
   $("#shapeTypeToolbar").addClass("hidden");
@@ -207,25 +209,28 @@ viewer.addEventListener("mousedown", function (e) {
   rectElement = document.createElement("div");
   rectElement.id = "shape" + baseId;
   rectElement.className = "shapeContainer form-fields active";
-  rectElement.style.display = "flex";
-  rectElement.style.alignItems = "center";
-  rectElement.style.justifyContent = "center";
   rectElement.style.position = "absolute";
   rectElement.style.left = `${startX}px`;
   rectElement.style.top = `${startY}px`;
-  rectElement.style.border = `${selectedBorderWeight} solid ${selectedShapeOutlineColor}`;
-  rectElement.style.backgroundColor = selectedShapeFillColor;
-  rectElement.style.borderRadius = `${selectedBorderRadius}`;
-  rectElement.style.fontSize = `${selectedTextSize}`;
-  rectElement.style.fontWeight = selectedTextBold ? "bold" : "normal";
-  rectElement.style.fontStyle = selectedTextItalic ? "italic" : "normal";
-  rectElement.style.textDecoration = selectedTextUnderline ? "underline" : "none";
-  rectElement.style.fontFamily = `${selectedTextFamily}`;
 
-  if (shapeType === "circle") {
-    rectElement.style.borderRadius = "50%";
+  if (shapeType === "line") {
+    rectElement.style.borderBottom = `${selectedBorderWeight} solid ${selectedShapeOutlineColor}`;
+    rectElement.style.width = `1px`;
   } else {
+    rectElement.style.border = `${selectedBorderWeight} solid ${selectedShapeOutlineColor}`;
+    rectElement.style.backgroundColor = selectedShapeFillColor;
+    rectElement.style.borderRadius = shapeType === "circle" ? "50%" : selectedBorderRadius;
+    rectElement.style.display = "flex";
+    rectElement.style.alignItems = "center";
+    rectElement.style.justifyContent = "center";
+    rectElement.style.border = `${selectedBorderWeight} solid ${selectedShapeOutlineColor}`;
+    rectElement.style.backgroundColor = selectedShapeFillColor;
     rectElement.style.borderRadius = `${selectedBorderRadius}`;
+    rectElement.style.fontSize = `${selectedTextSize}`;
+    rectElement.style.fontWeight = selectedTextBold ? "bold" : "normal";
+    rectElement.style.fontStyle = selectedTextItalic ? "italic" : "normal";
+    rectElement.style.textDecoration = selectedTextUnderline ? "underline" : "none";
+    rectElement.style.fontFamily = `${selectedTextFamily}`;
   }
 
   viewer.appendChild(rectElement);
@@ -239,11 +244,15 @@ viewer.addEventListener("mousemove", function (e) {
   const width = currentX - startX;
   const height = currentY - startY;
 
-  if (shapeType === "circle") {
+  if (shapeType === "line") {
+    rectElement.style.width = `${Math.abs(width)}px`;
+    rectElement.style.height = `${selectedBorderWeight}px`;
+    rectElement.style.transform = `rotate(${Math.atan2(height, width) * (180 / Math.PI)}deg)`;
+  } else if (shapeType === "circle") {
     const size = Math.max(Math.abs(width), Math.abs(height));
     rectElement.style.width = `${size}px`;
     rectElement.style.height = `${size}px`;
-  } else {
+  } else if (shapeType === "shape") {
     rectElement.style.width = `${Math.abs(width)}px`;
     rectElement.style.height = `${Math.abs(height)}px`;
   }
@@ -285,60 +294,66 @@ viewer.addEventListener("mouseup", function (e) {
   current_form_id = baseId;
   current_shape_id = baseId;
 
-  plot.initStore();
-
-  const finalRect = {
-    left: rectElement.style.left,
-    top: rectElement.style.top,
-    width: rectElement.style.width,
-    height: rectElement.style.height,
-  };
-
-  const editableDiv = document.createElement("div");
-  editableDiv.className = "shapeText";
-  editableDiv.setAttribute("contenteditable", "false");
-  editableDiv.style.position = "absolute";
-  editableDiv.style.width = "100%";
-  editableDiv.style.height = "fit-content";
-  editableDiv.style.display = "flex";
-  editableDiv.style.alignItems = "center";
-  editableDiv.style.justifyContent = "center";
-  editableDiv.style.textAlign = "center";
-  editableDiv.style.color = selectedTextColor;
-  editableDiv.style.fontSize = selectedTextSize;
-  editableDiv.style.fontWeight = selectedTextBold ? "bold" : "normal";
-  editableDiv.style.fontStyle = selectedTextItalic ? "italic" : "normal";
-  editableDiv.style.textDecoration = selectedTextUnderline ? "underline " : "";
-  editableDiv.style.fontFamily = selectedTextFamily;
-
-  rectElement.appendChild(editableDiv);
-
-  enableInteractJS(rectElement.id, SHAPE, baseId);
+  if (shapeType === "line") {
+    rectElement.style.transform = rectElement.style.transform || "none";
+  }
 
   $("#shapeToolbar").css("display", "flex");
   $("#viewerContainer").addClass("withToolbar");
 
-  editableDiv.addEventListener("blur", () => {
-    const shapeText = editableDiv.innerHTML.trim();
-    handleShape(
-      selectedShapeFillColor,
-      selectedShapeOutlineColor,
-      selectedTextColor,
-      selectedBorderRadius,
-      selectedBorderWeight,
-      selectedTextSize,
-      selectedTextBold,
-      selectedTextItalic,
-      selectedTextUnderline,
-      selectedTextFamily,
-      shapeText,
-      parseInt(finalRect.width, 10),
-      parseInt(finalRect.height, 10),
-      viewer.clientWidth,
-      viewer.clientHeight,
-    );
-  });
-})
+  plot.initStore();
+
+  if (shapeType !== "line") {
+    const finalRect = {
+      left: rectElement.style.left,
+      top: rectElement.style.top,
+      width: rectElement.style.width,
+      height: rectElement.style.height,
+    };
+
+    const editableDiv = document.createElement("div");
+    editableDiv.className = "shapeText";
+    editableDiv.setAttribute("contenteditable", "false");
+    editableDiv.style.position = "absolute";
+    editableDiv.style.width = "100%";
+    editableDiv.style.height = "fit-content";
+    editableDiv.style.display = "flex";
+    editableDiv.style.alignItems = "center";
+    editableDiv.style.justifyContent = "center";
+    editableDiv.style.textAlign = "center";
+    editableDiv.style.color = selectedTextColor;
+    editableDiv.style.fontSize = selectedTextSize;
+    editableDiv.style.fontWeight = selectedTextBold ? "bold" : "normal";
+    editableDiv.style.fontStyle = selectedTextItalic ? "italic" : "normal";
+    editableDiv.style.textDecoration = selectedTextUnderline ? "underline " : "";
+    editableDiv.style.fontFamily = selectedTextFamily;
+  
+    rectElement.appendChild(editableDiv);
+  
+    enableInteractJS(rectElement.id, SHAPE, baseId);
+
+    editableDiv.addEventListener("blur", () => {
+      const shapeText = editableDiv.innerHTML.trim();
+      handleShape(
+        selectedShapeFillColor,
+        selectedShapeOutlineColor,
+        selectedTextColor,
+        selectedBorderRadius,
+        selectedBorderWeight,
+        selectedTextSize,
+        selectedTextBold,
+        selectedTextItalic,
+        selectedTextUnderline,
+        selectedTextFamily,
+        shapeText,
+        parseInt(finalRect.width, 10),
+        parseInt(finalRect.height, 10),
+        viewer.clientWidth,
+        viewer.clientHeight,
+      );
+    });
+  }
+});
 
 viewer.addEventListener("click", function (e) {
   if (isDraft !== "false" && !isEditing) {
@@ -559,6 +574,8 @@ function handleShape(shapeFillColor, borderColor, textColor, borderRadius, borde
 
 function enableInteractJS(elementId, type, currentId) {
   const element = document.getElementById(elementId);
+
+  console.log("elementId " + elementId);
 
   interact(`#${elementId}`)
     .resizable({

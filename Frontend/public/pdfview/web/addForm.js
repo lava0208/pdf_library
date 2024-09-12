@@ -135,6 +135,7 @@ const generalUserMode = function () {
   }
   if(isOpenEmailPdf){
     searchFormButton.style.display = "flex";
+    shapeToolbarButton.style.display = "none";
   }
 }
 
@@ -1739,6 +1740,8 @@ document.addEventListener("DOMContentLoaded", function () {
             url: URL.createObjectURL(pdfFile),
             originalUrl: pdfFile.name,
           });
+
+          console.log(draw_form_storage);
           
           const checkViewerInterval = setInterval(() => {
             if (PDFViewerApplication.pdfDocument && PDFViewerApplication.pdfDocument.numPages > 0) {
@@ -3436,14 +3439,24 @@ const showOptionAndResizebar = function (
     if (document.getElementById(`${id}-font-size`)) {
       document.getElementById(`${id}-font-size`).innerHTML = selectSizeContent;
     }
+    if (document.getElementById(`${id}-font-color`)) {
+      document.getElementById(`${id}-font-color`).value = "#000000";
+    }
+    if (document.getElementById(`${id}-font-background-color`)) {
+      document.getElementById(`${id}-font-background-color`).value = "#FFFFFF";
+    }
+    if (document.getElementById(`${id}-left`)) {
+      document.getElementById(`${id}-left`).checked = true;
+    }    
+  } else {
+    if (document.getElementById(`${id}-background-color`)) {
+      document.getElementById(`${id}-background-color`).value = "#FFFFFF";
+    }
   }
 };
 
 // Add Delete button and define action.
 const addDeleteButton = function (currentId, container, object, type) {
-  const left = object.offsetWidth;
-  const top = object.offsetHeight;
-
   container.id = `${type}_tooltipbar` + currentId;
   container.style.position = "absolute";
   container.style.zIndex = standardZIndex;
@@ -3467,7 +3480,7 @@ const addDeleteButton = function (currentId, container, object, type) {
 
     let currentObject;
 
-    currentId = container.id.replace(`${type}_tooltipbar`, "");
+    // currentId = container.id.replace(`${type}_tooltipbar`, "");
     const target = document.getElementById(`${type}` + currentId);
     if (target && document.getElementById("topLeft"))
       removeResizebar(target.id);
@@ -3682,7 +3695,7 @@ const eventHandler = async function (e) {
 
       pg.appendChild(checkbox);
 
-      showOptionAndResizebar(CHECKBOX_OPTION, checkbox, formWidth, formHeight);
+      showOptionAndResizebar(CHECKBOX_OPTION, checkbox, formWidth, formHeight, "checkbox");
 
       document.getElementById(
         "checkbox-field-input-name"
@@ -3800,7 +3813,7 @@ const eventHandler = async function (e) {
 
       pg.appendChild(radio);
 
-      showOptionAndResizebar(RADIO_OPTION, radio, formWidth, formHeight)
+      showOptionAndResizebar(RADIO_OPTION, radio, formWidth, formHeight, "radio")
 
       document.getElementById(
         "radio-field-input-name"
@@ -6112,8 +6125,9 @@ const sendSubmitData = function () {
   })
     .then(response => {
       if (response.ok) {
+        searchFormButton.style.display = "none";
         $("body").removeClass("loading");
-        alert("Thanks for your submitting your document!");
+        alert("Thanks for your submitting your document!");        
       } else {
         console.error('Failed to upload PDF file');
       }

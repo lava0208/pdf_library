@@ -2383,7 +2383,6 @@ dialog :link {
 
 .text-field-input:focus, .number-field-input:focus {
   outline: none;
-  border: 1px solid #3C97FE;
 }
 
 .form-fields input{
@@ -2391,8 +2390,13 @@ dialog :link {
 }
 
 .number-field-input{
-  min-width: 35px;
+  min-width: 30px;
   border-radius: 0!important;
+  border-right: 0;
+}
+
+.number-field-input:last-of-type{
+  border-right: 1px solid #3C97FE;
 }
 
 /* Combobox Field */
@@ -2757,4 +2761,27 @@ input[type=number]::-webkit-outer-spin-button {
   width: 50px;
   text-align: center;
   padding: 7px;
+}
+
+.form-buttons{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.form-buttons div{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 25px;
+  background-color: #3C97FE;
+  cursor: pointer;
+  color: white;
+  font-size: 12px;
+  border: none;
+}
+
+.form-buttons div:hover{
+  opacity: 0.8;
 }

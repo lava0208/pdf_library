@@ -1,6 +1,7 @@
 // let baseId = 0;
 let draw_form_storage;
 let current_form_id = 0;
+let active_form_index = -1;
 let currentMode = null;
 let ratio = Math.max(window.devicePixelRatio || 1, 1);
 
@@ -1637,6 +1638,7 @@ const drawFormElement = function () {
     })
   }
   generalUserMode();
+  searchForm();
 }
 
 //... Draw font family
@@ -2372,8 +2374,6 @@ const removeResizebar = function (objectId) {
       let childElement = document.getElementById(item);
       if (container.querySelector(`#${item}`)) {
         container.removeChild(childElement);
-      } else {
-        console.log("Child element with id " + item + "not found");
       }
     });
   } else {
@@ -6132,4 +6132,41 @@ const getImgHeight = async (src) => {
   let height = img.height;
   
   return { width: width, height: height};
+}
+
+
+
+function searchForm() {
+  const formFields = document.querySelectorAll('.form-fields');
+
+  if (formFields.length > 0) {
+    function updateResizebar() {
+      formFields.forEach(field => {
+        const fieldId = field.id;
+        removeResizebar(fieldId);
+      });
+
+      if (formFields[active_form_index]) {
+        const currentFieldId = formFields[active_form_index].id;
+        addResizebar(currentFieldId);
+      }
+    }
+
+    document.getElementById('nextBtn').addEventListener('click', function () {
+      if (active_form_index < draw_form_storage.length - 1) {
+        active_form_index++;
+        updateResizebar();
+      }
+    });
+
+    document.getElementById('prevBtn').addEventListener('click', function () {
+      if (active_form_index > 0) {
+        active_form_index--;
+        updateResizebar();
+      }
+    });
+
+  } else {
+    console.error("No form fields found");
+  }
 }

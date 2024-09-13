@@ -1303,17 +1303,15 @@ const drawFormElement = function () {
           editableDiv.innerHTML = item.shapeText;
           editableDiv.style.position = "absolute";
           editableDiv.style.width = "100%";
-          editableDiv.style.height = "fit-content";
-          editableDiv.style.display = "flex";
-          editableDiv.style.alignItems = "center";
-          editableDiv.style.justifyContent = "center";
-          editableDiv.style.textAlign = "center";
+          editableDiv.style.height = "100%";
           editableDiv.style.fontStyle = item.textItalic ? "italic" : "normal";
           editableDiv.style.fontWeight = item.textBold ? "bold" : "normal";
           editableDiv.style.textDecoration = item.textUnderline ? "underline" : "none";
           editableDiv.style.fontSize = item.textSize;
           editableDiv.style.color = item.textColor;
           editableDiv.style.fontFamily = item.textFamily;
+
+          shapeTextAlign(editableDiv, item.textAlign);
           editableDiv.focus();
 
           // shapeContainer.append(shapeImg);
@@ -6172,7 +6170,45 @@ const getImgHeight = async (src) => {
   return { width: width, height: height};
 }
 
+function shapeTextAlign(shapeText, selectedTextAlign) {
+  shapeText.style.textAlign = "";
+  shapeText.style.top = "";
+  shapeText.style.bottom = "";
+  shapeText.style.left = "";
+  shapeText.style.transform = "";
 
+  const alignments = selectedTextAlign.split(",").map(align => align.trim());
+  const verticalAlign = alignments[0];
+  const horizontalAlign = alignments[1];
+
+  if (horizontalAlign === "left"){
+    shapeText.style.justifyContent = "start";
+  } else if (horizontalAlign === "center"){
+    shapeText.style.justifyContent = "center";
+    shapeText.style.textAlign = "center";
+  } else if (horizontalAlign === "right"){
+    shapeText.style.justifyContent = "end";
+    shapeText.style.textAlign = "right";
+  } else if (horizontalAlign === "justify") {
+    shapeText.style.justifyContent = "justify";
+    shapeText.style.textAlign = "justify";
+  }
+
+  if (verticalAlign === "top") {
+    shapeText.style.display = "flex";
+    shapeText.style.alignItems = "start";
+  } else if (verticalAlign === "bottom") {
+    shapeText.style.display = "flex";
+    shapeText.style.alignItems = "end";
+  } else if (verticalAlign === "middle") {
+    shapeText.style.display = "flex";
+    shapeText.style.alignItems = "center";
+  }
+
+  $("#text-align-dropdown .flex-container").removeClass("active");
+  $(`#text-align-dropdown .flex-container[direction=${horizontalAlign}]`).addClass("active");
+  $(`#text-align-dropdown .flex-container[direction=${verticalAlign}]`).addClass("active");
+}
 
 function searchForm() {
   const formFields = document.querySelectorAll('.form-fields');

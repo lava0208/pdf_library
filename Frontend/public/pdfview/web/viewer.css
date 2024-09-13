@@ -2699,19 +2699,22 @@ div[contenteditable="true"]:focus{
   cursor: pointer;
 }
 
-.font-family-container{
+.font-family-container, .flex-container{
   display: flex;
   align-items: center;
   padding: 3px;
   margin-bottom: 2px;
-  cursor: pointer;
+  cursor: pointer;  
+  min-width: 80px;
 }
 
-.font-family-container:hover, .font-family-container.active{
+.font-family-container:hover, .font-family-container.active,
+.flex-container:hover, .flex-container.active{
   background-color: #dddedf;
 }
 
-.font-family-container small{
+.font-family-container small,
+.flex-container small{
   width: 100px;
 }
 
@@ -2791,10 +2794,10 @@ input[type=number]::-webkit-outer-spin-button {
   opacity: 0.8;
 }
 
-.active{
+.form-fields.active:not(.shapeContainer){
   border-width: 3px!important;
 }
 
-.active .number-field-input{
+.form-fields.active:not(.shapeContainer) .number-field-input{
   border-width: 3px!important;
 }

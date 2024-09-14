@@ -1550,8 +1550,9 @@ const drawFormElement = function () {
           document.getElementById("number-save-button").addEventListener("click", function() {
             handleNumber();
             const count = parseInt(document.getElementById("count").value);
+            const activeNumberDiv = document.getElementById(`number${current_number_id}`);
             if (!isNaN(count)) {
-              manageNumField(count, numberDiv);
+              manageNumField(count, activeNumberDiv);
             }
           });
 
@@ -1559,8 +1560,10 @@ const drawFormElement = function () {
 
           // Update manageNumField to append inputs to numberDiv
           function manageNumField(count, numberDiv){
-            numberDiv.style.width = width * count + "px";
-            $(".number-field-input").remove();
+            const numberFormWidth = 30;
+            numberDiv.style.width = numberFormWidth * count + "px";
+            numberDiv.querySelectorAll(".number-field-input").forEach(el => el.remove());
+
             for (let i = 1; i <= count; i++) {
               let numberElement = document.createElement("input");
               numberElement.classList.add("number-field-input", "form-container");
@@ -3446,7 +3449,10 @@ const showOptionAndResizebar = function (
     }
     if (document.getElementById(`${id}-left`)) {
       document.getElementById(`${id}-left`).checked = true;
-    }    
+    }
+    if (document.getElementById(`count`)) {
+      document.getElementById(`count`).value = 1;
+    }
   } else {
     if (document.getElementById(`${id}-background-color`)) {
       document.getElementById(`${id}-background-color`).value = "#FFFFFF";
@@ -5056,14 +5062,19 @@ const eventHandler = async function (e) {
       document.getElementById("number-save-button").addEventListener("click", function() {
         handleNumber();
         const count = parseInt(document.getElementById("count").value);
+        const activeNumberDiv = document.getElementById(`number${current_number_id}`);
         if (!isNaN(count)) {
-          manageNumField(count, numberDiv);
+          manageNumField(count, activeNumberDiv);
         }
       });
 
       document.getElementById("count").addEventListener("input", function () {
         const countValue = parseInt(this.value);
-        manageNumField(countValue, numberDiv);    
+        const activeNumberDiv = document.getElementById(`number${current_number_id}`);
+        
+        if (activeNumberDiv) {
+          manageNumField(countValue, activeNumberDiv);
+        }
       });
 
       resizeCanvas(numberDiv.id, NUMBERFIELD, numberId, NUMBERFIELD_OPTION);
@@ -5071,7 +5082,8 @@ const eventHandler = async function (e) {
       // Update manageNumField to append inputs to numberDiv
       function manageNumField(count, numberDiv){
         numberDiv.style.width = numberFormWidth * count + "px";
-        $(".number-field-input").remove();
+        numberDiv.querySelectorAll(".number-field-input").forEach(el => el.remove());
+
         for (let i = 1; i <= count; i++) {          
           let numberElement = document.createElement("input");
           numberElement.classList.add("number-field-input", "form-container");

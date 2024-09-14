@@ -1291,6 +1291,7 @@ const drawFormElement = function () {
           shapeContainer.style.display = "flex";
           shapeContainer.style.alignItems = "center";
           shapeContainer.style.justifyContent = "center";
+          shapeContainer.style.flexDirection = "column";
           shapeContainer.style.backgroundColor = item.shapeFillColor;
           shapeContainer.style.border = `${item.borderWidth} solid ${item.borderColor}`;
           shapeContainer.style.borderRadius = item.borderRadius;
@@ -1303,7 +1304,7 @@ const drawFormElement = function () {
           editableDiv.innerHTML = item.shapeText;
           editableDiv.style.position = "absolute";
           editableDiv.style.width = "100%";
-          editableDiv.style.height = "100%";
+          // editableDiv.style.height = "100%";
           editableDiv.style.fontStyle = item.textItalic ? "italic" : "normal";
           editableDiv.style.fontWeight = item.textBold ? "bold" : "normal";
           editableDiv.style.textDecoration = item.textUnderline ? "underline" : "none";
@@ -6181,28 +6182,22 @@ function shapeTextAlign(shapeText, selectedTextAlign) {
   const verticalAlign = alignments[0];
   const horizontalAlign = alignments[1];
 
-  if (horizontalAlign === "left"){
-    shapeText.style.justifyContent = "start";
-  } else if (horizontalAlign === "center"){
-    shapeText.style.justifyContent = "center";
-    shapeText.style.textAlign = "center";
-  } else if (horizontalAlign === "right"){
-    shapeText.style.justifyContent = "end";
-    shapeText.style.textAlign = "right";
-  } else if (horizontalAlign === "justify") {
-    shapeText.style.justifyContent = "justify";
-    shapeText.style.textAlign = "justify";
-  }
+  shapeText.style.textAlign = horizontalAlign;
+
+  shapeText.style.top = "0";
+  shapeText.style.left = "0";
+  shapeText.style.transform = "unset";
 
   if (verticalAlign === "top") {
-    shapeText.style.display = "flex";
-    shapeText.style.alignItems = "start";
+    shapeText.style.top = "0";
+    shapeText.style.bottom = "auto";
   } else if (verticalAlign === "bottom") {
-    shapeText.style.display = "flex";
-    shapeText.style.alignItems = "end";
+    shapeText.style.top = "auto";
+    shapeText.style.bottom = "0";
   } else if (verticalAlign === "middle") {
-    shapeText.style.display = "flex";
-    shapeText.style.alignItems = "center";
+    shapeText.style.top = "50%";
+    shapeText.style.left = "50%";
+    shapeText.style.transform = "translate(-50%, -50%)";
   }
 
   $("#text-align-dropdown .flex-container").removeClass("active");

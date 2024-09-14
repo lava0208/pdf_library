@@ -1350,6 +1350,54 @@ See https://github.com/adobe-type-tools/cmap-resources
                     </div>
                   </div>
                 </div>
+                <div class="dropdown" id="list-style-dropdown">
+                  <button
+                    class="btn dropdown-toggle d-flex align-items-center"
+                    type="button"
+                  >
+                    <i class="fa fa-solid fa-list"></i>
+                  </button>
+                  <div class="dropdown-menu">
+                    <div id="list-styles">
+                      <div class="flex-container active" list-type="numeric">
+                        <small>1, 2, 3...</small>
+                        <i class="fa fa-solid fa-list-ol"></i>
+                      </div>
+                      <div class="flex-container" list-type="roman">
+                        <small>I, II, III...</small>
+                        <i class="fa fa-solid fa-list-ul"></i>
+                      </div>
+                      <div class="flex-container" list-type="alpha-lower">
+                        <small>a, b, c...</small>
+                        <i class="fa fa-solid fa-list-ul"></i>
+                      </div>
+                      <div class="flex-container" list-type="alpha-upper">
+                        <small>A, B, C...</small>
+                        <i class="fa fa-solid fa-list-ul"></i>
+                      </div>
+                      <div class="flex-container" list-type="dash">
+                        <small>-, -, -</small>
+                        <i class="fa fa-solid fa-minus"></i>
+                      </div>
+                      <div class="flex-container" list-type="dot">
+                        <small>•, •, •</small>
+                        <i class="fa fa-solid fa-circle"></i>
+                      </div>
+                    </div>
+                    <div id="list-form">
+                      <input type="text" id="list-input" placeholder="Enter item" />
+                      <div class="flex-container">
+                        <button id="list-add-button">Add</button>
+                        <button id="list-save-button">Save</button>
+                      </div>                      
+                      <div id="list-preview-container">
+                        <h5>Preview</h5>
+                        <div id="list-container"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
                 <div id="extra-shape-icons">
                   <i class="fa-solid fa-bold" id="shape-text-bold"></i>
                   <i class="fa-solid fa-italic" id="shape-text-italic"></i>

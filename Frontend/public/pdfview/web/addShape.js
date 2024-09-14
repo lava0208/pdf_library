@@ -19,6 +19,9 @@ let selectedTextItalic = false;
 let selectedTextUnderline = false;
 let selectedTextFamily = 'Courier';
 let selectedTextAlign = 'top,left';
+let selectedListType = 'numeric';
+let listCounter = 1;
+
 
 $("#shapeToolbarButton").on("click", function () {
   $("#shapeTypeToolbar").removeClass("hidden");
@@ -177,12 +180,6 @@ viewer.addEventListener("mousedown", function (e) {
     rectElement.style.border = `${selectedBorderWeight} solid ${selectedShapeOutlineColor}`;
     rectElement.style.backgroundColor = selectedShapeFillColor;
     rectElement.style.borderRadius = shapeType === "circle" ? "50%" : selectedBorderRadius;
-    rectElement.style.display = "flex";
-    rectElement.style.alignItems = "center";
-    rectElement.style.justifyContent = "center";
-    rectElement.style.border = `${selectedBorderWeight} solid ${selectedShapeOutlineColor}`;
-    rectElement.style.backgroundColor = selectedShapeFillColor;
-    rectElement.style.borderRadius = `${selectedBorderRadius}`;
     rectElement.style.fontSize = `${selectedTextSize}`;
     rectElement.style.fontWeight = selectedTextBold ? "bold" : "normal";
     rectElement.style.fontStyle = selectedTextItalic ? "italic" : "normal";
@@ -268,10 +265,11 @@ viewer.addEventListener("mouseup", function (e) {
     editableDiv.setAttribute("contenteditable", "false");
     editableDiv.style.position = "absolute";
     editableDiv.style.width = "100%";
-    editableDiv.style.height = "100%";
-    editableDiv.style.display = "flex";
-    editableDiv.style.alignItems = "center";
-    editableDiv.style.justifyContent = "center";
+    // editableDiv.style.height = "100%";
+    // editableDiv.style.display = "flex";
+    // editableDiv.style.alignItems = "center";
+    // editableDiv.style.justifyContent = "center";
+    // editableDiv.style.flexDirection = "column";
     editableDiv.style.textAlign = "center";
     editableDiv.style.color = selectedTextColor;
     editableDiv.style.fontSize = selectedTextSize;
@@ -297,15 +295,37 @@ viewer.addEventListener("mouseup", function (e) {
 viewer.addEventListener("click", function (e) {
   if (isDraft !== "false" && !isEditing) {
     if (form_storage && form_storage !== null) {
-        form_storage.forEach((formItem) => {
-          if (formItem.form_type === SHAPE){
-            if (formItem.id == current_form_id) {
-              drawShapeFromStorage(formItem);
-            }
-            resizeCanvas(formItem.containerId, SHAPE, formItem.id);
+      form_storage.forEach((formItem) => {
+        if (formItem.form_type === SHAPE) {
+          if (formItem.id == current_form_id) {
+            // Save the updated text before any other actions
+            const shapeContainer = document.getElementById(formItem.containerId);
+            const shapeTextDiv = shapeContainer.querySelector(".shapeText");
+            const shapeText = shapeTextDiv.innerHTML.trim();
+            handleShape(
+              shapeContainer.style.backgroundColor,
+              shapeContainer.style.borderColor,
+              shapeTextDiv.style.color,
+              shapeContainer.style.borderRadius,
+              shapeContainer.style.borderWidth,
+              shapeTextDiv.style.fontSize,
+              shapeTextDiv.style.fontWeight === "bold",
+              shapeTextDiv.style.fontStyle === "italic",
+              shapeTextDiv.style.textDecoration.includes("underline"),
+              shapeTextDiv.style.fontFamily,
+              selectedTextAlign,
+              shapeText,
+              parseInt(shapeContainer.style.width, 10),
+              parseInt(shapeContainer.style.height, 10),
+              viewer.clientWidth,
+              viewer.clientHeight,
+            );
           }
-      })
+        }
+      });
     }
+
+    // Existing code to hide the toolbars when clicked outside of shape
     if (!e.target.classList.contains("shapeContainer") && !e.target.closest(".shapeContainer")) {
       document.querySelectorAll(".shapeText").forEach(shapeText => {
         shapeText.setAttribute("contenteditable", "false");
@@ -319,12 +339,13 @@ viewer.addEventListener("click", function (e) {
         document.getElementById("shape_tooltipbar" + current_shape_id).remove();
       }      
     }
-  }else{
+  } else {
     document.querySelectorAll(".shapeText").forEach(shapeText => {
       shapeText.setAttribute("contenteditable", "false");
     });
   }
 });
+
 
 viewer.addEventListener("dblclick", function (e) {
   if(isDraft !== "false" && !isEditing){
@@ -335,14 +356,13 @@ viewer.addEventListener("dblclick", function (e) {
       $(".right-sidebar").removeClass("active");
   
       const shapeContainer = e.target.closest(".shapeContainer");
-      $(".shapeContainer").removeClass("active");
-      $(shapeContainer).addClass("active");
-      
       const shapeText = shapeContainer.querySelector(".shapeText");
 
-      shapeContainer.addEventListener("dblclick", (e) => {
-        showTextInput(e, shapeText);
-      });
+      showTextInput(e, shapeText);
+
+      $(".shapeContainer").removeClass("active");
+      $(shapeContainer).addClass("active");
+      $("#list-style-dropdown .dropdown-menu").removeClass("show");
 
       $("#shape-fill-dropdown").find("input").val(rgbToHex(shapeContainer.style.backgroundColor));
       $("#shape-outline-dropdown").find("input").val(rgbToHex(shapeContainer.style.borderColor));
@@ -671,21 +691,16 @@ function saveText(editableDiv, shapeContainer) {
 }
 
 function showTextInput(event, editableDiv) {
-  editableDiv.style.display = 'flex';
-  editableDiv.style.left = '50%';
-  editableDiv.style.top = '50%';
-  editableDiv.style.width = '100%';
-  editableDiv.style.height = '100%';
-  editableDiv.style.minHeight = 'auto';
-  editableDiv.style.transform = 'translate(-50%, -50%)';
+  editableDiv.setAttribute("contenteditable", "true");
   editableDiv.focus();
 
-  const range = document.caretRangeFromPoint(event.clientX, event.clientY);
-  if (range) {
-    const selection = window.getSelection();
-    selection.removeAllRanges();
-    selection.addRange(range);
-  }
+  // Set the caret to the end of the content
+  const range = document.createRange();
+  const selection = window.getSelection();
+  range.selectNodeContents(editableDiv);
+  range.collapse(false); // Collapse to the end
+  selection.removeAllRanges();
+  selection.addRange(range);
 }
 
 function drawShapeStyle(item){
@@ -723,28 +738,22 @@ function drawTextAlign(selectedTextAlign) {
   const verticalAlign = alignments[0];
   const horizontalAlign = alignments[1];
 
-  if (horizontalAlign === "left"){
-    shapeText.style.justifyContent = "start";
-  } else if (horizontalAlign === "center"){
-    shapeText.style.justifyContent = "center";
-    shapeText.style.textAlign = "center";
-  } else if (horizontalAlign === "right"){
-    shapeText.style.justifyContent = "end";
-    shapeText.style.textAlign = "right";
-  } else if (horizontalAlign === "justify") {
-    shapeText.style.justifyContent = "justify";
-    shapeText.style.textAlign = "justify";
-  }
+  shapeText.style.textAlign = horizontalAlign;
+
+  shapeText.style.top = "0";
+  shapeText.style.left = "0";
+  shapeText.style.transform = "unset";
 
   if (verticalAlign === "top") {
-    shapeText.style.display = "flex";
-    shapeText.style.alignItems = "start";
+    shapeText.style.top = "0";
+    shapeText.style.bottom = "auto";
   } else if (verticalAlign === "bottom") {
-    shapeText.style.display = "flex";
-    shapeText.style.alignItems = "end";
+    shapeText.style.top = "auto";
+    shapeText.style.bottom = "0";
   } else if (verticalAlign === "middle") {
-    shapeText.style.display = "flex";
-    shapeText.style.alignItems = "center";
+    shapeText.style.top = "50%";
+    shapeText.style.left = "50%";
+    shapeText.style.transform = "translate(-50%, -50%)";
   }
 }
 
@@ -805,4 +814,126 @@ function drawShape(shapeContainer, shapeText) {
     viewer.clientWidth,
     viewer.clientHeight,
   );
+}
+
+//... Manage List Style
+const listContainer = document.getElementById('list-container');
+
+$(".dropdown-toggle").click(function () {
+  if($(this).parent().attr("id") != "list-style-dropdown"){    
+    $("#list-style-dropdown .dropdown-menu").removeClass("show"); 
+  }else{    
+    $("#list-style-dropdown .dropdown-menu").toggleClass("show");
+  }
+});
+
+// Event listener for selecting a list style
+document.querySelectorAll('#list-styles .flex-container').forEach(item => {
+  item.addEventListener('click', function () {
+    document.querySelectorAll('#list-styles .flex-container').forEach(el => el.classList.remove('active'));
+    this.classList.add('active');
+
+    selectedListType = this.getAttribute('list-type'); // Update selected list type
+    listCounter = 1; // Reset the counter for the new list style
+
+    // Update existing list items with the new style
+    updateListItemsStyle();
+  });
+});
+
+// Event listener for adding an option
+document.getElementById('list-add-button').addEventListener('click', function () {
+  const inputText = document.querySelector('#list-input').value.trim();
+  if (inputText === '') {
+    alert('Please enter some text!');
+    return;
+  }
+
+  // Generate the list item with the remove icon
+  const listItemHtml = generateListItemHtml(inputText, selectedListType);
+  listContainer.insertAdjacentHTML('beforeend', listItemHtml);
+
+  // Clear the input field
+  document.querySelector('#list-input').value = '';
+
+  // Add event listeners for removing items
+  listContainer.querySelectorAll('.remove-list-item').forEach(btn => {
+    btn.addEventListener('click', function () {
+      this.parentElement.remove();
+      updateListItemsStyle(); // Recalculate list style after item removal
+    });
+  });
+
+  updateListItemsStyle(); // Update style after adding a new item
+});
+
+// Event listener for saving the list
+document.getElementById('list-save-button').addEventListener('click', function () {
+  const shapeText = document.querySelector('.shapeText');
+
+  // Iterate over all list items and save them in the shape
+  const listItems = listContainer.querySelectorAll('.list-item');
+  listItems.forEach(item => {
+    const newDiv = document.createElement('div');
+    newDiv.innerHTML = item.querySelector('.list-marker').textContent + ' ' + item.querySelector('.list-text').textContent;
+    shapeText.appendChild(newDiv);
+  });
+
+  // Optionally, you can clear the list container if needed
+  listContainer.innerHTML = '';
+  $("#list-style-dropdown .dropdown-menu").removeClass("show");
+});
+
+// Function to generate list item HTML with a remove button
+function generateListItemHtml(text, listType) {
+  let listMarker = getListMarker(listType);
+  return `
+    <div class="list-item">
+      <span class="list-marker">${listMarker}</span> <span class="list-text">${text}</span>
+      <i class="fa fa-trash remove-list-item"></i>
+    </div>
+  `;
+}
+
+// Function to update existing list items when the style is changed
+function updateListItemsStyle() {
+  const listItems = listContainer.querySelectorAll('.list-item .list-marker');
+  listCounter = 1; // Reset the list counter before reapplying styles
+
+  listItems.forEach(item => {
+    item.textContent = getListMarker(selectedListType); // Update each item's marker
+  });
+}
+
+// Helper function to generate the list marker
+function getListMarker(listType) {
+  switch (listType) {
+    case 'numeric':
+      return listCounter++ + '.';
+    case 'roman':
+      return getRomanNumeral(listCounter++) + '.';
+    case 'alpha-lower':
+      return String.fromCharCode(96 + listCounter++) + '.'; // a., b., c. ...
+    case 'alpha-upper':
+      return String.fromCharCode(64 + listCounter++) + '.'; // A., B., C. ...
+    case 'dash':
+      return '-';
+    case 'dot':
+      return '•';
+    default:
+      return '';
+  }
+}
+
+// Roman numeral conversion (helper function)
+function getRomanNumeral(num) {
+  const lookup = { M: 1000, CM: 900, D: 500, CD: 400, C: 100, XC: 90, L: 50, XL: 40, X: 10, IX: 9, V: 5, IV: 4, I: 1 };
+  let roman = '';
+  for (let i in lookup) {
+    while (num >= lookup[i]) {
+      roman += i;
+      num -= lookup[i];
+    }
+  }
+  return roman;
 }

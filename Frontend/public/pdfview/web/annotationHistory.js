@@ -446,8 +446,6 @@ const addHistory = function (id, type, username, date, page, typeString) {
                 if (historyMainPart.hasChildNodes()) historyComment.style.display = "flex";
                 if (type !== TEXTFIELD && type !== TEXT_CONTENT && type !== NUMBERFIELD) replyInput.focus();
                 removeAllResizeBar();
-                const focusItem = document.getElementById(`${typeString}${id}`);
-                if (focusItem && !focusItem.querySelector("#topLeft")) addResizebar(focusItem.id);
             });
             pageDiv.appendChild(historyDiv);
             showHistoryBar.appendChild(pageDiv);

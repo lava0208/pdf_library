@@ -18,7 +18,7 @@ let selectedTextBold = false;
 let selectedTextItalic = false;
 let selectedTextUnderline = false;
 let selectedTextFamily = 'Courier';
-let selectedTextAlign = 'top,left';
+let selectedTextAlign = shapeType === "circle" ? 'middle,center' : 'top,left';
 let selectedListType = 'numeric';
 let listCounter = 1;
 
@@ -39,8 +39,10 @@ $(".shape-item").on("click", function () {
 
   if (shapeType === "circle") {
     selectedBorderRadius = "50%";
+    selectedTextAlign = 'middle,center';
   } else if(shapeType === "shape") {
     selectedBorderRadius = "0px";
+    selectedTextAlign = 'top,left';
   }
 
   $("#shapeTypeToolbar").addClass("hidden");
@@ -140,10 +142,16 @@ $("#text-align-dropdown .flex-container").on("click", function () {
   selectedTextAlign = `${verticalAlign || ''}, ${horizontalAlign || ''}`.trim();
 
   const shapeContainer = document.querySelector(".shapeContainer.active");
-  const shapeTextHtml = shapeContainer.querySelector(".shapeText").innerHTML.trim();
+  
+  if (shapeContainer) {
+    shapeContainer.setAttribute("position", selectedTextAlign);
+    const shapeTextHtml = shapeContainer.querySelector(".shapeText").innerHTML.trim();
 
-  drawTextAlign(selectedTextAlign);
-  drawShape(shapeContainer, shapeTextHtml);
+    drawTextAlign(selectedTextAlign);
+    drawShape(shapeContainer, shapeTextHtml);
+  } else {
+    console.log('No active shape found.');
+  }
 });
 
 $("#closeShapeToolbar").on("click", function () {
@@ -169,6 +177,8 @@ viewer.addEventListener("mousedown", function (e) {
   rectElement = document.createElement("div");
   rectElement.id = "shape" + baseId;
   rectElement.className = "shapeContainer form-fields active";
+  rectElement.setAttribute("type", shapeType);
+  rectElement.setAttribute("position", selectedTextAlign);
   rectElement.style.position = "absolute";
   rectElement.style.left = `${startX}px`;
   rectElement.style.top = `${startY}px`;
@@ -185,8 +195,6 @@ viewer.addEventListener("mousedown", function (e) {
     rectElement.style.fontStyle = selectedTextItalic ? "italic" : "normal";
     rectElement.style.textDecoration = selectedTextUnderline ? "underline" : "none";
     rectElement.style.fontFamily = `${selectedTextFamily}`;
-
-    ///... selectedTextAlign
   }
 
   viewer.appendChild(rectElement);
@@ -195,81 +203,107 @@ viewer.addEventListener("mousedown", function (e) {
 viewer.addEventListener("mousemove", function (e) {
   if (!isDrawing) return;
 
-  const currentX = e.clientX - viewer.getBoundingClientRect().left;
-  const currentY = e.clientY - viewer.getBoundingClientRect().top;
-  const width = currentX - startX;
-  const height = currentY - startY;
-
   if (shapeType === "line") {
-    rectElement.style.width = `${Math.abs(width)}px`;
-    rectElement.style.height = `${selectedBorderWeight}px`;
-    rectElement.style.transform = `rotate(${Math.atan2(height, width) * (180 / Math.PI)}deg)`;
-  } else if (shapeType === "circle") {
-    const size = Math.max(Math.abs(width), Math.abs(height));
-    rectElement.style.width = `${size}px`;
-    rectElement.style.height = `${size}px`;
-  } else if (shapeType === "shape") {
-    rectElement.style.width = `${Math.abs(width)}px`;
-    rectElement.style.height = `${Math.abs(height)}px`;
-  }
+    const rect = viewer.getBoundingClientRect();
+    const currentX = e.clientX - rect.left;
+    const currentY = e.clientY - rect.top;
+    const deltaX = currentX - startX;
+    const deltaY = currentY - startY;
+    const length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+    const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
 
-  rectElement.style.left = `${Math.min(currentX, startX)}px`;
-  rectElement.style.top = `${Math.min(currentY, startY)}px`;
+    rectElement.style.position = "absolute";
+    rectElement.style.width = `${length}px`;
+    rectElement.style.height = `${selectedBorderWeight}px`;
+    rectElement.style.left = `${startX}px`;
+    rectElement.style.top = `${startY}px`;
+    rectElement.style.transformOrigin = "0 0";
+    rectElement.style.transform = `rotate(${angle}deg)`;
+    rectElement.style.backgroundColor = selectedShapeOutlineColor;
+  } else {
+    const currentX = e.clientX - viewer.getBoundingClientRect().left;
+    const currentY = e.clientY - viewer.getBoundingClientRect().top;
+    const width = currentX - startX;
+    const height = currentY - startY;
+
+    if (shapeType === "circle") {
+      const size = Math.max(Math.abs(width), Math.abs(height));
+      rectElement.style.width = `${size}px`;
+      rectElement.style.height = `${size}px`;
+    } else if (shapeType === "shape") {
+      rectElement.style.width = `${Math.abs(width)}px`;
+      rectElement.style.height = `${Math.abs(height)}px`;
+    }
+
+    rectElement.style.left = `${Math.min(currentX, startX)}px`;
+    rectElement.style.top = `${Math.min(currentY, startY)}px`;
+  }
 });
 
 viewer.addEventListener("mouseup", function (e) {
   if (!isDrawing) return;
 
-  initialShapeStyle();
-
-  viewer.style.cursor = 'auto';
-
-  const rect = viewer.getBoundingClientRect();
-  const endX = e.clientX - rect.left;
-  const endY = e.clientY - rect.top;
-
-  const left = Math.min(startX, endX);
-  const top = Math.min(startY, endY);
-
-  let ost = computePageOffset();
-  let x = left + rect.left - ost.left;
-  let y = top + rect.top - ost.top;
-
-  let pageId = String(PDFViewerApplication.page);
-  let pg = document.getElementById(pageId);
-
-  let shape_x_y = PDFViewerApplication.pdfViewer._pages[
-    PDFViewerApplication.page - 1
-  ].viewport.convertToPdfPoint(x, y);
-
-  pos_x_pdf = shape_x_y[0];
-  pos_y_pdf = shape_x_y[1];
-
-  isDrawing = false;
-  isDrawingShape = false;
-  current_form_id = baseId;
-  current_shape_id = baseId;
-
   if (shapeType === "line") {
-    rectElement.style.transform = rectElement.style.transform || "none";
-  }
+    const rect = viewer.getBoundingClientRect();
+    const endX = e.clientX - rect.left;
+    const endY = e.clientY - rect.top;
+    const deltaX = endX - startX;
+    const deltaY = endY - startY;
+    const length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+    const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
 
-  $("#shapeToolbar").css("display", "flex");
-  $("#viewerContainer").addClass("withToolbar");
+    rectElement.style.width = `${length}px`;
+    rectElement.style.height = `${selectedBorderWeight}px`;
+    rectElement.style.left = `${startX}px`;
+    rectElement.style.top = `${startY}px`;
+    rectElement.style.transformOrigin = "0 0";
+    rectElement.style.transform = `rotate(${angle}deg)`;
 
-  plot.initStore();
+    isDrawing = false;
+    isDrawingShape = false;
 
-  if (shapeType !== "line") {
+    enableInteractJS(rectElement.id, SHAPE, baseId);
+  } else {
+    initialShapeStyle();
+
+    viewer.style.cursor = 'auto';
+
+    const rect = viewer.getBoundingClientRect();
+    const endX = e.clientX - rect.left;
+    const endY = e.clientY - rect.top;
+
+    const left = Math.min(startX, endX);
+    const top = Math.min(startY, endY);
+
+    let ost = computePageOffset();
+    let x = left + rect.left - ost.left;
+    let y = top + rect.top - ost.top;
+
+    let pageId = String(PDFViewerApplication.page);
+    let pg = document.getElementById(pageId);
+
+    let shape_x_y = PDFViewerApplication.pdfViewer._pages[
+      PDFViewerApplication.page - 1
+    ].viewport.convertToPdfPoint(x, y);
+
+    pos_x_pdf = shape_x_y[0];
+    pos_y_pdf = shape_x_y[1];
+
+    isDrawing = false;
+    isDrawingShape = false;
+    current_form_id = baseId;
+    current_shape_id = baseId;
+
+    $("#shapeToolbar").css("display", "flex");
+    $("#viewerContainer").addClass("withToolbar");
+
+    plot.initStore();
+
     const editableDiv = document.createElement("div");
     editableDiv.className = "shapeText";
     editableDiv.setAttribute("contenteditable", "false");
     editableDiv.style.position = "absolute";
     editableDiv.style.width = "100%";
-    // editableDiv.style.height = "100%";
-    // editableDiv.style.display = "flex";
-    // editableDiv.style.alignItems = "center";
-    // editableDiv.style.justifyContent = "center";
-    // editableDiv.style.flexDirection = "column";
     editableDiv.style.textAlign = "center";
     editableDiv.style.color = selectedTextColor;
     editableDiv.style.fontSize = selectedTextSize;
@@ -277,16 +311,12 @@ viewer.addEventListener("mouseup", function (e) {
     editableDiv.style.fontStyle = selectedTextItalic ? "italic" : "normal";
     editableDiv.style.textDecoration = selectedTextUnderline ? "underline " : "";
     editableDiv.style.fontFamily = selectedTextFamily;
-
-    //... selectedTextAlign
   
     rectElement.appendChild(editableDiv);
   
     enableInteractJS(rectElement.id, SHAPE, baseId);
-
     editableDiv.addEventListener("blur", () => {
       const shapeText = editableDiv.innerHTML.trim();
-
       drawShape(rectElement, shapeText);
     });
   }
@@ -358,6 +388,11 @@ viewer.addEventListener("dblclick", function (e) {
       const shapeContainer = e.target.closest(".shapeContainer");
       const shapeText = shapeContainer.querySelector(".shapeText");
 
+      const existingShapeType = shapeContainer.getAttribute("type");
+      const existingShapePosition = shapeContainer.getAttribute("position");
+      shapeType = existingShapeType;
+      selectedTextAlign = existingShapePosition;
+
       showTextInput(e, shapeText);
 
       $(".shapeContainer").removeClass("active");
@@ -416,7 +451,6 @@ viewer.addEventListener("dblclick", function (e) {
       selectedTextUnderline = shapeText.style.textDecoration === "underline" ? true : false;
       selectedTextFamily = shapeText.style.fontFamily;
 
-      //... selectedTextAlign
       if (isDraft != null) {
         const horizontalAlign = $("#text-align-dropdown .flex-container.active[type='horizontal']").attr("direction");
         const verticalAlign = $("#text-align-dropdown .flex-container.active[type='vertical']").attr("direction");
@@ -477,7 +511,7 @@ function initialShapeStyle(){
   selectedTextItalic = false;
   selectedTextUnderline = false;
   selectedTextFamily = 'Courier';
-  selectedTextAlign = 'top,left';
+  selectedTextAlign = shapeType === "circle" ? 'middle,center' : 'top,left';
 }
 
 function handleShape(shapeFillColor, borderColor, textColor, borderRadius, borderWidth, textSize, textBold, textItalic, textUnderline, textFamily, textAlign, shapeText, w, h, canvasWidth, canvasHeight) {
@@ -548,78 +582,93 @@ function handleShape(shapeFillColor, borderColor, textColor, borderRadius, borde
 function enableInteractJS(elementId, type, currentId) {
   const element = document.getElementById(elementId);
 
-  interact(`#${elementId}`)
-    .resizable({
-      edges: { left: ".resize-l", right: ".resize-r", bottom: ".resize-b", top: ".resize-t" },
-      listeners: {
-        move(event) {
-          const target = event.target;
-          let x = (parseFloat(target.getAttribute("data-x")) || 0);
-          let y = (parseFloat(target.getAttribute("data-y")) || 0);
-          x += event.deltaRect.left;
-          y += event.deltaRect.top;
-          target.style.width = `${event.rect.width}px`;
-          target.style.height = `${event.rect.height}px`;
-          target.style.transform = `translate(${x}px, ${y}px)`;
-          target.setAttribute("data-x", x);
-          target.setAttribute("data-y", y);
-          resizeHandler(event.rect.width, event.rect.height, currentId);
+  const getRotationAngle = (element) => {
+    const matrix = window.getComputedStyle(element).transform;
+    if (matrix === 'none') return 0;
+    const values = matrix.split('(')[1].split(')')[0].split(',');
+    const a = values[0];
+    const b = values[1];
+    const angle = Math.round(Math.atan2(b, a) * (180 / Math.PI));
+    return angle;
+  };
+
+  let originalAngle = getRotationAngle(element);
+
+  if (shapeType !== "line") {
+    interact(`#${elementId}`)
+      .resizable({
+        edges: { left: ".resize-l", right: ".resize-r", bottom: ".resize-b", top: ".resize-t" },
+        listeners: {
+          move(event) {
+            const target = event.target;
+            let x = (parseFloat(target.getAttribute("data-x")) || 0);
+            let y = (parseFloat(target.getAttribute("data-y")) || 0);
+            x += event.deltaRect.left;
+            y += event.deltaRect.top;
+            target.style.width = `${event.rect.width}px`;
+            target.style.height = `${event.rect.height}px`;
+            target.style.transform = `translate(${x}px, ${y}px) rotate(${originalAngle}deg)`;
+            target.setAttribute("data-x", x);
+            target.setAttribute("data-y", y);
+
+            resizeHandler(event.rect.width, event.rect.height, currentId);
+          },
+          end(event) {
+            console.log(event);
+          },
         },
-        end(event) {
-          console.log(event);
-        },
+        modifiers: [
+          interact.modifiers.restrictEdges({ outer: "parent" }),
+          interact.modifiers.restrictSize({ min: { width: 15, height: 15 } }),
+        ],
+        inertia: true,
+        enabled: true
+      });
+  }
+
+  interact(`#${elementId}`).draggable({
+    listeners: {
+      move(event) {
+        const target = event.target;
+        let x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
+        let y = (parseFloat(target.getAttribute("data-y")) || 0) + event.dy;
+        target.style.transform = `translate(${x}px, ${y}px) rotate(${originalAngle}deg)`;
+        target.setAttribute("data-x", x);
+        target.setAttribute("data-y", y);
+
+        drawCrossLines(target);
       },
-      modifiers: [
-        interact.modifiers.restrictEdges({ outer: "parent" }),
-        interact.modifiers.restrictSize({ min: { width: 15, height: 15 } }),
-      ],
-      inertia: true,
-      enabled: false
-    })
-    .draggable({
-      listeners: {
-        move(event) {
-          const target = event.target;
-          let x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
-          let y = (parseFloat(target.getAttribute("data-y")) || 0) + event.dy;
-          target.style.transform = `translate(${x}px, ${y}px)`;
-          target.setAttribute("data-x", x);
-          target.setAttribute("data-y", y);
-          drawCrossLines(target);
-        },
-        end(event) {
-          const target = event.target;
-          const shapeText = target.querySelector(".shapeText").innerHTML.trim();
-          
-          handleShape(
-            target.style.backgroundColor,
-            target.style.borderColor,
-            target.querySelector(".shapeText").style.color,
-            target.style.borderRadius,
-            target.style.borderWidth,
-            target.querySelector(".shapeText").style.fontSize,
-            target.querySelector(".shapeText").style.fontWeight === "bold",
-            target.querySelector(".shapeText").style.fontStyle === "italic",
-            target.querySelector(".shapeText").style.textDecoration.includes("underline"),
-            target.querySelector(".shapeText").style.fontFamily,
-            selectedTextAlign,
-            shapeText,
-            parseInt(target.style.width, 10),
-            parseInt(target.style.height, 10),
-            viewer.clientWidth,
-            viewer.clientHeight,
-          );
-          $(".horizontal-line, .vertical-line").remove();
-        },
+      end(event) {
+        const target = event.target;
+        handleShape(
+          target.style.backgroundColor,
+          target.style.borderColor,
+          selectedShapeFillColor,
+          target.style.borderRadius,
+          target.style.borderWidth,
+          12,
+          false,
+          false,
+          "none",
+          selectedTextFamily,
+          selectedTextAlign,
+          target.innerHTML.trim(),
+          parseInt(target.style.width, 10),
+          parseInt(target.style.height, 10),
+          viewer.clientWidth,
+          viewer.clientHeight
+        );
+        $(".horizontal-line, .vertical-line").remove();
       },
-      inertia: true,
-      modifiers: [
-        interact.modifiers.restrictRect({
-          restriction: 'parent',
-          endOnly: true
-        })
-      ],
-    });
+    },
+    inertia: true,
+    modifiers: [
+      interact.modifiers.restrictRect({
+        restriction: 'parent',
+        endOnly: true
+      })
+    ],
+  });
 
   element.addEventListener("click", function () {
     interact(`#${elementId}`).resizable({ enabled: true });
@@ -755,6 +804,10 @@ function drawTextAlign(selectedTextAlign) {
     shapeText.style.left = "50%";
     shapeText.style.transform = "translate(-50%, -50%)";
   }
+
+  $("#text-align-dropdown .flex-container").removeClass("active");
+  $(`#text-align-dropdown .flex-container[direction=${horizontalAlign}]`).addClass("active");
+  $(`#text-align-dropdown .flex-container[direction=${verticalAlign}]`).addClass("active");
 }
 
 function rgbToHex(rgb) {

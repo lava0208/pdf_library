@@ -5190,7 +5190,7 @@ function cropCanvas(canvas) {
   return newCanvas.toDataURL();
 }
 
-const flatten = async function () {
+const flatten = async function () {  
   pdfBytes = await PDFViewerApplication.pdfDocument.saveDocument();
   const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
   const form = pdfDoc.getForm();
@@ -5229,13 +5229,11 @@ async function fetchImageAsBase64(url) {
 }
 
 async function embedImage(form_item, pdfDoc, page) {
-  let imgData = form_item.imgData;
+  let imgData = form_item.form_type === SIGNATURE ? form_item.imgData : form_item.photoData;
 
   if (!imgData.includes("data:image/png;base64")) {
     imgData = $("#" + form_item.containerId).find("img").attr("src");
   }
-
-  const [r, g, b] = hexToRgb1(form_item.textBackgroundColor);
 
   try {
     const pngImage = await pdfDoc.embedPng(imgData);
@@ -5244,7 +5242,7 @@ async function embedImage(form_item, pdfDoc, page) {
       y: form_item.y - form_item.height,
       width: form_item.width,
       height: form_item.height,
-      color: hexToRgbNew(form_item.textBackgroundColor),
+      color: form_item.textBackgroundColor ? hexToRgbNew(form_item.textBackgroundColor) : PDFLib.rgb(1, 1, 1),
     });
     page.drawImage(pngImage, {
       x: form_item.x,
@@ -5283,8 +5281,8 @@ async function addFormElements() {
   let checkboxForm, radioForm, textfieldForm, comboboxForm, datefieldForm;
   let radioOption;
   let selectedFont = "";
-  if (form_storage && form_storage.length != 0) {
-    form_storage.map(async (form_item) => {
+  if (draw_form_storage && draw_form_storage.length != 0) {
+    draw_form_storage.map(async (form_item) => {
       page = pdfDoc.getPage(form_item.page_number - 1);
       if (form_item.form_type == RADIO) {
         if (radioOption != form_item.data.option) {
@@ -5297,18 +5295,19 @@ async function addFormElements() {
         form_item.form_type != CHECKBOX &&
         form_item.form_type != RADIO &&
         form_item.form_type != SIGNATURE &&
-        form_item.form_type != SHAPE
+        form_item.form_type != SHAPE,
+        form_item.form_type != PHOTO
       ) {
         const fontName = form_item.fontStyle;
-        if (fontStyles.hasOwnProperty(fontName)) {
+        if (fontName && fontStyles.hasOwnProperty(fontName)) {
           selectedFont = fontStyles[fontName];
         } else {
           const fontByte = font_storage.find(
             (font) => font.fontName === fontName
           );
-          selectedFont = fontByte.fontArrayBuffer;
+          selectedFont = fontByte && fontByte.fontArrayBuffer;
         }
-        customFont = await pdfDoc.embedFont(selectedFont);
+        customFont = await selectedFont && pdfDoc.embedFont(selectedFont);
       }
       switch (form_item.form_type) {
         case CHECKBOX:
@@ -5601,6 +5600,8 @@ async function addFormElements() {
           break;
         case SIGNATURE:
           if (form_item.imgData != undefined) {
+            console.log(form_item);
+            
             await embedImage(form_item, pdfDoc, page);
           }else{
             page.drawRectangle({

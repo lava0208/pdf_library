@@ -219,7 +219,6 @@ viewer.addEventListener("mousemove", function (e) {
     rectElement.style.top = `${startY}px`;
     rectElement.style.transformOrigin = "0 0";
     rectElement.style.transform = `rotate(${angle}deg)`;
-    rectElement.style.backgroundColor = selectedShapeOutlineColor;
   } else {
     const currentX = e.clientX - viewer.getBoundingClientRect().left;
     const currentY = e.clientY - viewer.getBoundingClientRect().top;
@@ -328,21 +327,27 @@ viewer.addEventListener("click", function (e) {
       form_storage.forEach((formItem) => {
         if (formItem.form_type === SHAPE) {
           if (formItem.id == current_form_id) {
-            // Save the updated text before any other actions
             const shapeContainer = document.getElementById(formItem.containerId);
-            const shapeTextDiv = shapeContainer.querySelector(".shapeText");
-            const shapeText = shapeTextDiv.innerHTML.trim();
+            
+            let shapeText = "";
+            if (shapeType !== "line") {
+              const shapeTextDiv = shapeContainer.querySelector(".shapeText");
+              if (shapeTextDiv) {
+                shapeText = shapeTextDiv.innerHTML.trim();
+              }
+            }
+
             handleShape(
               shapeContainer.style.backgroundColor,
               shapeContainer.style.borderColor,
-              shapeTextDiv.style.color,
+              shapeType !== "line" ? shapeTextDiv.style.color : null,
               shapeContainer.style.borderRadius,
               shapeContainer.style.borderWidth,
-              shapeTextDiv.style.fontSize,
-              shapeTextDiv.style.fontWeight === "bold",
-              shapeTextDiv.style.fontStyle === "italic",
-              shapeTextDiv.style.textDecoration.includes("underline"),
-              shapeTextDiv.style.fontFamily,
+              shapeType !== "line" ? shapeTextDiv.style.fontSize : null,
+              shapeType !== "line" ? shapeTextDiv.style.fontWeight === "bold" : false,
+              shapeType !== "line" ? shapeTextDiv.style.fontStyle === "italic" : false,
+              shapeType !== "line" ? shapeTextDiv.style.textDecoration.includes("underline") : false,
+              shapeType !== "line" ? shapeTextDiv.style.fontFamily : null,
               selectedTextAlign,
               shapeText,
               parseInt(shapeContainer.style.width, 10),
@@ -365,7 +370,7 @@ viewer.addEventListener("click", function (e) {
       $("#shapeTypeToolbar").addClass("hidden");
       $("#viewerContainer").removeClass("withToolbar");
       $(".shapeContainer.active").removeClass("active");
-      if(document.getElementById("shape_tooltipbar" + current_shape_id)){
+      if (document.getElementById("shape_tooltipbar" + current_shape_id)) {
         document.getElementById("shape_tooltipbar" + current_shape_id).remove();
       }      
     }
@@ -375,7 +380,6 @@ viewer.addEventListener("click", function (e) {
     });
   }
 });
-
 
 viewer.addEventListener("dblclick", function (e) {
   if(isDraft !== "false" && !isEditing){
@@ -393,72 +397,76 @@ viewer.addEventListener("dblclick", function (e) {
       shapeType = existingShapeType;
       selectedTextAlign = existingShapePosition;
 
-      showTextInput(e, shapeText);
-
       $(".shapeContainer").removeClass("active");
       $(shapeContainer).addClass("active");
-      $("#list-style-dropdown .dropdown-menu").removeClass("show");
 
-      $("#shape-fill-dropdown").find("input").val(rgbToHex(shapeContainer.style.backgroundColor));
-      $("#shape-outline-dropdown").find("input").val(rgbToHex(shapeContainer.style.borderColor));
-      $("#text-color-dropdown").find("input").val(rgbToHex(shapeText.style.color));
-  
-      if(shapeType === "shape"){
-        $("#border-radius-dropdown input").val(parseInt(shapeContainer.style.borderRadius));
-        $("#border-radius-dropdown .range-value").text(shapeContainer.style.borderRadius);
+      if(shapeType === "line"){
+        // $("#shape-outline-dropdown").find("input").val(rgbToHex(shapeContainer.style.borderColor));        
       }else{
-        $("#border-radius-dropdown input").val(0);
-      }
-      $("#border-weight-dropdown input").val(parseInt(shapeContainer.style.borderWidth));      
-      $("#text-size-dropdown input").val(parseInt(shapeText.style.fontSize));
-
-      $("#border-weight-dropdown .range-value").text(shapeContainer.style.borderWidth);
-      $("#text-size-dropdown .range-value").text(shapeText.style.fontSize);
+        showTextInput(e, shapeText);
+        $("#list-style-dropdown .dropdown-menu").removeClass("show");
   
-      if (shapeText.style.fontWeight === "bold") {
-        $("#shape-text-bold").addClass("active");
-      } else {
-        $("#shape-text-bold").removeClass("active");
-      }
-  
-      if (shapeText.style.fontStyle === "italic") {
-        $("#shape-text-italic").addClass("active");
-      } else {
-        $("#shape-text-italic").removeClass("active");
-      }
-  
-      if (shapeText.style.textDecoration.includes("underline")) {
-        $("#shape-text-underline").addClass("active");
-      } else {
-        $("#shape-text-underline").removeClass("active");
-      }
+        $("#shape-fill-dropdown").find("input").val(rgbToHex(shapeContainer.style.backgroundColor));
+        $("#shape-outline-dropdown").find("input").val(rgbToHex(shapeContainer.style.borderColor));
+        $("#text-color-dropdown").find("input").val(rgbToHex(shapeText.style.color));
 
-      if (shapeText.style.fontFamily && shapeText.style.fontFamily !== "") {
-        $(".font-family-container").removeClass("active");
-        $(`.font-family-container[family="${shapeText.style.fontFamily}"]`).addClass("active");
-      } else {
-        $(".font-family-container").removeClass("active");
-      }
+        $("#border-weight-dropdown input").val(parseInt(shapeContainer.style.borderWidth));      
+        $("#text-size-dropdown input").val(parseInt(shapeText.style.fontSize));
+        $("#border-weight-dropdown .range-value").text(shapeContainer.style.borderWidth);
+        $("#text-size-dropdown .range-value").text(shapeText.style.fontSize);
+
+        if(shapeType === "shape"){
+          $("#border-radius-dropdown input").val(parseInt(shapeContainer.style.borderRadius));
+          $("#border-radius-dropdown .range-value").text(shapeContainer.style.borderRadius);
+        }else{
+          $("#border-radius-dropdown input").val(0);
+        }
+
+        if (shapeText.style.fontWeight === "bold") {
+          $("#shape-text-bold").addClass("active");
+        } else {
+          $("#shape-text-bold").removeClass("active");
+        }
+    
+        if (shapeText.style.fontStyle === "italic") {
+          $("#shape-text-italic").addClass("active");
+        } else {
+          $("#shape-text-italic").removeClass("active");
+        }
+    
+        if (shapeText.style.textDecoration.includes("underline")) {
+          $("#shape-text-underline").addClass("active");
+        } else {
+          $("#shape-text-underline").removeClass("active");
+        }
   
-      selectedShapeFillColor = shapeContainer.style.backgroundColor;
-      selectedShapeOutlineColor = shapeContainer.style.borderColor;
-      selectedBorderRadius = shapeContainer.style.borderRadius;
-      selectedBorderWeight = shapeContainer.style.borderWidth;
-      selectedTextColor = shapeText.style.color;
-      selectedTextSize = shapeText.style.fontSize;
-      selectedTextBold = shapeText.style.fontWeight === "bold" ? true : false;
-      selectedTextItalic = shapeText.style.fontStyle === "italic" ? true : false;
-      selectedTextUnderline = shapeText.style.textDecoration === "underline" ? true : false;
-      selectedTextFamily = shapeText.style.fontFamily;
+        if (shapeText.style.fontFamily && shapeText.style.fontFamily !== "") {
+          $(".font-family-container").removeClass("active");
+          $(`.font-family-container[family="${shapeText.style.fontFamily}"]`).addClass("active");
+        } else {
+          $(".font-family-container").removeClass("active");
+        }
 
-      if (isDraft != null) {
-        const horizontalAlign = $("#text-align-dropdown .flex-container.active[type='horizontal']").attr("direction");
-        const verticalAlign = $("#text-align-dropdown .flex-container.active[type='vertical']").attr("direction");
-        const selectedTextAlign = verticalAlign + "," + horizontalAlign;
+        selectedShapeFillColor = shapeContainer.style.backgroundColor;
+        selectedShapeOutlineColor = shapeContainer.style.borderColor;
+        selectedBorderRadius = shapeContainer.style.borderRadius;
+        selectedBorderWeight = shapeContainer.style.borderWidth;
+        selectedTextColor = shapeText.style.color;
+        selectedTextSize = shapeText.style.fontSize;
+        selectedTextBold = shapeText.style.fontWeight === "bold" ? true : false;
+        selectedTextItalic = shapeText.style.fontStyle === "italic" ? true : false;
+        selectedTextUnderline = shapeText.style.textDecoration === "underline" ? true : false;
+        selectedTextFamily = shapeText.style.fontFamily;
 
-        drawTextAlign(selectedTextAlign);
-      } else {
-        drawTextAlign(selectedTextAlign);
+        if (isDraft != null) {
+          const horizontalAlign = $("#text-align-dropdown .flex-container.active[type='horizontal']").attr("direction");
+          const verticalAlign = $("#text-align-dropdown .flex-container.active[type='vertical']").attr("direction");
+          const selectedTextAlign = verticalAlign + "," + horizontalAlign;
+  
+          drawTextAlign(selectedTextAlign);
+        } else {
+          drawTextAlign(selectedTextAlign);
+        }
       }
 
       //... add delete button
@@ -596,34 +604,34 @@ function enableInteractJS(elementId, type, currentId) {
 
   if (shapeType !== "line") {
     interact(`#${elementId}`)
-      .resizable({
-        edges: { left: ".resize-l", right: ".resize-r", bottom: ".resize-b", top: ".resize-t" },
-        listeners: {
-          move(event) {
-            const target = event.target;
-            let x = (parseFloat(target.getAttribute("data-x")) || 0);
-            let y = (parseFloat(target.getAttribute("data-y")) || 0);
-            x += event.deltaRect.left;
-            y += event.deltaRect.top;
-            target.style.width = `${event.rect.width}px`;
-            target.style.height = `${event.rect.height}px`;
-            target.style.transform = `translate(${x}px, ${y}px) rotate(${originalAngle}deg)`;
-            target.setAttribute("data-x", x);
-            target.setAttribute("data-y", y);
+    .resizable({
+      edges: { left: ".resize-l", right: ".resize-r", bottom: ".resize-b", top: ".resize-t" },
+      listeners: {
+        move(event) {
+          const target = event.target;
+          let x = (parseFloat(target.getAttribute("data-x")) || 0);
+          let y = (parseFloat(target.getAttribute("data-y")) || 0);
+          x += event.deltaRect.left;
+          y += event.deltaRect.top;
+          target.style.width = `${event.rect.width}px`;
+          target.style.height = `${event.rect.height}px`;
+          target.style.transform = `translate(${x}px, ${y}px) rotate(${originalAngle}deg)`;
+          target.setAttribute("data-x", x);
+          target.setAttribute("data-y", y);
 
-            resizeHandler(event.rect.width, event.rect.height, currentId);
-          },
-          end(event) {
-            console.log(event);
-          },
+          resizeHandler(event.rect.width, event.rect.height, currentId);
         },
-        modifiers: [
-          interact.modifiers.restrictEdges({ outer: "parent" }),
-          interact.modifiers.restrictSize({ min: { width: 15, height: 15 } }),
-        ],
-        inertia: true,
-        enabled: true
-      });
+        end(event) {
+          console.log(event);
+        },
+      },
+      modifiers: [
+        interact.modifiers.restrictEdges({ outer: "parent" }),
+        interact.modifiers.restrictSize({ min: { width: 15, height: 15 } }),
+      ],
+      inertia: true,
+      enabled: true
+    });
   }
 
   interact(`#${elementId}`).draggable({
@@ -697,7 +705,9 @@ function drawShapeFromStorage(formItem) {
 
   editableDiv.addEventListener("dblclick", (event) => {
     // current_form_id = formItem.id;
-    showTextInput(event, editableDiv);
+    if(shapeType !== "line"){
+      showTextInput(event, editableDiv);
+    }
   });
 
   editableDiv.addEventListener("blur", () => {
@@ -825,14 +835,19 @@ function saveShapeColorStyle(that){
 
   const shapeContainer = document.querySelector(".shapeContainer.active");
   const shapeText = shapeContainer && shapeContainer.querySelector(".shapeText");
-  const shapeTextHtml = shapeContainer && shapeContainer.querySelector(".shapeText").innerHTML.trim();
+  const shapeTextHtml = shapeType === "line" ? "" : shapeContainer && shapeContainer.querySelector(".shapeText").innerHTML.trim();
 
   if (type === "background") {
     selectedShapeFillColor = color;
     shapeContainer.style.backgroundColor = color;
   } else if (type === "border") {
-    selectedShapeOutlineColor = color;
-    shapeContainer.style.borderColor = color;
+    console.log("shapeType " + shapeType)
+    if(shapeType === "line"){
+      shapeContainer.style.borderBottom = `1px solid ${color}`;
+    }else{
+      selectedShapeOutlineColor = color;
+      shapeContainer.style.borderColor = color;
+    }
   } else if (type === "text") {
     selectedTextColor = color;
     shapeText.style.color = color;

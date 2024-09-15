@@ -2856,283 +2856,176 @@ const resizeCanvas = function (id, type, currentId, optionId) {
   DrawType = type;
   const interactInstance = interact(`#${id}`)
 
-  if (type === PHOTO) {
-    interactInstance.draggable({
-      listeners: {
-        move(event) {
-          if (!isEditing) {
-            var target = event.target;
-            // keep the dragged position in the data-x/data-y attributes
-            var x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
-            var y = (parseFloat(target.getAttribute("data-y")) || 0) + event.dy;
-            if (DrawType === RADIO) {
-              form_storage.map(function (item) {
-                if (item.id === parseInt(currentId)) {
-                  if (item.data.baseX && item.data.baseY) {
-                    let posXpdf = item.data.baseX + x * 0.75 * 0.8;
-                    let posYpdf =
-                      item.data.baseY - y * 0.75 * 0.8 - item.data.height;
-                    if (posXpdf < 0) {
-                      newX = 0 - item.data.baseX / 0.75 / 0.8;
-                    } else if (posXpdf + item.data.width >= pageWidth) {
-                      newX =
-                        (pageWidth - item.data.width - item.data.baseX) /
-                        0.75 /
-                        0.8;
-                    } else newX = x;
-                    if (posYpdf < 0) {
-                      newY = (item.data.baseY - item.data.height) / 0.75 / 0.8;
-                    } else if (posYpdf + item.data.height >= pageHeight) {
-                      newY = (item.data.baseY - pageHeight) / 0.75 / 0.8;
-                    } else newY = y;
-                  }
-                }
-              });
-            } else if (DrawType === TEXT_CONTENT) {
-              text_storage.map(function (item) {
-                if (item.id === parseInt(currentId)) {
-                  let posXpdf = item.baseX + x * 0.75 * 0.8;
-                  let posYpdf = item.baseY - y * 0.75 * 0.8 - item.height;
-                  if (posXpdf < 0) {
-                    newX = 0 - item.baseX / 0.75 / 0.8;
-                  } else if (posXpdf + item.width >= pageWidth) {
-                    newX = (pageWidth - item.width - item.baseX) / 0.75 / 0.8;
-                  } else newX = x;
-                  if (posYpdf < 0) {
-                    newY = (item.baseY - item.height) / 0.75 / 0.8;
-                  } else if (posYpdf + item.height >= pageHeight) {
-                    newY = (item.baseY - pageHeight) / 0.75 / 0.8;
-                  } else newY = y;
-                }
-              });
-            } else if (DrawType === COMMENT) {
-              comment_storage.map(function (item) {
-                if (item.id === parseInt(currentId)) {
-                  let posXpdf = item.baseX + x * 0.75 * 0.8;
-                  let posYpdf = item.baseY - y * 0.75 * 0.8 - item.height;
-                  if (posXpdf < 0) {
-                    newX = 0 - item.baseX / 0.75 / 0.8;
-                  } else if (posXpdf + item.width >= pageWidth) {
-                    newX = (pageWidth - item.width - item.baseX) / 0.75 / 0.8;
-                  } else newX = x;
-                  if (posYpdf < 0) {
-                    newY = (item.baseY - item.height) / 0.75 / 0.8;
-                  } else if (posYpdf + item.height >= pageHeight) {
-                    newY = (item.baseY - pageHeight) / 0.75 / 0.8;
-                  } else newY = y;
-                }
-              });
-            } else {
-              form_storage.map(function (item) {
-                if (item.id === parseInt(currentId)) {
-                  let posXpdf = item.baseX + x * 0.75 * 0.8;
-                  let posYpdf = item.baseY - y * 0.75 * 0.8 - item.height;
-                  if (posXpdf < 0) {
-                    newX = 0 - item.baseX / 0.75 / 0.8;
-                  } else if (posXpdf + item.width >= pageWidth) {
-                    newX = (pageWidth - item.width - item.baseX) / 0.75 / 0.8;
-                  } else newX = x;
-                  if (posYpdf < 0) {
-                    newY = (item.baseY - item.height) / 0.75 / 0.8;
-                  } else if (posYpdf + item.height >= pageHeight) {
-                    newY = (item.baseY - pageHeight) / 0.75 / 0.8;
-                  } else newY = y;
-                }
-              });
-            }
-            // translate the element
-            target.style.transform = "translate(" + newX + "px, " + newY + "px)";
+  interactInstance
+  .resizable({
+    // resize from all edges and corners
+    edges: {
+      left: ".resize-l",
+      right: ".resize-r",
+      bottom: ".resize-b",
+      top: ".resize-t",
+    },
 
-            // update the position attributes
-            target.setAttribute("data-x", newX);
-            target.setAttribute("data-y", newY);
+    listeners: {
+      move(event) {
+        if (!isEditing) {
+          var target = event.target;
+          let x = parseFloat(target.getAttribute("data-x")) || 0;
+          let y = parseFloat(target.getAttribute("data-y")) || 0;
 
-            drawCrossLines(target);
-          }
-        },
-        end(event) {
-          if (!isEditing) {
-            const target = event.target;
-            var x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
-            var y = (parseFloat(target.getAttribute("data-y")) || 0) + event.dy;
-            moveEventHandler(event, newX, newY, currentId);
-            $(".horizontal-line, .vertical-line").remove();
-          }
-        },
+          // update the element's style
+          target.style.width = event.rect.width + "px";
+          target.style.height = event.rect.height + "px";
+
+          // translate when resizing from top or left edges
+          x += event.deltaRect.left;
+          y += event.deltaRect.top;
+
+          target.style.transform = "translate(" + x + "px," + y + "px)";
+
+          target.setAttribute("data-x", x);
+          target.setAttribute("data-y", y);
+
+          resizeHandler(event.rect.width, event.rect.height, currentId);
+          showOption(
+            optionId,
+            event.rect.width / 2 - 180,
+            event.rect.height + 15
+          );
+        }
       },
-    });
-  }else{
-    interactInstance
-    .resizable({
-      // resize from all edges and corners
-      edges: {
-        left: ".resize-l",
-        right: ".resize-r",
-        bottom: ".resize-b",
-        top: ".resize-t",
+      end(event) {
+        if (!isEditing) {
+          let target = event.target;
+          let x = parseFloat(target.getAttribute("data-x")) || 0;
+          let y = parseFloat(target.getAttribute("data-y")) || 0;
+          // update the element's style
+          target.style.width = event.rect.width + "px";
+          target.style.height = event.rect.height + "px";
+          target.setAttribute("data-x", x);
+          target.setAttribute("data-y", y);
+          moveEventHandler(event, x, y, currentId);
+        }
       },
+    },
+    modifiers: [
+      // keep the edges inside the parent
+      interact.modifiers.restrictEdges({
+        outer: "parent",
+      }),
 
-      listeners: {
-        move(event) {
-          if (!isEditing) {
-            var target = event.target;
-            let x = parseFloat(target.getAttribute("data-x")) || 0;
-            let y = parseFloat(target.getAttribute("data-y")) || 0;
+      // minimum size
+      interact.modifiers.restrictSize({
+        min: { width: 15, height: 15 },
+      }),
+    ],
 
-            // update the element's style
-            target.style.width = event.rect.width + "px";
-            target.style.height = event.rect.height + "px";
-
-            // translate when resizing from top or left edges
-            x += event.deltaRect.left;
-            y += event.deltaRect.top;
-
-            target.style.transform = "translate(" + x + "px," + y + "px)";
-
-            target.setAttribute("data-x", x);
-            target.setAttribute("data-y", y);
-
-            resizeHandler(event.rect.width, event.rect.height, currentId);
-            showOption(
-              optionId,
-              event.rect.width / 2 - 180,
-              event.rect.height + 15
-            );
-          }
-        },
-        end(event) {
-          if (!isEditing) {
-            let target = event.target;
-            let x = parseFloat(target.getAttribute("data-x")) || 0;
-            let y = parseFloat(target.getAttribute("data-y")) || 0;
-            // update the element's style
-            target.style.width = event.rect.width + "px";
-            target.style.height = event.rect.height + "px";
-            target.setAttribute("data-x", x);
-            target.setAttribute("data-y", y);
-            moveEventHandler(event, x, y, currentId);
-          }
-        },
-      },
-      modifiers: [
-        // keep the edges inside the parent
-        interact.modifiers.restrictEdges({
-          outer: "parent",
-        }),
-
-        // minimum size
-        interact.modifiers.restrictSize({
-          min: { width: 15, height: 15 },
-        }),
-      ],
-
-      inertia: true,
-    })
-    .draggable({
-      listeners: {
-        move(event) {
-          if (!isEditing) {
-            var target = event.target;
-            // keep the dragged position in the data-x/data-y attributes
-            var x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
-            var y = (parseFloat(target.getAttribute("data-y")) || 0) + event.dy;
-            if (DrawType === RADIO) {
-              form_storage.map(function (item) {
-                if (item.id === parseInt(currentId)) {
-                  if (item.data.baseX && item.data.baseY) {
-                    let posXpdf = item.data.baseX + x * 0.75 * 0.8;
-                    let posYpdf =
-                      item.data.baseY - y * 0.75 * 0.8 - item.data.height;
-                    if (posXpdf < 0) {
-                      newX = 0 - item.data.baseX / 0.75 / 0.8;
-                    } else if (posXpdf + item.data.width >= pageWidth) {
-                      newX =
-                        (pageWidth - item.data.width - item.data.baseX) /
-                        0.75 /
-                        0.8;
-                    } else newX = x;
-                    if (posYpdf < 0) {
-                      newY = (item.data.baseY - item.data.height) / 0.75 / 0.8;
-                    } else if (posYpdf + item.data.height >= pageHeight) {
-                      newY = (item.data.baseY - pageHeight) / 0.75 / 0.8;
-                    } else newY = y;
-                  }
-                }
-              });
-            } else if (DrawType === TEXT_CONTENT) {
-              text_storage.map(function (item) {
-                if (item.id === parseInt(currentId)) {
-                  let posXpdf = item.baseX + x * 0.75 * 0.8;
-                  let posYpdf = item.baseY - y * 0.75 * 0.8 - item.height;
+    inertia: true,
+  })
+  .draggable({
+    listeners: {
+      move(event) {
+        if (!isEditing) {
+          var target = event.target;
+          // keep the dragged position in the data-x/data-y attributes
+          var x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
+          var y = (parseFloat(target.getAttribute("data-y")) || 0) + event.dy;
+          if (DrawType === RADIO) {
+            form_storage.map(function (item) {
+              if (item.id === parseInt(currentId)) {
+                if (item.data.baseX && item.data.baseY) {
+                  let posXpdf = item.data.baseX + x * 0.75 * 0.8;
+                  let posYpdf =
+                    item.data.baseY - y * 0.75 * 0.8 - item.data.height;
                   if (posXpdf < 0) {
-                    newX = 0 - item.baseX / 0.75 / 0.8;
-                  } else if (posXpdf + item.width >= pageWidth) {
-                    newX = (pageWidth - item.width - item.baseX) / 0.75 / 0.8;
+                    newX = 0 - item.data.baseX / 0.75 / 0.8;
+                  } else if (posXpdf + item.data.width >= pageWidth) {
+                    newX =
+                      (pageWidth - item.data.width - item.data.baseX) /
+                      0.75 /
+                      0.8;
                   } else newX = x;
                   if (posYpdf < 0) {
-                    newY = (item.baseY - item.height) / 0.75 / 0.8;
-                  } else if (posYpdf + item.height >= pageHeight) {
-                    newY = (item.baseY - pageHeight) / 0.75 / 0.8;
+                    newY = (item.data.baseY - item.data.height) / 0.75 / 0.8;
+                  } else if (posYpdf + item.data.height >= pageHeight) {
+                    newY = (item.data.baseY - pageHeight) / 0.75 / 0.8;
                   } else newY = y;
                 }
-              });
-            } else if (DrawType === COMMENT) {
-              comment_storage.map(function (item) {
-                if (item.id === parseInt(currentId)) {
-                  let posXpdf = item.baseX + x * 0.75 * 0.8;
-                  let posYpdf = item.baseY - y * 0.75 * 0.8 - item.height;
-                  if (posXpdf < 0) {
-                    newX = 0 - item.baseX / 0.75 / 0.8;
-                  } else if (posXpdf + item.width >= pageWidth) {
-                    newX = (pageWidth - item.width - item.baseX) / 0.75 / 0.8;
-                  } else newX = x;
-                  if (posYpdf < 0) {
-                    newY = (item.baseY - item.height) / 0.75 / 0.8;
-                  } else if (posYpdf + item.height >= pageHeight) {
-                    newY = (item.baseY - pageHeight) / 0.75 / 0.8;
-                  } else newY = y;
-                }
-              });
-            } else {
-              form_storage.map(function (item) {
-                if (item.id === parseInt(currentId)) {
-                  let posXpdf = item.baseX + x * 0.75 * 0.8;
-                  let posYpdf = item.baseY - y * 0.75 * 0.8 - item.height;
-                  if (posXpdf < 0) {
-                    newX = 0 - item.baseX / 0.75 / 0.8;
-                  } else if (posXpdf + item.width >= pageWidth) {
-                    newX = (pageWidth - item.width - item.baseX) / 0.75 / 0.8;
-                  } else newX = x;
-                  if (posYpdf < 0) {
-                    newY = (item.baseY - item.height) / 0.75 / 0.8;
-                  } else if (posYpdf + item.height >= pageHeight) {
-                    newY = (item.baseY - pageHeight) / 0.75 / 0.8;
-                  } else newY = y;
-                }
-              });
-            }
-            // translate the element
-            target.style.transform = "translate(" + newX + "px, " + newY + "px)";
-
-            // update the position attributes
-            target.setAttribute("data-x", newX);
-            target.setAttribute("data-y", newY);
-
-            drawCrossLines(target);
+              }
+            });
+          } else if (DrawType === TEXT_CONTENT) {
+            text_storage.map(function (item) {
+              if (item.id === parseInt(currentId)) {
+                let posXpdf = item.baseX + x * 0.75 * 0.8;
+                let posYpdf = item.baseY - y * 0.75 * 0.8 - item.height;
+                if (posXpdf < 0) {
+                  newX = 0 - item.baseX / 0.75 / 0.8;
+                } else if (posXpdf + item.width >= pageWidth) {
+                  newX = (pageWidth - item.width - item.baseX) / 0.75 / 0.8;
+                } else newX = x;
+                if (posYpdf < 0) {
+                  newY = (item.baseY - item.height) / 0.75 / 0.8;
+                } else if (posYpdf + item.height >= pageHeight) {
+                  newY = (item.baseY - pageHeight) / 0.75 / 0.8;
+                } else newY = y;
+              }
+            });
+          } else if (DrawType === COMMENT) {
+            comment_storage.map(function (item) {
+              if (item.id === parseInt(currentId)) {
+                let posXpdf = item.baseX + x * 0.75 * 0.8;
+                let posYpdf = item.baseY - y * 0.75 * 0.8 - item.height;
+                if (posXpdf < 0) {
+                  newX = 0 - item.baseX / 0.75 / 0.8;
+                } else if (posXpdf + item.width >= pageWidth) {
+                  newX = (pageWidth - item.width - item.baseX) / 0.75 / 0.8;
+                } else newX = x;
+                if (posYpdf < 0) {
+                  newY = (item.baseY - item.height) / 0.75 / 0.8;
+                } else if (posYpdf + item.height >= pageHeight) {
+                  newY = (item.baseY - pageHeight) / 0.75 / 0.8;
+                } else newY = y;
+              }
+            });
+          } else {
+            form_storage.map(function (item) {
+              if (item.id === parseInt(currentId)) {
+                let posXpdf = item.baseX + x * 0.75 * 0.8;
+                let posYpdf = item.baseY - y * 0.75 * 0.8 - item.height;
+                if (posXpdf < 0) {
+                  newX = 0 - item.baseX / 0.75 / 0.8;
+                } else if (posXpdf + item.width >= pageWidth) {
+                  newX = (pageWidth - item.width - item.baseX) / 0.75 / 0.8;
+                } else newX = x;
+                if (posYpdf < 0) {
+                  newY = (item.baseY - item.height) / 0.75 / 0.8;
+                } else if (posYpdf + item.height >= pageHeight) {
+                  newY = (item.baseY - pageHeight) / 0.75 / 0.8;
+                } else newY = y;
+              }
+            });
           }
-        },
-        end(event) {
-          if (!isEditing) {
-            const target = event.target;
-            var x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
-            var y = (parseFloat(target.getAttribute("data-y")) || 0) + event.dy;
-            moveEventHandler(event, newX, newY, currentId);
-            $(".horizontal-line, .vertical-line").remove();
-          }
-        },
+          // translate the element
+          target.style.transform = "translate(" + newX + "px, " + newY + "px)";
+
+          // update the position attributes
+          target.setAttribute("data-x", newX);
+          target.setAttribute("data-y", newY);
+
+          drawCrossLines(target);
+        }
       },
-    });
-  }
+      end(event) {
+        if (!isEditing) {
+          const target = event.target;
+          var x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
+          var y = (parseFloat(target.getAttribute("data-y")) || 0) + event.dy;
+          moveEventHandler(event, newX, newY, currentId);
+          $(".horizontal-line, .vertical-line").remove();
+        }
+      },
+    },
+  });
 };
 
 function drawCrossLines(target) {

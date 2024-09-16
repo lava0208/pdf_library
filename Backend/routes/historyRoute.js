@@ -16,8 +16,13 @@ const storage = multer.diskStorage({
         setCurrentFile("uploads/" + currentFileName);
     }
 });
-const upload = multer({ storage: storage });
-
+const upload = multer({
+    storage: storage,
+    limits: {
+        fieldSize: 25 * 1024 * 1024, // Allow fields up to 25MB
+        fileSize: 50 * 1024 * 1024,  // Allow file uploads up to 50MB
+    }
+});
 
 const { getAllDocuments, getAllFolderDocuments, getDocument, createDocument, updateDocument, updateDocumentName, deleteDocument, moveDocument } = require('../controllers/historyController');
 

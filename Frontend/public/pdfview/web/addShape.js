@@ -72,7 +72,11 @@ $(".size-dropdown input").on("input", function () {
   } else if (type === "2") {
     selectedBorderWeight = $(this).val() + "px";
     shapeContainer.style.borderWidth = `${selectedBorderWeight}`;
-    shapeContainer.style.border = `${selectedBorderWeight} solid ${selectedShapeOutlineColor}`;
+    if(shapeType !== "line"){
+      shapeContainer.style.border = `${selectedBorderWeight} solid ${selectedShapeOutlineColor}`;
+    }else{
+      shapeContainer.style.borderBottom = `${selectedBorderWeight} solid ${selectedShapeOutlineColor}`;
+    }
     $(this).parent().find(".range-value").html(selectedBorderWeight);
   } else {
     selectedTextSize = $(this).val() + "px";
@@ -329,9 +333,11 @@ viewer.addEventListener("click", function (e) {
           if (formItem.id == current_form_id) {
             const shapeContainer = document.getElementById(formItem.containerId);
             
+            let shapeTextDiv = null;
             let shapeText = "";
+            
             if (shapeType !== "line") {
-              const shapeTextDiv = shapeContainer.querySelector(".shapeText");
+              shapeTextDiv = shapeContainer.querySelector(".shapeText");
               if (shapeTextDiv) {
                 shapeText = shapeTextDiv.innerHTML.trim();
               }
@@ -340,14 +346,14 @@ viewer.addEventListener("click", function (e) {
             handleShape(
               shapeContainer.style.backgroundColor,
               shapeContainer.style.borderColor,
-              shapeType !== "line" ? shapeTextDiv.style.color : null,
+              shapeTextDiv ? shapeTextDiv.style.color : null,
               shapeContainer.style.borderRadius,
               shapeContainer.style.borderWidth,
-              shapeType !== "line" ? shapeTextDiv.style.fontSize : null,
-              shapeType !== "line" ? shapeTextDiv.style.fontWeight === "bold" : false,
-              shapeType !== "line" ? shapeTextDiv.style.fontStyle === "italic" : false,
-              shapeType !== "line" ? shapeTextDiv.style.textDecoration.includes("underline") : false,
-              shapeType !== "line" ? shapeTextDiv.style.fontFamily : null,
+              shapeTextDiv ? shapeTextDiv.style.fontSize : null,
+              shapeTextDiv ? shapeTextDiv.style.fontWeight === "bold" : false,
+              shapeTextDiv ? shapeTextDiv.style.fontStyle === "italic" : false,
+              shapeTextDiv ? shapeTextDiv.style.textDecoration.includes("underline") : false,
+              shapeTextDiv ? shapeTextDiv.style.fontFamily : null,
               selectedTextAlign,
               shapeText,
               parseInt(shapeContainer.style.width, 10),
@@ -380,6 +386,7 @@ viewer.addEventListener("click", function (e) {
     });
   }
 });
+
 
 viewer.addEventListener("dblclick", function (e) {
   if(isDraft !== "false" && !isEditing){

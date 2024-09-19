@@ -59,10 +59,16 @@ $(".shape-save").on("click", function () {
 
 $(".size-dropdown input").on("input", function () {
   const shapeContainer = document.querySelector(".shapeContainer.active");
+
+  if (!shapeContainer) return;
+
   const shapeText = shapeContainer.querySelector(".shapeText");
-  const shapeTextHtml = shapeContainer.querySelector(".shapeText").innerHTML.trim();
+  const shapeTextHtml = shapeText ? shapeText.innerHTML.trim() : "";
+
+  selectedShapeOutlineColor = shapeContainer.style.borderBottomColor;
 
   const type = $(this).parents(".size-dropdown").attr("type");
+
   if (type === "1") {
     if(shapeType === "shape"){
       selectedBorderRadius = $(this).val() + "px";
@@ -72,19 +78,25 @@ $(".size-dropdown input").on("input", function () {
   } else if (type === "2") {
     selectedBorderWeight = $(this).val() + "px";
     shapeContainer.style.borderWidth = `${selectedBorderWeight}`;
-    if(shapeType !== "line"){
+    
+    if (shapeType !== "line") {
       shapeContainer.style.border = `${selectedBorderWeight} solid ${selectedShapeOutlineColor}`;
-    }else{
+    } else {
       shapeContainer.style.borderBottom = `${selectedBorderWeight} solid ${selectedShapeOutlineColor}`;
     }
+
     $(this).parent().find(".range-value").html(selectedBorderWeight);
   } else {
-    selectedTextSize = $(this).val() + "px";
-    shapeText.style.fontSize = `${selectedTextSize}`;
-    $(this).parent().find(".range-value").html(selectedTextSize);
+    if (shapeText) {
+      selectedTextSize = $(this).val() + "px";
+      shapeText.style.fontSize = `${selectedTextSize}`;
+      $(this).parent().find(".range-value").html(selectedTextSize);
+    }
   }
 
-  drawShape(shapeContainer, shapeTextHtml);
+  if (shapeTextHtml || shapeType === "line") {
+    drawShape(shapeContainer, shapeTextHtml);
+  }
 });
 
 $("#extra-shape-icons i").on("click", function () {
@@ -189,7 +201,7 @@ viewer.addEventListener("mousedown", function (e) {
 
   if (shapeType === "line") {
     rectElement.style.borderBottom = `${selectedBorderWeight} solid ${selectedShapeOutlineColor}`;
-    rectElement.style.width = `1px`;
+    rectElement.style.width = `${selectedBorderWeight}`;
   } else {
     rectElement.style.border = `${selectedBorderWeight} solid ${selectedShapeOutlineColor}`;
     rectElement.style.backgroundColor = selectedShapeFillColor;
@@ -504,7 +516,6 @@ viewer.addEventListener("dblclick", function (e) {
 });
 
 function initialShapeStyle(){
-  // Initialize the styles of editorShapeFormatToolbar
   $("#shape-fill-dropdown").find("input").val("#FFFFFF");
   $("#shape-outline-dropdown").find("input").val("#000000");
   $("#text-color-dropdown").find("input").val("#000000");
@@ -515,7 +526,6 @@ function initialShapeStyle(){
   $("#shape-text-italic").removeClass("active");
   $("#shape-text-underline").removeClass("active");
 
-  // Set default values
   selectedShapeFillColor = 'rgb(255, 255, 255)';
   selectedShapeOutlineColor = 'rgb(0, 0, 0)';
   selectedTextColor = 'rgb(0, 0, 0)';
@@ -848,9 +858,8 @@ function saveShapeColorStyle(that){
     selectedShapeFillColor = color;
     shapeContainer.style.backgroundColor = color;
   } else if (type === "border") {
-    console.log("shapeType " + shapeType)
     if(shapeType === "line"){
-      shapeContainer.style.borderBottom = `1px solid ${color}`;
+      shapeContainer.style.borderBottom = `${selectedBorderWeight} solid ${color}`;
     }else{
       selectedShapeOutlineColor = color;
       shapeContainer.style.borderColor = color;

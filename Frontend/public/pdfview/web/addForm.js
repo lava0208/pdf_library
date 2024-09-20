@@ -2320,7 +2320,7 @@ const handleList = function (e) {
   }
   document
     .getElementById("list-save-button")
-    .removeEventListener("click", handleCombo);
+    .removeEventListener("click", handleList);
 };
 
 // Display 4 points around the canvas to resize the canvas - top, left, right, bottom.
@@ -5556,13 +5556,15 @@ async function addFormElements() {
           }
           break;
         case SHAPE:
-          const shapeImage = await pdfDoc.embedPng(form_item.photoData);
-          page.drawImage(shapeImage, {
-            x: form_item.x,
-            y: form_item.y - form_item.height,
-            width: form_item.width,
-            height: form_item.height,
-          });
+          if (form_item.photoData) {
+            const shapeImage = await pdfDoc.embedPng(form_item.photoData);
+            page.drawImage(shapeImage, {
+              x: form_item.x,
+              y: form_item.y - form_item.height,
+              width: form_item.width,
+              height: form_item.height,
+            });
+          }
           break;
         case PHOTO:
           if (form_item.photoData != undefined) {

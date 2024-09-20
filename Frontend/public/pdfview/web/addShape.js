@@ -926,7 +926,7 @@ document.querySelectorAll('#list-styles .flex-container').forEach(item => {
 });
 
 // Event listener for adding an option
-document.getElementById('list-add-button').addEventListener('click', function () {
+document.getElementById('list-add-btn').addEventListener('click', function () {
   const inputText = document.querySelector('#list-input').value.trim();
   if (inputText === '') {
     alert('Please enter some text!');
@@ -952,7 +952,7 @@ document.getElementById('list-add-button').addEventListener('click', function ()
 });
 
 // Event listener for saving the list
-document.getElementById('list-save-button').addEventListener('click', function () {
+document.getElementById('list-save-btn').addEventListener('click', function () {
   const shapeText = document.querySelector('.shapeText');
 
   // Iterate over all list items and save them in the shape

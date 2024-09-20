@@ -1190,7 +1190,8 @@ const drawFormElement = function () {
 
           signatureContainer.addEventListener("dblclick", () => {
             current_form_id = id;
-            if (!isEditing && !isSubmit) {
+            // if (!isEditing && !isSubmit) {
+            if (!isSubmit) {
               const signature_creator = document.getElementById(SIGNATURE_OPTION);
               signature_creator.style.display = "flex";
               document.getElementById("signature-initial-tab").click();
@@ -1360,7 +1361,7 @@ const drawFormElement = function () {
           photoContainer.style.alignItems = "center";
           photoContainer.style.justifyContent = "center";
           photoContainer.style.userSelect = "none";
-          photoContainer.style.color = "white";
+          photoContainer.style.color = "black";
           photoContainer.style.minHeight = "40px";
           photoContainer.textContent = "Double click to upload image!";
 
@@ -1415,7 +1416,8 @@ const drawFormElement = function () {
 
           photoContainer.addEventListener("dblclick", () => {
             current_form_id = id;
-            if (!isEditing && !isSubmit) {
+            // if (!isEditing && !isSubmit) {
+            if (!isSubmit) {
               const image_creator = document.getElementById(PHOTO_OPTION);
               image_creator.style.display = "flex";
               document.getElementById("photo-close").onclick = function () {
@@ -1434,7 +1436,8 @@ const drawFormElement = function () {
                   reader.onload = function (e) {
                     photoData = e.target.result;
                     handlePhoto();
-                    createAndAppendPhotoImage(photoData);
+                    
+                    createAndAppendPhotoImage(photoData, photoContainer, current_form_id);
                   };
                   reader.readAsDataURL(file);
                 } else {
@@ -3358,14 +3361,12 @@ const addDeleteButton = function (currentId, container, object, type) {
   container.id = `${type}_tooltipbar` + currentId;
   container.style.position = "absolute";
   container.style.zIndex = standardZIndex;
-  // container.style.top = -10 - parseInt(top) + "px";
   container.style.top = "-42px";
   container.style.left = "0px";
   container.style.display = "flex";
   container.style.flexDirection = "row";
   container.style.alignItems = "center";
   container.style.gap = "5px";
-  // container.style.height = parseInt(top) + "px";
   container.style.height = "30px";
   container.classList.add("delete-button");
   let deleteBtn = document.createElement("button");
@@ -3378,18 +3379,23 @@ const addDeleteButton = function (currentId, container, object, type) {
 
     let currentObject;
 
-    // currentId = container.id.replace(`${type}_tooltipbar`, "");
     const target = document.getElementById(`${type}` + currentId);
-    if (target && document.getElementById("topLeft"))
+    if (target && document.getElementById("topLeft")) {
       removeResizebar(target.id);
-    target.style.display = "none";
-    if (type == "text-content") {
-      currentObject = text_storage.find((item) => item.id = currentId);
+    }
+
+    if (target) {
+      target.style.display = "none";
+    }
+
+    // Handle deletion of different types
+    if (type === "text-content") {
+      currentObject = text_storage.find((item) => item.id == currentId);
       text_storage = text_storage.filter(function (item) {
         return item.id !== parseInt(currentId);
       });
-    } else if (type == "comment") {
-      currentObject = comment_storage.find((item) => item.id = currentId);
+    } else if (type === "comment") {
+      currentObject = comment_storage.find((item) => item.id == currentId);
       comment_storage = comment_storage.filter(function (comment) {
         return comment.id !== parseInt(currentId);
       });
@@ -3398,17 +3404,25 @@ const addDeleteButton = function (currentId, container, object, type) {
       form_storage = form_storage.filter(function (item) {
         return item.id != currentId;
       });
+      form_storage = form_storage.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i);
     }
-    const commentPageDiv = document.getElementById(`page${currentObject.page_number}`);
-    const currentHistoryDiv = document.getElementById(`historyDiv${currentId}`);
-    if (commentPageDiv && commentPageDiv.contains(currentHistoryDiv)) {
-      commentPageDiv.removeChild(currentHistoryDiv);
+    if (currentObject) {
+      const commentPageDiv = document.getElementById(`page${currentObject.page_number}`);
+      const currentHistoryDiv = document.getElementById(`historyDiv${currentId}`);
+      if (commentPageDiv && commentPageDiv.contains(currentHistoryDiv)) {
+        commentPageDiv.removeChild(currentHistoryDiv);
+      }
     }
   });
+
+  // Keyboard delete functionality
   document.addEventListener("keydown", (e) => {
-    if (type != "text-content" && e.key === "Delete") {
+    if (type !== "text-content" && e.key === "Delete") {
       currentId = container.id.replace(`${type}_tooltipbar`, "");
-      document.getElementById(`${type}` + currentId).style.display = "none";
+      const target = document.getElementById(`${type}` + currentId);
+      if (target) {
+        target.style.display = "none";
+      }
       form_storage = form_storage.filter(function (item) {
         return item.id !== parseInt(currentId);
       });
@@ -4772,7 +4786,7 @@ const eventHandler = async function (e) {
       photoContainer.style.alignItems = "center";
       photoContainer.style.justifyContent = "center";
       photoContainer.style.userSelect = "none";
-      photoContainer.style.color = "white";
+      photoContainer.style.color = "black";
       photoContainer.style.minHeight = "40px";
       photoContainer.textContent = "Double click to upload image!";
 
@@ -5766,19 +5780,15 @@ const changeMode = () => {
         form_storage.forEach((formItem) => {
           let formId = item.parentNode.id.replace("text", "");
           if (formItem.id == formId) {
-            // if(formItem.isBold) item.style.fontWeight = "bold";
-            // else item.style.fontWeight = "normal";
-            // if(formItem.isItalic) item.style.fontStyle = "italic";
-            // else item.style.fontStyle = "normal";
+            item.style.fontFamily = formItem.fontStyle;
             item.style.fontSize = formItem.fontSize + "px";
             item.style.color = formItem.textColor;
-            item.style.fontFamily = formItem.fontStyle;
+            item.style.backgroundColor = formItem.textBackgroundColor;
+
             if (formItem.align == 0) item.style.textAlign = "left";
             else if (formItem.align == 1) item.style.textAlign = "center";
             else if (formItem.align == 2) item.style.textAlign = "right";
 
-            //... background color
-            item.style.backgroundColor = formItem.textBackgroundColor;
             item.style.border = "none";
           }
         });

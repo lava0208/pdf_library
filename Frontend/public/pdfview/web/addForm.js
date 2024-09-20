@@ -5204,6 +5204,7 @@ async function addFormElements() {
   let checkboxForm, radioForm, textfieldForm, comboboxForm, datefieldForm;
   let radioOption;
   let selectedFont = "";
+  let customFont = "";
   if (draw_form_storage && draw_form_storage.length != 0) {
     draw_form_storage.map(async (form_item) => {
       page = pdfDoc.getPage(form_item.page_number - 1);
@@ -5213,7 +5214,6 @@ async function addFormElements() {
           radioForm = form.createRadioGroup(radioOption);
         }
       }
-      let customFont = "";
       if (
         form_item.form_type != CHECKBOX &&
         form_item.form_type != RADIO &&
@@ -5228,9 +5228,13 @@ async function addFormElements() {
           const fontByte = font_storage.find(
             (font) => font.fontName === fontName
           );
-          selectedFont = fontByte && fontByte.fontArrayBuffer;
+          if (fontByte) {
+            selectedFont = fontByte.fontArrayBuffer;
+          }
         }
-        customFont = await selectedFont && pdfDoc.embedFont(selectedFont);
+        if (selectedFont) {
+          customFont = await pdfDoc.embedFont(selectedFont);
+        }
       }
       switch (form_item.form_type) {
         case CHECKBOX:

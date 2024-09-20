@@ -1590,7 +1590,6 @@ const drawFormElement = function () {
               // Append the input to the numberDiv
               numberDiv.appendChild(numberElement);
             }
-            handleNumber();
           }
 
           break;
@@ -1746,10 +1745,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
           if(isDraft){
             if (data.formData) {
-              var tmp_Data = JSON.parse(data.formData);
-              draw_form_storage = tmp_Data.filter((item, index, self) =>
-                index === self.findIndex(t => t.id === item.id && t.containerId === item.containerId)
-              );
+              draw_form_storage = JSON.parse(data.formData);
             }
           }else{
             if(data[0].formData){
@@ -4978,8 +4974,6 @@ const eventHandler = async function (e) {
         }
       });
 
-      // handleNumber();
-
       document.getElementById("number-save-button").addEventListener("click", function() {
         handleNumber();
         const count = parseInt(document.getElementById("count").value);
@@ -5005,7 +4999,7 @@ const eventHandler = async function (e) {
         numberDiv.style.width = numberFormWidth * count + "px";
         numberDiv.querySelectorAll(".number-field-input").forEach(el => el.remove());
 
-        for (let i = 1; i <= count; i++) {          
+        for (let i = 1; i <= count; i++) {
           let numberElement = document.createElement("input");
           numberElement.classList.add("number-field-input", "form-container");
           numberElement.type = "number";

@@ -1562,11 +1562,11 @@ const drawFormElement = function () {
           resizeCanvas(numberDiv.id, NUMBERFIELD, id, NUMBERFIELD_OPTION);
 
           // Update manageNumField to append inputs to numberDiv
-          function manageNumField(count, numberDiv){
+          function manageNumField(count, numberDiv) {
             const numberFormWidth = 30;
             numberDiv.style.width = numberFormWidth * count + "px";
             numberDiv.querySelectorAll(".number-field-input").forEach(el => el.remove());
-
+          
             for (let i = 1; i <= count; i++) {
               let numberElement = document.createElement("input");
               numberElement.classList.add("number-field-input", "form-container");
@@ -1574,14 +1574,19 @@ const drawFormElement = function () {
               numberElement.min = "1";
               numberElement.max = "9";
               numberElement.style.display = "none";
-              numberElement.addEventListener("input", function () {
-                if (numberElement.value < 1) {
-                  numberElement.value = null;
-                } else if (numberElement.value > 9) {
-                  numberElement.value = null;
+              
+              numberElement.addEventListener("input", function (e) {
+                const value = parseInt(numberElement.value, 10);
+                
+                if (!isNaN(value) && value >= 1 && value <= 9) {
+                  const nextInput = numberElement.nextElementSibling;
+                  if (nextInput && nextInput.classList.contains("number-field-input")) {
+                    nextInput.focus();
+                  }
+                } else {
+                  numberElement.value = "";
                 }
               });
-        
               // Append the input to the numberDiv
               numberDiv.appendChild(numberElement);
             }
@@ -1739,25 +1744,34 @@ document.addEventListener("DOMContentLoaded", function () {
           const fileName = 'downloaded.pdf';
           const pdfFile = new File([blob], fileName, { type: 'application/pdf' });
 
-          draw_form_storage = isDraft ? data.formData && JSON.parse(data.formData) : data[0].formData && JSON.parse(data[0].formData);
+          if(isDraft){
+            if (data.formData) {
+              var tmp_Data = JSON.parse(data.formData);
+              draw_form_storage = tmp_Data.filter((item, index, self) =>
+                index === self.findIndex(t => t.id === item.id && t.containerId === item.containerId)
+              );
+            }
+          }else{
+            if(data[0].formData){
+              draw_form_storage = JSON.parse(data[0].formData);
+            }
+          }
+
           text_storage = isDraft ? data.textData && JSON.parse(data.textData) : data[0].textData && JSON.parse(data[0].textData);
           PDFViewerApplication.open({
             url: URL.createObjectURL(pdfFile),
             originalUrl: pdfFile.name,
           });
 
+          console.log("*******");
           console.log(draw_form_storage);
-          
           const checkViewerInterval = setInterval(() => {
             if (PDFViewerApplication.pdfDocument && PDFViewerApplication.pdfDocument.numPages > 0) {
               // If the document is loaded, call the drawFormElement function
               clearInterval(checkViewerInterval); // Clear the interval
               drawFormElement();
-
-              //...
-              isOpenSubmitDocument = isDraft == "false" ? true : false;
             }
-          }, 100);
+          })
         }
         $("body").removeClass("loading");
       })
@@ -4987,7 +5001,7 @@ const eventHandler = async function (e) {
       resizeCanvas(numberDiv.id, NUMBERFIELD, numberId, NUMBERFIELD_OPTION);
     
       // Update manageNumField to append inputs to numberDiv
-      function manageNumField(count, numberDiv){
+      function manageNumField(count, numberDiv){        
         numberDiv.style.width = numberFormWidth * count + "px";
         numberDiv.querySelectorAll(".number-field-input").forEach(el => el.remove());
 
@@ -4998,11 +5012,19 @@ const eventHandler = async function (e) {
           numberElement.min = "1";
           numberElement.max = "9";
           numberElement.style.display = "none";
-          numberElement.addEventListener("input", function () {
-            if (numberElement.value < 1) {
-              numberElement.value = null;
-            } else if (numberElement.value > 9) {
-              numberElement.value = null;
+          numberElement.addEventListener("input", function (e) {
+            const value = parseInt(numberElement.value, 10);
+            
+            // If the value is valid (between 1-9), move focus to the next field
+            if (!isNaN(value) && value >= 1 && value <= 9) {
+              // Focus on the next input if available
+              const nextInput = numberElement.nextElementSibling;
+              if (nextInput && nextInput.classList.contains("number-field-input")) {
+                nextInput.focus();
+              }
+            } else {
+              // If value is out of bounds, clear the input
+              numberElement.value = "";
             }
           });
     
@@ -5931,7 +5953,7 @@ const changeMode = () => {
     numberfields.forEach((item) => {
       item.style.display = "block";
       $("#number-field-option").hide();
-      if (form_storage  && form_storage !== null) {
+      if (form_storage  && form_storage !== null) {        
         form_storage.forEach((formItem) => {
           let formId = item.parentNode.id.replace("number", "");
           if (formItem.id == formId) {

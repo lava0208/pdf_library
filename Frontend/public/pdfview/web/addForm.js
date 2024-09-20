@@ -1658,7 +1658,7 @@ const drawFormElement = function () {
     })
   }
   generalUserMode();
-  if(!isSubmit){
+  if(!isSubmit && isOpenEmailPdf){
     searchForm();
   }  
 }
@@ -6168,6 +6168,16 @@ function searchForm() {
       if (active_form_index > 0) {
         active_form_index--;
         updateResizebar();
+      }
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter') {
+        // Same functionality as nextBtn click event
+        if (active_form_index < draw_form_storage.length - 1) {
+          active_form_index++;
+          updateResizebar();
+        }
       }
     });
 

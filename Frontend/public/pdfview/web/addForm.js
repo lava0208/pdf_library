@@ -1571,14 +1571,14 @@ const drawFormElement = function () {
               let numberElement = document.createElement("input");
               numberElement.classList.add("number-field-input", "form-container");
               numberElement.type = "number";
-              numberElement.min = "1";
+              numberElement.min = "0";
               numberElement.max = "9";
               numberElement.style.display = "none";
               
               numberElement.addEventListener("input", function (e) {
                 const value = parseInt(numberElement.value, 10);
                 
-                if (!isNaN(value) && value >= 1 && value <= 9) {
+                if (!isNaN(value) && value >= 0 && value <= 9) {
                   const nextInput = numberElement.nextElementSibling;
                   if (nextInput && nextInput.classList.contains("number-field-input")) {
                     nextInput.focus();
@@ -2760,10 +2760,10 @@ const handleNumber = function (e) {
   textBackgroundColor = document.getElementById("number-font-background-color") && document.getElementById("number-font-background-color").value;
 
   let initialValue = "";
-  const currentFormText = document.getElementById(`number${current_form_id}`);  
+  const currentFormText = $(`#number${current_form_id}`);  
   
-  if (currentFormText) {
-    $('.number-field-input').each(function() {
+  if ($(currentFormText)) {
+    $(currentFormText).find('.number-field-input').each(function() {
       var val = $(this).val() === "" ? "-" : $(this).val();
       initialValue = initialValue + val;
     });
@@ -5003,14 +5003,14 @@ const eventHandler = async function (e) {
           let numberElement = document.createElement("input");
           numberElement.classList.add("number-field-input", "form-container");
           numberElement.type = "number";
-          numberElement.min = "1";
+          numberElement.min = "0";
           numberElement.max = "9";
           numberElement.style.display = "none";
           numberElement.addEventListener("input", function (e) {
             const value = parseInt(numberElement.value, 10);
             
-            // If the value is valid (between 1-9), move focus to the next field
-            if (!isNaN(value) && value >= 1 && value <= 9) {
+            // If the value is valid (between 0-9), move focus to the next field
+            if (!isNaN(value) && value >= 0 && value <= 9) {
               // Focus on the next input if available
               const nextInput = numberElement.nextElementSibling;
               if (nextInput && nextInput.classList.contains("number-field-input")) {

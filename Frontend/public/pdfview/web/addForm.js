@@ -234,9 +234,10 @@ const drawFormElement = function () {
             checkedCheckboxes.push(id);
           }
 
-          checkbox.onclick = function () {
-            current_form_id = id;
-            toggleCheckbox(checkbox.id);
+          checkbox.onclick = function (e) {
+            const checkedId = e.target.parentNode.id;
+            current_form_id = checkedId.replace("checkbox", "");
+            toggleCheckbox(checkedId);
 
             let isChecked = checkbox.classList.contains("checked");
             var checkboxIndex = form_storage.findIndex(x => x.form_field_name === item.form_field_name) + 1;
@@ -260,7 +261,8 @@ const drawFormElement = function () {
           current_checkbox_id = id;
 
           checkbox.addEventListener("click", () => {
-            current_checkbox_id = id;
+            const checkedId = e.target.parentNode.id;
+            current_checkbox_id = checkedId;
             DrawType = CHECKBOX;
           });
 
@@ -3628,8 +3630,9 @@ const eventHandler = async function (e) {
       checkbox.classList.add("checkbox");
       checkbox.appendChild(checkmark);
       checkbox.onclick = function (e) {
-        current_form_id = checkboxId;
-        toggleCheckbox(checkbox.id);
+        const checkedId = e.target.parentNode.id;
+        current_form_id = checkedId.replace("checkbox", "");
+        toggleCheckbox(checkedId);
       };
 
       pg.appendChild(checkbox);

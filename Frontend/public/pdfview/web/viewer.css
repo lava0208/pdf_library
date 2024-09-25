@@ -2384,6 +2384,10 @@ dialog :link {
   border-radius: 3px;
 }
 
+.form-fields input:focus{
+  outline: none;
+}
+
 .number-field-input{
   min-width: 30px;
   border-radius: 0!important;

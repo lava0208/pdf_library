@@ -93,7 +93,6 @@ const fontSizeArr = [
 ];
 
 const borderSizeArr = [
-  0,
   1,
   2,
   3,
@@ -1658,8 +1657,7 @@ const drawFormElement = function () {
 
   if (text_storage  && text_storage !== null) {
     text_storage.forEach((item) => {
-      let id = item.id;
-      let new_x_y, x, y, width, height;
+      let new_x_y, x, y;
       x = item.x;
       y = item.y;
       item.baseX = item.x;
@@ -1691,7 +1689,7 @@ const drawFormElement = function () {
       container.style.left = x + "px";
       container.style.width = "fit-content";
       container.style.height = "fit-content";
-      container.style.zIndex = 101;
+      // container.style.zIndex = 101;
       container.tabIndex = 0;
       container.append(newText);
       pg.append(container);
@@ -1921,8 +1919,8 @@ const handleCheckbox = function (e) {
       y: pos_y_pdf,
       baseX: pos_x_pdf,
       baseY: pos_y_pdf,
-      width: formWidth * 0.75 * 0.75,
-      height: formHeight * 0.75 * 0.75,
+      width: formWidth * 0.75 * 0.8,
+      height: formHeight * 0.75 * 0.8,
       xPage: formWidth,
       yPage: formHeight,
       isChecked: false,
@@ -2003,8 +2001,8 @@ const handleRadio = function (e) {
         y: pos_y_pdf,
         baseX: pos_x_pdf,
         baseY: pos_y_pdf,
-        width: formWidth * 0.75 * 0.75,
-        height: formHeight * 0.75 * 0.75,
+        width: formWidth * 0.75 * 0.8,
+        height: formHeight * 0.75 * 0.8,
         xPage: formWidth,
         yPage: formHeight,
         isChecked: false,
@@ -3137,7 +3135,7 @@ const saveFormElementByClick = function () {
     form_storage.forEach((item) => {
       let currentItem = document.getElementById(item.containerId);
       if (currentItem) {
-        currentItem.style.zIndex = standardZIndex;
+        currentItem.style.zIndex = 5;
         if (currentItem.classList.contains("textfield-content"))
           currentItem.classList.remove("textfield-content");
       }
@@ -3231,26 +3229,26 @@ document.getElementById("viewer").addEventListener("mousedown", function (event)
     if (!isEditing) {
       event.preventDefault();
       removeAllResizeBar();
-      saveFormElementByClick();
+      saveFormElementByClick();      
       if (currentFormType === DATE) {
         if (!currentObject.parentElement.querySelector("#topLeft")) addResizebar(currentObject.parentElement.id);
         setTimeout(() => {
-          currentObject.parentElement.style.zIndex = selectedZIndex;
+          // currentObject.parentElement.style.zIndex = selectedZIndex;
         }, 200);
       } else if (currentFormType === SIGNATURE || currentFormType === SHAPE || currentFormType === PHOTO) {
         if (currentObject.tagName === "IMG") {
           if (!currentObject.parentElement.querySelector("#topLeft")) addResizebar(currentObject.parentElement.id);
-          currentObject.parentElement.style.zIndex = selectedZIndex;
+          // currentObject.parentElement.style.zIndex = selectedZIndex;
         } else {
           if (!currentObject.querySelector("#topLeft")) addResizebar(currentObject.id);
-          currentObject.style.zIndex = selectedZIndex;
+          // currentObject.style.zIndex = selectedZIndex;
         }
       } else if (currentFormType == TEXT_CONTENT) {
         if (!currentObject.parentElement.classList.contains("textfield-content"))
           currentObject.parentElement.classList.add("textfield-content");
       } else {
         if (!currentObject.querySelector("#topLeft")) addResizebar(currentObject.id);
-        currentObject.style.zIndex = selectedZIndex;
+        // currentObject.style.zIndex = selectedZIndex;
       }
       // handleComment(currentObject.id, currentFormType);
     } else {
@@ -3277,8 +3275,8 @@ const resizeHandler = function (width, height, currentId) {
   if (DrawType == RADIO) {
     form_storage.map(function (item) {
       if (item.id === parseInt(currentId)) {
-        item.data.width = width * 0.75 * 0.75;
-        item.data.height = height * 0.75 * 0.75;
+        item.data.width = width * 0.75 * 0.8;
+        item.data.height = height * 0.75 * 0.8;
         item.data.xPage = width;
         item.data.yPage = height;
       }
@@ -3286,8 +3284,8 @@ const resizeHandler = function (width, height, currentId) {
   } else if (DrawType == TEXT_CONTENT) {
     text_storage.map(function (item) {
       if (item.id === currentId) {
-        item.width = width * 0.75 * 0.75;
-        item.height = height * 0.75 * 0.75;
+        item.width = width * 0.75 * 0.8;
+        item.height = height * 0.75 * 0.8;
         item.xPage = width;
         item.yPage = height;
       }
@@ -3404,7 +3402,7 @@ const showOptionAndResizebar = function (
 
   let borderSizeContent = "";
   borderSizeArr.map((item) => {
-    borderSizeContent += `<option value=${item}>${item === 0 ? "none" : item}</option>`;
+    borderSizeContent += `<option value=${item}>${item}</option>`;
   });
   if (document.getElementById(`${id}-border-width`)) {
     document.getElementById(`${id}-border-width`).innerHTML = borderSizeContent;
@@ -3449,11 +3447,13 @@ const addDeleteButton = function (currentId, container, object, type) {
       text_storage = text_storage.filter(function (item) {
         return item.id !== parseInt(currentId);
       });
+      text_storage = text_storage.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i);
     } else if (type === "comment") {
       currentObject = comment_storage.find((item) => item.id == currentId);
       comment_storage = comment_storage.filter(function (comment) {
         return comment.id !== parseInt(currentId);
       });
+      comment_storage = comment_storage.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i);
     } else {
       currentObject = form_storage.find((item) => item.id == currentId);
       form_storage = form_storage.filter(function (item) {
@@ -3481,6 +3481,7 @@ const addDeleteButton = function (currentId, container, object, type) {
       form_storage = form_storage.filter(function (item) {
         return item.id !== parseInt(currentId);
       });
+      form_storage = form_storage.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i);
     }
   });
   container.appendChild(deleteBtn);
@@ -3504,7 +3505,7 @@ const addFormElementStyle = function (object, top, left, width, height, borderRa
   object.style.width = width + "px";
   object.style.height = height + "px";
   object.style.background = "#3C97FE";
-  object.style.zIndex = standardZIndex;
+  object.style.zIndex = 50;
   object.tabIndex = 0;
   object.style.borderRadius = borderRadius == "0" ? "0px" : "3px";
   object.classList.add("form-fields");
@@ -3518,7 +3519,7 @@ const addSignatureElementStyle = function (object, top, left, width, minHeight) 
   object.style.width = width + "px";
   object.style.minHeight = minHeight + "px";
   object.style.background = "#3C97FE";
-  object.style.zIndex = standardZIndex;
+  // object.style.zIndex = standardZIndex;
   object.tabIndex = 0;
   object.style.borderRadius = "3px";
   object.classList.add("form-fields");
@@ -3531,7 +3532,7 @@ const addPhotoElementStyle = function (object, top, left, width, minHeight) {
   object.style.width = width + "px";
   object.style.height = minHeight + "px";
   object.style.background = "#3C97FE";
-  object.style.zIndex = standardZIndex;
+  // object.style.zIndex = standardZIndex;
   object.tabIndex = 0;
   object.style.borderRadius = "3px";
   object.classList.add("form-fields");
@@ -4502,11 +4503,13 @@ const eventHandler = async function (e) {
 
       const newDate = document.createElement("input");
       newDate.id = "datecontent" + dateId;
+      newDate.classList.add("date-field-input", "form-container");
       newDate.style.position = "relative";
       newDate.type = "date";
       newDate.style.width = "100%";
       newDate.style.height = "100%";
       newDate.value = formattedDate;
+      newDate.style.display = "none";
 
       newDate.addEventListener("change", () => {
         let dateId = baseId;
@@ -5813,7 +5816,7 @@ const changeMode = () => {
   if (isEditing) {
     switchEditInsert.innerHTML = `
       <p>Edit Mode</p>
-      <i class="fa fa-toggle-off"></i>
+      <i class="fa fa-toggle-off" onclick="changeMode()"></i>
     `;
     isEditing = false;
     sidebar.querySelectorAll("button").forEach((item) => {
@@ -5853,7 +5856,7 @@ const changeMode = () => {
   } else {
     switchEditInsert.innerHTML = `
     <p>Normal Mode</p>
-    <i class="fa fa-toggle-on"></i>
+    <i class="fa fa-toggle-on" onclick="changeMode()"></i>
     `;
     isEditing = true;
     sidebar.querySelectorAll("button").forEach((item) => {

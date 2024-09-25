@@ -480,7 +480,7 @@ document.getElementById("viewer").addEventListener("click", (evt) => {
     container.style.width = "fit-content";
     container.style.height = "fit-content";
     // container.style.zIndex = 1;
-    container.style.zIndex = 150;
+    // container.style.zIndex = 150;
     container.tabIndex = 0;
     container.classList.add("textfield-content");
     container.append(newText);

@@ -1284,40 +1284,57 @@ const drawFormElement = function () {
           shapeContainer.className = "shapeContainer";
           shapeContainer.id = "shape" + id;
           shapeContainer.style.position = "absolute";
-          shapeContainer.style.top = y + "px";
-          shapeContainer.style.left = x + "px";
-          shapeContainer.style.width = width + "px";
-          shapeContainer.style.height = height + "px";
-          shapeContainer.style.zIndex = standardZIndex;
-          shapeContainer.style.display = "flex";
-          shapeContainer.style.alignItems = "center";
-          shapeContainer.style.justifyContent = "center";
-          shapeContainer.style.flexDirection = "column";
-          shapeContainer.style.backgroundColor = item.shapeFillColor;
-          shapeContainer.style.border = `${item.borderWidth} solid ${item.borderColor}`;
-          shapeContainer.style.borderRadius = item.borderRadius;
-          shapeContainer.tabIndex = 0;
-          shapeContainer.classList.add("form-fields");
 
-          const editableDiv = document.createElement("div");
-          editableDiv.className = "shapeText";
-          editableDiv.setAttribute("contenteditable", "true");
-          editableDiv.innerHTML = item.shapeText;
-          editableDiv.style.position = "absolute";
-          editableDiv.style.width = "100%";
-          // editableDiv.style.height = "100%";
-          editableDiv.style.fontStyle = item.textItalic ? "italic" : "normal";
-          editableDiv.style.fontWeight = item.textBold ? "bold" : "normal";
-          editableDiv.style.textDecoration = item.textUnderline ? "underline" : "none";
-          editableDiv.style.fontSize = item.textSize;
-          editableDiv.style.color = item.textColor;
-          editableDiv.style.fontFamily = item.textFamily;
+          if(item.shapeType === "line"){
+            const deltaX = item.baseX - item.x;
+            const deltaY = item.baseY - item.y;
 
-          shapeTextAlign(editableDiv, item.textAlign);
-          editableDiv.focus();
+            shapeContainer.style.top = `${y + deltaY / 2}px`;
+            shapeContainer.style.left = `${x + deltaX / 2}px`;
+            shapeContainer.style.width = width + "px";
+            shapeContainer.style.height = height !== null ? `${height}px` : "auto";
+            shapeContainer.style.zIndex = standardZIndex;
 
-          // shapeContainer.append(shapeImg);
-          shapeContainer.append(editableDiv);
+            shapeContainer.style.borderBottom = `${item.borderWidth || '1px'} solid ${item.borderColor || '#000000'}`;
+            const angle = Math.atan2(item.baseY, item.baseX) * (180 / Math.PI);
+            shapeContainer.style.transform = `rotate(${angle}deg)`;
+          } else {
+            shapeContainer.style.top = y + "px";
+            shapeContainer.style.left = x + "px";
+            shapeContainer.style.width = width + "px";
+            shapeContainer.style.height = height + "px";
+            shapeContainer.style.zIndex = standardZIndex;
+            shapeContainer.style.display = "flex";
+            shapeContainer.style.alignItems = "center";
+            shapeContainer.style.justifyContent = "center";
+            shapeContainer.style.flexDirection = "column";
+            shapeContainer.style.backgroundColor = item.shapeFillColor;
+            shapeContainer.style.border = `${item.borderWidth} solid ${item.borderColor}`;
+            shapeContainer.style.borderRadius = item.borderRadius;
+            shapeContainer.tabIndex = 0;
+            shapeContainer.classList.add("form-fields");
+  
+            const editableDiv = document.createElement("div");
+            editableDiv.className = "shapeText";
+            editableDiv.setAttribute("contenteditable", "true");
+            editableDiv.innerHTML = item.shapeText;
+            editableDiv.style.position = "absolute";
+            editableDiv.style.width = "100%";
+            // editableDiv.style.height = "100%";
+            editableDiv.style.fontStyle = item.textItalic ? "italic" : "normal";
+            editableDiv.style.fontWeight = item.textBold ? "bold" : "normal";
+            editableDiv.style.textDecoration = item.textUnderline ? "underline" : "none";
+            editableDiv.style.fontSize = item.textSize;
+            editableDiv.style.color = item.textColor;
+            editableDiv.style.fontFamily = item.textFamily;
+  
+            shapeTextAlign(editableDiv, item.textAlign);
+            editableDiv.focus();
+  
+            // shapeContainer.append(shapeImg);
+            shapeContainer.append(editableDiv);
+          }
+
           pg.appendChild(shapeContainer);
           resizeCanvas(shapeContainer.id, SHAPE, id);
 
@@ -1467,7 +1484,7 @@ const drawFormElement = function () {
 
           if(item.initialValue !== ""){
             var initialValueArr = item.initialValue.split("");
-            $(".number-field-input").each(function(i){
+            $("#" + numberDiv.id).find(".number-field-input").each(function(i){
               $(this).val(initialValueArr[i])
             })
           }
@@ -5556,16 +5573,42 @@ async function addFormElements() {
           }
           break;
         case SHAPE:
-          if (form_item.photoData) {
-            const shapeImage = await pdfDoc.embedPng(form_item.photoData);
-            page.drawImage(shapeImage, {
-              x: form_item.x,
-              y: form_item.y - form_item.height,
-              width: form_item.width,
-              height: form_item.height,
+          console.log(form_item);
+        
+          const fillColor = hexToRgbNew(form_item.shapeFillColor || '#FFFFFF'); // Default to white if no fill color is provided
+          const borderColor = hexToRgbNew(form_item.borderColor || '#000000');  // Default to black if no border color is provided
+          const bordersWidth = parseFloat(form_item.borderWidth) || 1;           // Parse border width
+          const borderRadius = parseFloat(form_item.borderRadius) || 0;         // Parse border radius
+        
+          // Draw the rectangle (or shape) with fill and border
+          page.drawRectangle({
+            x: form_item.x,
+            y: form_item.y - form_item.height,  // Adjust y position
+            width: form_item.width,
+            height: form_item.height,
+            color: fillColor,                   // Fill color
+            borderColor: borderColor,           // Border color
+            borderWidth: bordersWidth,           // Border width
+            borderRadius: borderRadius          // Border radius (if supported by pdf-lib)
+          });
+        
+          // Optional: Render text inside the shape if there's any `shapeText`
+          if (form_item.shapeText) {
+            const textY = form_item.y - form_item.height / 2; // Adjust text position based on shape height
+            const textSize = parseFloat(form_item.textSize) || 12; // Text size with a default value
+        
+            // Draw text inside the shape
+            page.drawText(form_item.shapeText.replace(/<[^>]+>/g, ''), { // Removing HTML tags if present
+              x: form_item.x + 5,  // Padding from the left
+              y: textY,            // Adjust text y position
+              size: textSize,      // Text size
+              color: hexToRgbNew(form_item.textColor || '#000000'),  // Default to black text color
+              font: await pdfDoc.embedFont(PDFLib.StandardFonts.Courier),  // Assuming Courier font
+              maxWidth: form_item.width - 10  // Optional, set a max width to fit the text inside
             });
           }
           break;
+          
         case PHOTO:
           if (form_item.photoData != undefined) {
             await embedImage(form_item, pdfDoc, page);
@@ -5619,6 +5662,7 @@ async function addFormElements() {
               textfieldForm.setFontSize(form_item.fontSize);
               textfieldForm.updateAppearances(customFont);
             } else {
+              // Draw background rectangle
               page.drawRectangle({
                 x: digitX,
                 y: form_item.y - squareHeight,
@@ -5628,15 +5672,33 @@ async function addFormElements() {
                 borderColor: hexToRgbNew("#000000"),
                 borderWidth: borderWidth
               });
-
-              const textY = form_item.y - squareHeight / 2 - form_item.fontSize / 3;
-
+        
+              // Calculate the width of the text
+              const textWidth = customFont.widthOfTextAtSize(item, form_item.fontSize);
+        
+              let textX;
+              // Handle horizontal alignment (0 = left, 1 = center, 2 = right)
+              if (form_item.align == 1) {
+                // Center alignment
+                textX = digitX + (squareWidth - textWidth) / 2;
+              } else if (form_item.align == 2) {
+                // Right alignment
+                textX = digitX + squareWidth - textWidth - 2; // 2px padding from the right
+              } else {
+                // Left alignment (default)
+                textX = digitX + 2; // 2px padding from the left
+              }
+        
+              // Calculate vertical alignment (centered vertically within the box)
+              const textY = form_item.y - squareHeight + (squareHeight - form_item.fontSize) / 2;
+        
+              // Draw the text with adjusted alignment
               page.drawText(item, {
-                x: digitX + (squareWidth / 2) - (form_item.fontSize / 4),
+                x: textX,
                 y: textY,
                 size: form_item.fontSize,
                 color: hexToRgbNew(form_item.textColor),
-                font: customFont
+                font: customFont,
               });
             }
           });

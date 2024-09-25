@@ -90,6 +90,20 @@ const fontSizeArr = [
   192,
 ];
 
+const borderSizeArr = [
+  0,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+];
+
 let formWidth = 25;
 let formHeight = 25;
 
@@ -260,7 +274,7 @@ const drawFormElement = function () {
           document.getElementById("checkbox-value").value = item.value;
           current_checkbox_id = id;
 
-          checkbox.addEventListener("click", () => {
+          checkbox.addEventListener("click", (e) => {
             const checkedId = e.target.parentNode.id;
             current_checkbox_id = checkedId;
             DrawType = CHECKBOX;
@@ -1681,30 +1695,6 @@ const drawFormElement = function () {
   }  
 }
 
-//... Draw font family
-const drawFontFamily = function () {
-  toolbar.find("#toolbar-font-style").empty();
-  fontStyleArr.forEach(function (item) {
-    let option = "";
-    if (item == "Calibri") {
-      option = `<option value="${item}" style="font-family: ${item}" selected="selected">${item}</option>`;
-    } else {
-      option = `<option value="${item}" style="font-family: ${item}">${item}</option>`;
-    }
-    toolbar.find("#toolbar-font-style").append(option);
-  })
-}
-
-//... Draw font size
-const drawFontSize = function () {
-  toolbar.find("#toolbar-font-size").empty();
-  fontSizeArr.forEach(function (item) {
-    let val = item == "Auto" ? 12 : item;
-    let option = `<option value="${val}" pixel="${val}px">${item}</option>`;
-    toolbar.find("#toolbar-font-size").append(option);
-  })
-}
-
 //... Change Font Style Event
 $(document).on("click", ".text-weight-button", function () {
   if ($(this).hasClass("active")) {
@@ -1716,8 +1706,6 @@ $(document).on("click", ".text-weight-button", function () {
 
 document.addEventListener("DOMContentLoaded", function () {
   loadFontFiles();
-  drawFontFamily();
-  drawFontSize();
   requestId = getIdFromUrl();
 
   let username = localStorage.getItem('username');
@@ -3382,6 +3370,14 @@ const showOptionAndResizebar = function (
     if (document.getElementById(`${id}-background-color`)) {
       document.getElementById(`${id}-background-color`).value = "#FFFFFF";
     }
+  }
+
+  let borderSizeContent = "";
+  borderSizeArr.map((item) => {
+    borderSizeContent += `<option value=${item}>${item === 0 ? "none" : item}</option>`;
+  });
+  if (document.getElementById(`${id}-border-size`)) {
+    document.getElementById(`${id}-border-size`).innerHTML = borderSizeContent;
   }
 };
 
@@ -5641,8 +5637,8 @@ async function addFormElements() {
         case NUMBERFIELD:
           const numberValue = form_item.initialValue !== undefined ? form_item.initialValue : "";
           const numberArr = numberValue.split("");
-          const squareWidth = 30;
-          const squareHeight = 40;
+          const squareWidth = 20;
+          const squareHeight = 24;
           const borderWidth = 1;
 
           numberArr.forEach(function (item, index) {
@@ -5650,7 +5646,7 @@ async function addFormElements() {
 
             if (!form_item.isReadOnly) {
               textfieldForm = form.createTextField(form_item.form_field_name + "_" + index);
-              textfieldForm.setText(item);
+              textfieldForm.setText(item == "-" ? "" : item);
               textfieldForm.addToPage(page, {
                 x: digitX,
                 y: form_item.y - squareHeight,

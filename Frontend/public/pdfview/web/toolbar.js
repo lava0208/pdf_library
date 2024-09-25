@@ -231,7 +231,6 @@ class Toolbar {
   #editorModeChanged({ mode }) {
     const {
       editorFreeTextButton,
-      editorFreeTextParamsToolbar,
       editorHighlightButton,
       editorHighlightParamsToolbar,
       editorInkButton,
@@ -239,12 +238,6 @@ class Toolbar {
       editorStampButton,
       editorStampParamsToolbar,
     } = this.#opts;
-
-    toggleCheckedBtn(
-      editorFreeTextButton,
-      mode === AnnotationEditorType.FREETEXT,
-      editorFreeTextParamsToolbar
-    );
 
     toggleCheckedBtn(
       editorHighlightButton,

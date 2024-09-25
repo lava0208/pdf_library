@@ -112,9 +112,6 @@ let historyId = 0;
 
 let current_history_id = 0;
 
-//...
-let toolbar = $("#editorFreeTextParamsToolbar");
-let isOnToolbar = false;
 let isOpenSubmitDocument = false;
 let baseId = 0;
 let selectedProfileSignature = null;

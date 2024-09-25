@@ -472,11 +472,6 @@ body {
   right: 225px;
 }
 
-#editorFreeTextParamsToolbar{
-  top: 42px;
-  right: 140px;
-}
-
 #editorShapeFormatToolbar{
   top: 213px;
   padding: 10px 15px;
@@ -1801,10 +1796,10 @@ dialog :link {
 .form-input {
   display: flex;
   flex-direction: column;
-  gap: 7px;
-  padding: 4px;
+  gap: 4px;
+  padding: 8px 5px;
   color: #222;
-  font-size: 18px;
+  font-size: 16px;
   outline: none;
   user-select: none;
 }
@@ -1823,7 +1818,7 @@ dialog :link {
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid #888;
-  padding: 5px;
+  padding: 8px 5px;
 }
 
 .form-style-name {
@@ -2657,6 +2652,10 @@ div[contenteditable="true"]:focus{
   width: auto;
   margin-left: 10px;
   gap: 20px;
+}
+
+#shapeToolbar img{
+  width: 20px;
 }
 
 #shapeIcons, #annotationIcons{

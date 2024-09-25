@@ -328,62 +328,6 @@ See https://github.com/adobe-type-tools/cmap-resources
 
         <div
           class="editorParamsToolbar hidden doorHangerRight"
-          id="editorFreeTextParamsToolbar"
-        >
-          <div class="editorParamsToolbarContainer">
-            <div class="editorParamsSetter">
-              <label
-                for="editorFreeTextColor"
-                class="editorParamsLabel"
-                data-l10n-id="pdfjs-editor-free-text-color-input"
-                >Color</label
-              >
-              <input
-                type="color"
-                id="editorFreeTextColor"
-                class="editorParamsColor"
-                tabindex="102"
-              />
-            </div>
-            <div class="editorParamsSetter">
-              <label
-                for="editorFreeTextFontSize"
-                class="editorParamsLabel"
-                data-l10n-id="pdfjs-editor-free-text-size-input"
-                >Size</label
-              >
-              <input
-                type="range"
-                id="editorFreeTextFontSize"
-                class="editorParamsSlider"
-                value="10"
-                min="5"
-                max="100"
-                step="1"
-                tabindex="103"
-                style="display: none"
-              />
-              <select
-                id="toolbar-font-size"
-                class="form-field-input"
-                style="width: 50%; font-size: 12px"
-              ></select>
-            </div>
-            <div class="editorParamsSetter">
-              <label for="toolbar-font-style" class="editorParamsLabel"
-                >Font Family</label
-              >
-              <select
-                id="toolbar-font-style"
-                class="form-field-input"
-                style="width: 50%; font-size: 12px"
-              ></select>
-            </div>
-          </div>
-        </div>
-
-        <div
-          class="editorParamsToolbar hidden doorHangerRight"
           id="editorInkParamsToolbar"
         >
           <div class="editorParamsToolbarContainer">
@@ -1128,7 +1072,7 @@ See https://github.com/adobe-type-tools/cmap-resources
                     data-toggle="dropdown"
                     aria-expanded="false"
                   >
-                    <i class="fa fa-fill"></i>
+                    <img src="./images/fill-color.svg" alt="color" />
                   </button>
                   <div class="dropdown-menu">
                     <div class="shape-colorpicker-container" type="background">
@@ -1199,7 +1143,7 @@ See https://github.com/adobe-type-tools/cmap-resources
                     data-toggle="dropdown"
                     aria-expanded="false"
                   >
-                    <i class="fa-solid fa-border-top-left"></i>
+                    <img src="./images/border-width.svg" alt="border width" />
                   </button>
                   <div class="dropdown-menu">
                     <input
@@ -1223,7 +1167,7 @@ See https://github.com/adobe-type-tools/cmap-resources
                     data-toggle="dropdown"
                     aria-expanded="false"
                   >
-                    <i class="fa fa-fill"></i>
+                    <img src="./images/fill-color.svg" alt="color" />
                   </button>
                   <div class="dropdown-menu">
                     <div class="shape-colorpicker-container" type="text">
@@ -1244,7 +1188,7 @@ See https://github.com/adobe-type-tools/cmap-resources
                     data-toggle="dropdown"
                     aria-expanded="false"
                   >
-                    <i class="fa fa-font"></i>
+                    <img src="./images/font.svg" alt="font" />
                   </button>
                   <div class="dropdown-menu">
                     <div class="font-family-container" family="Courier">
@@ -1296,7 +1240,7 @@ See https://github.com/adobe-type-tools/cmap-resources
                     data-toggle="dropdown"
                     aria-expanded="false"
                   >
-                    <i class="fa fa-text-height"></i>
+                    <img src="./images/font-size.svg" alt="font size" />
                   </button>
                   <div class="dropdown-menu">
                     <input
@@ -1317,7 +1261,7 @@ See https://github.com/adobe-type-tools/cmap-resources
                     data-toggle="dropdown"
                     aria-expanded="false"
                   >
-                    <i class="fa fa-solid fa-align-justify"></i>
+                    <img src="./images/align.svg" alt="align" />
                   </button>
                   <div class="dropdown-menu">
                     <div class="flex-container active" direction="left" type="horizontal">
@@ -1764,9 +1708,7 @@ See https://github.com/adobe-type-tools/cmap-resources
             </div>
           </div>
           <div class="form-style-container">
-            <div class="form-style-name">
-              <span style="font-size: 18px">Background Color</span>
-            </div>
+            <div class="form-style-name"> Fill Color </div>
             <input
               type="color"
               id="checkbox-background-color"
@@ -1826,9 +1768,7 @@ See https://github.com/adobe-type-tools/cmap-resources
             </div>
           </div>
           <div class="form-style-container">
-            <div class="form-style-name">
-              <span style="font-size: 18px">Background Color</span>
-            </div>
+            <div class="form-style-name"> Fill Color </div>
             <input
               type="color"
               id="radio-background-color"
@@ -1869,21 +1809,21 @@ See https://github.com/adobe-type-tools/cmap-resources
             <div class="form-field-input-container">
               <div class="form-style-container">
                 <div class="form-style-name">
-                  <i class="fa fa-font"></i>
+                  <img src="./images/font.svg" alt="font" />
                   <span>Font</span>
                 </div>
                 <select id="text-font-style" class="form-field-input"></select>
               </div>
               <div class="form-style-container">
                 <div class="form-style-name">
-                  <i class="fa fa-text-height"></i>
+                  <img src="./images/font-size.svg" alt="font size" />
                   <span>Font Size</span>
                 </div>
                 <select id="text-font-size" class="form-field-input"></select>
               </div>
               <div class="form-style-container">
                 <div class="form-style-name">
-                  <i class="fa fa-fill"></i>
+                  <img src="./images/fill-color.svg" alt="color" />
                   <span>Color</span>
                 </div>
                 <input
@@ -1895,8 +1835,8 @@ See https://github.com/adobe-type-tools/cmap-resources
               </div>
               <div class="form-style-container">
                 <div class="form-style-name">
-                  <i class="fa fa-fill"></i>
-                  <span>Background Color</span>
+                  <img src="./images/fill-color.svg" alt="color" />
+                  <span>Fill Color</span>
                 </div>
                 <input
                   type="color"
@@ -1908,7 +1848,27 @@ See https://github.com/adobe-type-tools/cmap-resources
               </div>
               <div class="form-style-container">
                 <div class="form-style-name">
-                  <i class="fa fa-align-left"></i>
+                  <img src="./images/border-color.svg" alt="color" />
+                  <span>Border Color</span>
+                </div>
+                <input
+                  type="color"
+                  id="checkbox-border-color"
+                  name="colorPicker"
+                  value="#000000"
+                  class="form-field-input"
+                />
+              </div>
+              <div class="form-style-container">                
+                <div class="form-style-name">
+                  <img src="./images/border-width.svg" alt="width" />
+                  <span>Border Width</span>
+                </div>
+                <select id="text-border-size" class="form-field-input"></select>
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <img src="./images/align.svg" alt="align" />
                   <span>Alignment</span>
                 </div>
                 <div>
@@ -2003,21 +1963,21 @@ See https://github.com/adobe-type-tools/cmap-resources
             <div class="form-field-input-container">
               <div class="form-style-container">
                 <div class="form-style-name">
-                  <i class="fa fa-font"></i>
+                  <img src="./images/font.svg" alt="font" />
                   <span>Font</span>
                 </div>
                 <select id="combo-font-style" class="form-field-input"></select>
               </div>
               <div class="form-style-container">
                 <div class="form-style-name">
-                  <i class="fa fa-text-height"></i>
+                  <img src="./images/font-size.svg" alt="font size" />
                   <span>Font Size</span>
                 </div>
                 <select id="combo-font-size" class="form-field-input"></select>
               </div>
               <div class="form-style-container">
                 <div class="form-style-name">
-                  <i class="fa fa-fill"></i>
+                  <img src="./images/fill-color.svg" alt="color" />
                   <span>Color</span>
                 </div>
                 <input
@@ -2029,8 +1989,8 @@ See https://github.com/adobe-type-tools/cmap-resources
               </div>
               <div class="form-style-container">
                 <div class="form-style-name">
-                  <i class="fa fa-fill"></i>
-                  <span>Background Color</span>
+                  <img src="./images/fill-color.svg" alt="color" />
+                  <span>Fill Color</span>
                 </div>
                 <input
                   type="color"
@@ -2119,21 +2079,21 @@ See https://github.com/adobe-type-tools/cmap-resources
             <div class="form-field-input-container">
               <div class="form-style-container">
                 <div class="form-style-name">
-                  <i class="fa fa-font"></i>
+                  <img src="./images/font.svg" alt="font" />
                   <span>Font</span>
                 </div>
                 <select id="list-font-style" class="form-field-input"></select>
               </div>
               <div class="form-style-container">
                 <div class="form-style-name">
-                  <i class="fa fa-text-height"></i>
+                  <img src="./images/font-size.svg" alt="font size" />
                   <span>Font Size</span>
                 </div>
                 <select id="list-font-size" class="form-field-input"></select>
               </div>
               <div class="form-style-container">
                 <div class="form-style-name">
-                  <i class="fa fa-fill"></i>
+                  <img src="./images/fill-color.svg" alt="color" />
                   <span>Color</span>
                 </div>
                 <input
@@ -2145,8 +2105,8 @@ See https://github.com/adobe-type-tools/cmap-resources
               </div>
               <div class="form-style-container">
                 <div class="form-style-name">
-                  <i class="fa fa-fill"></i>
-                  <span>Background Color</span>
+                  <img src="./images/fill-color.svg" alt="color" />
+                  <span>Fill Color</span>
                 </div>
                 <input
                   type="color"
@@ -2218,7 +2178,7 @@ See https://github.com/adobe-type-tools/cmap-resources
             <div class="form-field-input-container">
               <div class="form-style-container">
                 <div class="form-style-name">
-                  <i class="fa fa-font"></i>
+                  <img src="./images/font.svg" alt="font" />
                   <span>Font</span>
                 </div>
                 <select
@@ -2228,14 +2188,14 @@ See https://github.com/adobe-type-tools/cmap-resources
               </div>
               <div class="form-style-container">
                 <div class="form-style-name">
-                  <i class="fa fa-text-height"></i>
+                  <img src="./images/font-size.svg" alt="font size" />
                   <span>Font Size</span>
                 </div>
                 <select id="button-font-size" class="form-field-input"></select>
               </div>
               <div class="form-style-container">
                 <div class="form-style-name">
-                  <i class="fa fa-fill"></i>
+                  <img src="./images/fill-color.svg" alt="color" />
                   <span>Color</span>
                 </div>
                 <input
@@ -2248,8 +2208,8 @@ See https://github.com/adobe-type-tools/cmap-resources
             </div>
             <div class="form-style-container">
               <div class="form-style-name">
-                <i class="fa fa-fill"></i>
-                <span>Background Color</span>
+                <img src="./images/fill-color.svg" alt="color" />
+                <span>Fill Color</span>
               </div>
               <input
                 type="color"
@@ -2293,7 +2253,7 @@ See https://github.com/adobe-type-tools/cmap-resources
             <div class="form-field-input-container">
               <div class="form-style-container">
                 <div class="form-style-name">
-                  <i class="fa fa-font"></i>
+                  <img src="./images/font.svg" alt="font" />
                   <span>Font</span>
                 </div>
                 <select
@@ -2304,7 +2264,7 @@ See https://github.com/adobe-type-tools/cmap-resources
               </div>
               <div class="form-style-container">
                 <div class="form-style-name">
-                  <i class="fa fa-text-height"></i>
+                  <img src="./images/font-size.svg" alt="font size" />
                   <span>Font Size</span>
                 </div>
                 <div
@@ -2333,7 +2293,7 @@ See https://github.com/adobe-type-tools/cmap-resources
               </div>
               <div class="form-style-container">
                 <div class="form-style-name">
-                  <i class="fa fa-fill"></i>
+                  <img src="./images/fill-color.svg" alt="color" />
                   <span>Color</span>
                 </div>
                 <input
@@ -2377,21 +2337,21 @@ See https://github.com/adobe-type-tools/cmap-resources
             <div class="form-field-input-container">
               <div class="form-style-container">
                 <div class="form-style-name">
-                  <i class="fa fa-font"></i>
+                  <img src="./images/font.svg" alt="font" />
                   <span>Font</span>
                 </div>
                 <select id="date-font-style" class="form-field-input"></select>
               </div>
               <div class="form-style-container">
                 <div class="form-style-name">
-                  <i class="fa fa-text-height"></i>
+                  <img src="./images/font-size.svg" alt="font size" />
                   <span>Font Size</span>
                 </div>
                 <select id="date-font-size" class="form-field-input"></select>
               </div>
               <div class="form-style-container">
                 <div class="form-style-name">
-                  <i class="fa fa-fill"></i>
+                  <img src="./images/fill-color.svg" alt="color" />
                   <span>Color</span>
                 </div>
                 <input
@@ -2403,8 +2363,8 @@ See https://github.com/adobe-type-tools/cmap-resources
               </div>
               <div class="form-style-container">
                 <div class="form-style-name">
-                  <i class="fa fa-fill"></i>
-                  <span>Background Color</span>
+                  <img src="./images/fill-color.svg" alt="color" />
+                  <span>Fill Color</span>
                 </div>
                 <input
                   type="color"
@@ -2448,21 +2408,21 @@ See https://github.com/adobe-type-tools/cmap-resources
             <div class="form-field-input-container">
               <div class="form-style-container">
                 <div class="form-style-name">
-                  <i class="fa fa-font"></i>
+                  <img src="./images/font.svg" alt="font" />
                   <span>Font</span>
                 </div>
                 <select id="number-font-style" class="form-field-input"></select>
               </div>
               <div class="form-style-container">
                 <div class="form-style-name">
-                  <i class="fa fa-text-height"></i>
+                  <img src="./images/font-size.svg" alt="font size" />
                   <span>Font Size</span>
                 </div>
                 <select id="number-font-size" class="form-field-input"></select>
               </div>
               <div class="form-style-container">
                 <div class="form-style-name">
-                  <i class="fa fa-fill"></i>
+                  <img src="./images/fill-color.svg" alt="color" />
                   <span>Color</span>
                 </div>
                 <input
@@ -2474,8 +2434,8 @@ See https://github.com/adobe-type-tools/cmap-resources
               </div>
               <div class="form-style-container">
                 <div class="form-style-name">
-                  <i class="fa fa-fill"></i>
-                  <span>Background Color</span>
+                  <img src="./images/fill-color.svg" alt="color" />
+                  <span>Fill Color</span>
                 </div>
                 <input
                   type="color"
@@ -2487,7 +2447,7 @@ See https://github.com/adobe-type-tools/cmap-resources
               </div>
               <div class="form-style-container">
                 <div class="form-style-name">
-                  <i class="fa fa-align-left"></i>
+                  <img src="./images/align.svg" alt="align" />
                   <span>Alignment</span>
                 </div>
                 <div>
@@ -2873,7 +2833,7 @@ See https://github.com/adobe-type-tools/cmap-resources
         >
           <div class="signature-color-picker">
             <div>
-              <span>Background Color</span>
+              <span>Fill Color</span>
             </div>
             <div>
               <input

@@ -26,16 +26,10 @@ class AnnotationEditorParams {
   }
 
   #bindListeners({
-    editorFreeTextFontSize,
-    editorFreeTextColor,
     editorInkColor,
     editorInkThickness,
     editorInkOpacity,
     editorStampAddImage,
-
-    //... custom toolbar text
-    editorSelectTextFontSize,
-    editorSelectTextFontFamily
   }) {
     const dispatchEvent = (typeStr, value) => {
       this.eventBus.dispatch("switchannotationeditorparams", {
@@ -44,12 +38,6 @@ class AnnotationEditorParams {
         value,
       });
     };
-    editorFreeTextFontSize.addEventListener("input", function () {
-      dispatchEvent("FREETEXT_SIZE", this.valueAsNumber);
-    });
-    editorFreeTextColor.addEventListener("input", function () {
-      dispatchEvent("FREETEXT_COLOR", this.value);
-    });
     editorInkColor.addEventListener("input", function () {
       dispatchEvent("INK_COLOR", this.value);
     });
@@ -63,23 +51,10 @@ class AnnotationEditorParams {
       dispatchEvent("CREATE");
     });
 
-    //... custom toolbar text
-    editorSelectTextFontSize.addEventListener("change", function () {
-      dispatchEvent("SELECTTEXT_SIZE", this.value);
-    });
-    editorSelectTextFontFamily.addEventListener("change", function () {
-      dispatchEvent("SELECTTEXT_FAMILY", this.value);
-    });
 
     this.eventBus._on("annotationeditorparamschanged", evt => {
       for (const [type, value] of evt.details) {
         switch (type) {
-          case AnnotationEditorParamsType.FREETEXT_SIZE:
-            editorFreeTextFontSize.value = value;
-            break;
-          case AnnotationEditorParamsType.FREETEXT_COLOR:
-            editorFreeTextColor.value = value;
-            break;
           case AnnotationEditorParamsType.INK_COLOR:
             editorInkColor.value = value;
             break;
@@ -88,14 +63,6 @@ class AnnotationEditorParams {
             break;
           case AnnotationEditorParamsType.INK_OPACITY:
             editorInkOpacity.value = value;
-            break;
-
-          //... custom toolbar text
-          case AnnotationEditorParamsType.SELECTTEXT_SIZE:
-            editorSelectTextFontSize.value = value;
-            break;
-          case AnnotationEditorParamsType.SELECTTEXT_FAMILY:
-            editorSelectTextFontFamily.value = value;
             break;
         }
       }

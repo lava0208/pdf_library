@@ -55,9 +55,6 @@ function getViewerConfiguration() {
       viewFind: document.getElementById("viewFind"),
       print: document.getElementById("print"),
       editorFreeTextButton: document.getElementById("editorFreeText"),
-      editorFreeTextParamsToolbar: document.getElementById(
-        "editorFreeTextParamsToolbar"
-      ),
       editorHighlightButton: document.getElementById("editorHighlight"),
       editorHighlightParamsToolbar: document.getElementById(
         "editorHighlightParamsToolbar"
@@ -149,16 +146,11 @@ function getViewerConfiguration() {
     },
 
     annotationEditorParams: {
-      editorFreeTextFontSize: document.getElementById("editorFreeTextFontSize"),
       editorFreeTextColor: document.getElementById("editorFreeTextColor"),
       editorInkColor: document.getElementById("editorInkColor"),
       editorInkThickness: document.getElementById("editorInkThickness"),
       editorInkOpacity: document.getElementById("editorInkOpacity"),
       editorStampAddImage: document.getElementById("editorStampAddImage"),
-
-      //... custom toolbar text
-      editorSelectTextFontSize: document.getElementById("toolbar-font-size"),
-      editorSelectTextFontFamily: document.getElementById("toolbar-font-style"),
     },
     
     printContainer: document.getElementById("printContainer"),

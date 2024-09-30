@@ -93,6 +93,7 @@ const fontSizeArr = [
 ];
 
 const borderSizeArr = [
+  0,
   1,
   2,
   3,
@@ -995,6 +996,10 @@ const drawFormElement = function () {
           resizeCanvas(buttonDiv.id, BUTTON, id, BUTTON_OPTION);
           break;
         case DATE:
+          let dateDiv = document.createElement("div");
+          dateDiv.id = "date" + id;
+          addFormElementStyle(dateDiv, y, x, width, height);
+
           const newDate = document.createElement("input");
           newDate.id = "datecontent" + id;
           newDate.classList.add("date-field-input", "form-container");
@@ -1012,10 +1017,6 @@ const drawFormElement = function () {
 
             item.text = e.target.value;
           });
-
-          let dateDiv = document.createElement("div");
-          dateDiv.id = "date" + id;
-          addFormElementStyle(dateDiv, y, x, width, height);
 
           dateDiv.append(newDate);
           pg.appendChild(dateDiv);
@@ -3135,7 +3136,7 @@ const saveFormElementByClick = function () {
     form_storage.forEach((item) => {
       let currentItem = document.getElementById(item.containerId);
       if (currentItem) {
-        currentItem.style.zIndex = 5;
+        currentItem.style.zIndex = standardZIndex;     
         if (currentItem.classList.contains("textfield-content"))
           currentItem.classList.remove("textfield-content");
       }
@@ -3208,7 +3209,9 @@ document.getElementById("viewer").addEventListener("mousedown", function (event)
   }
   if (form_storage  && form_storage !== null) {
     form_storage.forEach((item) => {
-      if (item.containerId === currentObject.id || item.containerId === currentObjectParentId) {
+      const cId = item.form_type === DATE ? item.containerId.replace("content", "") : item.containerId;
+    
+      if (cId === currentObject.id || cId === currentObjectParentId) {
         currentFormType = item.form_type;
         DrawType = item.form_type;
         isExisting = true;
@@ -3231,14 +3234,11 @@ document.getElementById("viewer").addEventListener("mousedown", function (event)
       removeAllResizeBar();
       saveFormElementByClick();      
       if (currentFormType === DATE) {
-        if (!currentObject.parentElement.querySelector("#topLeft")) addResizebar(currentObject.parentElement.id);
-        setTimeout(() => {
-          // currentObject.parentElement.style.zIndex = selectedZIndex;
-        }, 200);
+        currentObject.style.zIndex = selectedZIndex;
       } else if (currentFormType === SIGNATURE || currentFormType === SHAPE || currentFormType === PHOTO) {
         if (currentObject.tagName === "IMG") {
           if (!currentObject.parentElement.querySelector("#topLeft")) addResizebar(currentObject.parentElement.id);
-          // currentObject.parentElement.style.zIndex = selectedZIndex;
+          currentObject.parentElement.style.zIndex = selectedZIndex;
         } else {
           if (!currentObject.querySelector("#topLeft")) addResizebar(currentObject.id);
           // currentObject.style.zIndex = selectedZIndex;
@@ -3248,7 +3248,7 @@ document.getElementById("viewer").addEventListener("mousedown", function (event)
           currentObject.parentElement.classList.add("textfield-content");
       } else {
         if (!currentObject.querySelector("#topLeft")) addResizebar(currentObject.id);
-        // currentObject.style.zIndex = selectedZIndex;
+        currentObject.style.zIndex = selectedZIndex;
       }
       // handleComment(currentObject.id, currentFormType);
     } else {
@@ -3505,7 +3505,7 @@ const addFormElementStyle = function (object, top, left, width, height, borderRa
   object.style.width = width + "px";
   object.style.height = height + "px";
   object.style.background = "#3C97FE";
-  object.style.zIndex = 50;
+  object.style.zIndex = standardZIndex;
   object.tabIndex = 0;
   object.style.borderRadius = borderRadius == "0" ? "0px" : "3px";
   object.classList.add("form-fields");
@@ -4532,39 +4532,6 @@ const eventHandler = async function (e) {
         formHeight,
         "date"
       );
-
-      // newDate.style.fontFamily =
-      //   document.getElementById("date-font-style").value;
-      // newDate.style.fontSize =
-      //   document.getElementById("date-font-size").value + "px";
-      // newDate.style.color = document.getElementById("date-font-color").value;
-
-      // document
-      //   .getElementById("date-font-style")
-      //   .addEventListener("change", () => {
-      //     document.getElementById(current_date_content_id).style.fontFamily =
-      //       document.getElementById("date-font-style").value;
-      //   });
-      // document
-      //   .getElementById("date-font-size")
-      //   .addEventListener("change", () => {
-      //     document.getElementById(current_date_content_id).style.fontSize =
-      //       document.getElementById("date-font-size").value + "px";
-      //   });
-      // document
-      //   .getElementById("date-font-color")
-      //   .addEventListener("change", () => {
-      //     document.getElementById(current_date_content_id).style.color =
-      //       document.getElementById("date-font-color").value;
-      //   });
-
-      // //... background color
-      // document
-      //   .getElementById("date-font-background-color")
-      //   .addEventListener("change", () => {
-      //     document.getElementById(current_date_content_id).style.backgroundColor =
-      //       document.getElementById("date-font-background-color").value;
-      //   });
 
       document.getElementById(
         "date-input-name"

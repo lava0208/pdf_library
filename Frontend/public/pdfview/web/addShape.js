@@ -269,9 +269,6 @@ viewer.addEventListener("mouseup", function (e) {
     const length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
     const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
 
-    console.log("============= " + startX);
-    console.log("============= " + endY);
-
     rectElement.style.width = `${length}px`;
     rectElement.style.height = `${selectedBorderWeight}px`;
     rectElement.style.left = `${startX}px`;
@@ -285,9 +282,7 @@ viewer.addEventListener("mouseup", function (e) {
     ].viewport.convertToPdfPoint(startX, endY);
 
     pos_x_pdf = shape_x_y[0];
-    console.log("++++++++++++++ " + pos_x_pdf);
     pos_y_pdf = shape_x_y[1];
-    console.log("++++++++++++++ " + pos_y_pdf);
 
     isDrawing = false;
     isDrawingShape = false;
@@ -311,17 +306,13 @@ viewer.addEventListener("mouseup", function (e) {
     let ost = computePageOffset();
     let x = left + rect.left - ost.left;
     let y = top + rect.top - ost.top;
-    console.log("============= " + x);
-    console.log("============= " + y);
 
     let shape_x_y = PDFViewerApplication.pdfViewer._pages[
       PDFViewerApplication.page - 1
     ].viewport.convertToPdfPoint(x, y);
 
     pos_x_pdf = shape_x_y[0];
-    console.log("++++++++++++++ " + pos_x_pdf);
     pos_y_pdf = shape_x_y[1];
-    console.log("++++++++++++++ " + pos_y_pdf);
 
     isDrawing = false;
     isDrawingShape = false;

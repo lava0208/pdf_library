@@ -156,7 +156,11 @@ const generalUserMode = function () {
 }
 
 const drawFormElement = function () {
-  form_storage = draw_form_storage;
+  form_storage = draw_form_storage.filter((value, index, self) =>
+    index === self.findIndex((t) => (
+      t.id === value.id
+    ))
+  );
 
   if(isDraft == "true"){
     var last_form = form_storage[form_storage.length - 1];
@@ -213,7 +217,7 @@ const drawFormElement = function () {
         x = item.x;
         y = item.y;
         width = item.xPage;
-        height = item.form_type !== 10 ? item.yPage : 'auto'; //... fit signature height
+        height = item.yPage;
         item.baseX = item.x;
         item.baseY = item.y;
       } else {
@@ -1145,15 +1149,14 @@ const drawFormElement = function () {
           signatureContainer.className = "signatureContainer", "form-container";
           signatureContainer.id = "signature" + id;
           addFormElementStyle(signatureContainer, y, x, width, height);
+          
           signatureContainer.style.display = "flex";
           signatureContainer.style.alignItems = "center";
           signatureContainer.style.justifyContent = "center";
-          signatureContainer.style.userSelect = "none";
           signatureContainer.style.color = "black";
           signatureContainer.style.minHeight = "40px";
-          signatureContainer.textContent = "Double Click to sign here!";
+          signatureContainer.textContent = "Double click to sign here!";
 
-          //... background color
           form_storage.map((element) => {
             if (element.id == id) {
               document.getElementById("signature-font-background-color").value =
@@ -1181,8 +1184,7 @@ const drawFormElement = function () {
           pg.appendChild(signatureContainer);
 
           current_signature_id = id;
-
-          resizeCanvas(signatureContainer.id, SIGNATURE, id);
+          
           signatureContainer.addEventListener("click", () => {
             if (!isEditing) {
               current_signature_id = id;
@@ -1249,7 +1251,6 @@ const drawFormElement = function () {
                     signatureImgData = cropCanvas(canvas);
                     createAndAppendImage(signatureImgData);
                   }
-                  handleSignature();
                 } else if (currentSignType == TYPE) {
                   let canvasType = document.getElementById("signature-type-text").value;
                   if (canvasType != "") {
@@ -1257,7 +1258,6 @@ const drawFormElement = function () {
                     signatureImgData = cropCanvas(canvas);
                     createAndAppendImage(signatureImgData);
                   }
-                  handleSignature();
                 } else if (currentSignType == UPLOAD) {
                   const file = document.getElementById("signature-image-input")
                     .files[0];
@@ -1266,21 +1266,22 @@ const drawFormElement = function () {
                     reader.onload = function (e) {
                       signatureImgData = e.target.result;
                       createAndAppendImage(signatureImgData);
+                      handleSignature();
                     };
                     reader.readAsDataURL(file);
-                    handleSignature();
                   } else {
                     alert("Please select an image file.");
+                    handleSignature();
                   }
                 } else if (currentSignType == PROFILE) {
                   if (selectedProfileSignature) {
                     signatureImgData = selectedProfileSignature;
-                    handleSignature();
                     createAndAppendImage(selectedProfileSignature);
                   } else {
                     alert("Please select an image file.");
                   }
                 }
+                handleSignature();
 
                 function createAndAppendImage(imgData) {
                   signature_creator.style.display = "none";
@@ -1302,6 +1303,10 @@ const drawFormElement = function () {
               };
             }
           });
+
+          // handleSignature();
+          resizeCanvas(signatureContainer.id, SIGNATURE, id);
+
           break;
         case SHAPE:
           let canvas = $("#drawing-shape-board").find("canvas")[0];
@@ -1405,10 +1410,24 @@ const drawFormElement = function () {
           photoContainer.style.display = "flex";
           photoContainer.style.alignItems = "center";
           photoContainer.style.justifyContent = "center";
-          photoContainer.style.userSelect = "none";
           photoContainer.style.color = "black";
           photoContainer.style.minHeight = "40px";
           photoContainer.textContent = "Double click to upload image!";
+
+          form_storage.map((element) => {
+            if (element.id == id) {
+              document.getElementById("photo-background-color").value =
+                element.textBackgroundColor;
+              document.getElementById("photo-border-color").value =
+                element.borderColor;
+
+              if (isDraft == "false" || isDraft == null) {
+                setTimeout(() => {
+                  $("#" + element.containerId).css({"background-color": element.textBackgroundColor, "border-color": element.borderColor});
+                }, 100);
+              }
+            }
+          })
 
           if (item.photoData) {
             if (item.photoData.includes("data:image/png;base64")) {
@@ -1486,7 +1505,7 @@ const drawFormElement = function () {
                   };
                   reader.readAsDataURL(file);
                 } else {
-                  alert("Please select an image file.");
+                  handlePhoto();
                 }
               };
             }
@@ -1781,13 +1800,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
           console.log("*******");
           console.log(draw_form_storage);
+          console.log(JSON.parse(data.formData));
+          
           const checkViewerInterval = setInterval(() => {
             if (PDFViewerApplication.pdfDocument && PDFViewerApplication.pdfDocument.numPages > 0) {
               // If the document is loaded, call the drawFormElement function
               clearInterval(checkViewerInterval); // Clear the interval
               drawFormElement();
             }
-          })
+          }, 100)
         }
         $("body").removeClass("loading");
       })
@@ -2711,8 +2732,6 @@ const handleSignature = function () {
       xPage: formWidth,
       yPage: formHeight,
       imgData: signatureImgData,
-
-      //... background color
       textBackgroundColor: textBackgroundColor,
     });
     const date = new Date(Date.now());
@@ -2747,6 +2766,18 @@ const handlePhoto = function () {
       count++;
   }
 
+  textBackgroundColor = document.getElementById("photo-background-color") && document.getElementById("photo-background-color").value;
+  borderColor = document.getElementById("photo-border-color") && document.getElementById("photo-border-color").value;
+
+  for (let i = 0; i < form_storage.length; i++) {
+    if (form_storage[i].id == current_form_id) {
+      form_storage[i].textBackgroundColor = textBackgroundColor;
+      form_storage[i].borderColor = borderColor;
+      handleTrack(form_storage[i].id, " photo");
+      break;
+    }
+  }
+
   if (baseId !== 0 && (count == imageStorage.length || imageStorage == null)) {
     form_storage.push({
       id: baseId,
@@ -2762,6 +2793,8 @@ const handlePhoto = function () {
       xPage: formWidth,
       yPage: formHeight,
       photoData: photoData,
+      textBackgroundColor: textBackgroundColor,
+      borderColor: borderColor,
     });
     const date = new Date(Date.now());
     addHistory(baseId, PHOTO, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "photo");
@@ -2944,6 +2977,8 @@ const resizeCanvas = function (id, type, currentId, optionId) {
         }
       },
       end(event) {
+        console.log(event);
+        
         if (!isEditing) {
           let target = event.target;
           let x = parseFloat(target.getAttribute("data-x")) || 0;
@@ -3512,12 +3547,12 @@ const addFormElementStyle = function (object, top, left, width, height, borderRa
 };
 
 //...
-const addSignatureElementStyle = function (object, top, left, width, minHeight) {
+const addSignatureElementStyle = function (object, top, left, width, height) {
   object.style.position = "absolute";
   object.style.top = top + "px";
   object.style.left = left + "px";
   object.style.width = width + "px";
-  object.style.minHeight = minHeight + "px";
+  object.style.height = height + "px";
   object.style.background = "#3C97FE";
   // object.style.zIndex = standardZIndex;
   object.tabIndex = 0;
@@ -4632,8 +4667,7 @@ const eventHandler = async function (e) {
       signatureContainer.id = "signature" + signatureId;
       signatureContainer.className = "signatureContainer", "form-container";
 
-      //...
-      addSignatureElementStyle(
+      addFormElementStyle(
         signatureContainer,
         topPos,
         leftPos,
@@ -4643,17 +4677,13 @@ const eventHandler = async function (e) {
       signatureContainer.style.display = "flex";
       signatureContainer.style.alignItems = "center";
       signatureContainer.style.justifyContent = "center";
-      signatureContainer.style.userSelect = "none";
       signatureContainer.style.color = "black";
       signatureContainer.style.minHeight = "40px";
-      signatureContainer.textContent = "Double Click to sign here!";
+      signatureContainer.textContent = "Double click to sign here!";
 
-      pg.appendChild(signatureContainer);
-      handleSignature();
+      pg.appendChild(signatureContainer);      
 
-      current_signature_id = signatureId;
-
-      resizeCanvas(signatureContainer.id, SIGNATURE, signatureId);
+      current_signature_id = signatureId;      
       
       signatureContainer.addEventListener("click", () => {
         if (!isEditing) {
@@ -4719,15 +4749,14 @@ const eventHandler = async function (e) {
                 signatureImgData = cropCanvas(canvas);
                 createAndAppendImage(signatureImgData, signatureContainer, signatureId);
               }
-              handleSignature();
-            } else if (currentSignType == TYPE) {              
+              // handleSignature();
+            } else if (currentSignType == TYPE) {
               let canvasType = document.getElementById("signature-type-text").value;
               if (canvasType != "") {
                 canvas = document.getElementById("signature-type-canvas");
                 signatureImgData = cropCanvas(canvas);
                 createAndAppendImage(signatureImgData, signatureContainer, signatureId);
               }
-              handleSignature();
             } else if (currentSignType == UPLOAD) {
               const file = document.getElementById("signature-image-input")
                 .files[0];
@@ -4735,8 +4764,8 @@ const eventHandler = async function (e) {
                 const reader = new FileReader();
                 reader.onload = function (e) {
                   signatureImgData = e.target.result;
-                  handleSignature();
                   createAndAppendImage(signatureImgData, signatureContainer, signatureId);
+                  handleSignature();
                 };
                 reader.readAsDataURL(file);
               } else {
@@ -4745,15 +4774,20 @@ const eventHandler = async function (e) {
             } else if (currentSignType == PROFILE) {
               if (selectedProfileSignature) {
                 signatureImgData = selectedProfileSignature;
-                handleSignature();
                 createAndAppendImage(selectedProfileSignature, signatureContainer, signatureId);
               } else {
                 alert("Please select an image file.");
               }
             }
+
+            // handleSignature();
           };
         }
       });
+
+      handleSignature();
+      resizeCanvas(signatureContainer.id, SIGNATURE, signatureId);
+      
       break;
     case SHAPE:
       let shapeId = baseId;
@@ -4819,7 +4853,6 @@ const eventHandler = async function (e) {
       photoContainer.style.display = "flex";
       photoContainer.style.alignItems = "center";
       photoContainer.style.justifyContent = "center";
-      photoContainer.style.userSelect = "none";
       photoContainer.style.color = "black";
       photoContainer.style.minHeight = "40px";
       photoContainer.textContent = "Double click to upload image!";
@@ -4830,7 +4863,6 @@ const eventHandler = async function (e) {
       current_photo_id = photoId;
 
       resizeCanvas(photoContainer.id, PHOTO, photoId);
-
       photoContainer.addEventListener("click", () => {
         if (!isEditing) {
           current_photo_id = photoId;
@@ -4864,7 +4896,7 @@ const eventHandler = async function (e) {
         }
       });
 
-      photoContainer.addEventListener("dblclick", () => {        
+      photoContainer.addEventListener("dblclick", () => {
         if (!isSubmit && !isEditing) {
           const image_creator = document.getElementById(PHOTO_OPTION);
           image_creator.style.display = "flex";
@@ -4886,8 +4918,8 @@ const eventHandler = async function (e) {
                 createAndAppendPhotoImage(photoData, photoContainer, photoId);
               };
               reader.readAsDataURL(file);
-            } else {
-              alert("Please select an image file.");
+            }else{
+              handlePhoto();
             }
           };
         }
@@ -5068,7 +5100,7 @@ function createAndAppendImage(imgData, container, id) {
   signatureImg.style.objectFit = "cover";
   container.textContent = "";
   container.append(signatureImg);
-  resizeCanvas(container.id, SIGNATURE, id);
+  // resizeCanvas(container.id, SIGNATURE, id);
 }
 
 function createAndAppendPhotoImage(photoData, container, id) {
@@ -5185,20 +5217,32 @@ async function embedImage(form_item, pdfDoc, page) {
   }
 
   try {
-    const pngImage = await pdfDoc.embedPng(imgData);
+    // Check if the image is PNG or JPEG
+    let image;
+    if (imgData.includes("data:image/png")) {
+      image = await pdfDoc.embedPng(imgData); // Embed PNG image
+    } else if (imgData.includes("data:image/jpeg")) {
+      image = await pdfDoc.embedJpg(imgData); // Embed JPEG image
+    } else {
+      throw new Error('Unsupported image format');
+    }
+
+    // Draw background color (if available)
     page.drawRectangle({
       x: form_item.x,
-      y: form_item.y - form_item.height,
-      width: form_item.width,
-      height: form_item.height,
+      y: form_item.y - form_item.yPage,
+      width: form_item.xPage,
+      height: form_item.yPage,
       color: form_item.textBackgroundColor ? hexToRgbNew(form_item.textBackgroundColor) : PDFLib.rgb(1, 1, 1),
     });
-    page.drawImage(pngImage, {
+    
+    page.drawImage(image, {
       x: form_item.x,
-      y: form_item.y - form_item.height,
-      width: form_item.width,
-      height: form_item.height,
+      y: form_item.y - form_item.yPage,
+      width: form_item.xPage,
+      height: form_item.yPage,
     });
+    
   } catch (error) {
     console.error('Error embedding image:', error);
   }
@@ -5575,7 +5619,7 @@ async function addFormElements() {
               borderColor: hexToRgbNew(form_item.textBackgroundColor),
             });
 
-            const text = "Double Click to sign here!";
+            const text = "Double click to sign here!";
             const fontSize = 9;
             const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
             const textWidth = font.widthOfTextAtSize(text, fontSize);
@@ -5816,7 +5860,11 @@ const changeMode = () => {
 
     textcontentfields.forEach((item) => { item.contentEditable = "true" });
 
+    signatureImages.forEach((item) => { item.style.border = "none" });
+
     shapeFields.forEach((item) => { item.contentEditable = "true" });
+
+    photoFields.forEach((item) => { item.style.border = "none" });
 
     numberfields.forEach((item) => (item.style.display = "none"));
 
@@ -6014,6 +6062,7 @@ const changeMode = () => {
         form_storage.forEach((formItem) => {
           let formId = item.id.replace("signature", "");
           if (formItem.id == formId) {
+            item.style.border = "1px solid black";
             item.style.backgroundColor = formItem.textBackgroundColor;
           }
         })
@@ -6026,6 +6075,7 @@ const changeMode = () => {
           let formId = item.id.replace("photo", "");
           if (formItem.id == formId) {
             item.style.backgroundColor = formItem.textBackgroundColor;
+            item.style.border = "1px solid " + formItem.borderColor;
           }
         })
       }

@@ -147,9 +147,11 @@
 .signature-color-picker {
   border-radius: 4px;
   display: flex;
+  align-items: center;
+  gap: 5px;
 }
 .signature-color-picker > div {
-  padding: 5px;
+  padding: 10px 5px;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -106,6 +106,27 @@ const borderSizeArr = [
   10,
 ];
 
+const colorArr = [
+  "purple",
+  "fuchsia",
+  "navy",
+  "blue",
+  "teal",
+  "aqua",
+  "green",
+  "lime",
+  "olive",
+  "yellow",
+  "maroon",
+  "red",  
+  "gray",
+  "silver",
+  "thistle",
+  "black",
+  "white",
+  "transparent",
+];
+
 let formWidth = 25;
 let formHeight = 25;
 
@@ -3441,8 +3462,47 @@ const showOptionAndResizebar = function (
   });
   if (document.getElementById(`${id}-border-width`)) {
     document.getElementById(`${id}-border-width`).innerHTML = borderSizeContent;
-  }
+  };
+  let colorContent = "";
+  colorArr.map((item) => {
+    var img = item === "transparent" ? `<img src="./images/no-color.png" alt="no color" width="20" />` : "";
+    var noColor = item === "transparent" ? "noColor" : "";
+    colorContent += `<div color="${item}" style="background-color: ${item}" class="color-container ${noColor}" onClick='changeFillColor("${id}", "${item}")'>${img}</div>`;
+  })
+  if (document.getElementById(`${id}-fill-colors`)) {
+    document.getElementById(`${id}-fill-colors`).innerHTML = colorContent;
+  };
 };
+
+const showFillColor = (id) => {
+  const fillColorsContainer = document.getElementById(`${id}-fill-colors`);
+  fillColorsContainer.classList.toggle("hidden");
+}
+
+const changeFillColor = (id, selectedColor) => {
+  const activeFillColorContainer = document.querySelector(".active-fill-color");
+  if (selectedColor === "transparent") {
+    activeFillColorContainer.style.backgroundColor = "transparent";
+    activeFillColorContainer.innerHTML = `<img src="./images/no-color.png" alt="no color" width="20" />`;
+    activeFillColorContainer.classList.add("noColor");
+  } else {
+    activeFillColorContainer.style.backgroundColor = selectedColor;
+    activeFillColorContainer.innerHTML = "";
+    activeFillColorContainer.classList.remove("noColor");
+  }
+
+  document.querySelectorAll(".color-container").forEach(container => {
+    container.classList.remove("active");
+  });
+
+  const selectedContainer = document.querySelector(`.color-container[color='${selectedColor}']`);
+  if (selectedContainer) {
+    selectedContainer.classList.add("active");
+  }
+
+  const fillColorsContainer = document.getElementById(`${id}-fill-colors`);
+  fillColorsContainer.classList.add("hidden");
+}
 
 // Add Delete button and define action.
 const addDeleteButton = function (currentId, container, object, type) {
@@ -3975,8 +4035,8 @@ const eventHandler = async function (e) {
                     element.fontSize;
                   document.getElementById("text-font-color").value =
                     element.textColor;
-                  document.getElementById("text-font-background-color").value =
-                    element.textBackgroundColor;
+                  // document.getElementById("text-font-background-color").value =
+                  //   element.textBackgroundColor;
                   document.getElementById("text-border-color").value =
                     element.borderColor;
                   document.getElementById("text-border-width").value =

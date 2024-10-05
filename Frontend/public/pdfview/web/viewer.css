@@ -2864,3 +2864,61 @@ input[type=number]::-webkit-outer-spin-button {
   cursor: pointer;
   margin-top: 3px;
 }
+
+.position-relative{
+  position: relative;
+}
+
+.active-fill-color-container{
+  border: 1px solid #202020;
+  border-radius: 3px;
+  padding: 5px 30px 5px 6px;
+  position: relative;
+  cursor: pointer;
+}
+
+.active-fill-color-container::after{
+  content: "";
+  margin: 0 0.5em;
+  display: inline-block;
+  border: 6px solid transparent;
+  border-top: 7px solid #202020;
+  border-bottom: 0 none;
+  position: absolute;
+  right: 0;
+  top: 12px;
+}
+
+.active-fill-color{
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  border: 1px solid #202020;
+}
+
+.fill-colors{
+  width: 200px;
+  position: absolute;
+  top: 35px;
+  right: 0;
+  z-index: 100;
+  background: white;
+  border-radius: 3px;
+  border: 1px solid lightgray;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  padding: 10px;
+}
+
+.color-container{
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  border: 1px solid #202020;
+  cursor: pointer;
+}
+
+.noColor{
+  border: none;
+}

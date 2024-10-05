@@ -1785,21 +1785,16 @@ document.addEventListener("DOMContentLoaded", function () {
           clientName = isDraft == null || isDraft == "" ? data[0].name : data.name;
           clientEmail = isDraft == null || isDraft == "" ? data[0].email : data.email;
 
-          // Handle the retrieved data from the backend
           const dataURI = isDraft ? data.pdfData : data[0].pdfData;
           const base64Data = dataURI.split(',')[1];
-          // Decode base64 data to binary
           const binaryData = atob(base64Data);
 
-          // Convert binary data to Uint8Array
           const array = new Uint8Array(binaryData.length);
           for (let i = 0; i < binaryData.length; i++) {
             array[i] = binaryData.charCodeAt(i);
           }
-          // Create Blob from Uint8Array
           const blob = new Blob([array], { type: 'application/pdf' });
 
-          // Create File from Blob
           const fileName = 'downloaded.pdf';
           const pdfFile = new File([blob], fileName, { type: 'application/pdf' });
 
@@ -1821,12 +1816,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
           console.log("*******");
           console.log(draw_form_storage);
-          console.log(JSON.parse(data.formData));
           
           const checkViewerInterval = setInterval(() => {
             if (PDFViewerApplication.pdfDocument && PDFViewerApplication.pdfDocument.numPages > 0) {
-              // If the document is loaded, call the drawFormElement function
-              clearInterval(checkViewerInterval); // Clear the interval
+              clearInterval(checkViewerInterval);
               drawFormElement();
             }
           }, 100)
@@ -3458,7 +3451,7 @@ const showOptionAndResizebar = function (
 
   let borderSizeContent = "";
   borderSizeArr.map((item) => {
-    borderSizeContent += `<option value=${item}>${item}</option>`;
+    borderSizeContent += `<option value="${item}" ${item === 1 ? 'selected' : ''}>${item}</option>`;
   });
   if (document.getElementById(`${id}-border-width`)) {
     document.getElementById(`${id}-border-width`).innerHTML = borderSizeContent;
@@ -4035,8 +4028,8 @@ const eventHandler = async function (e) {
                     element.fontSize;
                   document.getElementById("text-font-color").value =
                     element.textColor;
-                  // document.getElementById("text-font-background-color").value =
-                  //   element.textBackgroundColor;
+                  document.getElementById("text-font-background-color").value =
+                    element.textBackgroundColor;
                   document.getElementById("text-border-color").value =
                     element.borderColor;
                   document.getElementById("text-border-width").value =
@@ -5277,30 +5270,28 @@ async function embedImage(form_item, pdfDoc, page) {
   }
 
   try {
-    // Check if the image is PNG or JPEG
     let image;
     if (imgData.includes("data:image/png")) {
-      image = await pdfDoc.embedPng(imgData); // Embed PNG image
+      image = await pdfDoc.embedPng(imgData);
     } else if (imgData.includes("data:image/jpeg")) {
-      image = await pdfDoc.embedJpg(imgData); // Embed JPEG image
+      image = await pdfDoc.embedJpg(imgData);
     } else {
       throw new Error('Unsupported image format');
     }
 
-    // Draw background color (if available)
     page.drawRectangle({
       x: form_item.x,
-      y: form_item.y - form_item.yPage,
-      width: form_item.xPage,
-      height: form_item.yPage,
+      y: form_item.y - form_item.yPage * 0.75,
+      width: form_item.xPage * 0.75,
+      height: form_item.yPage * 0.75,
       color: form_item.textBackgroundColor ? hexToRgbNew(form_item.textBackgroundColor) : PDFLib.rgb(1, 1, 1),
     });
     
     page.drawImage(image, {
       x: form_item.x,
-      y: form_item.y - form_item.yPage,
-      width: form_item.xPage,
-      height: form_item.yPage,
+      y: form_item.y - form_item.yPage * 0.75,
+      width: form_item.xPage * 0.75,
+      height: form_item.yPage * 0.75,
     });
     
   } catch (error) {
@@ -5395,8 +5386,14 @@ async function addFormElements() {
           break;
         case RADIO:
           const color2 = form_item.textBackgroundColor === undefined ? '#ccc' : form_item.textBackgroundColor;
+          if (typeof radioCount === 'undefined' || radioCount === null) {
+            radioCount = 0;
+          }
+
+          const fieldName = `${radioCount}`;
+
           if (form_item.data.isReadOnly) {
-            radioForm.addOptionToPage(radioCount + "", page, {
+            radioForm.addOptionToPage(fieldName, page, {
               x: form_item.data.x,
               y: form_item.data.y - form_item.data.height,
               width: form_item.data.width,
@@ -5405,13 +5402,11 @@ async function addFormElements() {
               borderColor: hexToRgbNew(color2),
             });
             if (form_item.data.isChecked) {
-              radioForm.select(radioCount + "");
+              radioForm.select(fieldName);
             }
-            if (form_item.data.isReadOnly) {
-              radioForm.enableReadOnly();
-            }
+            radioForm.enableReadOnly();
           } else {
-            radioForm.addOptionToPage(radioCount + "", page, {
+            radioForm.addOptionToPage(fieldName, page, {
               x: form_item.data.x,
               y: form_item.data.y - form_item.data.height,
               width: form_item.data.width,
@@ -5421,9 +5416,10 @@ async function addFormElements() {
             });
         
             if (form_item.data.isChecked) {
-              radioForm.select(radioCount + "");
+              radioForm.select(fieldName);
             }
           }
+          
           radioCount++;
           break;
         case DATE:
@@ -5431,9 +5427,9 @@ async function addFormElements() {
             datefieldForm = form.createTextField(form_item.form_field_name);
             datefieldForm.addToPage(page, {
               x: form_item.x,
-              y: form_item.y - form_item.height,
-              width: form_item.width,
-              height: form_item.height,
+              y: form_item.y - form_item.yPage * 0.75,
+              width: form_item.xPage * 0.75,
+              height: form_item.yPage * 0.75,
               textColor: hexToRgbNew(form_item.textColor),
               backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
               borderColor: hexToRgbNew(form_item.borderColor),
@@ -5448,14 +5444,14 @@ async function addFormElements() {
             const initialValue = form_item.text !== undefined ? form_item.text : "";
             page.drawRectangle({
               x: form_item.x,
-              y: form_item.y - form_item.height,
-              width: form_item.width,
-              height: form_item.height,
+              y: form_item.y - form_item.yPage * 0.75,
+              width: form_item.xPage * 0.75,
+              height: form_item.yPage * 0.75,
               color: hexToRgbNew(form_item.textBackgroundColor),
               borderColor: hexToRgbNew(form_item.borderColor),
               borderWidth: parseInt(form_item.borderWidth),
             });
-            const textY = form_item.y - form_item.height / 2 - form_item.fontSize / 3;
+            const textY = form_item.y - form_item.yPage * 0.75 / 2 - form_item.fontSize / 3;
             page.drawText(initialValue, {
               x: form_item.x + 2,
               y: textY,
@@ -5472,9 +5468,9 @@ async function addFormElements() {
             textfieldForm.setText(initialValue);
             textfieldForm.addToPage(page, {
               x: form_item.x,
-              y: form_item.y - form_item.height,
-              width: form_item.width,
-              height: form_item.height,
+              y: form_item.y - form_item.yPage * 0.75,
+              width: form_item.xPage * 0.75,
+              height: form_item.yPage * 0.75,
               size: form_item.fontSize,
               textColor: hexToRgbNew(form_item.textColor),
               backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
@@ -5487,15 +5483,15 @@ async function addFormElements() {
           } else {
             page.drawRectangle({
               x: form_item.x,
-              y: form_item.y - form_item.height,
-              width: form_item.width,
-              height: form_item.height,
+              y: form_item.y - form_item.yPage * 0.75,
+              width: form_item.xPage * 0.75,
+              height: form_item.yPage * 0.75,
               color: hexToRgbNew(form_item.textBackgroundColor),
               borderColor: hexToRgbNew(form_item.borderColor),
               borderWidth: parseInt(form_item.borderWidth),
             });
 
-            const textY = form_item.y - form_item.height / 2 - form_item.fontSize / 3;
+            const textY = form_item.y - form_item.yPage * 0.75 / 2 - form_item.fontSize / 3;
 
             page.drawText(initialValue, {
               x: form_item.x,
@@ -5514,31 +5510,29 @@ async function addFormElements() {
               comboboxForm.select(form_item.initialValue);
             comboboxForm.addToPage(page, {
               x: form_item.x,
-              y: form_item.y - form_item.height,
-              width: form_item.width,
-              height: form_item.height,
+              y: form_item.y - form_item.yPage * 0.75,
+              width: form_item.xPage * 0.75,
+              height: form_item.yPage * 0.75,
               textColor: hexToRgbNew(form_item.textColor),
               backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
               borderColor: hexToRgbNew(form_item.borderColor),
               borderWidth: parseInt(form_item.borderWidth),
             });
             comboboxForm.setFontSize(form_item.fontSize);
-            // comboboxForm.updateAppearances(customFont);
-            // comboboxForm.defaultUpdateAppearances(customFont);
           } else {
             const initialValue = form_item.initialValue !== undefined ? form_item.initialValue : form_item.optionArray[0];
     
             page.drawRectangle({
               x: form_item.x,
-              y: form_item.y - form_item.height,
-              width: form_item.width,
-              height: form_item.height,
+              y: form_item.y - form_item.yPage * 0.75,
+              width: form_item.xPage * 0.75,
+              height: form_item.yPage * 0.75,
               color: hexToRgbNew(form_item.textBackgroundColor),
               borderColor: hexToRgbNew(form_item.borderColor),
               borderWidth: parseInt(form_item.borderWidth),
             });
             
-            const textY = form_item.y - form_item.height / 2 - form_item.fontSize / 3;
+            const textY = form_item.y - form_item.yPage * 0.75 / 2 - form_item.fontSize / 3;
 
             page.drawText(initialValue, {
               x: form_item.x + 2,
@@ -5558,9 +5552,9 @@ async function addFormElements() {
 
             listboxForm.addToPage(page, {
               x: form_item.x,
-              y: form_item.y - form_item.height,
-              width: form_item.width,
-              height: form_item.height,
+              y: form_item.y - form_item.yPage * 0.75,
+              width: form_item.xPage * 0.75,
+              height: form_item.yPage * 0.75,
               size: form_item.fontSize,
               textColor: hexToRgbNew(form_item.textColor),
               backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
@@ -5574,9 +5568,9 @@ async function addFormElements() {
             const initialValue = form_item.initialValue !== undefined ? form_item.initialValue : "";
             page.drawRectangle({
               x: form_item.x,
-              y: form_item.y - form_item.height,
-              width: form_item.width,
-              height: form_item.height,
+              y: form_item.y - form_item.yPage * 0.75,
+              width: form_item.xPage * 0.75,
+              height: form_item.yPage * 0.75,
               color: hexToRgbNew(form_item.textBackgroundColor),
               borderColor: hexToRgbNew(form_item.borderColor),
               borderWidth: parseInt(form_item.borderWidth),
@@ -5594,9 +5588,9 @@ async function addFormElements() {
           buttonfieldForm = form.createButton(form_item.form_field_name);
           buttonfieldForm.addToPage(form_item.text, page, {
             x: form_item.x,
-            y: form_item.y - form_item.height,
-            width: form_item.width,
-            height: form_item.height,
+            y: form_item.y - form_item.yPage * 0.75,
+            width: form_item.xPage * 0.75,
+            height: form_item.yPage * 0.75,
             textColor: hexToRgbNew(form_item.textColor),
             backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
             borderColor: hexToRgbNew(form_item.borderColor),
@@ -5666,25 +5660,24 @@ async function addFormElements() {
           break;
         case SIGNATURE:
           if (form_item.imgData != undefined) {
-            console.log(form_item);
-            
             await embedImage(form_item, pdfDoc, page);
           }else{
             page.drawRectangle({
               x: form_item.x,
-              y: form_item.y - form_item.height,
-              width: form_item.width,
-              height: form_item.height,
+              y: form_item.y - form_item.yPage * 0.75,
+              width: form_item.xPage * 0.75,
+              height: form_item.yPage * 0.75,
               color: hexToRgbNew(form_item.textBackgroundColor),
-              borderColor: hexToRgbNew(form_item.textBackgroundColor),
+              borderColor: hexToRgbNew("#000000"),
+              borderWidth: 1
             });
 
             const text = "Double click to sign here!";
-            const fontSize = 9;
+            const fontSize = 10;
             const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
             const textWidth = font.widthOfTextAtSize(text, fontSize);
-            const textX = form_item.x + (form_item.width - textWidth) / 2;
-            const textY = form_item.y - form_item.height + (form_item.height - fontSize) / 2;
+            const textX = form_item.x + (form_item.xPage * 0.75 - textWidth) / 2;
+            const textY = form_item.y - form_item.yPage * 0.75 + (form_item.yPage * 0.75 - fontSize) / 2;
 
             page.drawText(text, {
               x: textX,
@@ -5730,24 +5723,26 @@ async function addFormElements() {
             });
           }
           break;
-          
         case PHOTO:
           if (form_item.photoData != undefined) {
             await embedImage(form_item, pdfDoc, page);
           }else{
             page.drawRectangle({
               x: form_item.x,
-              y: form_item.y - form_item.height,
-              width: form_item.width,
-              height: form_item.height
+              y: form_item.y - form_item.yPage * 0.75,
+              width: form_item.xPage * 0.75,
+              height: form_item.yPage * 0.75,
+              backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
+              borderColor: hexToRgbNew(form_item.borderColor),
+              borderWidth: 1,
             });
 
             const text = "Double click to upload image!";
-            const fontSize = 9;
+            const fontSize = 10;
             const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
             const textWidth = font.widthOfTextAtSize(text, fontSize);
-            const textX = form_item.x + (form_item.width - textWidth) / 2;
-            const textY = form_item.y - form_item.height + (form_item.height - fontSize) / 2;
+            const textX = form_item.x + (form_item.xPage * 0.75 - textWidth) / 2;
+            const textY = form_item.y - form_item.yPage * 0.75 + (form_item.yPage * 0.75 - fontSize) / 2;
 
             page.drawText(text, {
               x: textX,
@@ -5760,8 +5755,8 @@ async function addFormElements() {
         case NUMBERFIELD:
           const numberValue = form_item.initialValue !== undefined ? form_item.initialValue : "";
           const numberArr = numberValue.split("");
-          const squareWidth = 20;
-          const squareHeight = 24;
+          const squareWidth = form_item.xPage * 0.75;
+          const squareHeight = form_item.yPage * 0.75;
           const borderWidth = 1;
 
           numberArr.forEach(function (item, index) {
@@ -5959,17 +5954,15 @@ const changeMode = () => {
         form_storage.forEach((formItem) => {
           let formId = item.parentNode.id.replace("checkbox", "");
           if (formItem.id == formId) {
-            //... background color
             item.style.backgroundColor = formItem.textBackgroundColor;
-            item.style.border = "none";
+            // item.style.border = "none";
+            item.style.border = "1px solid #202020";
           }
         })
       }
     });
     radiofields1.forEach((item) => {
       item.style.display = "inline-block";
-
-      //... background color
       item.style.backgroundColor = item.textBackgroundColor;
     });
     radiofields2.forEach((item) => {
@@ -5979,9 +5972,9 @@ const changeMode = () => {
         form_storage.forEach((formItem) => {
           let formId = item.parentNode.id.replace("radio", "");
           if (formItem.id == formId) {
-            //... background color
             item.style.backgroundColor = formItem.textBackgroundColor;
-            item.style.border = "none";
+            // item.style.border = "none";
+            item.style.border = "1px solid #202020";
           }
         })
       }

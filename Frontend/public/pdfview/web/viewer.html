@@ -2896,15 +2896,39 @@ See https://github.com/adobe-type-tools/cmap-resources
             <div>
               <span>Fill Color</span>
             </div>
+            <input
+              type="color"
+              id="signature-font-background-color"
+              value="#ffffff"
+              data-action="change-color"
+              name="signature-color"
+            />
             <div>
-              <input
-                type="color"
-                id="signature-font-background-color"
-                value="#ffffff"
-                data-action="change-color"
-                name="signature-color"
-              />
+              <span>Border Color</span>
             </div>
+            <input
+              type="color"
+              id="signature-border-color"
+              value="#000000"
+              data-action="change-color"
+              name="signature-border-color"
+            />
+            <div>
+              <span>Border Width</span>
+            </div>
+            <select id="signature-border-width" class="form-field-input">
+              <option value="0">0</option>
+              <option value="1" selected>1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+            </select>
           </div>
           <div>
             <button id="signature-close-button" class="button">Close</button>
@@ -2961,6 +2985,22 @@ See https://github.com/adobe-type-tools/cmap-resources
               data-action="change-color"
               name="photo-border-color"
             />
+            <div>
+              <span>Border Width</span>
+            </div>
+            <select id="photo-border-width" class="form-field-input">
+              <option value="0">0</option>
+              <option value="1" selected>1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+            </select>
           </div>
           <div style="margin-left: auto;">
             <button id="photo-close-button" class="button">Close</button>

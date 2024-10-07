@@ -359,6 +359,7 @@ const drawFormElement = function () {
                     .remove();
                 }
               }
+              document.getElementById(checkbox.id).style.zIndex = selectedZIndex;
             }
           });
 
@@ -459,6 +460,7 @@ const drawFormElement = function () {
                     .remove();
                 }
               }
+              document.getElementById(radio.id).style.zIndex = selectedZIndex;
             }
           });
           document
@@ -564,6 +566,7 @@ const drawFormElement = function () {
                     .remove();
                 }
               }
+              document.getElementById(textDiv.id).style.zIndex = selectedZIndex;
             }
           });
 
@@ -691,6 +694,7 @@ const drawFormElement = function () {
                   //   .remove();
                 }
               }
+              document.getElementById(comboDiv.id).style.zIndex = selectedZIndex;
             }
           });
 
@@ -842,6 +846,7 @@ const drawFormElement = function () {
                   //   .remove();
                 }
               }
+              document.getElementById(listDiv.id).style.zIndex = selectedZIndex;
             }
           });
 
@@ -1005,6 +1010,7 @@ const drawFormElement = function () {
                     .remove();
                 }
               }
+              document.getElementById(buttonDiv.id).style.zIndex = selectedZIndex;
             }
           });
 
@@ -1155,6 +1161,7 @@ const drawFormElement = function () {
                     .remove();
                 }
               }
+              document.getElementById(dateDiv.id).style.zIndex = selectedZIndex;
             }
           });
 
@@ -1182,10 +1189,14 @@ const drawFormElement = function () {
             if (element.id == id) {
               document.getElementById("signature-font-background-color").value =
                 element.textBackgroundColor;
+              document.getElementById("signature-border-color").value =
+                element.borderColor;
+              document.getElementById("signature-border-width").value =
+                element.borderWidth;
 
               if (isDraft == "false" || isDraft == null) {
                 setTimeout(() => {
-                  $("#" + element.containerId).css("background-color", element.textBackgroundColor);
+                  $("#" + element.containerId).css({"background-color": element.textBackgroundColor, "border": element.borderWidth + "px solid " + element.borderColor});
                 }, 100);
               }
             }
@@ -1210,18 +1221,18 @@ const drawFormElement = function () {
             if (!isEditing) {
               current_signature_id = id;
 
-              let istooltipshow = false;
+              let issigntooltipshow = false;
 
               if (
                 document.getElementById("signature_tooltipbar" + current_signature_id)
               ) {
-                istooltipshow = true;
+                issigntooltipshow = true;
               }
 
               if (isDragging) {
                 isDragging = false;
               } else {
-                if (!istooltipshow) {
+                if (!issigntooltipshow) {
                   let tooltipbar = document.createElement("div");
                   current_form_id = id;
                   addDeleteButton(
@@ -1313,12 +1324,9 @@ const drawFormElement = function () {
                   signatureImg.style.height = "100%";
                   signatureImg.src = imgData;
                   signatureImg.style.objectFit = "cover";
-
-                  //... background color
-                  // signatureImg.style.backgroundColor = document.getElementById("signature-font-background-color").value;
-
                   signatureContainer.textContent = "";
                   signatureContainer.append(signatureImg);
+
                   resizeCanvas(signatureContainer.id, SIGNATURE, id);
                 }
               };
@@ -1441,10 +1449,12 @@ const drawFormElement = function () {
                 element.textBackgroundColor;
               document.getElementById("photo-border-color").value =
                 element.borderColor;
+              document.getElementById("photo-border-width").value =
+                element.borderWidth;
 
               if (isDraft == "false" || isDraft == null) {
                 setTimeout(() => {
-                  $("#" + element.containerId).css({"background-color": element.textBackgroundColor, "border-color": element.borderColor});
+                  $("#" + element.containerId).css({"background-color": element.textBackgroundColor, "border": element.borderWidth + "px solid " + element.borderColor});
                 }, 100);
               }
             }
@@ -1632,6 +1642,7 @@ const drawFormElement = function () {
                     .remove();
                 }
               }
+              document.getElementById(numberDiv.id).style.zIndex = selectedZIndex;
             }
           });
 
@@ -2688,11 +2699,18 @@ const handleDate = function (e) {
 };
 
 const handleSignature = function () {
+  textBackgroundColor = document.getElementById("signature-background-color") && document.getElementById("signature-background-color").value;
+  borderColor = document.getElementById("signature-border-color") && document.getElementById("signature-border-color").value;
+  borderWidth = document.getElementById("signature-border-width") && document.getElementById("signature-border-width").value;
   for (let i = 0; i < form_storage.length; i++) {
     if (
       form_storage[i].id == current_form_id
     ) {
+      form_storage[i].textBackgroundColor = textBackgroundColor;
+      form_storage[i].borderColor = borderColor;
+      form_storage[i].borderWidth = borderWidth;
       form_storage[i].imgData = signatureImgData;
+
       if(signatureImgData != "" && signatureImgData != undefined){
         getImgHeight(signatureImgData).then(function(e){
           form_storage[i].width = e.width * 0.3;
@@ -2713,15 +2731,16 @@ const handleSignature = function () {
       count++;
   }
 
-  //... background color
   textBackgroundColor = document.getElementById("signature-font-background-color") && document.getElementById("signature-font-background-color").value;
+  borderColor = document.getElementById("signature-border-color") && document.getElementById("signature-border-color").value;
+  borderWidth = document.getElementById("signature-border-width") && document.getElementById("signature-border-width").value;
 
   // if (isDraft == "true" && isOpenEmailPdf) {
   for (let i = 0; i < form_storage.length; i++) {
     if (form_storage[i].id == current_form_id) {
-
-      //... background color
       form_storage[i].textBackgroundColor = textBackgroundColor;
+      form_storage[i].borderColor = borderColor;
+      form_storage[i].borderWidth = borderWidth;
 
       let sign_type = $(".signature-option .tablink-active").text();
 
@@ -2747,18 +2766,31 @@ const handleSignature = function () {
       yPage: formHeight,
       imgData: signatureImgData,
       textBackgroundColor: textBackgroundColor,
+      borderColor: borderColor,
+      borderWidth: borderWidth,
     });
     const date = new Date(Date.now());
     addHistory(baseId, SIGNATURE, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "signature");
   }
+
+  console.log("^^^^^^^^^^^^^^");
+  console.log(form_storage);
+  
 };
 
 const handlePhoto = function () {
+  textBackgroundColor = document.getElementById("photo-background-color") && document.getElementById("photo-background-color").value;
+  borderColor = document.getElementById("photo-border-color") && document.getElementById("photo-border-color").value;
+  borderWidth = document.getElementById("photo-border-width") && document.getElementById("photo-border-width").value;
   for (let i = 0; i < form_storage.length; i++) {
     if (
       form_storage[i].id == current_form_id
     ) {
+      form_storage[i].textBackgroundColor = textBackgroundColor;
+      form_storage[i].borderColor = borderColor;
+      form_storage[i].borderWidth = borderWidth;
       form_storage[i].photoData = photoData;
+
       if(photoData != "" && photoData != undefined){
         getImgHeight(photoData).then(function(e){
           form_storage[i].width = e.width * 0.3;
@@ -2782,11 +2814,13 @@ const handlePhoto = function () {
 
   textBackgroundColor = document.getElementById("photo-background-color") && document.getElementById("photo-background-color").value;
   borderColor = document.getElementById("photo-border-color") && document.getElementById("photo-border-color").value;
+  borderWidth = document.getElementById("photo-border-width") && document.getElementById("photo-border-width").value;
 
   for (let i = 0; i < form_storage.length; i++) {
     if (form_storage[i].id == current_form_id) {
       form_storage[i].textBackgroundColor = textBackgroundColor;
       form_storage[i].borderColor = borderColor;
+      form_storage[i].borderWidth = borderWidth;
       handleTrack(form_storage[i].id, " photo");
       break;
     }
@@ -2809,6 +2843,7 @@ const handlePhoto = function () {
       photoData: photoData,
       textBackgroundColor: textBackgroundColor,
       borderColor: borderColor,
+      borderWidth: borderWidth,
     });
     const date = new Date(Date.now());
     addHistory(baseId, PHOTO, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "photo");
@@ -3259,14 +3294,16 @@ document.getElementById("viewer").addEventListener("mousedown", function (event)
   if (form_storage  && form_storage !== null) {
     form_storage.forEach((item) => {
       const cId = item.form_type === DATE ? item.containerId.replace("content", "") : item.containerId;
-    
       if (cId === currentObject.id || cId === currentObjectParentId) {
         currentFormType = item.form_type;
         DrawType = item.form_type;
         isExisting = true;
       }
+      document.getElementById(cId).style.zIndex = standardZIndex;
     })
   }
+  
+  
   if (text_storage  && text_storage !== null) {
     text_storage.forEach((item) => {
       if (item.textContentId === currentObject.id) {
@@ -3279,11 +3316,13 @@ document.getElementById("viewer").addEventListener("mousedown", function (event)
 
   if (isExisting) {
     if (!isEditing) {
+      console.log("mouse down event");
+      
       event.preventDefault();
       removeAllResizeBar();
       saveFormElementByClick();      
       if (currentFormType === DATE) {
-        currentObject.style.zIndex = selectedZIndex;
+        // currentObject.style.zIndex = selectedZIndex;
       } else if (currentFormType === SIGNATURE || currentFormType === SHAPE || currentFormType === PHOTO) {
         if (currentObject.tagName === "IMG") {
           if (!currentObject.parentElement.querySelector("#topLeft")) addResizebar(currentObject.parentElement.id);
@@ -3295,6 +3334,7 @@ document.getElementById("viewer").addEventListener("mousedown", function (event)
       } else if (currentFormType == TEXT_CONTENT) {
         if (!currentObject.parentElement.classList.contains("textfield-content"))
           currentObject.parentElement.classList.add("textfield-content");
+        currentObject.style.zIndex = standardZIndex;
       } else {
         if (!currentObject.querySelector("#topLeft")) addResizebar(currentObject.id);
         currentObject.style.zIndex = selectedZIndex;
@@ -3684,7 +3724,7 @@ const submitAction = function () {
         // resizeCanvas(`${item.imgId}`);
         break;
       case BUTTON:
-        currentItem.remove();
+        // currentItem.remove();
         break;
       case NUMBERFIELD:
         currentItem.querySelectorAll(".number-field-input").forEach(function(input) {
@@ -3818,6 +3858,7 @@ const eventHandler = async function (e) {
                 .remove();
             }
           }
+          document.getElementById(checkbox.id).style.zIndex = selectedZIndex;
         }
       });
 
@@ -3932,6 +3973,7 @@ const eventHandler = async function (e) {
                 .remove();
             }
           }
+          document.getElementById(radio.id).style.zIndex = selectedZIndex;
         }
       });
 
@@ -4057,6 +4099,7 @@ const eventHandler = async function (e) {
                 .remove();
             }
           }
+          document.getElementById(textDiv.id).style.zIndex = selectedZIndex;
         }
       });
 
@@ -4198,6 +4241,7 @@ const eventHandler = async function (e) {
               //   .remove();
             }
           }
+          document.getElementById(comboDiv.id).style.zIndex = selectedZIndex;
         }
       });
 
@@ -4368,6 +4412,7 @@ const eventHandler = async function (e) {
               //   .remove();
             }
           }
+          document.getElementById(listDiv.id).style.zIndex = selectedZIndex;
         }
       });
 
@@ -4555,15 +4600,11 @@ const eventHandler = async function (e) {
                 .remove();
             }
           }
+          document.getElementById(buttonDiv.id).style.zIndex = selectedZIndex;
         }
       });
 
       handleButton();
-
-      // const buttonValue = document.getElementById("button-text");
-      // buttonValue.addEventListener('change', () => {
-      //     document.getElementById(buttonDiv.id).textContent = buttonValue.value;
-      // })
 
       document
         .getElementById("button-save-button")
@@ -4608,6 +4649,8 @@ const eventHandler = async function (e) {
       let dateDiv = document.createElement("div");
       dateDiv.id = "date" + dateId;
       addFormElementStyle(dateDiv, topPos, leftPos, formWidth, formHeight);
+      console.log("dateDiv.id " + dateDiv.id);
+      
 
       dateDiv.append(newDate);
       pg.appendChild(dateDiv);
@@ -4636,7 +4679,7 @@ const eventHandler = async function (e) {
           let isdatetooltipshow = false;
 
           if (document.getElementById("date_tooltipbar" + current_date_id)) {
-            isdatetooltipshow = true;
+            isdatetooltipshow = true;            
           }
 
           if (isDragging) {
@@ -4691,6 +4734,7 @@ const eventHandler = async function (e) {
                 .remove();
             }
           }
+          document.getElementById(dateDiv.id).style.zIndex = selectedZIndex;
         }
       });
 
@@ -4833,7 +4877,7 @@ const eventHandler = async function (e) {
               }
             }
 
-            // handleSignature();
+            handleSignature();
           };
         }
       });
@@ -5082,6 +5126,7 @@ const eventHandler = async function (e) {
                 .remove();
             }
           }
+          document.getElementById(numberDiv.id).style.zIndex = selectedZIndex;
         }
       });
 
@@ -5285,6 +5330,8 @@ async function embedImage(form_item, pdfDoc, page) {
       width: form_item.xPage * 0.75,
       height: form_item.yPage * 0.75,
       color: form_item.textBackgroundColor ? hexToRgbNew(form_item.textBackgroundColor) : PDFLib.rgb(1, 1, 1),
+      borderColor: hexToRgbNew(form_item.borderColor),
+      borderWidth: parseInt(form_item.borderWidth),
     });
     
     page.drawImage(image, {
@@ -5668,8 +5715,8 @@ async function addFormElements() {
               width: form_item.xPage * 0.75,
               height: form_item.yPage * 0.75,
               color: hexToRgbNew(form_item.textBackgroundColor),
-              borderColor: hexToRgbNew("#000000"),
-              borderWidth: 1
+              borderColor: hexToRgbNew(form_item.borderColor),
+              borderWidth: parseInt(form_item.borderWidth),
             });
 
             const text = "Double click to sign here!";
@@ -5688,38 +5735,33 @@ async function addFormElements() {
           }
           break;
         case SHAPE:
-          console.log(form_item);
+          const fillColor = hexToRgbNew(form_item.shapeFillColor || '#FFFFFF');
+          const borderColor = hexToRgbNew(form_item.borderColor || '#000000');
+          const bordersWidth = parseFloat(form_item.borderWidth) || 1;
+          const borderRadius = parseFloat(form_item.borderRadius) || 0;
         
-          const fillColor = hexToRgbNew(form_item.shapeFillColor || '#FFFFFF'); // Default to white if no fill color is provided
-          const borderColor = hexToRgbNew(form_item.borderColor || '#000000');  // Default to black if no border color is provided
-          const bordersWidth = parseFloat(form_item.borderWidth) || 1;           // Parse border width
-          const borderRadius = parseFloat(form_item.borderRadius) || 0;         // Parse border radius
-        
-          // Draw the rectangle (or shape) with fill and border
           page.drawRectangle({
             x: form_item.x,
-            y: form_item.y - form_item.height,  // Adjust y position
+            y: form_item.y - form_item.height,
             width: form_item.width,
             height: form_item.height,
-            color: fillColor,                   // Fill color
-            borderColor: borderColor,           // Border color
-            borderWidth: bordersWidth,           // Border width
-            borderRadius: borderRadius          // Border radius (if supported by pdf-lib)
+            color: fillColor,
+            borderColor: borderColor,
+            borderWidth: bordersWidth,
+            borderRadius: borderRadius
           });
         
-          // Optional: Render text inside the shape if there's any `shapeText`
           if (form_item.shapeText) {
-            const textY = form_item.y - form_item.height / 2; // Adjust text position based on shape height
-            const textSize = parseFloat(form_item.textSize) || 12; // Text size with a default value
+            const textY = form_item.y - form_item.height / 2;
+            const textSize = parseFloat(form_item.textSize) || 12;
         
-            // Draw text inside the shape
-            page.drawText(form_item.shapeText.replace(/<[^>]+>/g, ''), { // Removing HTML tags if present
-              x: form_item.x + 5,  // Padding from the left
-              y: textY,            // Adjust text y position
-              size: textSize,      // Text size
-              color: hexToRgbNew(form_item.textColor || '#000000'),  // Default to black text color
-              font: await pdfDoc.embedFont(PDFLib.StandardFonts.Courier),  // Assuming Courier font
-              maxWidth: form_item.width - 10  // Optional, set a max width to fit the text inside
+            page.drawText(form_item.shapeText.replace(/<[^>]+>/g, ''), {
+              x: form_item.x + 5,
+              y: textY,
+              size: textSize,
+              color: hexToRgbNew(form_item.textColor || '#000000'),
+              font: await pdfDoc.embedFont(PDFLib.StandardFonts.Courier),
+              maxWidth: form_item.width - 10
             });
           }
           break;
@@ -5734,7 +5776,7 @@ async function addFormElements() {
               height: form_item.yPage * 0.75,
               backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
               borderColor: hexToRgbNew(form_item.borderColor),
-              borderWidth: 1,
+              borderWidth: parseInt(form_item.borderWidth),
             });
 
             const text = "Double click to upload image!";
@@ -5875,7 +5917,7 @@ const changeMode = () => {
   const buttonfields = document.querySelectorAll(".button-field-input");
   const datefields = document.querySelectorAll(".date-field-input");
   const textcontentfields = document.querySelectorAll(".textcontent");
-  const signatureImages = document.querySelectorAll(".signatureContainer");
+  const signatureFields = document.querySelectorAll(".signatureContainer");
   const shapeFields = document.querySelectorAll(".shapeContainer");
   const photoFields = document.querySelectorAll(".photoContainer");
   const numberfields = document.querySelectorAll(".number-field-input");
@@ -5915,7 +5957,7 @@ const changeMode = () => {
 
     textcontentfields.forEach((item) => { item.contentEditable = "true" });
 
-    signatureImages.forEach((item) => { item.style.border = "none" });
+    signatureFields.forEach((item) => { item.style.border = "none" });
 
     shapeFields.forEach((item) => { item.contentEditable = "true" });
 
@@ -5945,7 +5987,6 @@ const changeMode = () => {
         item.style.border = "none";
       }
     });
-    
     // Enable all checkbox and radio field to input
     checkfields.forEach((item) => {
       item.style.display = "flex";
@@ -6109,14 +6150,14 @@ const changeMode = () => {
         })
       }
     });
-    signatureImages.forEach((item) => {
+    signatureFields.forEach((item) => {
       item.contentEditable = "false";
       if (form_storage  && form_storage !== null) {
         form_storage.forEach((formItem) => {
           let formId = item.id.replace("signature", "");
           if (formItem.id == formId) {
-            item.style.border = "1px solid black";
             item.style.backgroundColor = formItem.textBackgroundColor;
+            item.style.border = formItem.borderWidth + "px solid " + formItem.borderColor;
           }
         })
       }
@@ -6128,7 +6169,7 @@ const changeMode = () => {
           let formId = item.id.replace("photo", "");
           if (formItem.id == formId) {
             item.style.backgroundColor = formItem.textBackgroundColor;
-            item.style.border = "1px solid " + formItem.borderColor;
+            item.style.border = formItem.borderWidth + "px solid " + formItem.borderColor;
           }
         })
       }

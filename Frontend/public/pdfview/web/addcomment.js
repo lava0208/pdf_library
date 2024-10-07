@@ -418,22 +418,6 @@ document.getElementById("viewer").addEventListener("click", (evt) => {
           if(!divId.includes("date")){
             textContent.setAttribute("contentEditable", "true");
           }
-          
-          // isTextModeOn = true;
-          // resizeCanvas(
-          //   this.id, 
-          //   textContent,
-          //   index + 1,
-          //   TEXT_CONTENT_OPTION
-          // );
-
-          // showOptionAndResizebar(
-          //   TEXT_CONTENT_OPTION,
-          //   div,
-          //   300,
-          //   15,
-          //   "text-content"
-          // );
         }
       }
     });

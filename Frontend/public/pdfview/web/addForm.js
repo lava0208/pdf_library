@@ -60,6 +60,8 @@ let signatureImgData, shapeImgData, photoData;
 
 let boundingBox;
 
+let openHeader = document.getElementsByClassName("openHeader");
+
 const fontStyleArr = [
   "Courier",
   "Helvetica",
@@ -360,6 +362,7 @@ const drawFormElement = function () {
                 }
               }
               document.getElementById(checkbox.id).style.zIndex = selectedZIndex;
+              manageFormProps();
             }
           });
 
@@ -461,6 +464,7 @@ const drawFormElement = function () {
                 }
               }
               document.getElementById(radio.id).style.zIndex = selectedZIndex;
+              manageFormProps();
             }
           });
           document
@@ -567,6 +571,7 @@ const drawFormElement = function () {
                 }
               }
               document.getElementById(textDiv.id).style.zIndex = selectedZIndex;
+              manageFormProps();
             }
           });
 
@@ -695,6 +700,7 @@ const drawFormElement = function () {
                 }
               }
               document.getElementById(comboDiv.id).style.zIndex = selectedZIndex;
+              manageFormProps();
             }
           });
 
@@ -847,6 +853,7 @@ const drawFormElement = function () {
                 }
               }
               document.getElementById(listDiv.id).style.zIndex = selectedZIndex;
+              manageFormProps();
             }
           });
 
@@ -1011,6 +1018,7 @@ const drawFormElement = function () {
                 }
               }
               document.getElementById(buttonDiv.id).style.zIndex = selectedZIndex;
+              manageFormProps();
             }
           });
 
@@ -1162,6 +1170,7 @@ const drawFormElement = function () {
                 }
               }
               document.getElementById(dateDiv.id).style.zIndex = selectedZIndex;
+              manageFormProps();
             }
           });
 
@@ -1643,6 +1652,7 @@ const drawFormElement = function () {
                 }
               }
               document.getElementById(numberDiv.id).style.zIndex = selectedZIndex;
+              manageFormProps();
             }
           });
 
@@ -3316,8 +3326,6 @@ document.getElementById("viewer").addEventListener("mousedown", function (event)
 
   if (isExisting) {
     if (!isEditing) {
-      console.log("mouse down event");
-      
       event.preventDefault();
       removeAllResizeBar();
       saveFormElementByClick();      
@@ -3753,6 +3761,8 @@ const eventHandler = async function (e) {
   let topPos = y;
   let leftPos = x;
 
+  manageFormProps();
+
   switch (currentMode) {
     case CHECKBOX:
       removeCheckbox();
@@ -3859,6 +3869,7 @@ const eventHandler = async function (e) {
             }
           }
           document.getElementById(checkbox.id).style.zIndex = selectedZIndex;
+          manageFormProps();
         }
       });
 
@@ -3974,6 +3985,7 @@ const eventHandler = async function (e) {
             }
           }
           document.getElementById(radio.id).style.zIndex = selectedZIndex;
+          manageFormProps();
         }
       });
 
@@ -4100,6 +4112,7 @@ const eventHandler = async function (e) {
             }
           }
           document.getElementById(textDiv.id).style.zIndex = selectedZIndex;
+          manageFormProps();
         }
       });
 
@@ -4242,6 +4255,7 @@ const eventHandler = async function (e) {
             }
           }
           document.getElementById(comboDiv.id).style.zIndex = selectedZIndex;
+          manageFormProps();
         }
       });
 
@@ -4413,6 +4427,7 @@ const eventHandler = async function (e) {
             }
           }
           document.getElementById(listDiv.id).style.zIndex = selectedZIndex;
+          manageFormProps();
         }
       });
 
@@ -4601,6 +4616,7 @@ const eventHandler = async function (e) {
             }
           }
           document.getElementById(buttonDiv.id).style.zIndex = selectedZIndex;
+          manageFormProps();
         }
       });
 
@@ -4735,6 +4751,7 @@ const eventHandler = async function (e) {
             }
           }
           document.getElementById(dateDiv.id).style.zIndex = selectedZIndex;
+          manageFormProps();
         }
       });
 
@@ -5054,6 +5071,7 @@ const eventHandler = async function (e) {
         numberFormHeight,
         "number"
       );
+      
       const numberfieldAlign = document.querySelectorAll(
         'input[type=radio][name="number-field"]'
       );
@@ -5127,6 +5145,7 @@ const eventHandler = async function (e) {
             }
           }
           document.getElementById(numberDiv.id).style.zIndex = selectedZIndex;
+          manageFormProps();
         }
       });
 
@@ -5150,8 +5169,7 @@ const eventHandler = async function (e) {
 
       resizeCanvas(numberDiv.id, NUMBERFIELD, numberId, NUMBERFIELD_OPTION);
     
-      // Update manageNumField to append inputs to numberDiv
-      function manageNumField(count, numberDiv){        
+      function manageNumField(count, numberDiv){
         numberDiv.style.width = numberFormWidth * count + "px";
         numberDiv.querySelectorAll(".number-field-input").forEach(el => el.remove());
 
@@ -5165,20 +5183,16 @@ const eventHandler = async function (e) {
           numberElement.addEventListener("input", function (e) {
             const value = parseInt(numberElement.value, 10);
             
-            // If the value is valid (between 0-9), move focus to the next field
             if (!isNaN(value) && value >= 0 && value <= 9) {
-              // Focus on the next input if available
               const nextInput = numberElement.nextElementSibling;
               if (nextInput && nextInput.classList.contains("number-field-input")) {
                 nextInput.focus();
               }
             } else {
-              // If value is out of bounds, clear the input
               numberElement.value = "";
             }
           });
     
-          // Append the input to the numberDiv
           numberDiv.appendChild(numberElement);
         }
       }
@@ -6424,5 +6438,29 @@ function searchForm() {
 
   } else {
     console.error("No form fields found");
+  }
+}
+
+for (i = 0; i < openHeader.length; i++) {
+  openHeader[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.maxHeight) {
+      panel.style.maxHeight = null;
+    } else {
+      panel.style.maxHeight = panel.scrollHeight + "px";
+    }
+  });
+}
+
+function manageFormProps() {
+  const headers = document.getElementsByClassName("openHeader");
+  const bodies = document.getElementsByClassName("openBody");
+
+  for (let i = 0; i < headers.length; i++) {
+    headers[i].classList.remove("active");
+  }
+  for (let i = 0; i < bodies.length; i++) {
+    bodies[i].style.maxHeight = null;
   }
 }

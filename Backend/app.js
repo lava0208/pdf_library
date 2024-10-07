@@ -236,7 +236,8 @@ app.post('/sendlink', upload.single('pdfFile'), async (req, res) => {
         name: name,
         email: email,
         description: description,
-        uniqueLink: uniqueLink
+        uniqueLink: uniqueLink,
+        username: username
       }];
 
       // Save to documents table

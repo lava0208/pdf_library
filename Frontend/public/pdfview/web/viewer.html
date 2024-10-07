@@ -1679,10 +1679,8 @@ See https://github.com/adobe-type-tools/cmap-resources
           </div>
         </div>
         <div class="checkbox-option-content">
-          <div class="form-input">
-            <div>
-              <span>Form Field Name*</span>
-            </div>
+          <div class="checkbox-option-name">
+            <span>Form Field Name*</span>
             <div class="form-field-input-container">
               <input
                 id="checkbox-field-input-name"
@@ -1691,31 +1689,40 @@ See https://github.com/adobe-type-tools/cmap-resources
               />
             </div>
           </div>
-          <div class="form-input">
-            <div>
-              <span>Label*</span>
-            </div>
+          <div class="checkbox-option-name">
+            <span>Label*</span>
             <div class="form-field-input-container">
-              <input id="checkbox-label" class="form-field-input" type="text" />
+              <input
+                id="checkbox-label"
+                class="form-field-input"
+                type="text"
+              />
             </div>
           </div>
-          <div class="form-input">
-            <div>
-              <span>Value*</span>
-            </div>
+          <div class="checkbox-option-name">
+            <span>Value*</span>
             <div class="form-field-input-container">
-              <input id="checkbox-value" class="form-field-input" type="text" />
+              <input
+                id="checkbox-value"
+                class="form-field-input"
+                type="text"
+              />
             </div>
           </div>
-          <div class="form-style-container">
-            <div class="form-style-name"> Fill Color </div>
-            <input
-              type="color"
-              id="checkbox-background-color"
-              name="colorPicker"
-              value="#FFFFFF"
-              class="form-field-input"
-            />
+          <div class="checkbox-option-body">
+            <div class="openHeader">Checkbox Field Style</div>
+            <div class="openBody">
+              <div class="form-style-container">
+                <div class="form-style-name"> Fill Color </div>
+                <input
+                  type="color"
+                  id="checkbox-background-color"
+                  name="colorPicker"
+                  value="#FFFFFF"
+                  class="form-field-input"
+                />
+              </div>
+            </div>
           </div>
         </div>
         <div id="checkbox-save-button" class="checkbox-option-footer">
@@ -1730,52 +1737,46 @@ See https://github.com/adobe-type-tools/cmap-resources
           </div>
         </div>
         <div class="checkbox-option-content">
-          <div class="form-input">
-            <div>
-              <span>Form Field Name*</span>
-            </div>
+          <div class="checkbox-option-name">
+            <span>Form Field Name*</span>
             <div class="form-field-input-container">
               <input
                 id="radio-field-input-name"
                 class="form-field-input"
                 type="text"
               />
-              <div>
-                <span style="font-size: 24px"
-                  ><i class="fa-solid fa-triangle-exclamation"></i
-                ></span>
-                <span style="font-size: 14px"
-                  >To group the radio buttons, make sure they have the same form
-                  field names</span
-                >
-              </div>
+            </div>
+            <div>
+              <small><i class="fa-solid fa-triangle-exclamation"></i
+              > To group the radio buttons, make sure they have the same form field names</small>
             </div>
           </div>
-          <div class="form-input">
-            <div>
-              <span>Label*</span>
-            </div>
+          <div class="checkbox-option-name">
+            <span>Label*</span>
             <div class="form-field-input-container">
               <input id="radio-label" class="form-field-input" type="text" />
             </div>
           </div>
-          <div class="form-input">
-            <div>
-              <span>Value*</span>
-            </div>
+          <div class="checkbox-option-name">
+            <span>Value*</span>
             <div class="form-field-input-container">
               <input id="radio-value" class="form-field-input" type="text" />
             </div>
           </div>
-          <div class="form-style-container">
-            <div class="form-style-name"> Fill Color </div>
-            <input
-              type="color"
-              id="radio-background-color"
-              name="colorPicker"
-              value="#FFFFFF"
-              class="form-field-input"
-            />
+          <div class="checkbox-option-body">
+            <div class="openHeader">Radio Field Style</div>
+            <div class="openBody">
+              <div class="form-style-container">
+                <div class="form-style-name"> Fill Color </div>
+                <input
+                  type="color"
+                  id="radio-background-color"
+                  name="colorPicker"
+                  value="#FFFFFF"
+                  class="form-field-input"
+                />
+              </div>
+            </div>
           </div>
         </div>
         <div id="radio-save-button" class="checkbox-option-footer">
@@ -1790,10 +1791,8 @@ See https://github.com/adobe-type-tools/cmap-resources
           </div>
         </div>
         <div class="checkbox-option-content">
-          <div class="form-input">
-            <div>
-              <span>Form Field Name*</span>
-            </div>
+          <div class="checkbox-option-name">
+            <span>Form Field Name*</span>
             <div class="form-field-input-container">
               <input
                 id="text-field-input-name"
@@ -1802,11 +1801,45 @@ See https://github.com/adobe-type-tools/cmap-resources
               />
             </div>
           </div>
-          <div class="form-input">
-            <div>
-              <span>Text Style</span>
+          <div class="checkbox-option-body">
+            <div class="openHeader">Text Field Style</div>
+            <div class="openBody">
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <img src="./images/fill-color.svg" alt="color" />
+                  <span>Fill Color</span>
+                </div>
+                <input
+                  type="color"
+                  id="text-font-background-color"
+                  name="colorPicker"
+                  value="#FFFFFF"
+                  class="form-field-input"
+                />
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <img src="./images/border-color.svg" alt="color" />
+                  <span>Border Color</span>
+                </div>
+                <input
+                  type="color"
+                  id="text-border-color"
+                  name="colorPicker"
+                  value="#000000"
+                  class="form-field-input"
+                />
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <img src="./images/border-width.svg" alt="width" />
+                  <span>Border Width</span>
+                </div>
+                <select id="text-border-width" class="form-field-input"></select>
+              </div>
             </div>
-            <div class="form-field-input-container">
+            <div class="openHeader">Text Style</div>
+            <div class="openBody">
               <div class="form-style-container">
                 <div class="form-style-name">
                   <img src="./images/font.svg" alt="font" />
@@ -1832,45 +1865,6 @@ See https://github.com/adobe-type-tools/cmap-resources
                   name="colorPicker"
                   class="form-field-input"
                 />
-              </div>
-              <div class="form-style-container">
-                <div class="form-style-name">
-                  <img src="./images/fill-color.svg" alt="color" />
-                  <span>Fill Color</span>
-                </div>
-                <input
-                  type="color"
-                  id="text-font-background-color"
-                  name="colorPicker"
-                  value="#FFFFFF"
-                  class="form-field-input"
-                />
-                <!-- <div class="position-relative">
-                  <div class="active-fill-color-container" onclick="showFillColor('text')">
-                    <div color="white" class="active-fill-color"></div>
-                  </div>
-                  <div class="fill-colors hidden" id="text-fill-colors"></div>
-                </div> -->
-              </div>
-              <div class="form-style-container">
-                <div class="form-style-name">
-                  <img src="./images/border-color.svg" alt="color" />
-                  <span>Border Color</span>
-                </div>
-                <input
-                  type="color"
-                  id="text-border-color"
-                  name="colorPicker"
-                  value="#000000"
-                  class="form-field-input"
-                />
-              </div>
-              <div class="form-style-container">
-                <div class="form-style-name">
-                  <img src="./images/border-width.svg" alt="width" />
-                  <span>Border Width</span>
-                </div>
-                <select id="text-border-width" class="form-field-input"></select>
               </div>
               <div class="form-style-container">
                 <div class="form-style-name">
@@ -1923,14 +1917,12 @@ See https://github.com/adobe-type-tools/cmap-resources
       <div id="combo-option" class="checkbox-option">
         <div class="checkbox-option-header">
           <div class="checkbox-option-header-text">
-            <h4>Combobox Field Properties</h4>
+            <h4>Combo Box Field Properties</h4>
           </div>
         </div>
-        <div class="checkbox-option-content" style="height: 280px">
-          <div class="form-input">
-            <div>
-              <span>Form Field Name*</span>
-            </div>
+        <div class="checkbox-option-content">
+          <div class="checkbox-option-name">
+            <span>Form Field Name*</span>
             <div class="form-field-input-container">
               <input
                 id="combo-input-name"
@@ -1955,44 +1947,14 @@ See https://github.com/adobe-type-tools/cmap-resources
             <div id="add-option" class="combobox-add-option">
               <u>Add Option</u>
             </div>
-            <div>
-              <span style="font-size: 24px"
-                ><i class="fa-solid fa-triangle-exclamation"></i
-              ></span>
-              <span style="font-size: 14px">Option's name must be unique.</span>
+            <div class="checkbox-option-name">
+              <small><i class="fa-solid fa-triangle-exclamation"></i> 
+              Option's name must be unique.</small>
             </div>
           </div>
-          <div class="form-input">
-            <div>
-              <span>Text Style</span>
-            </div>
-            <div class="form-field-input-container">
-              <div class="form-style-container">
-                <div class="form-style-name">
-                  <img src="./images/font.svg" alt="font" />
-                  <span>Font</span>
-                </div>
-                <select id="combo-font-style" class="form-field-input"></select>
-              </div>
-              <div class="form-style-container">
-                <div class="form-style-name">
-                  <img src="./images/font-size.svg" alt="font size" />
-                  <span>Font Size</span>
-                </div>
-                <select id="combo-font-size" class="form-field-input"></select>
-              </div>
-              <div class="form-style-container">
-                <div class="form-style-name">
-                  <img src="./images/fill-color.svg" alt="color" />
-                  <span>Color</span>
-                </div>
-                <input
-                  type="color"
-                  id="combo-font-color"
-                  name="colorPicker"
-                  class="form-field-input"
-                />
-              </div>
+          <div class="checkbox-option-body">
+            <div class="openHeader">Combo Box Field Style</div>
+            <div class="openBody">
               <div class="form-style-container">
                 <div class="form-style-name">
                   <img src="./images/fill-color.svg" alt="color" />
@@ -2027,6 +1989,35 @@ See https://github.com/adobe-type-tools/cmap-resources
                 <select id="combo-border-width" class="form-field-input"></select>
               </div>
             </div>
+            <div class="openHeader">Text Style</div>
+            <div class="openBody">
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <img src="./images/font.svg" alt="font" />
+                  <span>Font</span>
+                </div>
+                <select id="combo-font-style" class="form-field-input"></select>
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <img src="./images/font-size.svg" alt="font size" />
+                  <span>Font Size</span>
+                </div>
+                <select id="combo-font-size" class="form-field-input"></select>
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <img src="./images/fill-color.svg" alt="color" />
+                  <span>Color</span>
+                </div>
+                <input
+                  type="color"
+                  id="combo-font-color"
+                  name="colorPicker"
+                  class="form-field-input"
+                />
+              </div>
+            </div>
           </div>
         </div>
         <div id="combo-save-button" class="checkbox-option-footer">
@@ -2037,14 +2028,12 @@ See https://github.com/adobe-type-tools/cmap-resources
       <div id="list-option" class="checkbox-option">
         <div class="checkbox-option-header">
           <div class="checkbox-option-header-text">
-            <h4>Listbox Field Properties</h4>
+            <h4>List Box Field Properties</h4>
           </div>
         </div>
-        <div class="checkbox-option-content" style="height: 280px">
-          <div class="form-input">
-            <div>
-              <span>Form Field Name*</span>
-            </div>
+        <div class="checkbox-option-content">
+          <div class="checkbox-option-name">
+            <span>Form Field Name*</span>
             <div class="form-field-input-container">
               <input
                 id="list-input-name"
@@ -2069,44 +2058,14 @@ See https://github.com/adobe-type-tools/cmap-resources
             <div id="add-option-list" class="combobox-add-option">
               <u>Add Option</u>
             </div>
-            <div>
-              <span style="font-size: 24px"
-                ><i class="fa-solid fa-triangle-exclamation"></i
-              ></span>
-              <span style="font-size: 14px">Option's name must be unique.</span>
+            <div class="checkbox-option-name">
+              <small><i class="fa-solid fa-triangle-exclamation"></i
+              > Option's name must be unique.</small>
             </div>
           </div>
-          <div class="form-input">
-            <div>
-              <span>Text Style</span>
-            </div>
-            <div class="form-field-input-container">
-              <div class="form-style-container">
-                <div class="form-style-name">
-                  <img src="./images/font.svg" alt="font" />
-                  <span>Font</span>
-                </div>
-                <select id="list-font-style" class="form-field-input"></select>
-              </div>
-              <div class="form-style-container">
-                <div class="form-style-name">
-                  <img src="./images/font-size.svg" alt="font size" />
-                  <span>Font Size</span>
-                </div>
-                <select id="list-font-size" class="form-field-input"></select>
-              </div>
-              <div class="form-style-container">
-                <div class="form-style-name">
-                  <img src="./images/fill-color.svg" alt="color" />
-                  <span>Color</span>
-                </div>
-                <input
-                  type="color"
-                  id="list-font-color"
-                  name="colorPicker"
-                  class="form-field-input"
-                />
-              </div>
+          <div class="checkbox-option-body">
+            <div class="openHeader">List Box Field Style</div>
+            <div class="openBody">
               <div class="form-style-container">
                 <div class="form-style-name">
                   <img src="./images/fill-color.svg" alt="color" />
@@ -2141,6 +2100,35 @@ See https://github.com/adobe-type-tools/cmap-resources
                 <select id="list-border-width" class="form-field-input"></select>
               </div>
             </div>
+            <div class="openHeader">Text Style</div>
+            <div class="openBody">
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <img src="./images/font.svg" alt="font" />
+                  <span>Font</span>
+                </div>
+                <select id="list-font-style" class="form-field-input"></select>
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <img src="./images/font-size.svg" alt="font size" />
+                  <span>Font Size</span>
+                </div>
+                <select id="list-font-size" class="form-field-input"></select>
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <img src="./images/fill-color.svg" alt="color" />
+                  <span>Color</span>
+                </div>
+                <input
+                  type="color"
+                  id="list-font-color"
+                  name="colorPicker"
+                  class="form-field-input"
+                />
+              </div>
+            </div>
           </div>
         </div>
         <div id="list-save-button" class="checkbox-option-footer">
@@ -2154,11 +2142,9 @@ See https://github.com/adobe-type-tools/cmap-resources
             <h4>Button Properties</h4>
           </div>
         </div>
-        <div class="checkbox-option-content" style="height: 280px">
-          <div class="form-input">
-            <div>
-              <span>Form Field Name*</span>
-            </div>
+        <div class="checkbox-option-content">
+          <div class="checkbox-option-name">
+            <span>Form Field Name*</span>
             <div class="form-field-input-container">
               <input
                 id="button-field-input-name"
@@ -2166,18 +2152,62 @@ See https://github.com/adobe-type-tools/cmap-resources
                 type="text"
               />
             </div>
-            <div>
-              <span>Button Text</span>
-            </div>
+          </div>
+          <div class="checkbox-option-name">
+            <span>Button Text</span>
             <div class="form-field-input-container">
               <input id="button-text" class="form-field-input" type="text" />
             </div>
           </div>
-          <div class="form-input">
-            <div>
-              <span>Text Style</span>
-            </div>
+          <div class="checkbox-option-name">
+            <span>Button Action</span>
             <div class="form-field-input-container">
+              <select id="button-field-input-action" class="form-field-input">
+                <option value="submit">Submit</option>
+                <option value="reset">Reset</option>
+                <option value="no_action">No Action</option>
+              </select>
+            </div>
+          </div>
+          <div class="checkbox-option-body">
+            <div class="openHeader">Button Field Style</div>
+            <div class="openBody">
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <img src="./images/fill-color.svg" alt="color" />
+                  <span>Fill Color</span>
+                </div>
+                <input
+                  type="color"
+                  id="button-font-background-color"
+                  name="colorPicker"
+                  value="#FFFFFF"
+                  class="form-field-input"
+                />
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <img src="./images/border-color.svg" alt="color" />
+                  <span>Border Color</span>
+                </div>
+                <input
+                  type="color"
+                  id="button-border-color"
+                  name="colorPicker"
+                  value="#000000"
+                  class="form-field-input"
+                />
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <img src="./images/border-width.svg" alt="width" />
+                  <span>Border Width</span>
+                </div>
+                <select id="button-border-width" class="form-field-input"></select>
+              </div>
+            </div>
+            <div class="openHeader">Text Style</div>
+            <div class="openBody">
               <div class="form-style-container">
                 <div class="form-style-name">
                   <img src="./images/font.svg" alt="font" />
@@ -2208,51 +2238,6 @@ See https://github.com/adobe-type-tools/cmap-resources
                 />
               </div>
             </div>
-            <div class="form-style-container">
-              <div class="form-style-name">
-                <img src="./images/fill-color.svg" alt="color" />
-                <span>Fill Color</span>
-              </div>
-              <input
-                type="color"
-                id="button-font-background-color"
-                name="colorPicker"
-                value="#FFFFFF"
-                class="form-field-input"
-              />
-            </div>
-            <div class="form-style-container">
-              <div class="form-style-name">
-                <img src="./images/border-color.svg" alt="color" />
-                <span>Border Color</span>
-              </div>
-              <input
-                type="color"
-                id="button-border-color"
-                name="colorPicker"
-                value="#000000"
-                class="form-field-input"
-              />
-            </div>
-            <div class="form-style-container">
-              <div class="form-style-name">
-                <img src="./images/border-width.svg" alt="width" />
-                <span>Border Width</span>
-              </div>
-              <select id="button-border-width" class="form-field-input"></select>
-            </div>
-          </div>
-          <div class="form-input">
-            <div>
-              <span>Button Action</span>
-            </div>
-            <div class="form-field-input-container">
-              <select id="button-field-input-action" class="form-field-input">
-                <option value="submit">Submit</option>
-                <option value="reset">Reset</option>
-                <option value="no_action">No Action</option>
-              </select>
-            </div>
           </div>
         </div>
         <div id="button-save-button" class="checkbox-option-footer">
@@ -2271,8 +2256,7 @@ See https://github.com/adobe-type-tools/cmap-resources
           </div>
         </div>
         <div class="checkbox-option-content">
-          <div class="form-input">
-            <div class="form-field-input-container">
+          <div class="checkbox-option-body">
               <div class="form-style-container">
                 <div class="form-style-name">
                   <img src="./images/font.svg" alt="font" />
@@ -2289,11 +2273,20 @@ See https://github.com/adobe-type-tools/cmap-resources
                   <img src="./images/font-size.svg" alt="font size" />
                   <span>Font Size</span>
                 </div>
+                <select
+                  id="text-content-font-size"
+                  class="form-field-input"
+                ></select>
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <img src="./images/font.svg" alt="font style" />
+                  <span>Font Style</span>
+                </div>
                 <div
                   style="
                     display: flex;
                     justify-content: space-between;
-                    width: 50%;
                   "
                 >
                   <div class="form-style-weight">
@@ -2307,10 +2300,6 @@ See https://github.com/adobe-type-tools/cmap-resources
                       <i class="fa-solid fa-underline"></i>
                     </div>
                   </div>
-                  <select
-                    id="text-content-font-size"
-                    class="form-field-input"
-                  ></select>
                 </div>
               </div>
               <div class="form-style-container">
@@ -2326,7 +2315,6 @@ See https://github.com/adobe-type-tools/cmap-resources
                 />
               </div>
             </div>
-          </div>
         </div>
         <div id="text-content-save-button" class="checkbox-option-footer">
           <div class="form-save-button">Save</div>
@@ -2340,10 +2328,8 @@ See https://github.com/adobe-type-tools/cmap-resources
           </div>
         </div>
         <div class="checkbox-option-content">
-          <div class="form-input">
-            <div>
-              <span>Form Field Name*</span>
-            </div>
+          <div class="checkbox-option-name">
+            <span>Form Field Name*</span>
             <div class="form-field-input-container">
               <input
                 id="date-input-name"
@@ -2352,37 +2338,9 @@ See https://github.com/adobe-type-tools/cmap-resources
               />
             </div>
           </div>
-          <div class="form-input">
-            <div>
-              <span>Text Style</span>
-            </div>
-            <div class="form-field-input-container">
-              <div class="form-style-container">
-                <div class="form-style-name">
-                  <img src="./images/font.svg" alt="font" />
-                  <span>Font</span>
-                </div>
-                <select id="date-font-style" class="form-field-input"></select>
-              </div>
-              <div class="form-style-container">
-                <div class="form-style-name">
-                  <img src="./images/font-size.svg" alt="font size" />
-                  <span>Font Size</span>
-                </div>
-                <select id="date-font-size" class="form-field-input"></select>
-              </div>
-              <div class="form-style-container">
-                <div class="form-style-name">
-                  <img src="./images/fill-color.svg" alt="color" />
-                  <span>Color</span>
-                </div>
-                <input
-                  type="color"
-                  id="date-font-color"
-                  name="colorPicker"
-                  class="form-field-input"
-                />
-              </div>
+          <div class="checkbox-option-body">
+            <div class="openHeader">Date Field Style</div>
+            <div class="openBody">
               <div class="form-style-container">
                 <div class="form-style-name">
                   <img src="./images/fill-color.svg" alt="color" />
@@ -2417,6 +2375,35 @@ See https://github.com/adobe-type-tools/cmap-resources
                 <select id="date-border-width" class="form-field-input"></select>
               </div>
             </div>
+            <div class="openHeader">Date Style</div>
+            <div class="openBody">
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <img src="./images/font.svg" alt="font" />
+                  <span>Font</span>
+                </div>
+                <select id="date-font-style" class="form-field-input"></select>
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <img src="./images/font-size.svg" alt="font size" />
+                  <span>Font Size</span>
+                </div>
+                <select id="date-font-size" class="form-field-input"></select>
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <img src="./images/fill-color.svg" alt="color" />
+                  <span>Color</span>
+                </div>
+                <input
+                  type="color"
+                  id="date-font-color"
+                  name="colorPicker"
+                  class="form-field-input"
+                />
+              </div>
+            </div>
           </div>
         </div>
         <div id="date-save-button" class="checkbox-option-footer">
@@ -2431,10 +2418,8 @@ See https://github.com/adobe-type-tools/cmap-resources
           </div>
         </div>
         <div class="checkbox-option-content">
-          <div class="form-input">
-            <div>
-              <span>Form Field Name*</span>
-            </div>
+          <div class="checkbox-option-name">
+            <span>Form Field Name*</span>
             <div class="form-field-input-container">
               <input
                 id="number-field-input-name"
@@ -2443,37 +2428,9 @@ See https://github.com/adobe-type-tools/cmap-resources
               />
             </div>
           </div>
-          <div class="form-input">
-            <div>
-              <span>Number Style</span>
-            </div>
-            <div class="form-field-input-container">
-              <div class="form-style-container">
-                <div class="form-style-name">
-                  <img src="./images/font.svg" alt="font" />
-                  <span>Font</span>
-                </div>
-                <select id="number-font-style" class="form-field-input"></select>
-              </div>
-              <div class="form-style-container">
-                <div class="form-style-name">
-                  <img src="./images/font-size.svg" alt="font size" />
-                  <span>Font Size</span>
-                </div>
-                <select id="number-font-size" class="form-field-input"></select>
-              </div>
-              <div class="form-style-container">
-                <div class="form-style-name">
-                  <img src="./images/fill-color.svg" alt="color" />
-                  <span>Color</span>
-                </div>
-                <input
-                  type="color"
-                  id="number-font-color"
-                  name="colorPicker"
-                  class="form-field-input"
-                />
-              </div>
+          <div class="checkbox-option-body">
+            <div class="openHeader">Number Field Style</div>
+            <div class="openBody">
               <div class="form-style-container">
                 <div class="form-style-name">
                   <img src="./images/fill-color.svg" alt="color" />
@@ -2506,6 +2463,35 @@ See https://github.com/adobe-type-tools/cmap-resources
                   <span>Border Width</span>
                 </div>
                 <select id="number-border-width" class="form-field-input"></select>
+              </div>
+            </div>
+            <div class="openHeader">Number Style</div>
+            <div class="openBody">
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <img src="./images/font.svg" alt="font" />
+                  <span>Font</span>
+                </div>
+                <select id="number-font-style" class="form-field-input"></select>
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <img src="./images/font-size.svg" alt="font size" />
+                  <span>Font Size</span>
+                </div>
+                <select id="number-font-size" class="form-field-input"></select>
+              </div>
+              <div class="form-style-container">
+                <div class="form-style-name">
+                  <img src="./images/fill-color.svg" alt="color" />
+                  <span>Color</span>
+                </div>
+                <input
+                  type="color"
+                  id="number-font-color"
+                  name="colorPicker"
+                  class="form-field-input"
+                />
               </div>
               <div class="form-style-container">
                 <div class="form-style-name">
@@ -2554,13 +2540,6 @@ See https://github.com/adobe-type-tools/cmap-resources
                 </div>
                 <input type="number" id="count" value="1" />
               </div>
-              <!-- <div class="form-style-container">
-                <div class="form-style-name">
-                  <i class="fa fa-solid fa-arrow-up-9-1"></i>
-                  <span>Count</span>
-                </div>
-                <input type="number" class="form-fields count" />
-              </div> -->
             </div>
           </div>
         </div>

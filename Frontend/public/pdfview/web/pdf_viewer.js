@@ -63,7 +63,6 @@ import {
   UNKNOWN_SCALE,
   VERTICAL_PADDING,
   watchScroll,
-
 } from "./ui_utils.js";
 
 import { NullL10n } from "web-l10n_utils";
@@ -272,7 +271,7 @@ class PDFViewer {
     this.#altTextManager = options.altTextManager || null;
 
     if (this.findController) {
-      this.findController.onIsPageVisible = pageNumber =>
+      this.findController.onIsPageVisible = (pageNumber) =>
         this._getVisiblePages().ids.has(pageNumber);
     }
     this._scriptingManager = options.scriptingManager || null;
@@ -357,7 +356,7 @@ class PDFViewer {
     // that *all* pages have in fact been completely loaded.
     return (
       this._pagesCapability.settled &&
-      this._pages.every(pageView => pageView?.pdfPage)
+      this._pages.every((pageView) => pageView?.pdfPage)
     );
   }
 
@@ -643,7 +642,7 @@ class PDFViewer {
 
     // Handle the window/tab becoming inactive *after* rendering has started;
     // fixes (another part of) bug 1746213.
-    const visibilityChangePromise = new Promise(resolve => {
+    const visibilityChangePromise = new Promise((resolve) => {
       this.#onVisibilityChange = () => {
         if (document.visibilityState !== "hidden") {
           return;
@@ -725,17 +724,17 @@ class PDFViewer {
       const savedCursor = this.container.style.cursor;
       this.container.style.cursor = "wait";
 
-      const interruptCopy = ev =>
+      const interruptCopy = (ev) =>
         (this.#interruptCopyCondition = ev.key === "Escape");
       window.addEventListener("keydown", interruptCopy);
 
       this.getAllText()
-        .then(async text => {
+        .then(async (text) => {
           if (text !== null) {
             await navigator.clipboard.writeText(text);
           }
         })
-        .catch(reason => {
+        .catch((reason) => {
           console.warn(
             `Something goes wrong when extracting the text: ${reason.message}`
           );
@@ -802,7 +801,7 @@ class PDFViewer {
       }
     );
 
-    this._onBeforeDraw = evt => {
+    this._onBeforeDraw = (evt) => {
       const pageView = this._pages[evt.pageNumber - 1];
       if (!pageView) {
         return;
@@ -813,7 +812,7 @@ class PDFViewer {
     };
     this.eventBus._on("pagerender", this._onBeforeDraw);
 
-    this._onAfterDraw = evt => {
+    this._onAfterDraw = (evt) => {
       if (evt.cssTransform || this._onePageRenderedCapability.settled) {
         return;
       }
@@ -971,7 +970,7 @@ class PDFViewer {
           }
           for (let pageNum = 2; pageNum <= pagesCount; ++pageNum) {
             const promise = pdfDocument.getPage(pageNum).then(
-              pdfPage => {
+              (pdfPage) => {
                 const pageView = this._pages[pageNum - 1];
                 if (!pageView.pdfPage) {
                   pageView.setPdfPage(pdfPage);
@@ -981,7 +980,7 @@ class PDFViewer {
                   this._pagesCapability.resolve();
                 }
               },
-              reason => {
+              (reason) => {
                 console.error(
                   `Unable to get page ${pageNum} to initialize viewer`,
                   reason
@@ -1013,7 +1012,7 @@ class PDFViewer {
           this.update();
         }
       })
-      .catch(reason => {
+      .catch((reason) => {
         console.error("Unable to initialize viewer", reason);
 
         this._pagesCapability.reject(reason);
@@ -1655,9 +1654,9 @@ class PDFViewer {
 
   _getVisiblePages() {
     const views =
-      this._scrollMode === ScrollMode.PAGE
-        ? this.#scrollModePageState.pages
-        : this._pages,
+        this._scrollMode === ScrollMode.PAGE
+          ? this.#scrollModePageState.pages
+          : this._pages,
       horizontal = this._scrollMode === ScrollMode.HORIZONTAL,
       rtl = horizontal && this._isContainerRtl;
 
@@ -1772,7 +1771,7 @@ class PDFViewer {
    */
   getPagesOverview() {
     let initialOrientation;
-    return this._pages.map(pageView => {
+    return this._pages.map((pageView) => {
       const viewport = pageView.pdfPage.getViewport({ scale: 1 });
       const orientation = isPortraitOrientation(viewport);
       if (initialOrientation === undefined) {
@@ -2138,7 +2137,6 @@ class PDFViewer {
     }
     let newScale = this._currentScale;
 
-
     if (scaleFactor > 1) {
       newScale = Math.round(newScale * scaleFactor * 100) / 100;
     } else {
@@ -2191,68 +2189,84 @@ class PDFViewer {
       let left = that.getNumber($(this).css("left"));
       let width = that.getNumber($(this).css("width")) || $(this).width();
       let height = that.getNumber($(this).css("height")) || $(this).height();
-      
-      if(id.includes("checkbox") || id.includes("radio") || id.includes("text") || id.includes("button") || id.includes("list") || id.includes("signature") || id.includes("shape") || id.includes("photo") || id.includes("number")){
-        that.originals[id] = { top, left, width, height }
-      } else{
-        let fontSize = that.getNumber($(this).find("input, select").css("font-size"));
+
+      if (
+        id.includes("checkbox") ||
+        id.includes("radio") ||
+        id.includes("text") ||
+        id.includes("button") ||
+        id.includes("list") ||
+        id.includes("signature") ||
+        id.includes("shape") ||
+        id.includes("photo") ||
+        id.includes("number")
+      ) {
+        that.originals[id] = { top, left, width, height };
+      } else {
+        let fontSize = that.getNumber(
+          $(this).find("input, select").css("font-size")
+        );
         that.originals[id] = { top, left, width, height, fontSize };
       }
     });
     $(".text-content").each(function () {
-      let id = $(this).attr("id");      
+      let id = $(this).attr("id");
       let top = that.getNumber($(this).css("top"));
       let left = that.getNumber($(this).css("left"));
       let width = that.getNumber($(this).css("width")) || $(this).width();
       let height = that.getNumber($(this).css("height")) || $(this).height();
-      let fontSize = that.getNumber($(this).find(".textcontent").css("font-size"));
-      
+      let fontSize = that.getNumber(
+        $(this).find(".textcontent").css("font-size")
+      );
+
       that.originals[id] = { top, left, width, height, fontSize };
     });
   }
 
-  //... custom form components with zoom
   customScale(scale) {
     var that = this;
     $(".form-fields").each(function () {
       let id = $(this).attr("id");
+      let top = that.getNumber($(this).css("top"));
+      let left = that.getNumber($(this).css("left"));
+      let width = that.getNumber($(this).css("width")) || $(this).width();
+      let height = that.getNumber($(this).css("height")) || $(this).height();
+
+      if (!that.originals[id]) {
+        that.originals[id] = { top, left, width, height };
+      }
       let original = that.originals[id];
 
       let updateWidth = original.width * scale + "px";
       let updateHeight = original.height * scale + "px";
       let updateTop = original.top * scale + "px";
       let updateLeft = original.left * scale + "px";
-  
-      $(this).css({ width: updateWidth, height: updateHeight, top: updateTop, left: updateLeft });
 
-      if(id.includes("checkbox") || id.includes("radio") || id.includes("button") || id.includes("list") || id.includes("signature")){
-        
-      } else{
-        let updateFontSize = original.fontSize * scale + "px";
+      $(this).css({
+        width: updateWidth,
+        height: updateHeight,
+        top: updateTop,
+        left: updateLeft,
+      });
+
+      if (
+        !id.includes("checkbox") &&
+        !id.includes("radio") &&
+        !id.includes("button") &&
+        !id.includes("list") &&
+        !id.includes("signature")
+      ) {
+        let fontSize = $(this).find("input, select").css("font-size");
+        let originalFontSize = that.getNumber(fontSize) || 14;
+        let updateFontSize = originalFontSize * scale + "px";
         $(this).find("input, select").css("font-size", updateFontSize);
       }
-    });
-    $(".text-content").each(function () {
-      let id = $(this).attr("id");
-      let original = that.originals[id];
-
-      let updateWidth = original.width * scale + "px";
-      let updateHeight = original.height * scale + "px";
-      let updateTop = original.top * scale + "px";
-      let updateLeft = original.left * scale + "px";
-  
-      $(this).css({ width: updateWidth, height: updateHeight, top: updateTop, left: updateLeft });
-
-      let updateFontSize = original.fontSize * scale + "px";
-      
-      $(this).find(".textcontent").css("font-size", updateFontSize);
     });
   }
 
   getNumber(str) {
     return parseFloat(str.replace("px", ""));
   }
-
 
   #updateContainerHeightCss(height = this.container.clientHeight) {
     if (height !== this.#previousContainerHeight) {

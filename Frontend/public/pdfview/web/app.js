@@ -1211,7 +1211,7 @@ const PDFViewerApplication = {
         this.eventBus.dispatch("documentloaded", { source: this });
         setTimeout(() => {
           this.pdfViewer.initializeForm();
-        }, 1000);        
+        }, 1000);
       });
     });
 

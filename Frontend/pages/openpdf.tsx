@@ -61,19 +61,13 @@ const OpenPdf = () => {
                         </div>
                     </div>
                     {showProfile && <UserProfile username={username} top="45px" right="20px" />}
-                    <div
-                        style={{
-                            marginLeft: "5px",
-                            marginRight: "5px",
-                            marginBottom: "5px",
-                        }}
-                    >
+                    <div>
                         <iframe
                             id="pdfIframe"
                             src={`./pdfview/web/viewer.html?id=${id}`}
                             style={{
                                 width: "100%",
-                                height: "calc(99vh - 45px)",
+                                height: "100vh",
                                 border: "none",
                                 paddingBottom: "none",
                                 margin: "none",

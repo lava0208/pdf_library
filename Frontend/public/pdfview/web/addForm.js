@@ -362,7 +362,7 @@ const drawFormElement = function () {
                 }
               }
               document.getElementById(checkbox.id).style.zIndex = selectedZIndex;
-              manageFormProps();
+              displayFormProps();
             }
           });
 
@@ -464,7 +464,7 @@ const drawFormElement = function () {
                 }
               }
               document.getElementById(radio.id).style.zIndex = selectedZIndex;
-              manageFormProps();
+              displayFormProps();
             }
           });
           document
@@ -571,7 +571,7 @@ const drawFormElement = function () {
                 }
               }
               document.getElementById(textDiv.id).style.zIndex = selectedZIndex;
-              manageFormProps();
+              displayFormProps();
             }
           });
 
@@ -700,7 +700,7 @@ const drawFormElement = function () {
                 }
               }
               document.getElementById(comboDiv.id).style.zIndex = selectedZIndex;
-              manageFormProps();
+              displayFormProps();
             }
           });
 
@@ -853,7 +853,7 @@ const drawFormElement = function () {
                 }
               }
               document.getElementById(listDiv.id).style.zIndex = selectedZIndex;
-              manageFormProps();
+              displayFormProps();
             }
           });
 
@@ -1018,7 +1018,7 @@ const drawFormElement = function () {
                 }
               }
               document.getElementById(buttonDiv.id).style.zIndex = selectedZIndex;
-              manageFormProps();
+              displayFormProps();
             }
           });
 
@@ -1170,7 +1170,7 @@ const drawFormElement = function () {
                 }
               }
               document.getElementById(dateDiv.id).style.zIndex = selectedZIndex;
-              manageFormProps();
+              displayFormProps();
             }
           });
 
@@ -1652,7 +1652,7 @@ const drawFormElement = function () {
                 }
               }
               document.getElementById(numberDiv.id).style.zIndex = selectedZIndex;
-              manageFormProps();
+              displayFormProps();
             }
           });
 
@@ -3761,7 +3761,7 @@ const eventHandler = async function (e) {
   let topPos = y;
   let leftPos = x;
 
-  manageFormProps();
+  displayFormProps();
 
   switch (currentMode) {
     case CHECKBOX:
@@ -3869,7 +3869,7 @@ const eventHandler = async function (e) {
             }
           }
           document.getElementById(checkbox.id).style.zIndex = selectedZIndex;
-          manageFormProps();
+          displayFormProps();
         }
       });
 
@@ -3985,7 +3985,7 @@ const eventHandler = async function (e) {
             }
           }
           document.getElementById(radio.id).style.zIndex = selectedZIndex;
-          manageFormProps();
+          displayFormProps();
         }
       });
 
@@ -4112,7 +4112,7 @@ const eventHandler = async function (e) {
             }
           }
           document.getElementById(textDiv.id).style.zIndex = selectedZIndex;
-          manageFormProps();
+          displayFormProps();
         }
       });
 
@@ -4255,7 +4255,7 @@ const eventHandler = async function (e) {
             }
           }
           document.getElementById(comboDiv.id).style.zIndex = selectedZIndex;
-          manageFormProps();
+          displayFormProps();
         }
       });
 
@@ -4427,7 +4427,7 @@ const eventHandler = async function (e) {
             }
           }
           document.getElementById(listDiv.id).style.zIndex = selectedZIndex;
-          manageFormProps();
+          displayFormProps();
         }
       });
 
@@ -4616,7 +4616,7 @@ const eventHandler = async function (e) {
             }
           }
           document.getElementById(buttonDiv.id).style.zIndex = selectedZIndex;
-          manageFormProps();
+          displayFormProps();
         }
       });
 
@@ -4751,7 +4751,7 @@ const eventHandler = async function (e) {
             }
           }
           document.getElementById(dateDiv.id).style.zIndex = selectedZIndex;
-          manageFormProps();
+          displayFormProps();
         }
       });
 
@@ -5145,7 +5145,7 @@ const eventHandler = async function (e) {
             }
           }
           document.getElementById(numberDiv.id).style.zIndex = selectedZIndex;
-          manageFormProps();
+          displayFormProps();
         }
       });
 
@@ -5918,8 +5918,14 @@ async function addFormElements() {
   pdfBytes = await pdfDoc.save();
 }
 
-const changeMode = () => {
-  const switchEditInsert = document.getElementById("switchEditInsert");
+$(".view-mode .item").click(function(){
+  const type = $(this).attr("type");
+  changeMode(type);
+  $(".view-mode .item").removeClass("active");
+  $(this).addClass("active");
+})
+
+const changeMode = (type) => {
   const formfields = document.querySelectorAll(".form-fields");
   const checkfields = document.querySelectorAll(".checkmark");
   const radiofields1 = document.querySelectorAll(".radioinputchild");
@@ -5935,11 +5941,8 @@ const changeMode = () => {
   const shapeFields = document.querySelectorAll(".shapeContainer");
   const photoFields = document.querySelectorAll(".photoContainer");
   const numberfields = document.querySelectorAll(".number-field-input");
+  isEditing = type === "edit";
   if (isEditing) {
-    switchEditInsert.innerHTML = `
-      <p>Edit Mode</p>
-      <i class="fa fa-toggle-off" onclick="changeMode()"></i>
-    `;
     isEditing = false;
     sidebar.querySelectorAll("button").forEach((item) => {
       item.disabled = false;
@@ -5980,10 +5983,6 @@ const changeMode = () => {
     numberfields.forEach((item) => (item.style.display = "none"));
 
   } else {
-    switchEditInsert.innerHTML = `
-    <p>Normal Mode</p>
-    <i class="fa fa-toggle-on" onclick="changeMode()"></i>
-    `;
     isEditing = true;
     sidebar.querySelectorAll("button").forEach((item) => {
       item.disabled = true;
@@ -6453,7 +6452,7 @@ for (i = 0; i < openHeader.length; i++) {
   });
 }
 
-function manageFormProps() {
+function displayFormProps() {
   const headers = document.getElementsByClassName("openHeader");
   const bodies = document.getElementsByClassName("openBody");
 
@@ -6463,4 +6462,18 @@ function manageFormProps() {
   for (let i = 0; i < bodies.length; i++) {
     bodies[i].style.maxHeight = null;
   }
+}
+
+function openTab(evt, cityName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(cityName).style.display = "grid";
+  evt.currentTarget.className += " active";
 }

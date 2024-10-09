@@ -758,17 +758,17 @@ document.getElementById("main-menu").addEventListener("click", function () {
     document.getElementById("menubtn").classList.remove("active_menu");
   }
 });
-document.getElementById("menubtn").addEventListener("click", function (event) {
-  if (!menuBtnStatus) {
-    mainmenu.style.display = "block";
-    mainmenu.focus();
-    document.getElementById("menubtn").classList.add("active_menu");
-  } else {
-    mainmenu.style.display = "none";
-    document.getElementById("menubtn").classList.remove("active_menu");
-  }
-  menuBtnStatus = !menuBtnStatus;
-});
+// document.getElementById("menubtn").addEventListener("click", function (event) {
+//   if (!menuBtnStatus) {
+//     mainmenu.style.display = "block";
+//     mainmenu.focus();
+//     document.getElementById("menubtn").classList.add("active_menu");
+//   } else {
+//     mainmenu.style.display = "none";
+//     document.getElementById("menubtn").classList.remove("active_menu");
+//   }
+//   menuBtnStatus = !menuBtnStatus;
+// });
 mainmenu.addEventListener("blur", function (event) {
   const buttonElements = mainmenu.querySelectorAll("button");
   if (

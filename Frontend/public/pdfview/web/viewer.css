@@ -260,7 +260,7 @@ small{
 
 #outerContainer {
   width: 100%;
-  height: calc(100% - 21px);
+  height: 100%;
   position: relative;
 }
 
@@ -277,7 +277,7 @@ small{
   transition-property: inset-inline-start;
   transition-duration: var(--sidebar-transition-duration);
   transition-timing-function: var(--sidebar-transition-timing-function);
-  margin-top: 40px;
+  margin-top: 55px;
 }
 
 #outerContainer:is(.sidebarMoving, .sidebarOpen){
@@ -301,6 +301,10 @@ small{
   position: absolute;
   width: 100%;
   box-shadow: inset calc(-1px * var(--dir-factor)) 0 0 rgb(0 0 0 / 0.25);
+}
+
+#viewer{
+  margin-top: 15px;
 }
 
 #viewerContainer {
@@ -332,7 +336,6 @@ small{
   z-index: 9999;
   cursor: default;
   font: message-box;
-  height: 36px;
 }
 
 :is(.toolbar, .editorParamsToolbar, .findbar, #sidebarContainer) :is(input, button, select),
@@ -366,15 +369,9 @@ small{
 .secondaryToolbar,
 .editorParamsToolbar {
   position: absolute;
-
-  height: 32px;
   background-color: var(--toolbar-bg-color);
   box-shadow: var(--toolbar-box-shadow);
   border-bottom: var(--toolbar-border-bottom);
-}
-
-#toolbarViewer {
-  height: 36px;
 }
 
 #loadingBar {
@@ -464,7 +461,7 @@ small{
 }
 
 .editorParamsToolbar {
-  top: 89px;
+  top: 107px;
   position: fixed;
   z-index: 30000;
   height: auto;
@@ -475,7 +472,7 @@ small{
   line-height: 14px;
   text-align: left;
   cursor: default;
-  right: 225px;
+  right: 300px;
 }
 
 #editorShapeFormatToolbar{
@@ -692,6 +689,11 @@ small{
   display: none;
 }
 
+#toolbarViewer {
+  height: 45px;
+  padding-top: 10px;
+}
+
 #toolbarViewerMiddle {
   position: absolute;
   left: 50%;
@@ -731,7 +733,7 @@ small{
 }
 
 .splitToolbarButton {
-  margin: 2px;
+  margin: 3px;
   display: inline-block;
 }
 
@@ -945,10 +947,12 @@ small{
 
 #previous::before {
   mask-image: var(--toolbarButton-pageUp-icon);
+  transform: rotate(-90deg);
 }
 
 #next::before {
   mask-image: var(--toolbarButton-pageDown-icon);
+  transform: rotate(270deg);
 }
 
 #zoomOut::before {
@@ -1165,7 +1169,7 @@ a:is(.toolbarButton, .secondaryToolbarButton)[href="#"] {
 #pageNumber {
   -moz-appearance: textfield;
   /* hides the spinner in moz */
-  text-align: end;
+  text-align: center;
   width: 40px;
   background-size: 0 0;
   transition-property: none;
@@ -2079,8 +2083,6 @@ select.form-field-input{
   flex-direction: row;
   border-radius: 20px;
   padding-left: 0;
-  padding-right: 10px;
-  margin-right: 10px;
   margin-left: 0;
   width: fit-content;
 }
@@ -2177,17 +2179,17 @@ select.form-field-input{
 .right-sidebar {
   position: fixed;
   inset-block: 0;
-  width: 200px;
+  width: 300px;
   z-index: 99999999;
-  font: message-box;
-  margin-top: 42px;
-  right: -250px;
-  background-color: #ffffff;
-  border-radius: 2px;
-  border-left: 1px solid #adb5bd;
-  box-shadow: 1px 3px 3px 0px rgba(0, 0, 0, 0.2);
-  padding: 10px;
-  opacity: 0.9;
+  /* font: message-box; */
+  margin-top: 60px;
+  /* right: -250px; */
+  right: 0;
+  background-color: var(--body-bg-color);
+  /* border-radius: 2px; */
+  /* box-shadow: 1px 3px 3px 0px rgba(0, 0, 0, 0.2); */
+  /* padding: 10px; */
+  /* opacity: 0.9; */
   transition: right 0.3s;
   overflow: auto;
 }
@@ -2223,7 +2225,7 @@ select.form-field-input{
   inset-block: 0;
   width: 200px;
   font: message-box;
-  margin-top: 42px;
+  margin-top: 60px;
   left: -250px;
   z-index: 100;
   background-color: #ffffff;
@@ -2929,4 +2931,98 @@ input[type=number]::-webkit-outer-spin-button {
   display: flex;
   flex-direction: column;
   gap: 5px;
+}
+
+.pdf-header{
+  padding: 15px;
+}
+
+.view-mode{
+  display: flex;
+  align-items: center;
+  background-color: #e2ecf7;
+  border-radius: 20px;
+  width: 180px;
+  position: absolute;
+  left: calc(50% - 90px);
+}
+
+.view-mode .item{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.view-mode .item.active{
+  background-color: #78d3ff;
+}
+
+.tab {
+  overflow: hidden;
+  border: none;
+}
+
+.tab button {
+  float: left;
+  border: none;
+  cursor: pointer;
+  padding: 16px 16px;
+  width: 50%;
+  font-weight: 600;
+}
+
+.tab button.active {
+  background-color: #fff;
+  border-top-right-radius: 8px;
+  border-top-left-radius: 8px;
+  border: 1px solid var(--body-bg-color);
+}
+
+.tabcontent {
+  display: none;
+  grid-template-columns: repeat(2, 1fr);
+  background-color: #d9d9d9;
+}
+
+.tabitem{
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  gap: 8px;
+  line-height: 1;
+  cursor: pointer;
+  border: 1px solid var(--body-bg-color);
+}
+
+.tabitem:hover, .tabitem.active{
+  background-color: #78d3ff;
+}
+
+.tabitem h6{
+  font-size: 13px;
+  font-weight: 500;
+  margin: auto;
+}
+
+.tabitem img{
+  width: 20px;
+}
+
+.tabitem i{
+  font-size: 20px;
+}
+
+.tabitem .img-container{
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid var(--body-bg-color);
+  text-align: center;
 }

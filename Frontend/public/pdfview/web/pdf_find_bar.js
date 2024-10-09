@@ -44,9 +44,9 @@ class PDFFindBar {
     this.eventBus = eventBus;
 
     // Add event listeners to the DOM elements.
-    this.toggleButton.addEventListener("click", () => {
-      this.toggle();
-    });
+    // this.toggleButton.addEventListener("click", () => {
+    //   this.toggle();
+    // });
 
     this.findField.addEventListener("input", () => {
       this.dispatchEvent("");

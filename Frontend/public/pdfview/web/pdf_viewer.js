@@ -2254,7 +2254,9 @@ class PDFViewer {
         !id.includes("radio") &&
         !id.includes("button") &&
         !id.includes("list") &&
-        !id.includes("signature")
+        !id.includes("signature") &&
+        !id.includes("shape") &&
+        !id.includes("photo")
       ) {
         let fontSize = $(this).find("input, select").css("font-size");
         let originalFontSize = that.getNumber(fontSize) || 14;

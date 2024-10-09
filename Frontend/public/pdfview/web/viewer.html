@@ -683,15 +683,16 @@ See https://github.com/adobe-type-tools/cmap-resources
         </div>
 
         <div class="toolbar">
-          <div id="toolbarContainer" style="height: 36px; padding-top: 5px">
+          <div id="toolbarContainer">
             <div id="toolbarViewer">
               <div id="toolbarViewerLeft">
-                <div class="toolbarButtonSpacer"></div>
-                <button class="menuBtn" id="menubtn">
+                <!-- <div class="toolbarButtonSpacer"></div> -->
+                <img src="/images/logo-black.png" alt="logo" width="50" style="margin: 5px 20px;" />
+                <!-- <button class="menuBtn" id="menubtn">
                   <i class="fas fa-bars"></i>
                 </button>
-                <div class="toolbarButtonSpacer"></div>
-                <div class="splitToolbarButtonSeparator"></div>
+                <div class="toolbarButtonSpacer"></div> -->
+                <!-- <div class="splitToolbarButtonSeparator"></div>
                 <div class="toolbarButtonSpacer"></div>
                 <button
                   id="sidebarToggle"
@@ -706,8 +707,6 @@ See https://github.com/adobe-type-tools/cmap-resources
                     >Toggle Sidebar</span
                   >
                 </button>
-                <!-- <div class="toolbarButtonSpacer"></div> -->
-                <!-- <div class="splitToolbarButtonSeparator"></div> -->
                 <button
                   id="secondaryToolbarToggle"
                   class="toolbarButton"
@@ -733,7 +732,7 @@ See https://github.com/adobe-type-tools/cmap-resources
                 >
                   <span data-l10n-id="pdfjs-findbar-button-label">Find</span>
                 </button>
-                <div class="toolbarButtonSpacer"></div>
+                <div class="toolbarButtonSpacer"></div> -->
                 <span class="loadingInput start">
                   <input
                     type="number"
@@ -776,8 +775,11 @@ See https://github.com/adobe-type-tools/cmap-resources
                   </button>
                 </div>
               </div>
-
-              <div id="toolbarViewerLeft">
+              <div class="view-mode">
+                <div class="item" type="view"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 12c0 1.654-1.346 3-3 3s-3-1.346-3-3 1.346-3 3-3 3 1.346 3 3zm9-.449s-4.252 8.449-11.985 8.449c-7.18 0-12.015-8.449-12.015-8.449s4.446-7.551 12.015-7.551c7.694 0 11.985 7.551 11.985 7.551zm-7 .449c0-2.757-2.243-5-5-5s-5 2.243-5 5 2.243 5 5 5 5-2.243 5-5z"/></svg> View</div>
+                <div class="item active" type="edit"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path d="M9 19h-4v-2h4v2zm2.946-4.036l3.107 3.105-4.112.931 1.005-4.036zm12.054-5.839l-7.898 7.996-3.202-3.202 7.898-7.995 3.202 3.201zm-6 8.92v3.955h-16v-20h7.362c4.156 0 2.638 6 2.638 6s2.313-.635 4.067-.133l1.952-1.976c-2.214-2.807-5.762-5.891-7.83-5.891h-10.189v24h20v-7.98l-2 2.025z"/></svg> Edit</div>
+              </div>
+              <div id="toolbarViewerRight">
                 <span id="scaleSelectContainer" class="dropdownToolbarButton">
                   <select
                     id="scaleSelect"
@@ -926,31 +928,13 @@ See https://github.com/adobe-type-tools/cmap-resources
                     />
                   </div>
                 </div>
-              </div>
-
-              <div id="toolbarViewerRight">
                 <div
                   id="editorModeButtons"
                   class="splitToolbarButton toggled annotationToolsContainer"
                   role="radiogroup"
                 >
-                  <!-- <button
-                    id="editorHighlight"
-                    class="toolbarButton"
-                    disabled="disabled"
-                    title="Highlight"
-                    role="radio"
-                    aria-checked="false"
-                    aria-controls="editorHighlightParamsToolbar"
-                    tabindex="31"
-                    data-l10n-id="pdfjs-editor-highlight-button"
-                  >
-                    <span data-l10n-id="pdfjs-editor-highlight-button-label"
-                      >Highlight</span
-                    >
-                  </button> -->
                 </div>
-                <div id="toolbarViewerRight" class="formToolsContainer">
+                <div class="formToolsContainer">
                   <button
                     class="second_toolbar_button hidden"
                     id="editorFreeText"
@@ -964,17 +948,7 @@ See https://github.com/adobe-type-tools/cmap-resources
                   <!-- <button class="second_toolbar_button hidden" id="add_comment_mode" title="Add Comment">
                   <i class="fa-solid fa-comment" style="font-size: 20px; color: #535353"></i>
                 </button> -->
-                  <button
-                    class="second_toolbar_button"
-                    title="Share Link"
-                    onclick="shareLink()"
-                    id="shareDocument"
-                  >
-                    <i
-                      class="fa-solid fa-share-nodes"
-                      style="font-size: 20px; color: #535353"
-                    ></i>
-                  </button>
+                  
                   <button
                     class="second_toolbar_button"
                     title="Show History"
@@ -2549,170 +2523,125 @@ See https://github.com/adobe-type-tools/cmap-resources
       </div>
     </div>
     <div class="right-sidebar">
-      <div
-        id="switchEditInsert"
-        class="switch-edit-insert"
-      >
-        <p>Edit Mode</p>
-        <i class="fa fa-toggle-off" onclick="changeMode()"></i>
+      <div class="tab">
+        <button class="tablinks active" onclick="openTab(event, 'insert')">Insert</button>
+        <button class="tablinks" onclick="openTab(event, 'annotate')">Annotate</button>
       </div>
-      <p class="toolbarTitle">Annotations:</p>
-      <button
-        id="editorHighlight"
-        class="secondaryToolbarButton"
-        disabled="disabled"
-        title="Highlight"
-        role="radio"
-        aria-checked="false"
-        aria-controls="editorHighlightParamsToolbar"
-        tabindex="31"
-        data-l10n-id="pdfjs-editor-highlight-button"
-      >
-        <span data-l10n-id="pdfjs-editor-highlight-button-label"
-          >Highlight</span
-        >
-      </button>
-      <button
-        id="editorInk"
-        class="secondaryToolbarButton"
-        disabled="disabled"
-        title="Draw"
-        role="radio"
-        aria-checked="false"
-        aria-controls="editorInkParamsToolbar"
-        tabindex="33"
-        data-l10n-id="pdfjs-editor-ink-button"
-        style="display: none"
-      >
-        <span data-l10n-id="pdfjs-editor-ink-button-label">Draw</span>
-      </button>
-      <button
-        id="editorStamp"
-        class="secondaryToolbarButton"
-        disabled="disabled"
-        title="Add or edit images"
-        role="radio"
-        aria-checked="false"
-        aria-controls="editorStampParamsToolbar"
-        tabindex="34"
-        data-l10n-id="pdfjs-editor-stamp-button"
-      >
-        <span data-l10n-id="pdfjs-editor-stamp-button-label"
-          >Add or edit images</span
-        >
-      </button>      
-      <!-- <div class="horizontalToolbarSeparator"></div>
-    <p class="toolbarTitle">Add Shapes:</p>
-    <button class="menu-button" id="shape_format" title="Shape Format">
-      <i class="fa-solid fa-shapes" style="width: 17px"></i>
-      <p class="menu-button-item">Shape Format</p>
-    </button> -->
-      <!-- <button class="menu-button" id="add_shape" title="Add Shapes">
-      <i class="fa-solid fa-shapes" style="width: 17px"></i>
-      <p class="menu-button-item">Add Shapes</p>
-    </button> -->
-      <div class="horizontalToolbarSeparator"></div>
-      <p class="toolbarTitle">Comments:</p>
-      <button class="menu-button" id="add_text" title="Add Text">
-        <i class="far fa-i" style="width: 17px"></i>
-        <p class="menu-button-item">Add Text</p>
-      </button>
-      <button class="menu-button" id="add_comment_mode" title="Add Comment">
-        <i class="far fa-comment"></i>
-        <p class="menu-button-item">Add Comment</p>
-      </button>
-      <div class="horizontalToolbarSeparator"></div>
-      <p class="toolbarTitle">Form Fields:</p>
-      <button
-        class="menu-button"
-        id="add_form_check"
-        title="Add checkbox"
-        onclick="addForm(CHECKBOX)"
-      >
-        <i class="fa-sharp fa-regular fa-square-check" style="width: 17px"></i>
-        <p class="menu-button-item">CheckBox</p>
-      </button>
-      <button
-        class="menu-button"
-        id="add_form_radio"
-        title="Add radio button"
-        onclick="addForm(RADIO)"
-      >
-        <i class="fa-regular fa-circle-dot" style="width: 17px"></i>
-        <p class="menu-button-item">Radio</p>
-      </button>
-      <button
-        class="menu-button"
-        id="add_form_text"
-        title="Add textfield"
-        onclick="addForm(TEXTFIELD)"
-      >
-        <i class="fa fa-font" style="width: 17px"></i>
-        <p class="menu-button-item">TextField</p>
-      </button>
-      <button
-        class="menu-button"
-        id="add_form_number"
-        title="Add numberfield"
-        onclick="addForm(NUMBERFIELD)"
-      >
-        <i class="fa fa-5 fa-solid" style="width: 17px"></i>
-        <p class="menu-button-item">NumberField</p>
-      </button>
-      <button
-        class="menu-button"
-        id="add_form_combo"
-        title="Add combobox"
-        onclick="addForm(COMBOBOX)"
-      >
-        <i class="fa fa-caret-down" style="width: 17px"></i>
-        <p class="menu-button-item">Combobox</p>
-      </button>
-      <button
-        class="menu-button"
-        id="add_form_list"
-        title="Add list"
-        onclick="addForm(LIST)"
-      >
-        <i class="fa fa-list" aria-hidden="true" style="width: 17px"></i>
-        <p class="menu-button-item">List</p>
-      </button>
-      <button
-        class="menu-button"
-        id="add_form_date"
-        title="Add date"
-        onclick="addForm(DATE)"
-      >
-        <i class="fa-regular fa-calendar-days" style="width: 17px"></i>
-        <p class="menu-button-item">Date</p>
-      </button>
-      <button
-        class="menu-button"
-        id="add_form_signature"
-        title="Add Signature"
-        onclick="addForm(SIGNATURE)"
-      >
-        <i class="fa-solid fa-signature" style="width: 17px"></i>
-        <p class="menu-button-item">Signature</p>
-      </button>
-      <button
-        class="menu-button"
-        id="add_form_button"
-        title="Add button"
-        onclick="addForm(BUTTON)"
-      >
-        <i class="fa fa-toggle-off" style="width: 17px"></i>
-        <p class="menu-button-item">Button</p>
-      </button>
-      <button
-        class="menu-button"
-        id="add_image"
-        title="Add Photo/Image"
-        onclick="addForm(PHOTO)"
-      >
-        <i class="fa-solid fa-image" style="width: 17px"></i>
-        <p class="menu-button-item">Add Photo / Image</p>
-      </button>
+      
+      <div id="insert" class="tabcontent" style="display: grid;">
+        <div class="tabitem" id="add_text">
+          <div class="img-container">
+            <img src="./images/font.svg" alt="text" style="width: 25px;">
+          </div>          
+          <h6>Text</h6>
+        </div>
+        <div class="tabitem" id="add_form_combo" onclick="addForm(COMBOBOX)">
+          <div class="img-container">
+            <img src="./images/form-combo.svg" alt="combo">
+          </div>
+          <h6>Combo Box</h6>
+        </div>        
+        <div class="tabitem" id="add_form_check" onclick="addForm(CHECKBOX)">
+          <div class="img-container">
+            <img src="./images/form-checkbox.svg" alt="checkbox" style="width: 25px;">
+          </div>
+          <h6>Checkbox</h6>
+        </div>
+        <div class="tabitem" id="add_form_radio" onclick="addForm(RADIO)">
+          <div class="img-container">
+            <img src="./images/form-radio.svg" alt="radio" style="width: 25px;">
+          </div>
+          <h6>Radio</h6>
+        </div>
+        <div class="tabitem" id="add_form_text" onclick="addForm(TEXTFIELD)">
+          <div class="img-container">
+            <img src="./images/form-text.svg" alt="text">
+          </div>
+          <h6>Text Field</h6>
+        </div>
+        <div class="tabitem" id="add_form_number" onclick="addForm(NUMBERFIELD)">
+          <div class="img-container">
+            <img src="./images/form-number.svg" alt="number">
+          </div>
+          <h6>Number Field</h6>
+        </div>
+        <div class="tabitem" id="add_form_list" onclick="addForm(LIST)">
+          <div class="img-container">
+            <img src="./images/form-list.svg" alt="list">
+          </div>
+          <h6>List Box</h6>
+        </div>
+        <div class="tabitem" id="add_form_signature" onclick="addForm(SIGNATURE)">
+          <div class="img-container">
+            <img src="./images/form-signature.svg" alt="signature">
+          </div>
+          <h6>Signature</h6>
+        </div>
+        <div class="tabitem" id="add_form_date" onclick="addForm(DATE)">
+          <div class="img-container">
+            <img src="./images/form-date.svg" alt="date">
+          </div>
+          <h6>Date</h6>
+        </div>
+        <div class="tabitem" id="add_form_button" onclick="addForm(BUTTON)">
+          <div class="img-container">
+            <img src="./images/form-button.svg" alt="button">
+          </div>
+          <h6>Button</h6>
+        </div>
+        <div class="tabitem" id="add_image" onclick="addForm(PHOTO)">
+          <div class="img-container">
+            <i class="fa-regular fa-image"></i>
+          </div>
+          <h6>Photo</h6>
+        </div>
+      </div>
+      <div id="annotate" class="tabcontent">
+        <div class="tabitem" id="editorHighlight">
+          <div class="img-container">
+            <i class="fa-solid fa-highlighter"></i>
+          </div>
+          <h6>Highlight</h6>
+        </div>
+        <div class="tabitem" id="add_comment_mode">
+          <div class="img-container">
+            <i class="fa-regular fa-comment-dots"></i>
+          </div>
+          <h6>Comment</h6>
+        </div>
+        <div class="tabitem" id="editorStamp">
+          <div class="img-container">
+            <i class="fa-regular fa-image"></i>
+          </div>
+          <h6>Image</h6>        
+        </div>
+        <div class="tabitem shape-item" type="shape">
+          <div class="img-container">
+            <i class="fa-regular fa-square"></i>
+          </div>
+          <h6>Rectangle</h6>
+        </div>
+        <div class="tabitem" id="editorInk">
+          <div class="img-container">
+            <i class="fa-solid fa-feather"></i>
+          </div>
+          <h6>Draw</h6>
+        </div>
+        <div class="tabitem shape-item" type="circle">
+          <div class="img-container">
+            <i class="fa-regular fa-circle"></i>
+          </div>
+          <h6>Circle</h6>
+        </div>
+        <div class="tabitem shape-item" type="line">
+          <div class="img-container">
+            <img src="./images/form-line.jpg" alt="line">
+          </div>
+          <h6>Line</h6>
+        </div>
+      </div>
+
+    
       <p class="toolbarTitle">Fluttern:</p>
       <button
         class="menu-button"
@@ -2723,6 +2652,17 @@ See https://github.com/adobe-type-tools/cmap-resources
         <i class="fa-sharp fa-solid fa-download" style="width: 17px"></i>
         <p class="menu-button-item">Fluttern</p>
       </button>
+      <!-- <button
+        class="second_toolbar_button"
+        title="Share Link"
+        onclick="shareLink()"
+        id="shareDocument"
+      >
+        <i
+          class="fa-solid fa-share-nodes"
+          style="font-size: 20px; color: #535353"
+        ></i>
+      </button> -->
     </div>
 
     <div

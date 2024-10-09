@@ -11837,4 +11837,35 @@ footer.footer p.small a.focus {
   max-width: 500px;
 }
 
+.pdf-header{
+  padding: 15px;
+}
+
+.view-mode{
+  display: flex;
+  align-items: center;
+  gap: 0px;
+  padding: 0;
+  background-color: #e2ecf7;
+  border-radius: 20px;
+  width: 200px;
+  position: absolute;
+  left: calc(50% - 100px);
+}
+
+.view-mode .item{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.view-mode .item.active{
+  background-color: #78d3ff;
+}
+
 /* Styles Begins */

@@ -11,24 +11,24 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 })
 
-document.getElementById("sidebarToggle").addEventListener("click", function () {
-    const sidebarContainer = document.getElementById("sidebarContainer");
-    if (window.getComputedStyle(sidebarContainer).visibility === "visible") {
-        sidebarContainer.style.visibility = 'hidden';
-        leftSideBarOpened = false;
-        if (showHistoryBarOpened) {
-            showHistoryBar.classList.remove("active");
-            showHistoryBar.classList.toggle("active0");
-        }
-    } else {
-        sidebarContainer.style.visibility = 'visible';
-        leftSideBarOpened = true;
-        if (showHistoryBarOpened) {
-            showHistoryBar.classList.remove("active0");
-            showHistoryBar.classList.toggle("active");
-        }
-    }
-})
+// document.getElementById("sidebarToggle").addEventListener("click", function () {
+//     const sidebarContainer = document.getElementById("sidebarContainer");
+//     if (window.getComputedStyle(sidebarContainer).visibility === "visible") {
+//         sidebarContainer.style.visibility = 'hidden';
+//         leftSideBarOpened = false;
+//         if (showHistoryBarOpened) {
+//             showHistoryBar.classList.remove("active");
+//             showHistoryBar.classList.toggle("active0");
+//         }
+//     } else {
+//         sidebarContainer.style.visibility = 'visible';
+//         leftSideBarOpened = true;
+//         if (showHistoryBarOpened) {
+//             showHistoryBar.classList.remove("active0");
+//             showHistoryBar.classList.toggle("active");
+//         }
+//     }
+// })
 
 //... save reply
 const saveHistory = function (username, date, page, reply, type, currentid) {

@@ -622,28 +622,10 @@ See https://github.com/adobe-type-tools/cmap-resources
           </div>
         </div>
         <!-- secondaryToolbar -->
-        <div class="listMenu" id="main-menu" tabindex="0">
-          <button
-            id="secondaryOpenFile"
-            class="secondaryToolbarButton"
-            title="Open File"
-            tabindex="51"
-            data-l10n-id="pdfjs-open-file-button"
-          >
-            <span data-l10n-id="pdfjs-print-button-label">Open File</span>
-          </button>
+        <div id="main-menu1">
           <button class="menu-button" id="pdfEditorButton" title="PDF Editor">
             <i class="far fa-file"></i>
             <p class="menu-button-item">Pdf Editor</p>
-          </button>
-          <button
-            id="secondaryPrint"
-            class="secondaryToolbarButton"
-            title="Print"
-            tabindex="52"
-            data-l10n-id="pdfjs-print-button"
-          >
-            <span data-l10n-id="pdfjs-print-button-label">Print</span>
           </button>
           <button
             class="menu-button"
@@ -662,24 +644,6 @@ See https://github.com/adobe-type-tools/cmap-resources
             <i class="far fa-file"></i>
             <p class="menu-button-item">Pdf Viewer</p>
           </button>
-          <button
-            class="menu-button"
-            id="saveDraftButton"
-            title="Save As Draft"
-            onclick="saveDoc()"
-          >
-            <i class="far fa-file-pdf"></i>
-            <p class="menu-button-item">Save As Draft</p>
-          </button>
-          <button
-            class="menu-button hidden"
-            id="deleteDraftButton"
-            title="Save As Draft"
-            onclick="deleteDoc()"
-          >
-            <i class="fa fa-trash"></i>
-            <p class="menu-button-item">Delete</p>
-          </button>
         </div>
 
         <div class="toolbar">
@@ -688,11 +652,11 @@ See https://github.com/adobe-type-tools/cmap-resources
               <div id="toolbarViewerLeft">
                 <!-- <div class="toolbarButtonSpacer"></div> -->
                 <img src="/images/logo-black.png" alt="logo" width="50" style="margin: 5px 20px;" />
-                <!-- <button class="menuBtn" id="menubtn">
+                <button class="menuBtn" id="menubtn">
                   <i class="fas fa-bars"></i>
                 </button>
                 <div class="toolbarButtonSpacer"></div>
-                <div class="splitToolbarButtonSeparator"></div> -->
+                <div class="splitToolbarButtonSeparator"></div>
                 <div class="toolbarButtonSpacer"></div>
                 <button
                   id="sidebarToggle"
@@ -2657,14 +2621,13 @@ See https://github.com/adobe-type-tools/cmap-resources
           <i class="fa-regular fa-trash-can"></i>
         </div>
       </div>
-
-      <div class="document-upload" id="secondaryOpenFile">
-        <input type="file" name="file" id="document-file" class="inputfile">
-        <label for="document-file">
+      
+      <div class="document-upload">
+        <label id="secondaryOpenFile">
           <img src="./images/upload-file-light.svg" alt="upload" />
           <h6>Drop your document here.</h6>
         </label>
-      </div>
+      </div>      
     </div>
 
     <div

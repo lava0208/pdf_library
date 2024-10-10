@@ -690,7 +690,6 @@ const PDFViewerApplication = {
 
     if (!this.supportsPrinting) {
       appConfig.toolbar?.print?.classList.add("hidden");
-      appConfig.secondaryToolbar?.printButton.classList.add("hidden");
     }
 
     if (!this.supportsFullscreen) {

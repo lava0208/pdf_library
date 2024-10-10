@@ -257,5 +257,6 @@ const Format = () => {
   isButton = false;
   isDate = false;
   isSignature = false;
+  isPhoto = false;
   isNumberField = false;
 };

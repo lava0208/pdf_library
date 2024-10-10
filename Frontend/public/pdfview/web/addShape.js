@@ -1,4 +1,3 @@
-let isDrawingShape = false;
 let shapeId = baseId;
 
 const viewer = document.getElementById("viewer");
@@ -27,6 +26,8 @@ $(".shape-item").on("click", function () {
   shapeType = $(this).attr("type");
   isDrawingShape = true;
   viewer.style.cursor = 'crosshair';
+  isTextModeOn = false;
+  isAddCommentModeOn = false;
 
   if (shapeType === "circle") {
     selectedBorderRadius = "50%";
@@ -36,6 +37,8 @@ $(".shape-item").on("click", function () {
     selectedTextAlign = 'top,left';
   }
 
+  $(".tabitem").removeClass("active_menu");
+  $(this).addClass("active_menu");
   $("#shapeTypeToolbar").addClass("hidden");
   $("#viewerContainer").removeClass("withToolbar");
 });
@@ -206,6 +209,7 @@ viewer.addEventListener("mousedown", function (e) {
     rectElement.style.fontFamily = `${selectedTextFamily}`;
   }
 
+  $(".shape-item").removeClass("active_menu");
   viewer.appendChild(rectElement);
 });
 
@@ -312,6 +316,7 @@ viewer.addEventListener("mouseup", function (e) {
 
     $("#shapeToolbar").css("display", "flex");
     $("#viewerContainer").addClass("withToolbar");
+    $(".shape-item").removeClass("active_menu");
 
     plot.initStore();
 
@@ -528,6 +533,34 @@ viewer.addEventListener("dblclick", function (e) {
     }
   }
 });
+
+document.getElementById("add_comment_mode").addEventListener("click", (e) => {
+  isTextModeOn = false;
+  isAddCommentModeOn = !isAddCommentModeOn;
+  handleChange();
+});
+
+document.getElementById("add_text").addEventListener("click", (e) => {
+  isAddCommentModeOn = false;
+  isTextModeOn = !isTextModeOn;
+  handleChange();
+});
+
+function handleChange() {
+  let addText = document.getElementById("add_text");
+  let addComment = document.getElementById("add_comment_mode");
+  if (!isTextModeOn) {
+    addText.classList.remove("active_menu");
+  } else {
+    addText.classList.add("active_menu");
+  }
+  if (!isAddCommentModeOn) {
+    addComment.classList.remove("active_menu");
+    comment_control.style.display = "none";
+  } else {
+    addComment.classList.add("active_menu");
+  }
+};
 
 function initialShapeStyle(){
   $("#shape-fill-dropdown").find("input").val("#FFFFFF");

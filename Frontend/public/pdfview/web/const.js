@@ -76,15 +76,12 @@ const numberFieldOption = document.getElementById(NUMBERFIELD_OPTION);
 
 /* Elements for calling main toolbox of right pane */
 
-const rightSidebarButton = document.getElementById("penIcon");
 const sidebar = document.querySelector(".right-sidebar");
 
 /* Elements for submitting document by link */
 const shareDocumentButton = document.getElementById("shareDocument");
 const submitDocumentButton = document.getElementById("submitDocument");
 const showHistoryButton = document.getElementById("showHistory");
-const shapeToolbarButton = document.getElementById("shapeToolbarButton");
-const addTextButton = document.getElementById("editorFreeText");
 const addCommentButton = document.getElementById("add_comment_mode");
 const searchFormButton = document.getElementById("search-form");
 
@@ -115,6 +112,10 @@ let current_history_id = 0;
 let isOpenSubmitDocument = false;
 let baseId = 0;
 let selectedProfileSignature = null;
+
+let isAddCommentModeOn = false;
+let isTextModeOn = false;
+let isDrawingShape = false;
 
 const saveDraftButton = document.getElementById("saveDraftButton");
 const urlParams = new URLSearchParams(window.location.search);

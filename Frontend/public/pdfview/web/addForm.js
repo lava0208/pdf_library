@@ -6473,4 +6473,10 @@ function openTab(evt, cityName) {
   }
   document.getElementById(cityName).style.display = "grid";
   evt.currentTarget.className += " active";
+
+  $(".tabitem").removeClass("active_menu");
+  addForm();
+  isAddCommentModeOn = false;
+  isTextModeOn = false;
+  isDrawingShape = false;
 }

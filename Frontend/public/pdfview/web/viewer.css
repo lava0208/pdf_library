@@ -455,7 +455,7 @@ small{
 }
 
 .editorParamsToolbar {
-  top: 107px;
+  top: 155px;
   position: fixed;
   z-index: 30000;
   height: auto;
@@ -2150,10 +2150,6 @@ select.form-field-input{
   font-size: 16px;
 }
 
-.active_menu {
-  background-color: #dddedf;
-}
-
 .menu-button:hover {
   background-color: #dde6ee;
 }
@@ -2934,10 +2930,11 @@ input[type=number]::-webkit-outer-spin-button {
   padding: 16px 16px;
   width: 50%;
   font-weight: 600;
+  background-color: #fff;
 }
 
 .tab button.active {
-  background-color: #fff;
+  background-color: #78d3ff;
   border: 1px solid var(--body-bg-color);
 }
 
@@ -2957,6 +2954,10 @@ input[type=number]::-webkit-outer-spin-button {
 
 .tabitem:hover, .tabitem.active{
   background-color: #78d3ff;
+}
+
+.tabitem.active_menu, .tabitem.toggled {
+  background-color: #dddedf;
 }
 
 .tabitem h6{

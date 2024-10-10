@@ -679,6 +679,17 @@ See https://github.com/adobe-type-tools/cmap-resources
                 >
                   <span data-l10n-id="pdfjs-tools-button-label">Tools</span>
                 </button>
+                <button
+                  class="second_toolbar_button"
+                  title="Show History"
+                  onclick="showHistory()"
+                  id="showHistory"
+                >
+                  <i
+                    class="fa-brands fa-stack-exchange"
+                    style="font-size: 16px; color: #535353"
+                  ></i>
+                </button>
                 <div class="toolbarButtonSpacer"></div>
                 <div class="splitToolbarButtonSeparator"></div>
                 <div class="toolbarButtonSpacer"></div>
@@ -737,8 +748,8 @@ See https://github.com/adobe-type-tools/cmap-resources
                 </div>
               </div>
               <div class="view-mode">
-                <div class="item" type="view"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 12c0 1.654-1.346 3-3 3s-3-1.346-3-3 1.346-3 3-3 3 1.346 3 3zm9-.449s-4.252 8.449-11.985 8.449c-7.18 0-12.015-8.449-12.015-8.449s4.446-7.551 12.015-7.551c7.694 0 11.985 7.551 11.985 7.551zm-7 .449c0-2.757-2.243-5-5-5s-5 2.243-5 5 2.243 5 5 5 5-2.243 5-5z"/></svg> View</div>
-                <div class="item active" type="edit"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path d="M9 19h-4v-2h4v2zm2.946-4.036l3.107 3.105-4.112.931 1.005-4.036zm12.054-5.839l-7.898 7.996-3.202-3.202 7.898-7.995 3.202 3.201zm-6 8.92v3.955h-16v-20h7.362c4.156 0 2.638 6 2.638 6s2.313-.635 4.067-.133l1.952-1.976c-2.214-2.807-5.762-5.891-7.83-5.891h-10.189v24h20v-7.98l-2 2.025z"/></svg> Edit</div>
+                <div class="item" type="view"><img src="./images/eye.svg" alt="view" /> View</div>
+                <div class="item active" type="edit"><img src="./images/edit.svg" alt="edit" /> Edit</div>
               </div>
               <div id="toolbarViewerRight">
                 <span id="scaleSelectContainer" class="dropdownToolbarButton">
@@ -898,20 +909,6 @@ See https://github.com/adobe-type-tools/cmap-resources
                     <i
                       class="fa-solid far fa-i"
                       style="font-size: 18px; color: #535353"
-                    ></i>
-                  </button>
-                  <!-- <button class="second_toolbar_button hidden" id="add_comment_mode" title="Add Comment">
-                  <i class="fa-solid fa-comment" style="font-size: 20px; color: #535353"></i>
-                </button> -->
-                  <button
-                    class="second_toolbar_button"
-                    title="Show History"
-                    onclick="showHistory()"
-                    id="showHistory"
-                  >
-                    <i
-                      class="fa-brands fa-stack-exchange"
-                      style="font-size: 20px; color: #535353"
                     ></i>
                   </button>
                 </div>
@@ -2472,18 +2469,12 @@ See https://github.com/adobe-type-tools/cmap-resources
       </div>
       
       <div id="insert" class="tabcontent" style="display: grid;">
-        <div class="tabitem" id="add_text">
-          <div class="img-container">
-            <img src="./images/font.svg" alt="text" style="width: 25px;">
-          </div>          
-          <h6>Text</h6>
-        </div>
         <div class="tabitem" id="add_form_combo" onclick="addForm(COMBOBOX)">
           <div class="img-container">
             <img src="./images/form-combo.svg" alt="combo">
           </div>
           <h6>Combo Box</h6>
-        </div>        
+        </div>
         <div class="tabitem" id="add_form_check" onclick="addForm(CHECKBOX)">
           <div class="img-container">
             <img src="./images/form-checkbox.svg" alt="checkbox" style="width: 25px;">
@@ -2540,11 +2531,11 @@ See https://github.com/adobe-type-tools/cmap-resources
         </div>
       </div>
       <div id="annotate" class="tabcontent">
-        <div class="tabitem" id="editorHighlight">
+        <div class="tabitem" id="add_text">
           <div class="img-container">
-            <i class="fa-solid fa-highlighter"></i>
+            <img src="./images/font.svg" alt="text" style="width: 25px;">
           </div>
-          <h6>Highlight</h6>
+          <h6>Text</h6>
         </div>
         <div class="tabitem" id="add_comment_mode">
           <div class="img-container">
@@ -2556,7 +2547,7 @@ See https://github.com/adobe-type-tools/cmap-resources
           <div class="img-container">
             <i class="fa-regular fa-image"></i>
           </div>
-          <h6>Image</h6>        
+          <h6>Image</h6>
         </div>
         <div class="tabitem shape-item" type="shape">
           <div class="img-container">
@@ -2564,17 +2555,23 @@ See https://github.com/adobe-type-tools/cmap-resources
           </div>
           <h6>Rectangle</h6>
         </div>
-        <div class="tabitem" id="editorInk">
+        <div class="tabitem" id="editorHighlight">
           <div class="img-container">
-            <i class="fa-solid fa-feather"></i>
+            <i class="fa-solid fa-highlighter"></i>
           </div>
-          <h6>Draw</h6>
+          <h6>Highlight</h6>
         </div>
         <div class="tabitem shape-item" type="circle">
           <div class="img-container">
             <i class="fa-regular fa-circle"></i>
           </div>
           <h6>Circle</h6>
+        </div>
+        <div class="tabitem" id="editorInk">
+          <div class="img-container">
+            <i class="fa-solid fa-feather"></i>
+          </div>
+          <h6>Draw</h6>
         </div>
         <div class="tabitem shape-item" type="line">
           <div class="img-container">

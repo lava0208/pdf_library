@@ -28,9 +28,6 @@ viewer.addEventListener("mousedown", function (e) {
     rectElement.style.top = `${startY}px`;
     rectElement.style.border = `1px solid blue`;
 
-    console.log(e);
-    
-  
     viewer.appendChild(rectElement);
 });
 

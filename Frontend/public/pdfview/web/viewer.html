@@ -650,12 +650,9 @@ See https://github.com/adobe-type-tools/cmap-resources
           <div id="toolbarContainer">
             <div id="toolbarViewer">
               <div id="toolbarViewerLeft">
-                <!-- <div class="toolbarButtonSpacer"></div> -->
-                <img src="/images/logo-black.png" alt="logo" width="50" style="margin: 5px 20px;" />
-                <button class="menuBtn" id="menubtn">
-                  <i class="fas fa-bars"></i>
-                </button>
-                <div class="toolbarButtonSpacer"></div>
+                <a href="/">
+                  <img src="/images/logo-black.png" alt="logo" width="50" style="margin: 5px 20px;" />
+                </a>
                 <div class="splitToolbarButtonSeparator"></div>
                 <div class="toolbarButtonSpacer"></div>
                 <button
@@ -914,17 +911,6 @@ See https://github.com/adobe-type-tools/cmap-resources
                   >
                     <i
                       class="fa-brands fa-stack-exchange"
-                      style="font-size: 20px; color: #535353"
-                    ></i>
-                  </button>
-                  <button
-                    class="second_toolbar_button"
-                    title="Open Toolbar"
-                    onclick="openToolbar()"
-                    id="penIcon"
-                  >
-                    <i
-                      class="fas fa-pen-nib fa-lg"
                       style="font-size: 20px; color: #535353"
                     ></i>
                   </button>
@@ -2615,13 +2601,11 @@ See https://github.com/adobe-type-tools/cmap-resources
           <i class="fa-regular fa-trash-can"></i>
         </div>
       </div>
-      
-      <div class="document-upload">
-        <label id="secondaryOpenFile">
-          <img src="./images/upload-file-light.svg" alt="upload" />
-          <h6>Drop your document here.</h6>
-        </label>
-      </div>      
+
+      <button type="button" class="btn btn-large" id="secondaryOpenFile">Open Document</button>
+      <div id="toggle-rightbar" onclick="openToolbar()" title="Right Bar">
+        <img src="./images/arrow-back-light.svg" alt="toggle show" />
+      </div>
     </div>
 
     <div

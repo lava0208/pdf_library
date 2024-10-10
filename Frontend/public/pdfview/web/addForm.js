@@ -145,7 +145,6 @@ const generalUserMode = function () {
   if (initialId) {
     //... open draft document
     if (isDraft == null || isDraft == "") {
-      rightSidebarButton.style.display = "none";
       shareDocumentButton.style.display = "none";
       addTextButton.style.display = "none";
       addCommentButton.style.display = "none";
@@ -161,7 +160,6 @@ const generalUserMode = function () {
         viewer.dispatchEvent(new Event('click'));
       } else {
         //... open submitted document
-        rightSidebarButton.style.display = "none";
         shareDocumentButton.style.display = "none";
         addTextButton.style.display = "none";
         addCommentButton.style.display = "none";

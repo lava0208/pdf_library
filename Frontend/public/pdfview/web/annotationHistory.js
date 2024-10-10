@@ -561,7 +561,6 @@ const getDocList = async function (id) {
     })
     .then(response => response.json())
         .then(data => {
-            $("#saveDraftButton p").text("Update Draft");
             $("#deleteDraftButton").removeClass("hidden");
             $("#pdfViewerButton").removeClass("hidden");
             $("#secondaryPrint").addClass("hidden");

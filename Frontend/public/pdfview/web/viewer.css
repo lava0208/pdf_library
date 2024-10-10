@@ -312,7 +312,6 @@ small{
   position: absolute;
   inset: 36px 0 0;
   outline: none;
-  margin-top: 5px;
 }
 
 #viewerContainer.withToolbar{
@@ -322,11 +321,6 @@ small{
 #viewerContainer:not(.pdfPresentationMode) {
   transition-duration: var(--sidebar-transition-duration);
   transition-timing-function: var(--sidebar-transition-timing-function);
-}
-
-#outerContainer.sidebarOpen #viewerContainer:not(.pdfPresentationMode) {
-  inset-inline-start: var(--sidebar-width);
-  transition-property: inset-inline-start;
 }
 
 .toolbar {
@@ -472,7 +466,7 @@ small{
   line-height: 14px;
   text-align: left;
   cursor: default;
-  right: 300px;
+  right: 320px;
 }
 
 #editorShapeFormatToolbar{
@@ -1764,7 +1758,7 @@ dialog :link {
   justify-content: space-between;
   box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
   width: 360px;
-  max-height: 400px;
+  max-height: 410px;
   position: relative;
   z-index: 1000;
   border: 1px solid #d9d9d9;
@@ -1847,7 +1841,6 @@ select.form-field-input{
 
 .checkbox-option-footer {
   cursor: pointer;
-  margin-top: 15px;
 }
 
 .form-save-button {
@@ -2180,16 +2173,11 @@ select.form-field-input{
   position: fixed;
   inset-block: 0;
   width: 300px;
-  z-index: 99999999;
-  /* font: message-box; */
+  height: fit-content;
+  z-index: 100;
   margin-top: 60px;
-  /* right: -250px; */
-  right: 0;
+  right: 20px;
   background-color: var(--body-bg-color);
-  /* border-radius: 2px; */
-  /* box-shadow: 1px 3px 3px 0px rgba(0, 0, 0, 0.2); */
-  /* padding: 10px; */
-  /* opacity: 0.9; */
   transition: right 0.3s;
   overflow: auto;
 }
@@ -2986,14 +2974,12 @@ input[type=number]::-webkit-outer-spin-button {
 .tabcontent {
   display: none;
   grid-template-columns: repeat(2, 1fr);
-  background-color: #d9d9d9;
 }
 
 .tabitem{
   display: flex;
   align-items: center;
   background-color: #fff;
-  gap: 8px;
   line-height: 1;
   cursor: pointer;
   border: 1px solid var(--body-bg-color);
@@ -3025,4 +3011,57 @@ input[type=number]::-webkit-outer-spin-button {
   justify-content: center;
   border-right: 1px solid var(--body-bg-color);
   text-align: center;
+}
+
+.form-actions{
+  display: flex;
+  margin-top: 10px;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fff;
+  padding: 10px;
+}
+
+.form-action-container{
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.form-action-container i{
+  font-size: 22px;
+}
+
+.form-action-container:hover{
+  background-color: #78d3ff;
+}
+
+.document-upload{
+  border: 2px dashed #a9aeb7;
+  margin-top: 30px;
+  border-radius: 15px;
+}
+
+.document-upload label{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  padding: 30px;
+  cursor: pointer;
+}
+
+.document-upload input{
+  display: none;
+}
+
+.document-upload label h6{
+  color: #4d525dab;
+  font-size: 16px;
 }

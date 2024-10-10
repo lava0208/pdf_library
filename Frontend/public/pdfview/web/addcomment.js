@@ -747,37 +747,3 @@ const setDocumentAsPDF = async function () {
     add_txt_comment();
   }
 };
-
-// OpenFile, SaveFile, PrintButton, ExitButton
-let menuBtnStatus = false;
-const mainmenu = document.getElementById("main-menu");
-document.getElementById("main-menu").addEventListener("click", function () {
-  if (menuBtnStatus) {
-    mainmenu.style.display = "none";
-    menuBtnStatus = !menuBtnStatus;
-    document.getElementById("menubtn").classList.remove("active_menu");
-  }
-});
-// document.getElementById("menubtn").addEventListener("click", function (event) {
-//   if (!menuBtnStatus) {
-//     mainmenu.style.display = "block";
-//     mainmenu.focus();
-//     document.getElementById("menubtn").classList.add("active_menu");
-//   } else {
-//     mainmenu.style.display = "none";
-//     document.getElementById("menubtn").classList.remove("active_menu");
-//   }
-//   menuBtnStatus = !menuBtnStatus;
-// });
-mainmenu.addEventListener("blur", function (event) {
-  const buttonElements = mainmenu.querySelectorAll("button");
-  if (
-    !event.relatedTarget ||
-    ![...buttonElements].includes(event.relatedTarget)
-  ) {
-    if (menuBtnStatus) {
-      mainmenu.style.display = "none";
-      document.getElementById("menubtn").classList.remove("active_menu");
-    }
-  }
-});

@@ -691,8 +691,8 @@ See https://github.com/adobe-type-tools/cmap-resources
                 <!-- <button class="menuBtn" id="menubtn">
                   <i class="fas fa-bars"></i>
                 </button>
-                <div class="toolbarButtonSpacer"></div> -->
-                <!-- <div class="splitToolbarButtonSeparator"></div>
+                <div class="toolbarButtonSpacer"></div>
+                <div class="splitToolbarButtonSeparator"></div> -->
                 <div class="toolbarButtonSpacer"></div>
                 <button
                   id="sidebarToggle"
@@ -732,7 +732,7 @@ See https://github.com/adobe-type-tools/cmap-resources
                 >
                   <span data-l10n-id="pdfjs-findbar-button-label">Find</span>
                 </button>
-                <div class="toolbarButtonSpacer"></div> -->
+                <!-- <div class="toolbarButtonSpacer"></div> -->
                 <span class="loadingInput start">
                   <input
                     type="number"
@@ -948,7 +948,6 @@ See https://github.com/adobe-type-tools/cmap-resources
                   <!-- <button class="second_toolbar_button hidden" id="add_comment_mode" title="Add Comment">
                   <i class="fa-solid fa-comment" style="font-size: 20px; color: #535353"></i>
                 </button> -->
-                  
                   <button
                     class="second_toolbar_button"
                     title="Show History"
@@ -2635,34 +2634,37 @@ See https://github.com/adobe-type-tools/cmap-resources
         </div>
         <div class="tabitem shape-item" type="line">
           <div class="img-container">
-            <img src="./images/form-line.jpg" alt="line">
+            <img src="./images/form-line.svg" alt="line">
           </div>
           <h6>Line</h6>
         </div>
       </div>
 
-    
-      <p class="toolbarTitle">Fluttern:</p>
-      <button
-        class="menu-button"
-        id="add_form_download"
-        title="Flatten and Download PDF"
-        onclick="flatten()"
-      >
-        <i class="fa-sharp fa-solid fa-download" style="width: 17px"></i>
-        <p class="menu-button-item">Fluttern</p>
-      </button>
-      <!-- <button
-        class="second_toolbar_button"
-        title="Share Link"
-        onclick="shareLink()"
-        id="shareDocument"
-      >
-        <i
-          class="fa-solid fa-share-nodes"
-          style="font-size: 20px; color: #535353"
-        ></i>
-      </button> -->
+      <div class="form-actions">
+        <!-- <div class="form-action-container">
+          <img src="./images/print.svg" alt="print">
+        </div> -->
+        <div class="form-action-container" id="saveDraftButton" onclick="saveDoc()">
+          <i class="fa-regular fa-save"></i>
+        </div>
+        <div class="form-action-container" id="add_form_download" onclick="flatten()">
+          <img src="./images/download.svg" alt="download">
+        </div>
+        <div class="form-action-container" id="shareDocument" onclick="shareLink()">
+          <i class="fa-solid fa-share-nodes"></i>
+        </div>
+        <div class="form-action-container" id="deleteDraftButton" onclick="deleteDoc()">
+          <i class="fa-regular fa-trash-can"></i>
+        </div>
+      </div>
+
+      <div class="document-upload" id="secondaryOpenFile">
+        <input type="file" name="file" id="document-file" class="inputfile">
+        <label for="document-file">
+          <img src="./images/upload-file-light.svg" alt="upload" />
+          <h6>Drop your document here.</h6>
+        </label>
+      </div>
     </div>
 
     <div

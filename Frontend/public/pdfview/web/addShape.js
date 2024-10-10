@@ -22,15 +22,6 @@ let selectedTextAlign = shapeType === "circle" ? 'middle,center' : 'top,left';
 let selectedListType = 'numeric';
 let listCounter = 1;
 
-
-$("#shapeToolbarButton").on("click", function () {
-  $("#shapeTypeToolbar").removeClass("hidden");
-  $("#viewerContainer").addClass("withToolbar");
-  $("#shapeToolbar").addClass("hidden");
-
-  initialShapeStyle();
-});
-
 $(".shape-item").on("click", function () {
   baseId++;
   shapeType = $(this).attr("type");

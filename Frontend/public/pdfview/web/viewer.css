@@ -2687,26 +2687,6 @@ div[contenteditable="true"]:focus{
   width: 100px;
 }
 
-#shapeToolbarButton{
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;  
-  cursor: pointer;
-  float: left;
-  margin-left: 3px;
-}
-
-#shapeToolbarButton:hover{
-  background-color: #d9d9d9;
-}
-
-#shapeToolbarButton img{
-  height: 15px;
-  object-fit: cover;
-}
-
 .line {
   position: absolute;
   background-color: #3c97fe;

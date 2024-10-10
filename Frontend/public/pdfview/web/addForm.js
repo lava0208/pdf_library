@@ -174,7 +174,6 @@ const generalUserMode = function () {
   }
   if(isOpenEmailPdf){
     searchFormButton.style.display = "flex";
-    shapeToolbarButton.style.display = "none";
   }
 }
 

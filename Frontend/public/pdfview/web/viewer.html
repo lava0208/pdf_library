@@ -885,12 +885,6 @@ See https://github.com/adobe-type-tools/cmap-resources
                       >Zoom In</span
                     >
                   </button>
-                  <div id="shapeToolbarButton">
-                    <img
-                      src="./images/toolbarButton-shape.jpg"
-                      alt="shape annotation"
-                    />
-                  </div>
                 </div>
                 <div
                   id="editorModeButtons"
@@ -2608,16 +2602,16 @@ See https://github.com/adobe-type-tools/cmap-resources
         <!-- <div class="form-action-container">
           <img src="./images/print.svg" alt="print">
         </div> -->
-        <div class="form-action-container" id="saveDraftButton" onclick="saveDoc()">
+        <div class="form-action-container" id="saveDraftButton" onclick="saveDoc()" title="save">
           <i class="fa-regular fa-save"></i>
         </div>
-        <div class="form-action-container" id="add_form_download" onclick="flatten()">
+        <div class="form-action-container" id="add_form_download" onclick="flatten()" title="download">
           <img src="./images/download.svg" alt="download">
         </div>
-        <div class="form-action-container" id="shareDocument" onclick="shareLink()">
+        <div class="form-action-container" id="shareDocument" onclick="shareLink()" title="share with email">
           <i class="fa-solid fa-share-nodes"></i>
         </div>
-        <div class="form-action-container" id="deleteDraftButton" onclick="deleteDoc()">
+        <div class="form-action-container" id="deleteDraftButton" onclick="deleteDoc()" title="delete">
           <i class="fa-regular fa-trash-can"></i>
         </div>
       </div>

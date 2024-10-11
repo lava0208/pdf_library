@@ -62,6 +62,7 @@ const handleFormModeChange = () => {
 };
 
 const addForm = function (mode) {
+  viewer.style.cursor = 'text';
   currentMode = mode;
   switch (mode) {
     case CHECKBOX:
@@ -190,11 +191,11 @@ const addForm = function (mode) {
 };
 
 const addEventListener = function () {
-  document.getElementById("viewer").addEventListener("click", eventHandler);
+  viewer.addEventListener("click", eventHandler);
 };
 
 const removeEventListener = function () {
-  document.getElementById("viewer").removeEventListener("click", eventHandler);
+  viewer.removeEventListener("click", eventHandler);
 };
 
 const removeCheckbox = function () {

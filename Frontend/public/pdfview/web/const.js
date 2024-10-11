@@ -76,6 +76,7 @@ const numberFieldOption = document.getElementById(NUMBERFIELD_OPTION);
 
 /* Elements for calling main toolbox of right pane */
 
+const viewer = document.getElementById("viewer");
 const sidebar = document.querySelector(".right-sidebar");
 
 /* Elements for submitting document by link */

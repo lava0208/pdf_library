@@ -146,7 +146,6 @@ const generalUserMode = function () {
     //... open draft document
     if (isDraft == null || isDraft == "") {
       shareDocumentButton.style.display = "none";
-      addTextButton.style.display = "none";
       addCommentButton.style.display = "none";
       showHistoryButton.style.display = "none";
       saveDraftButton.style.display = "none";
@@ -154,14 +153,12 @@ const generalUserMode = function () {
       changeMode();
     } else {
     if (isDraft == "true" || isDraft == null) {
-        addTextButton.style.display = "block";
         const viewer = document.getElementById('viewer');
         viewer.addEventListener('click', e => { });
         viewer.dispatchEvent(new Event('click'));
       } else {
         //... open submitted document
         shareDocumentButton.style.display = "none";
-        addTextButton.style.display = "none";
         addCommentButton.style.display = "none";
         showHistoryButton.style.display = "none";
         saveDraftButton.style.display = "none";
@@ -3285,7 +3282,7 @@ const handleComment = function (id, type) {
   }
 }
 
-document.getElementById("viewer").addEventListener("mousedown", function (event) {
+viewer.addEventListener("mousedown", function (event) {
   let isExisting = false;
   let optionCount = 0;
   let currentFormType, currentObject;
@@ -3759,6 +3756,7 @@ const eventHandler = async function (e) {
   let leftPos = x;
 
   displayFormProps();
+  viewer.style.cursor = 'auto';
 
   switch (currentMode) {
     case CHECKBOX:

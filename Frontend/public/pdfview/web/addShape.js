@@ -1,6 +1,4 @@
 let shapeId = baseId;
-
-const viewer = document.getElementById("viewer");
 let isDrawing = false;
 let startX = 0;
 let startY = 0;

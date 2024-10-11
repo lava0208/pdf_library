@@ -381,7 +381,7 @@ const moveEventHandler = (event, offsetX, offsetY, currentId) => {
   }
 };
 
-document.getElementById("viewer").addEventListener("click", (evt) => {
+viewer.addEventListener("click", (evt) => {
   if (pageWidth == 0) getPageWidth();
   let ost = computePageOffset();
 

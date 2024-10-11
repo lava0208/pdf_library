@@ -272,12 +272,11 @@ small{
   visibility: hidden;
   z-index: 100;
   font: message-box;
-  border-top: 1px solid rgb(51 51 51);
   border-inline-end: var(--doorhanger-border-color-whcm);
   transition-property: inset-inline-start;
   transition-duration: var(--sidebar-transition-duration);
   transition-timing-function: var(--sidebar-transition-timing-function);
-  margin-top: 55px;
+  margin-top: 100px;
 }
 
 #outerContainer:is(.sidebarMoving, .sidebarOpen){
@@ -295,7 +294,7 @@ small{
 }
 
 #sidebarContent {
-  inset-block: 32px 0;
+  inset-block: 40px 0;
   inset-inline-start: 0;
   overflow: auto;
   position: absolute;
@@ -303,14 +302,10 @@ small{
   box-shadow: inset calc(-1px * var(--dir-factor)) 0 0 rgb(0 0 0 / 0.25);
 }
 
-#viewer{
-  margin-top: 15px;
-}
-
 #viewerContainer {
   overflow: auto;
   position: absolute;
-  inset: 36px 0 0;
+  inset: 95px 0 0;
   outline: none;
 }
 
@@ -332,6 +327,14 @@ small{
   font: message-box;
 }
 
+#topbar{
+  position: relative;
+  padding: 10px;
+  height: 40px;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.3);
+  z-index: 100;
+}
+
 :is(.toolbar, .editorParamsToolbar, .findbar, #sidebarContainer) :is(input, button, select),
 .secondaryToolbar :is(input, button, a, select) {
   outline: none;
@@ -343,10 +346,10 @@ small{
 }
 
 #toolbarSidebar {
-  width: calc(100%-1px);
-  height: 32px;
+  height: 40px;
   background-color: var(--sidebar-toolbar-bg-color);
   border-right: 1px solid #adb5bd;
+  border-bottom: 1px solid #adb5bd;
 }
 
 #sidebarResizer {
@@ -369,6 +372,7 @@ small{
 }
 
 #loadingBar {
+  display: none;
   /* Define these variables here, and not in :root, to avoid reflowing the
       entire viewer when updating progress (see issue 15958). */
   --progressBar-percent: 0%;
@@ -440,7 +444,7 @@ small{
 
 .findbar,
 .secondaryToolbar {
-  top: 42px;
+  top: 100px;
   position: absolute;
   z-index: 30000;
   height: auto;
@@ -683,11 +687,6 @@ small{
   display: none;
 }
 
-#toolbarViewer {
-  height: 45px;
-  padding-top: 10px;
-}
-
 #toolbarViewerMiddle {
   position: absolute;
   left: 50%;
@@ -727,7 +726,6 @@ small{
 }
 
 .splitToolbarButton {
-  margin: 3px;
   display: inline-block;
 }
 
@@ -741,9 +739,26 @@ small{
 .dialogButton {
   border: none;
   background: none;
-  width: 28px;
-  height: 28px;
+  width: 40px;
+  height: 40px;
   outline: none;
+}
+
+.toolbarButton#previous,
+.toolbarButton#next,
+.toolbarButton#findPrevious,
+.toolbarButton#findNext{
+  background-color: #3d424e33;
+  padding: 0;
+  height: 26px;
+  width: 30px;
+  margin-top: 8px;
+}
+
+.toolbarButton#findPrevious,
+.toolbarButton#findNext{
+  margin: 2px 1px;
+  height: 27px;
 }
 
 .fileToolsBtn {
@@ -799,9 +814,8 @@ small{
 .secondaryToolbarButton,
 .dialogButton {
   min-width: 16px;
-  margin: 2px 1px;
-  padding: 2px 6px 0;
-  border: none;
+  margin: 0;
+  padding: 6px;
   border-radius: 2px;
   color: var(--main-color);
   font-size: 12px;
@@ -809,6 +823,7 @@ small{
   user-select: none;
   cursor: default;
   box-sizing: border-box;
+  cursor: pointer;
 }
 
 .toolbarButton:is(:hover, :focus-visible) {
@@ -816,7 +831,6 @@ small{
 }
 
 .secondaryToolbarButton:is(:hover, :focus-visible) {
-  background-color: var(--doorhanger-hover-bg-color);
   color: var(--doorhanger-hover-color);
 }
 
@@ -881,7 +895,7 @@ small{
 }
 
 .toolbarButtonSpacer {
-  width: 10px;
+  width: 2px;
   display: inline-block;
   height: 1px;
 }
@@ -892,8 +906,8 @@ small{
     * All relevant containers have a size of 28x28 */
   position: absolute;
   display: inline-block;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
 
   content: "";
   background-color: var(--toolbar-icon-bg-color);
@@ -906,8 +920,8 @@ small{
 
 .toolbarButton::before {
   opacity: var(--toolbar-icon-opacity);
-  top: 6px;
-  left: 6px;
+  top: 11px;
+  left: 11px;
 }
 
 .toolbarButton:is(:hover, :focus-visible)::before,
@@ -933,20 +947,36 @@ small{
 
 #findPrevious::before {
   mask-image: var(--findbarButton-previous-icon);
+  top: 6px;
+  width: 14px;
+  height: 14px;
+  left: 7px;
 }
 
 #findNext::before {
   mask-image: var(--findbarButton-next-icon);
+  top: 6px;
+  width: 14px;
+  height: 14px;
+  left: 9px;
 }
 
 #previous::before {
   mask-image: var(--toolbarButton-pageUp-icon);
   transform: rotate(-90deg);
+  top: 6px;
+  width: 14px;
+  height: 14px;
+  left: 7px;
 }
 
 #next::before {
   mask-image: var(--toolbarButton-pageDown-icon);
   transform: rotate(270deg);
+  top: 6px;
+  width: 14px;
+  height: 14px;
+  left: 9px;
 }
 
 #zoomOut::before {
@@ -1140,7 +1170,7 @@ a:is(.toolbarButton, .secondaryToolbarButton)[href="#"] {
 
 .toolbarField {
   padding: 4px 7px;
-  margin: 3px 0;
+  margin: 0;
   border-radius: 2px;
   background-color: var(--field-bg-color);
   background-clip: padding-box;
@@ -1161,12 +1191,15 @@ a:is(.toolbarButton, .secondaryToolbarButton)[href="#"] {
 }
 
 #pageNumber {
-  -moz-appearance: textfield;
-  /* hides the spinner in moz */
-  text-align: center;
-  width: 40px;
+  width: 60px;
+  height: 26px;
+  padding: 0;
   background-size: 0 0;
   transition-property: none;
+  text-align: center;
+  background-color: #3d424e33;
+  border: none;
+  margin: 8px 1px 7px;
 
   /*#if !MOZCENTRAL*/
   &::-webkit-inner-spin-button {
@@ -1181,6 +1214,10 @@ a:is(.toolbarButton, .secondaryToolbarButton)[href="#"] {
     transition-property: visibility;
     transition-delay: var(--loading-icon-delay);
   }
+}
+
+.toolbarField#pageNumber:focus{
+  border-color: transparent!important;
 }
 
 .loadingInput {
@@ -1605,16 +1642,6 @@ dialog :link {
   }
 }
 
-@media all and (max-width: 560px) {
-  #scaleSelectContainer {
-    display: none;
-  }
-}
-
-#scaleSelect {
-  border-radius: 4px;
-}
-
 .comment-control-panel {
   position: fixed;
   background-color: white;
@@ -1705,18 +1732,19 @@ dialog :link {
 }
 
 .second_toolbar_button {
-  width: 28px;
-  height: 28px;
+  width: 40px;
+  height: 40px;
   border: none;
-  border-radius: 4px;
   display: flex;
   background: none;
   align-items: center;
   justify-content: center;
   outline: none;
-  margin: 2px;
-  color: #000000;
   cursor: pointer;
+}
+
+.second_toolbar_button.active{
+  background-color: var(--toggled-btn-bg-color);
 }
 
 .second_toolbar_button:hover {
@@ -2169,9 +2197,9 @@ select.form-field-input{
   position: fixed;
   inset-block: 0;
   width: 300px;
-  height: calc(100vh - 55px);
+  height: calc(100vh - 100px);
   z-index: 100;
-  margin-top: 55px;
+  margin-top: 100px;
   right: 10px;
   background-color: var(--body-bg-color);
   overflow: auto;
@@ -2209,7 +2237,7 @@ select.form-field-input{
   inset-block: 0;
   width: 200px;
   font: message-box;
-  margin-top: 60px;
+  margin-top: 100px;
   left: -250px;
   z-index: 100;
   background-color: #ffffff;
@@ -2589,6 +2617,7 @@ div[contenteditable="true"]:focus{
   box-shadow: var(--toolbar-box-shadow);
   border-bottom: var(--toolbar-border-bottom);
   position: relative;
+  width: 100%;
 }
 
 #shapeTypeToolbar{
@@ -2898,16 +2927,18 @@ input[type=number]::-webkit-outer-spin-button {
   align-items: center;
   background-color: #e2ecf7;
   border-radius: 20px;
-  width: 180px;
   position: absolute;
   left: calc(50% - 90px);
+  top: 10px;
 }
 
 .view-mode .item{
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
-  padding: 6px 15px;
+  width: 90px;
+  height: 40px;
   border-radius: 20px;
   cursor: pointer;
   font-size: 12px;
@@ -3065,4 +3096,23 @@ input[type=number]::-webkit-outer-spin-button {
 
 .right-sidebar.active #toggle-rightbar img{
   transform: rotate(0);
+}
+
+.zoomContainer{
+  display: flex;
+  align-items: center;
+}
+
+.zoomContainer .zoomButton{
+  cursor: pointer;
+  line-height: 1;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.zoomContainer .zoomButton:hover{
+  background-color: #d9d9d9;
 }

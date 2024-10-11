@@ -62,7 +62,7 @@ const handleFormModeChange = () => {
 };
 
 const addForm = function (mode) {
-  viewer.style.cursor = 'text';
+  viewer.style.cursor = 'pointer';
   currentMode = mode;
   switch (mode) {
     case CHECKBOX:

@@ -330,9 +330,9 @@ class PDFSidebar {
       }
     });
 
-    // this.toggleButton.addEventListener("click", evt => {
-    //   this.toggle(evt);
-    // });
+    this.toggleButton.addEventListener("click", evt => {
+      this.toggle(evt);
+    });
 
     // Buttons for switching views.
     this.thumbnailButton.addEventListener("click", () => {

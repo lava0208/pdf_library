@@ -171,7 +171,7 @@ class Toolbar {
 
   #bindListeners(buttons) {
     const { eventBus } = this;
-    const { pageNumber, scaleSelect } = this.#opts;
+    const { pageNumber } = this.#opts;
     const self = this;
 
     // The buttons within the toolbar.
@@ -197,30 +197,6 @@ class Toolbar {
         value: this.value,
       });
     });
-
-    scaleSelect.addEventListener("change", function () {
-      if (this.value === "custom") {
-        return;
-      }
-      eventBus.dispatch("scalechanged", {
-        source: self,
-        value: this.value,
-      });
-    });
-    // Here we depend on browsers dispatching the "click" event *after* the
-    // "change" event, when the <select>-element changes.
-    scaleSelect.addEventListener("click", function ({ target }) {
-      // Remove focus when an <option>-element was *clicked*, to improve the UX
-      // for mouse users (fixes bug 1300525 and issue 4923).
-      if (
-        this.value === self.pageScaleValue &&
-        target.tagName.toUpperCase() === "OPTION"
-      ) {
-        this.blur();
-      }
-    });
-    // Suppress context menus for some controls.
-    scaleSelect.oncontextmenu = noContextMenu;
 
     eventBus._on(
       "annotationeditormodechanged",
@@ -301,28 +277,6 @@ class Toolbar {
 
     opts.zoomOut.disabled = pageScale <= MIN_SCALE;
     opts.zoomIn.disabled = pageScale >= MAX_SCALE;
-
-    let predefinedValueFound = false;
-    for (const option of opts.scaleSelect.options) {
-      if (option.value !== pageScaleValue) {
-        option.selected = false;
-        continue;
-      }
-      option.selected = true;
-      predefinedValueFound = true;
-    }
-    if (!predefinedValueFound) {
-      //... set scale as 100% for first load
-      let scaleVal = isFirstPageLoad ? 100 : Math.round(pageScale * 10000) / 100;
-      opts.customScaleOption.selected = true;
-      opts.customScaleOption.setAttribute(
-        "data-l10n-args",
-        JSON.stringify({
-          scale: scaleVal,
-        })
-      );
-      opts.customScaleOption.text = `${scaleVal}` + "%";
-    }
   }
 
   updateLoadingIndicatorState(loading = false) {

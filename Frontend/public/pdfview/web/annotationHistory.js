@@ -11,24 +11,26 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 })
 
-// document.getElementById("sidebarToggle").addEventListener("click", function () {
-//     const sidebarContainer = document.getElementById("sidebarContainer");
-//     if (window.getComputedStyle(sidebarContainer).visibility === "visible") {
-//         sidebarContainer.style.visibility = 'hidden';
-//         leftSideBarOpened = false;
-//         if (showHistoryBarOpened) {
-//             showHistoryBar.classList.remove("active");
-//             showHistoryBar.classList.toggle("active0");
-//         }
-//     } else {
-//         sidebarContainer.style.visibility = 'visible';
-//         leftSideBarOpened = true;
-//         if (showHistoryBarOpened) {
-//             showHistoryBar.classList.remove("active0");
-//             showHistoryBar.classList.toggle("active");
-//         }
-//     }
-// })
+document.getElementById("sidebarToggle").addEventListener("click", function () {
+    const sidebarContainer = document.getElementById("sidebarContainer");
+    if (window.getComputedStyle(sidebarContainer).visibility === "visible") {
+        sidebarContainer.style.visibility = 'hidden';
+        leftSideBarOpened = false;
+        if (showHistoryBarOpened) {
+            showHistoryBar.classList.remove("active");
+            showHistoryBar.classList.toggle("active0");
+        }
+        this.classList.remove("toggled");
+    } else {
+        sidebarContainer.style.visibility = 'visible';
+        leftSideBarOpened = true;
+        if (showHistoryBarOpened) {
+            showHistoryBar.classList.remove("active0");
+            showHistoryBar.classList.toggle("active");
+        }
+        this.classList.add("toggled");
+    }
+})
 
 //... save reply
 const saveHistory = function (username, date, page, reply, type, currentid) {
@@ -455,7 +457,7 @@ const addHistory = function (id, type, username, date, page, typeString) {
 
 const showHistory = function () {
     if (leftSideBarOpened) showHistoryBar.classList.toggle("active");
-    else showHistoryBar.classList.toggle("active0");
+    else showHistoryBar.classList.toggle("active0"); showHistoryButton.classList.toggle("active");
     showHistoryBarOpened = !showHistoryBarOpened;
 }
 

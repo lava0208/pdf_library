@@ -226,7 +226,6 @@ See https://github.com/adobe-type-tools/cmap-resources
                   >Previous</span
                 >
               </button>
-              <div class="splitToolbarButtonSeparator"></div>
               <button
                 id="findNext"
                 class="toolbarButton"
@@ -622,7 +621,7 @@ See https://github.com/adobe-type-tools/cmap-resources
           </div>
         </div>
         <!-- secondaryToolbar -->
-        <div id="main-menu1">
+        <div id="main-menu1" class="hidden">
           <button class="menu-button" id="pdfEditorButton" title="PDF Editor">
             <i class="far fa-file"></i>
             <p class="menu-button-item">Pdf Editor</p>
@@ -647,14 +646,18 @@ See https://github.com/adobe-type-tools/cmap-resources
         </div>
 
         <div class="toolbar">
+          <div id="topbar">
+            <a href="/" style="display: block; max-width: fit-content;">
+              <img src="/images/logo-black.png" alt="logo" height="40" />
+            </a>
+            <div class="view-mode">
+              <div class="item" type="view"><img src="./images/eye.svg" alt="view" /> View</div>
+              <div class="item active" type="edit"><img src="./images/edit.svg" alt="edit" /> Edit</div>
+            </div>
+          </div>
           <div id="toolbarContainer">
             <div id="toolbarViewer">
               <div id="toolbarViewerLeft">
-                <a href="/">
-                  <img src="/images/logo-black.png" alt="logo" width="50" style="margin: 5px 20px;" />
-                </a>
-                <div class="splitToolbarButtonSeparator"></div>
-                <div class="toolbarButtonSpacer"></div>
                 <button
                   id="sidebarToggle"
                   class="toolbarButton"
@@ -668,6 +671,16 @@ See https://github.com/adobe-type-tools/cmap-resources
                     >Toggle Sidebar</span
                   >
                 </button>
+                <div class="toolbarButtonSpacer"></div>
+                <button
+                  class="second_toolbar_button"
+                  title="Show History"
+                  onclick="showHistory()"
+                  id="showHistory"
+                >
+                  <i class="fa-solid fa-clock-rotate-left" style="color: #535353"></i>
+                </button>
+                <div class="toolbarButtonSpacer"></div>
                 <button
                   id="secondaryToolbarToggle"
                   class="toolbarButton"
@@ -679,19 +692,6 @@ See https://github.com/adobe-type-tools/cmap-resources
                 >
                   <span data-l10n-id="pdfjs-tools-button-label">Tools</span>
                 </button>
-                <button
-                  class="second_toolbar_button"
-                  title="Show History"
-                  onclick="showHistory()"
-                  id="showHistory"
-                >
-                  <i
-                    class="fa-brands fa-stack-exchange"
-                    style="font-size: 16px; color: #535353"
-                  ></i>
-                </button>
-                <div class="toolbarButtonSpacer"></div>
-                <div class="splitToolbarButtonSeparator"></div>
                 <div class="toolbarButtonSpacer"></div>
                 <button
                   id="viewFind"
@@ -704,7 +704,26 @@ See https://github.com/adobe-type-tools/cmap-resources
                 >
                   <span data-l10n-id="pdfjs-findbar-button-label">Find</span>
                 </button>
-                <!-- <div class="toolbarButtonSpacer"></div> -->
+                <span
+                  id="numPages"
+                  class="toolbarLabel"
+                  style="display: none"
+                ></span>
+                
+              </div>
+
+              <div id="toolbarViewerMiddle">
+                <button
+                  class="toolbarButton hiddenSmallView"
+                  title="Previous Page"
+                  id="previous"
+                  tabindex="13"
+                  data-l10n-id="pdfjs-previous-button"
+                >
+                  <span data-l10n-id="pdfjs-previous-button-label"
+                    >Previous</span
+                  >
+                </button>
                 <span class="loadingInput start">
                   <input
                     type="number"
@@ -718,182 +737,27 @@ See https://github.com/adobe-type-tools/cmap-resources
                     autocomplete="off"
                   />
                 </span>
-                <span
-                  id="numPages"
-                  class="toolbarLabel"
-                  style="display: none"
-                ></span>
-
-                <div class="splitToolbarButton hiddenSmallView">
-                  <button
-                    class="toolbarButton"
-                    title="Previous Page"
-                    id="previous"
-                    tabindex="13"
-                    data-l10n-id="pdfjs-previous-button"
-                  >
-                    <span data-l10n-id="pdfjs-previous-button-label"
-                      >Previous</span
-                    >
-                  </button>
-                  <button
-                    class="toolbarButton"
-                    title="Next Page"
-                    id="next"
-                    tabindex="14"
-                    data-l10n-id="pdfjs-next-button"
-                  >
-                    <span data-l10n-id="pdfjs-next-button-label">Next</span>
-                  </button>
+                <button
+                  class="toolbarButton hiddenSmallView "
+                  title="Next Page"
+                  id="next"
+                  tabindex="14"
+                  data-l10n-id="pdfjs-next-button"
+                >
+                  <span data-l10n-id="pdfjs-next-button-label">Next</span>
+                </button>
+                <div class="toolbarButtonSpacer"></div>
+                <div class="splitToolbarButton zoomContainer">
+                  <div id="zoomOut" class="zoomButton">
+                    <img src="./images/zoomOut.svg" alt="zoomOut" width="20" />
+                  </div>
+                  <div id="zoomIn" class="zoomButton">
+                    <img src="./images/zoomIn.svg" alt="zoomIn" width="20" />
+                  </div>
                 </div>
               </div>
-              <div class="view-mode">
-                <div class="item" type="view"><img src="./images/eye.svg" alt="view" /> View</div>
-                <div class="item active" type="edit"><img src="./images/edit.svg" alt="edit" /> Edit</div>
-              </div>
+              
               <div id="toolbarViewerRight">
-                <span id="scaleSelectContainer" class="dropdownToolbarButton">
-                  <select
-                    id="scaleSelect"
-                    title="Zoom"
-                    tabindex="23"
-                    data-l10n-id="pdfjs-zoom-select"
-                    style="width: 100px"
-                  >
-                    <option
-                      id="pageAutoOption"
-                      title=""
-                      value="auto"
-                      data-l10n-id="pdfjs-page-scale-auto"
-                    >
-                      Auto
-                    </option>
-                    <option
-                      id="pageActualOption"
-                      title=""
-                      value="page-actual"
-                      data-l10n-id="pdfjs-page-scale-actual"
-                    >
-                      Actual
-                    </option>
-                    <option
-                      id="pageFitOption"
-                      title=""
-                      value="page-fit"
-                      data-l10n-id="pdfjs-page-scale-fit"
-                    >
-                      Fit
-                    </option>
-                    <option
-                      id="pageWidthOption"
-                      title=""
-                      value="page-width"
-                      data-l10n-id="pdfjs-page-scale-width"
-                    >
-                      Width
-                    </option>
-                    <option
-                      id="customScaleOption"
-                      title=""
-                      value="custom"
-                      disabled="disabled"
-                      hidden="true"
-                      data-l10n-id="pdfjs-page-scale-percent"
-                      data-l10n-args='{ "scale": 0 }'
-                    >
-                      0%
-                    </option>
-                    <option
-                      title=""
-                      value="0.5"
-                      data-l10n-id="pdfjs-page-scale-percent"
-                      data-l10n-args='{ "scale": 50 }'
-                    >
-                      50%
-                    </option>
-                    <option
-                      title=""
-                      value="0.75"
-                      data-l10n-id="pdfjs-page-scale-percent"
-                      data-l10n-args='{ "scale": 75 }'
-                    >
-                      75%
-                    </option>
-                    <option
-                      title=""
-                      value="1"
-                      selected="selected"
-                      data-l10n-id="pdfjs-page-scale-percent"
-                      data-l10n-args='{ "scale": 100 }'
-                    >
-                      100%
-                    </option>
-                    <option
-                      title=""
-                      value="1.25"
-                      data-l10n-id="pdfjs-page-scale-percent"
-                      data-l10n-args='{ "scale": 125 }'
-                    >
-                      125%
-                    </option>
-                    <option
-                      title=""
-                      value="1.5"
-                      data-l10n-id="pdfjs-page-scale-percent"
-                      data-l10n-args='{ "scale": 150 }'
-                    >
-                      150%
-                    </option>
-                    <option
-                      title=""
-                      value="2"
-                      data-l10n-id="pdfjs-page-scale-percent"
-                      data-l10n-args='{ "scale": 200 }'
-                    >
-                      200%
-                    </option>
-                    <option
-                      title=""
-                      value="3"
-                      data-l10n-id="pdfjs-page-scale-percent"
-                      data-l10n-args='{ "scale": 300 }'
-                    >
-                      300%
-                    </option>
-                    <option
-                      title=""
-                      value="4"
-                      data-l10n-id="pdfjs-page-scale-percent"
-                      data-l10n-args='{ "scale": 400 }'
-                    >
-                      400%
-                    </option>
-                  </select>
-                </span>
-                <div class="splitToolbarButton">
-                  <button
-                    id="zoomOut"
-                    class="toolbarButton"
-                    title="Zoom Out"
-                    tabindex="21"
-                    data-l10n-id="pdfjs-zoom-out-button"
-                  >
-                    <span data-l10n-id="pdfjs-zoom-out-button-label"
-                      >Zoom Out</span
-                    >
-                  </button>
-                  <button
-                    id="zoomIn"
-                    class="toolbarButton"
-                    title="Zoom In"
-                    tabindex="22"
-                    data-l10n-id="pdfjs-zoom-in-button"
-                  >
-                    <span data-l10n-id="pdfjs-zoom-in-button-label"
-                      >Zoom In</span
-                    >
-                  </button>
-                </div>
                 <div
                   id="editorModeButtons"
                   class="splitToolbarButton toggled annotationToolsContainer"
@@ -1268,11 +1132,6 @@ See https://github.com/adobe-type-tools/cmap-resources
               <button class="btn" type="button" id="closeShapeToolbar">
                 <i class="fa fa-close"></i>
               </button>
-            </div>
-            <div id="loadingBar">
-              <div class="progress">
-                <div class="glimmer"></div>
-              </div>
             </div>
           </div>
         </div>
@@ -3033,6 +2892,11 @@ See https://github.com/adobe-type-tools/cmap-resources
 
     <div class="loading-container">
       <img src="./images/loading-icon.gif" class="img-fluid bg-img" />
+      <div id="loadingBar">
+        <div class="progress">
+          <div class="glimmer"></div>
+        </div>
+      </div>
     </div>
 
     <script>

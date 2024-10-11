@@ -203,7 +203,7 @@ class SecondaryToolbar {
     const { eventBus } = this;
     const { toggleButton } = this.#opts;
     // Button to toggle the visibility of the secondary toolbar.
-    // toggleButton.addEventListener("click", this.toggle.bind(this));
+    toggleButton.addEventListener("click", this.toggle.bind(this));
 
     // All items within the secondary toolbar.
     for (const { element, eventName, close, eventDetails } of buttons) {

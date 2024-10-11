@@ -1786,7 +1786,7 @@ dialog :link {
   justify-content: space-between;
   box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
   width: 360px;
-  max-height: 410px;
+  max-height: 450px;
   position: relative;
   z-index: 1000;
   border: 1px solid #d9d9d9;
@@ -2707,7 +2707,7 @@ div[contenteditable="true"]:focus{
 .line {
   position: absolute;
   background-color: #3c97fe;
-  z-index: 1000;
+  z-index: 10000;
 }
 
 .horizontal-line {
@@ -3101,6 +3101,7 @@ input[type=number]::-webkit-outer-spin-button {
 .zoomContainer{
   display: flex;
   align-items: center;
+  margin-left: 10px;
 }
 
 .zoomContainer .zoomButton{

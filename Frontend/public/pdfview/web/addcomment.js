@@ -409,6 +409,7 @@ viewer.addEventListener("click", (evt) => {
           }
         }
       }
+      div.style.zIndex = selectedZIndex;
     });
   });
 
@@ -453,7 +454,7 @@ viewer.addEventListener("click", (evt) => {
     container.style.width = "fit-content";
     container.style.height = "fit-content";
     // container.style.zIndex = 1;
-    // container.style.zIndex = 150;
+    // container.style.zIndex = selectedZIndex;
     container.tabIndex = 0;
     container.classList.add("textfield-content");
     container.append(newText);
@@ -560,6 +561,13 @@ viewer.addEventListener("click", (evt) => {
         // Focus on the last character
         const inputLength = $input.val().length;
         $input.focus().get(0).setSelectionRange(inputLength, inputLength); 
+
+        $(document).on("click", "#" + TEXT_CONTENT_OPTION, function(){
+          $this.parent().css("z-index", selectedZIndex);
+        });
+        $(document).on("mousedown", "#" + TEXT_CONTENT_OPTION, function(){
+          $this.parent().css("z-index", selectedZIndex);
+        });
       }
     });
 
@@ -603,16 +611,17 @@ viewer.addEventListener("click", (evt) => {
                 if(document.getElementById("text-content-font-size")){
                   document.getElementById("text-content-font-size").value = element.fontSize;
                 }
-                // if(document.getElementById("toolbar-font-style")){
-                //   document.getElementById("toolbar-font-style").value = element.regularFontStyle;
-                // }
-                // if(document.getElementById("toolbar-font-size")){
-                //   document.getElementById("toolbar-font-size").value = element.baseFontSize;
-                // }
                 if(document.getElementById("text-content-color")){
                   document.getElementById("text-content-color").value = element.textColor;
                 }
-                
+
+                $(document).on("click", "#" + TEXT_CONTENT_OPTION, function(){
+                  document.getElementById(container.id).style.zIndex = selectedZIndex;
+                });
+                $(document).on("mousedown", "#" + TEXT_CONTENT_OPTION, function(){
+                  document.getElementById(container.id).style.zIndex = selectedZIndex;
+                });
+
                 container.append(option);
               }
             });

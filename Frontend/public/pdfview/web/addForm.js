@@ -326,10 +326,8 @@ const drawFormElement = function () {
                         element.label;
                       document.getElementById("checkbox-value").value =
                         element.value;
-
-                      //... background color
                       document.getElementById("checkbox-background-color").value =
-                      element.textBackgroundColor;
+                        element.textBackgroundColor;
 
                       isOptionPane = true;
                       option = showOption(
@@ -337,6 +335,14 @@ const drawFormElement = function () {
                         element.xPage / 2 - 180,
                         element.yPage + 15
                       );
+
+                      $(document).on("click", "#" + CHECKBOX_OPTION, function(){
+                        document.getElementById(checkbox.id).style.zIndex = selectedZIndex;
+                      });
+                      $(document).on("mousedown", "#" + CHECKBOX_OPTION, function(){
+                        document.getElementById(checkbox.id).style.zIndex = selectedZIndex;
+                      });
+
                       checkbox.append(option);
                     }
                   });
@@ -429,10 +435,8 @@ const drawFormElement = function () {
                         element.data.label;
                       document.getElementById("radio-value").value =
                         element.data.value;
-
-                      //... background color
                       document.getElementById("radio-background-color").value =
-                      element.textBackgroundColor;
+                        element.textBackgroundColor;
 
                       isOptionPane = true;
                       option = showOption(
@@ -440,6 +444,14 @@ const drawFormElement = function () {
                         element.xPage / 2 - 180,
                         element.yPage + 15
                       );
+
+                      $(document).on("click", "#" + RADIO_OPTION, function(){
+                        document.getElementById(radio.id).style.zIndex = selectedZIndex;
+                      });
+                      $(document).on("mousedown", "#" + RADIO_OPTION, function(){
+                        document.getElementById(radio.id).style.zIndex = selectedZIndex;
+                      });
+
                       radio.append(option);
                     }
                   });
@@ -549,6 +561,14 @@ const drawFormElement = function () {
                         document.getElementById("text-center").checked = true;
                       if (selected == ALIGN_RIGHT)
                         document.getElementById("text-right").checked = true;
+
+                      $(document).on("click", "#" + TEXTFIELD_OPTION, function(){
+                        document.getElementById(textDiv.id).style.zIndex = selectedZIndex;
+                      });
+                      $(document).on("mousedown", "#" + TEXTFIELD_OPTION, function(){
+                        document.getElementById(textDiv.id).style.zIndex = selectedZIndex;
+                      });
+
                       textDiv.append(option);
                     }
                   });
@@ -678,6 +698,14 @@ const drawFormElement = function () {
                         document.getElementById("option-content").append(optionContent);
                         comboboxOptionCount++;
                       });
+
+                      $(document).on("click", "#" + COMBOBOX_OPTION, function(){
+                        document.getElementById(comboDiv.id).style.zIndex = selectedZIndex;
+                      });
+                      $(document).on("mousedown", "#" + COMBOBOX_OPTION, function(){
+                        document.getElementById(comboDiv.id).style.zIndex = selectedZIndex;
+                      });
+
                       comboDiv.append(option);
                     }
                   });
@@ -832,6 +860,14 @@ const drawFormElement = function () {
                           .getElementById("option-content-list")
                           .append(optionContent);
                       });
+
+                      $(document).on("click", "#" + LIST_OPTION, function(){
+                        document.getElementById(listDiv.id).style.zIndex = selectedZIndex;
+                      });
+                      $(document).on("mousedown", "#" + LIST_OPTION, function(){
+                        document.getElementById(listDiv.id).style.zIndex = selectedZIndex;
+                      });
+
                       listDiv.append(option);
                     }
                   });
@@ -993,6 +1029,14 @@ const drawFormElement = function () {
                       } else if (element.action == RESET) {
                         selectedValue.value = "reset";
                       }
+
+                      $(document).on("click", "#" + BUTTON_OPTION, function(){
+                        document.getElementById(buttonDiv.id).style.zIndex = selectedZIndex;
+                      });
+                      $(document).on("mousedown", "#" + BUTTON_OPTION, function(){
+                        document.getElementById(buttonDiv.id).style.zIndex = selectedZIndex;
+                      });
+
                       buttonDiv.append(option);
                     }
                   });
@@ -1088,8 +1132,6 @@ const drawFormElement = function () {
               document.getElementById(current_date_content_id).style.color =
                 document.getElementById("date-font-color").value;
             });
-
-          //... background color
           document
             .getElementById("date-font-background-color")
             .addEventListener("change", () => {
@@ -1148,6 +1190,14 @@ const drawFormElement = function () {
                         document.getElementById("date-center").checked = true;
                       if (selected == ALIGN_RIGHT)
                         document.getElementById("date-right").checked = true;
+
+                      $(document).on("click", "#" + DATE_OPTION, function(){
+                        document.getElementById(dateDiv.id).style.zIndex = selectedZIndex;
+                      });
+                      $(document).on("mousedown", "#" + DATE_OPTION, function(){
+                        document.getElementById(dateDiv.id).style.zIndex = selectedZIndex;
+                      });
+
                       dateDiv.append(option);
                     }
                   });
@@ -1358,7 +1408,7 @@ const drawFormElement = function () {
             shapeContainer.style.left = `${x + deltaX / 2}px`;
             shapeContainer.style.width = width + "px";
             shapeContainer.style.height = height !== null ? `${height}px` : "auto";
-            shapeContainer.style.zIndex = standardZIndex;
+            // shapeContainer.style.zIndex = standardZIndex;
 
             shapeContainer.style.borderBottom = `${item.borderWidth || '1px'} solid ${item.borderColor || '#000000'}`;
             const angle = Math.atan2(item.baseY, item.baseX) * (180 / Math.PI);
@@ -1368,7 +1418,7 @@ const drawFormElement = function () {
             shapeContainer.style.left = x + "px";
             shapeContainer.style.width = width + "px";
             shapeContainer.style.height = height + "px";
-            shapeContainer.style.zIndex = standardZIndex;
+            // shapeContainer.style.zIndex = standardZIndex;
             shapeContainer.style.display = "flex";
             shapeContainer.style.alignItems = "center";
             shapeContainer.style.justifyContent = "center";
@@ -1634,6 +1684,14 @@ const drawFormElement = function () {
                         document.getElementById("number-center").checked = true;
                       if (selected == ALIGN_RIGHT)
                         document.getElementById("number-right").checked = true;
+
+                      $(document).on("click", "#" + NUMBERFIELD_OPTION, function(){
+                        document.getElementById(numberDiv.id).style.zIndex = selectedZIndex;
+                      });
+                      $(document).on("mousedown", "#" + NUMBERFIELD_OPTION, function(){
+                        document.getElementById(numberDiv.id).style.zIndex = selectedZIndex;
+                      });
+
                       numberDiv.append(option);
                     }
                   });
@@ -1930,8 +1988,6 @@ const handleCheckbox = function (e) {
   const { count, formFieldName } = checkFormField("checkbox-field-input-name");
   const label = document.getElementById("checkbox-label").value;
   const value = document.getElementById("checkbox-value").value;
-
-  //... background color
   textBackgroundColor = document.getElementById("checkbox-background-color") && document.getElementById("checkbox-background-color").value;
 
   for (let i = 0; i < form_storage.length; i++) {
@@ -1978,12 +2034,9 @@ const handleCheckbox = function (e) {
       isReadOnly: false,
       label: label,
       value: value,
-
-      //... background color
       textBackgroundColor: textBackgroundColor,
     });
 
-    //... background color
     textBackgroundColor = "";
 
     const date = new Date(Date.now());
@@ -1999,8 +2052,6 @@ const handleRadio = function (e) {
   isOptionPane = false;
   const label = document.getElementById("radio-label") && document.getElementById("radio-label").value;
   const value = document.getElementById("radio-value") && document.getElementById("radio-value").value;
-
-  //... background color
   textBackgroundColor = document.getElementById("radio-background-color") && document.getElementById("radio-background-color").value;
 
   if (document.getElementById(RADIO_OPTION)) document.getElementById(RADIO_OPTION).style.display = "none";
@@ -2027,8 +2078,6 @@ const handleRadio = function (e) {
 
         if (form_storage[i].id == current_form_id) {
           form_storage[i].form_field_name = formFieldName;
-
-          //... background color
           form_storage[i].textBackgroundColor = textBackgroundColor;
 
           //... handle track
@@ -2776,10 +2825,6 @@ const handleSignature = function () {
     const date = new Date(Date.now());
     addHistory(baseId, SIGNATURE, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "signature");
   }
-
-  console.log("^^^^^^^^^^^^^^");
-  console.log(form_storage);
-  
 };
 
 const handlePhoto = function () {
@@ -3030,8 +3075,6 @@ const resizeCanvas = function (id, type, currentId, optionId) {
         }
       },
       end(event) {
-        console.log(event);
-        
         if (!isEditing) {
           let target = event.target;
           let x = parseFloat(target.getAttribute("data-x")) || 0;
@@ -3224,7 +3267,7 @@ const saveFormElementByClick = function () {
     form_storage.forEach((item) => {
       let currentItem = document.getElementById(item.containerId);
       if (currentItem) {
-        currentItem.style.zIndex = standardZIndex;     
+        currentItem.style.zIndex = standardZIndex;
         if (currentItem.classList.contains("textfield-content"))
           currentItem.classList.remove("textfield-content");
       }
@@ -3234,7 +3277,7 @@ const saveFormElementByClick = function () {
     text_storage.forEach((item) => {
       let currentItem = document.getElementById(item.containerId);
       if (currentItem) {
-        // currentItem.style.zIndex = standardZIndex;
+        currentItem.style.zIndex = standardZIndex;
         if (currentItem.classList.contains("textfield-content"))
           currentItem.classList.remove("textfield-content");
       }
@@ -3325,7 +3368,7 @@ viewer.addEventListener("mousedown", function (event) {
       saveFormElementByClick();      
       if (currentFormType === DATE) {
         // currentObject.style.zIndex = selectedZIndex;
-      } else if (currentFormType === SIGNATURE || currentFormType === SHAPE || currentFormType === PHOTO) {
+      } else if (currentFormType === SIGNATURE || currentFormType === PHOTO) {
         if (currentObject.tagName === "IMG") {
           if (!currentObject.parentElement.querySelector("#topLeft")) addResizebar(currentObject.parentElement.id);
           currentObject.parentElement.style.zIndex = selectedZIndex;
@@ -3333,10 +3376,12 @@ viewer.addEventListener("mousedown", function (event) {
           if (!currentObject.querySelector("#topLeft")) addResizebar(currentObject.id);
           // currentObject.style.zIndex = selectedZIndex;
         }
+      } else if (currentFormType === SHAPE) {
+        // currentObject.style.zIndex = "auto";
       } else if (currentFormType == TEXT_CONTENT) {
         if (!currentObject.parentElement.classList.contains("textfield-content"))
           currentObject.parentElement.classList.add("textfield-content");
-        currentObject.style.zIndex = standardZIndex;
+        // currentObject.style.zIndex = standardZIndex;
       } else {
         if (!currentObject.querySelector("#topLeft")) addResizebar(currentObject.id);
         currentObject.style.zIndex = selectedZIndex;
@@ -3792,7 +3837,7 @@ const eventHandler = async function (e) {
       checkbox.onclick = function (e) {
         const checkedId = e.target.parentNode.id;
         current_form_id = checkedId.replace("checkbox", "");
-        toggleCheckbox(checkedId);
+        toggleCheckbox(checkedId);        
       };
 
       pg.appendChild(checkbox);
@@ -3822,7 +3867,7 @@ const eventHandler = async function (e) {
           }
           if (isDragging) {
             isDragging = false;
-          } else {
+          } else {            
             if (!istooltipshow) {
               let tooltipbar = document.createElement("div");
               current_form_id = checkboxId;
@@ -3834,8 +3879,6 @@ const eventHandler = async function (e) {
                     element.label;
                   document.getElementById("checkbox-value").value =
                     element.value;
-
-                  //... background color
                   document.getElementById("checkbox-background-color").value =
                     element.textBackgroundColor;
 
@@ -3845,6 +3888,14 @@ const eventHandler = async function (e) {
                     element.xPage / 2 - 180,
                     element.yPage + 15
                   );
+
+                  $(document).on("click", "#" + CHECKBOX_OPTION, function(){
+                    document.getElementById(checkbox.id).style.zIndex = selectedZIndex;
+                  });
+                  $(document).on("mousedown", "#" + CHECKBOX_OPTION, function(){
+                    document.getElementById(checkbox.id).style.zIndex = selectedZIndex;
+                  });
+                  
                   checkbox.append(option);
                 }
               });
@@ -3951,9 +4002,7 @@ const eventHandler = async function (e) {
                     element.data.label;
                   document.getElementById("radio-value").value =
                     element.data.value;
-
-                  //... background color
-                  document.getElementById("checkbox-background-color").value =
+                  document.getElementById("radio-background-color").value =
                     element.textBackgroundColor;
 
                   isOptionPane = true;
@@ -3962,6 +4011,14 @@ const eventHandler = async function (e) {
                     element.xPage / 2 - 180,
                     element.yPage + 15
                   );
+
+                  $(document).on("click", "#" + RADIO_OPTION, function(){
+                    document.getElementById(radio.id).style.zIndex = selectedZIndex;
+                  });
+                  $(document).on("mousedown", "#" + RADIO_OPTION, function(){
+                    document.getElementById(radio.id).style.zIndex = selectedZIndex;
+                  });
+
                   radio.append(option);
                 }
               });
@@ -4091,6 +4148,14 @@ const eventHandler = async function (e) {
                     document.getElementById("text-center").checked = true;
                   if (selected == ALIGN_RIGHT)
                     document.getElementById("text-right").checked = true;
+
+                  $(document).on("click", "#" + TEXTFIELD_OPTION, function(){
+                    document.getElementById(textDiv.id).style.zIndex = selectedZIndex;
+                  });
+                  $(document).on("mousedown", "#" + TEXTFIELD_OPTION, function(){
+                    document.getElementById(textDiv.id).style.zIndex = selectedZIndex;
+                  });
+
                   textDiv.append(option);
                 }
               });
@@ -4234,6 +4299,14 @@ const eventHandler = async function (e) {
                       .getElementById("option-content")
                       .append(optionContent);
                   });
+
+                  $(document).on("click", "#" + COMBOBOX_OPTION, function(){
+                    document.getElementById(comboDiv.id).style.zIndex = selectedZIndex;
+                  });
+                  $(document).on("mousedown", "#" + COMBOBOX_OPTION, function(){
+                    document.getElementById(comboDiv.id).style.zIndex = selectedZIndex;
+                  });
+
                   comboDiv.append(option);
                 }
               });
@@ -4407,6 +4480,14 @@ const eventHandler = async function (e) {
                       .getElementById("option-content-list")
                       .append(optionContent);
                   });
+
+                  $(document).on("click", "#" + LIST_OPTION, function(){
+                    document.getElementById(listDiv.id).style.zIndex = selectedZIndex;
+                  });
+                  $(document).on("mousedown", "#" + LIST_OPTION, function(){
+                    document.getElementById(listDiv.id).style.zIndex = selectedZIndex;
+                  });
+
                   listDiv.append(option);
                 }
               });
@@ -4592,6 +4673,14 @@ const eventHandler = async function (e) {
                   } else if (element.action == RESET) {
                     selectedValue.value = "reset";
                   }
+
+                  $(document).on("click", "#" + BUTTON_OPTION, function(){
+                    document.getElementById(buttonDiv.id).style.zIndex = selectedZIndex;
+                  });
+                  $(document).on("mousedown", "#" + BUTTON_OPTION, function(){
+                    document.getElementById(buttonDiv.id).style.zIndex = selectedZIndex;
+                  });
+
                   buttonDiv.append(option);
                 }
               });
@@ -4659,9 +4748,7 @@ const eventHandler = async function (e) {
 
       let dateDiv = document.createElement("div");
       dateDiv.id = "date" + dateId;
-      addFormElementStyle(dateDiv, topPos, leftPos, formWidth, formHeight);
-      console.log("dateDiv.id " + dateDiv.id);
-      
+      addFormElementStyle(dateDiv, topPos, leftPos, formWidth, formHeight);      
 
       dateDiv.append(newDate);
       pg.appendChild(dateDiv);
@@ -4730,6 +4817,14 @@ const eventHandler = async function (e) {
                     document.getElementById("date-center").checked = true;
                   if (selected == ALIGN_RIGHT)
                     document.getElementById("date-right").checked = true;
+
+                  $(document).on("click", "#" + DATE_OPTION, function(){
+                    document.getElementById(dateDiv.id).style.zIndex = selectedZIndex;
+                  });
+                  $(document).on("mousedown", "#" + DATE_OPTION, function(){
+                    document.getElementById(dateDiv.id).style.zIndex = selectedZIndex;
+                  });
+
                   dateDiv.append(option);
                 }
               });
@@ -5128,6 +5223,14 @@ const eventHandler = async function (e) {
                     document.getElementById("number-center").checked = true;
                   if (selected == ALIGN_RIGHT)
                     document.getElementById("number-right").checked = true;
+
+                  $(document).on("click", "#" + NUMBERFIELD_OPTION, function(){
+                    document.getElementById(numberDiv.id).style.zIndex = selectedZIndex;
+                  });
+                  $(document).on("mousedown", "#" + NUMBERFIELD_OPTION, function(){
+                    document.getElementById(numberDiv.id).style.zIndex = selectedZIndex;
+                  });
+
                   numberDiv.append(option);
                 }
               });

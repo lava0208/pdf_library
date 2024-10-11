@@ -2327,13 +2327,7 @@ See https://github.com/adobe-type-tools/cmap-resources
         <button class="tablinks" onclick="openTab(event, 'annotate')">Annotate</button>
       </div>
       
-      <div id="insert" class="tabcontent" style="display: grid;">
-        <button class="tabitem" id="add_form_combo" onclick="addForm(COMBOBOX)">
-          <div class="img-container">
-            <img src="./images/form-combo.svg" alt="combo">
-          </div>
-          <h6>Combo Box</h6>
-        </button>
+      <div id="insert" class="tabcontent" style="display: grid;">        
         <button class="tabitem" id="add_form_check" onclick="addForm(CHECKBOX)">
           <div class="img-container">
             <img src="./images/form-checkbox.svg" alt="checkbox" style="width: 25px;">
@@ -2358,6 +2352,12 @@ See https://github.com/adobe-type-tools/cmap-resources
           </div>
           <h6>Number Field</h6>
         </button>
+        <button class="tabitem" id="add_form_combo" onclick="addForm(COMBOBOX)">
+          <div class="img-container">
+            <img src="./images/form-combo.svg" alt="combo">
+          </div>
+          <h6>Combo Box</h6>
+        </button>
         <button class="tabitem" id="add_form_list" onclick="addForm(LIST)">
           <div class="img-container">
             <img src="./images/form-list.svg" alt="list">
@@ -2370,6 +2370,12 @@ See https://github.com/adobe-type-tools/cmap-resources
           </div>
           <h6>Signature</h6>
         </button>
+        <button class="tabitem" id="add_image" onclick="addForm(PHOTO)">
+          <div class="img-container">
+            <i class="fa-regular fa-image"></i>
+          </div>
+          <h6>Photo</h6>
+        </button>
         <button class="tabitem" id="add_form_date" onclick="addForm(DATE)">
           <div class="img-container">
             <img src="./images/form-date.svg" alt="date">
@@ -2381,12 +2387,6 @@ See https://github.com/adobe-type-tools/cmap-resources
             <img src="./images/form-button.svg" alt="button">
           </div>
           <h6>Button</h6>
-        </button>
-        <button class="tabitem" id="add_image" onclick="addForm(PHOTO)">
-          <div class="img-container">
-            <i class="fa-regular fa-image"></i>
-          </div>
-          <h6>Photo</h6>
         </button>
       </div>
       <div id="annotate" class="tabcontent">

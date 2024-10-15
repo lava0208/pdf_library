@@ -3679,7 +3679,8 @@ const addFormElementStyle = function (object, top, left, width, height, borderRa
   object.style.left = left + "px";
   object.style.width = width + "px";
   object.style.height = height + "px";
-  object.style.background = "#3C97FE";
+  object.style.background = "#78d3ff33";
+  object.style.border = "1px solid #3c97fe80";
   object.style.zIndex = standardZIndex;
   object.tabIndex = 0;
   object.style.borderRadius = borderRadius == "0" ? "0px" : "3px";
@@ -3693,7 +3694,7 @@ const addSignatureElementStyle = function (object, top, left, width, height) {
   object.style.left = left + "px";
   object.style.width = width + "px";
   object.style.height = height + "px";
-  object.style.background = "#3C97FE";
+  object.style.background = "#78d3ff33";
   // object.style.zIndex = standardZIndex;
   object.tabIndex = 0;
   object.style.borderRadius = "3px";
@@ -3706,7 +3707,7 @@ const addPhotoElementStyle = function (object, top, left, width, minHeight) {
   object.style.left = left + "px";
   object.style.width = width + "px";
   object.style.height = minHeight + "px";
-  object.style.background = "#3C97FE";
+  object.style.background = "#78d3ff33";
   // object.style.zIndex = standardZIndex;
   object.tabIndex = 0;
   object.style.borderRadius = "3px";
@@ -6047,7 +6048,7 @@ const changeMode = (type) => {
     });
 
     formfields.forEach((item) => {
-      item.style.background = "#3C97FE";
+      // item.style.background = "#3C97FE";
       item.style.flexDirection = "column";
     });
 
@@ -6089,13 +6090,14 @@ const changeMode = (type) => {
     formfields.forEach((item) => {
       if (item.querySelector("#topLeft")) removeResizebar(item.id);
       if (item.querySelector(".delete-button")) item.querySelector(".delete-button").remove();
-      item.style.background = "white";
-      item.style.border = `${item.borderWidth}px solid ${item.borderColor}`;
+      // item.style.background = "white";
+      // item.style.border = `${item.borderWidth}px solid ${item.borderColor}`;
+      item.style.border = "none";
 
       if(item.id.includes("number")){
         item.style.display = "flex";
         item.style.flexDirection = "row";
-        item.style.border = "none";
+        // item.style.border = "none";
       }
     });
     // Enable all checkbox and radio field to input
@@ -6142,8 +6144,7 @@ const changeMode = (type) => {
             item.style.fontSize = formItem.fontSize + "px";
             item.style.color = formItem.textColor;
             item.style.backgroundColor = formItem.textBackgroundColor;
-            item.style.borderColor = formItem.borderColor;
-            item.style.borderWidth = formItem.borderWidth + "px";
+            item.style.border = `${formItem.borderWidth}px solid ${formItem.borderColor}`;
 
             if (formItem.align == 0) item.style.textAlign = "left";
             else if (formItem.align == 1) item.style.textAlign = "center";
@@ -6187,8 +6188,7 @@ const changeMode = (type) => {
             item.style.color = formItem.textColor;
             item.style.fontFamily = formItem.regularFontStyle;
             item.style.backgroundColor = formItem.textBackgroundColor;
-            item.style.borderColor = formItem.borderColor;
-            item.style.borderWidth = formItem.borderWidth + "px";
+            item.style.border = `${formItem.borderWidth}px solid ${formItem.borderColor}`;
           }
         });
       }
@@ -6222,8 +6222,7 @@ const changeMode = (type) => {
               });
             }
             item.style.backgroundColor = formItem.textBackgroundColor;
-            item.style.borderColor = formItem.borderColor;
-            item.style.borderWidth = formItem.borderWidth + "px";
+            item.style.border = `${formItem.borderWidth}px solid ${formItem.borderColor}`;
           }
         });
       }
@@ -6240,8 +6239,7 @@ const changeMode = (type) => {
             item.style.fontFamily = formItem.regularFontStyle;
             item.textContent = formItem.text;
             item.style.backgroundColor = formItem.textBackgroundColor;
-            item.style.borderColor = formItem.borderColor;
-            item.style.borderWidth = formItem.borderWidth + "px";
+            item.style.border = `${formItem.borderWidth}px solid ${formItem.borderColor}`;
           }
         })
       }
@@ -6255,8 +6253,7 @@ const changeMode = (type) => {
           if (formItem.id == formId) {
             item.style.color = formItem.textColor;
             item.style.backgroundColor = formItem.textBackgroundColor;
-            item.style.borderColor = formItem.borderColor;
-            item.style.borderWidth = formItem.borderWidth + "px";
+            item.style.border = `${formItem.borderWidth}px solid ${formItem.borderColor}`;
           }
         })
       }
@@ -6296,8 +6293,7 @@ const changeMode = (type) => {
             item.style.fontSize = formItem.fontSize + "px";
             item.style.color = formItem.textColor;
             item.style.backgroundColor = formItem.textBackgroundColor;
-            item.style.borderColor = formItem.borderColor;
-            item.style.borderWidth = formItem.borderWidth + "px";
+            item.style.border = `${formItem.borderWidth}px solid ${formItem.borderColor}`;
           }
         });
       }
@@ -6322,8 +6318,7 @@ const changeMode = (type) => {
             else if (formItem.align == 2) item.style.textAlign = "right";
 
             item.style.backgroundColor = formItem.textBackgroundColor;
-            item.style.borderColor = formItem.borderColor;
-            item.style.borderWidth = formItem.borderWidth + "px";
+            item.style.border = `${formItem.borderWidth}px solid ${formItem.borderColor}`;
           }
         });
       }

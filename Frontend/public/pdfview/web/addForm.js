@@ -273,7 +273,6 @@ const drawFormElement = function () {
 
           checkbox.onclick = function (e) {
             const checkedId = e.target.parentNode.id;
-            current_form_id = checkedId.replace("checkbox", "");
             toggleCheckbox(checkedId);
 
             let isChecked = checkbox.classList.contains("checked");
@@ -303,6 +302,8 @@ const drawFormElement = function () {
             DrawType = CHECKBOX;
           });
 
+          updateColorPicker("checkbox-background-colorpicker");
+
           checkbox.addEventListener("dblclick", () => {
             if (!isEditing) {
               current_checkbox_id = id;
@@ -326,7 +327,9 @@ const drawFormElement = function () {
                         element.label;
                       document.getElementById("checkbox-value").value =
                         element.value;
-                      document.getElementById("checkbox-background-color").value =
+                      document.getElementById("checkbox-background-colorpicker").value =
+                        element.textBackgroundColor;
+                      document.getElementById("checkbox-background-colorpicker_autocomplete").style.backgroundColor =
                         element.textBackgroundColor;
 
                       isOptionPane = true;
@@ -397,7 +400,7 @@ const drawFormElement = function () {
 
           radio.append(inputRadio, spanElement);
           radio.onclick = function () {
-            current_form_id = id;
+            // current_form_id = id;
             selectRadioButton(this, id);
           };
 
@@ -1988,11 +1991,12 @@ const handleCheckbox = function (e) {
   const { count, formFieldName } = checkFormField("checkbox-field-input-name");
   const label = document.getElementById("checkbox-label").value;
   const value = document.getElementById("checkbox-value").value;
-  textBackgroundColor = document.getElementById("checkbox-background-color") && document.getElementById("checkbox-background-color").value;
+
+  textBackgroundColor = getSelectedColor();
 
   for (let i = 0; i < form_storage.length; i++) {
     if (form_storage[i].id == current_form_id) {
-      if(!isEditing){
+      if(!isEditing){        
         form_storage[i].textBackgroundColor = textBackgroundColor;
         form_storage[i].form_field_name = formFieldName;
       }
@@ -2042,6 +2046,9 @@ const handleCheckbox = function (e) {
     const date = new Date(Date.now());
     addHistory(baseId, CHECKBOX, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, 'checkbox');
   }
+
+  console.log(form_storage);
+  
   document
     .getElementById("checkbox-save-button")
     .removeEventListener("click", handleCheckbox);
@@ -3857,6 +3864,8 @@ const eventHandler = async function (e) {
 
       current_checkbox_id = checkboxId;
 
+      updateColorPicker("checkbox-background-colorpicker");
+
       checkbox.addEventListener("dblclick", () => {
         if (!isEditing) {
           current_checkbox_id = checkboxId;          
@@ -3880,7 +3889,9 @@ const eventHandler = async function (e) {
                     element.label;
                   document.getElementById("checkbox-value").value =
                     element.value;
-                  document.getElementById("checkbox-background-color").value =
+                  document.getElementById("checkbox-background-colorpicker").value =
+                    element.textBackgroundColor;
+                  document.getElementById("checkbox-background-colorpicker_autocomplete").style.backgroundColor =
                     element.textBackgroundColor;
 
                   isOptionPane = true;
@@ -6576,3 +6587,29 @@ function openTab(evt, cityName) {
   isTextModeOn = false;
   isDrawingShape = false;
 }
+
+const parseArrayColors = (input) => {
+  try {
+    return JSON.parse(input.value);
+  } catch (error) {
+    return null;
+  }
+};
+
+const updateColorPicker = (id) => {
+  if (gridColorPicker) {
+    gridColorPicker = null;
+    document.querySelector(".gcp-autocomplete-wrapper").remove();
+  }
+
+  const colorPickerElement = document.getElementById(id);
+  gridColorPicker = new GridColorPicker(colorPickerElement, {
+    callback: (color) => {
+      selectedColor = color;
+    },
+  });
+};
+
+const getSelectedColor = () => {
+  return selectedColor;
+};

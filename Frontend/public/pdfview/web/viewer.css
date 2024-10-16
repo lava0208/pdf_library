@@ -1805,6 +1805,7 @@ dialog :link {
 
 .checkbox-option-content {
   overflow: auto;
+  position: relative;
 }
 
 .checkbox-option-name {

@@ -86,6 +86,8 @@ const showHistoryButton = document.getElementById("showHistory");
 const addCommentButton = document.getElementById("add_comment_mode");
 const searchFormButton = document.getElementById("search-form");
 
+let gridColorPicker;
+let selectedColor;
 let clientName = '';
 let clientEmail = '';
 let isSubmit = false;

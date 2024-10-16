@@ -52,6 +52,8 @@ See https://github.com/adobe-type-tools/cmap-resources
     <link rel="stylesheet" href="css/share-document.css" />
     <link rel="stylesheet" href="css/index.css" />
     <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/docs-style.css" />
+    <link rel="stylesheet" href="css/GridColorPicker.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"
@@ -1485,15 +1487,11 @@ See https://github.com/adobe-type-tools/cmap-resources
           <div class="checkbox-option-body">
             <div class="openHeader">Checkbox Field Style</div>
             <div class="openBody">
-              <div class="form-style-container">
+              <div class="form-style-container my-3">
                 <div class="form-style-name"> Fill Color </div>
-                <input
-                  type="color"
-                  id="checkbox-background-color"
-                  name="colorPicker"
-                  value="#FFFFFF"
-                  class="form-field-input"
-                />
+                <div class="color-picker-container">
+                  <input type="text" id="checkbox-background-colorpicker" class="form-control" />
+                </div>
               </div>
             </div>
           </div>
@@ -2918,6 +2916,7 @@ See https://github.com/adobe-type-tools/cmap-resources
     <script src="js/bootstrap.min.js"></script>
     <script src="js/select2.min.js"></script>
     <script src="js/pdf.min.js" defer></script>
+    <script src="js/GridColorPicker.js"></script>
     <script src="jQuery.print.js"></script>
     <script src="font.js"></script>
     <script src="const.js"></script>
@@ -2937,7 +2936,7 @@ See https://github.com/adobe-type-tools/cmap-resources
     <script src="js/custom.js" defer></script>
     <script src="js/pdf-lib.js"></script>
     <script src="js/interact.min.js"></script>
-    <script src="js/fontkit.umd.min.js"></script>
+    <script src="js/fontkit.umd.min.js"></script>    
     <!--#endif-->
   </body>
 </html>

@@ -16,7 +16,7 @@
 
 .gcp-autocomplete-wrapper>input {
     cursor: pointer;
-    /* max-width: 100px; */
+    max-width: 80px;
 }
 
 .gcp-autocomplete-wrapper>input::selection {

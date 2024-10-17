@@ -302,7 +302,17 @@ const drawFormElement = function () {
             DrawType = CHECKBOX;
           });
 
-          updateColorPicker("checkbox-background-colorpicker");
+          if (!checkboxBackgroundColorPickerInitialized) {
+            const checkboxBackgroundColorElement = document.getElementById("checkbox-background-colorpicker");
+            if (checkboxBackgroundColorElement) {
+              new GridColorPicker(checkboxBackgroundColorElement, {
+                callback: (selectedColor) => {
+                  textBackgroundColor = selectedColor;
+                },
+              });
+              checkboxBackgroundColorPickerInitialized = true;
+            }
+          }
 
           checkbox.addEventListener("dblclick", () => {
             if (!isEditing) {
@@ -438,7 +448,9 @@ const drawFormElement = function () {
                         element.data.label;
                       document.getElementById("radio-value").value =
                         element.data.value;
-                      document.getElementById("radio-background-color").value =
+                      document.getElementById("radio-background-colorpicker").value =
+                        element.textBackgroundColor;
+                      document.getElementById("radio-background-colorpicker_autocomplete").style.backgroundColor =
                         element.textBackgroundColor;
 
                       isOptionPane = true;
@@ -517,6 +529,43 @@ const drawFormElement = function () {
           textfieldAlign.forEach(function (radio) {
             radio.addEventListener("change", handleRadioSelection);
           });
+
+          if (!backgroundColorPickerInitialized) {
+            const backgroundColorElement = document.getElementById("text-background-colorpicker");
+            if(backgroundColorElement){
+              new GridColorPicker(backgroundColorElement, {
+                callback: (selectedColor) => {
+                  textBackgroundColor = selectedColor;
+                },
+              });
+              backgroundColorPickerInitialized = true;
+            }
+          }
+
+          if (!borderColorPickerInitialized) {
+            const borderColorElement = document.getElementById("text-border-colorpicker");
+            if(borderColorElement){
+              new GridColorPicker(borderColorElement, {
+                callback: (selectedColor) => {
+                  borderColor = selectedColor;
+                },
+              });
+              borderColorPickerInitialized = true;
+            }
+          }
+
+          if (!textColorPickerInitialized) {
+            const textColorElement = document.getElementById("text-font-colorpicker");
+            if (textColorElement) {
+              new GridColorPicker(textColorElement, {
+                callback: (selectedColor) => {
+                  textColor = selectedColor;
+                },
+              });
+              textColorPickerInitialized = true;
+            }
+          }
+
           textDiv.addEventListener("dblclick", () => {
             if (!isEditing) {
               current_text_id = id;
@@ -548,14 +597,29 @@ const drawFormElement = function () {
                         element.fontStyle;
                       document.getElementById("text-font-size").value =
                         element.fontSize;
-                      document.getElementById("text-font-color").value =
-                        element.textColor;
-                      document.getElementById("text-font-background-color").value =
-                        element.textBackgroundColor;
-                      document.getElementById("text-border-color").value =
-                        element.borderColor;
                       document.getElementById("text-border-width").value =
                         element.borderWidth;
+
+                      document.getElementById("text-background-colorpicker").value =
+                        element.textBackgroundColor;
+                      if(document.getElementById("text-background-colorpicker_autocomplete")){
+                        document.getElementById("text-background-colorpicker_autocomplete").style.backgroundColor =
+                          element.textBackgroundColor;
+                      }
+                      
+                      document.getElementById("text-border-colorpicker").value =
+                        element.borderColor;
+                      if(document.getElementById("text-border-colorpicker_autocomplete")){
+                        document.getElementById("text-border-colorpicker_autocomplete").style.backgroundColor =
+                          element.borderColor;
+                      }
+                      
+                      document.getElementById("text-font-colorpicker").value =
+                        element.textColor;
+                      if(document.getElementById("text-font-colorpicker_autocomplete")){
+                        document.getElementById("text-font-colorpicker_autocomplete").style.backgroundColor =
+                          element.textColor;
+                      }
 
                       let selected = element.align;
                       if (selected == ALIGN_LEFT)
@@ -1992,7 +2056,7 @@ const handleCheckbox = function (e) {
   const label = document.getElementById("checkbox-label").value;
   const value = document.getElementById("checkbox-value").value;
 
-  textBackgroundColor = getSelectedColor();
+  textBackgroundColor = document.getElementById("checkbox-background-colorpicker") && document.getElementById("checkbox-background-colorpicker").value;;
 
   for (let i = 0; i < form_storage.length; i++) {
     if (form_storage[i].id == current_form_id) {
@@ -2046,8 +2110,6 @@ const handleCheckbox = function (e) {
     const date = new Date(Date.now());
     addHistory(baseId, CHECKBOX, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, 'checkbox');
   }
-
-  console.log(form_storage);
   
   document
     .getElementById("checkbox-save-button")
@@ -2059,7 +2121,8 @@ const handleRadio = function (e) {
   isOptionPane = false;
   const label = document.getElementById("radio-label") && document.getElementById("radio-label").value;
   const value = document.getElementById("radio-value") && document.getElementById("radio-value").value;
-  textBackgroundColor = document.getElementById("radio-background-color") && document.getElementById("radio-background-color").value;
+  
+  textBackgroundColor = document.getElementById("radio-background-colorpicker") && document.getElementById("radio-background-colorpicker").value;
 
   if (document.getElementById(RADIO_OPTION)) document.getElementById(RADIO_OPTION).style.display = "none";
   const formFieldName = document.getElementById("radio-field-input-name") && document.getElementById("radio-field-input-name").value;
@@ -2116,6 +2179,7 @@ const handleRadio = function (e) {
         isReadOnly: false,
         label: label,
         value: value,
+        textBackgroundColor: textBackgroundColor,
       },
     });
     const date = new Date(Date.now());
@@ -2136,10 +2200,11 @@ const handleText = function (e) {
 
   fontStyle = generateFontName("text-font-style");
   fontSize = document.getElementById("text-font-size") && parseInt(document.getElementById("text-font-size").value);
-  textColor = document.getElementById("text-font-color") && document.getElementById("text-font-color").value;
-  textBackgroundColor = document.getElementById("text-font-background-color") && document.getElementById("text-font-background-color").value;
-  borderColor = document.getElementById("text-border-color") && document.getElementById("text-border-color").value;
   borderWidth = document.getElementById("text-border-width") && document.getElementById("text-border-width").value;
+
+  textColor = document.getElementById("text-font-colorpicker") && document.getElementById("text-font-colorpicker").value;
+  textBackgroundColor = document.getElementById("text-background-colorpicker") && document.getElementById("text-background-colorpicker").value;
+  borderColor = document.getElementById("text-border-colorpicker") && document.getElementById("text-border-colorpicker").value;
 
   var selectedAlign = document.querySelector('input[type=radio][name="text-field"]:checked') && document.querySelector('input[type=radio][name="text-field"]:checked').value;
   if (selectedAlign == "left") {
@@ -2239,6 +2304,8 @@ const handleText = function (e) {
     const date = new Date(Date.now());
     addHistory(baseId, TEXTFIELD, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "text");
   }
+
+  console.log(form_storage);
 
   document
     .getElementById("text-save-button")
@@ -3353,6 +3420,12 @@ viewer.addEventListener("mousedown", function (event) {
         DrawType = item.form_type;
         isExisting = true;
       }
+      console.log("========= standardZIndex ======== " + standardZIndex);
+
+      $(".form-fields").each(function(){
+        $(this).css("z-index", standardZIndex)
+      })
+
       document.getElementById(cId).style.zIndex = standardZIndex;
     })
   }
@@ -3391,7 +3464,7 @@ viewer.addEventListener("mousedown", function (event) {
         // currentObject.style.zIndex = standardZIndex;
       } else {
         if (!currentObject.querySelector("#topLeft")) addResizebar(currentObject.id);
-        currentObject.style.zIndex = selectedZIndex;
+        currentObject.style.zIndex = selectedZIndex;        
       }
       // handleComment(currentObject.id, currentFormType);
     } else {
@@ -3864,7 +3937,17 @@ const eventHandler = async function (e) {
 
       current_checkbox_id = checkboxId;
 
-      updateColorPicker("checkbox-background-colorpicker");
+      if (!checkboxBackgroundColorPickerInitialized) {
+        const checkboxBackgroundColorElement = document.getElementById("checkbox-background-colorpicker");
+        if (checkboxBackgroundColorElement) {
+          new GridColorPicker(checkboxBackgroundColorElement, {
+            callback: (selectedColor) => {
+              textBackgroundColor = selectedColor;
+            },
+          });
+          checkboxBackgroundColorPickerInitialized = true;
+        }
+      }
 
       checkbox.addEventListener("dblclick", () => {
         if (!isEditing) {
@@ -4014,7 +4097,10 @@ const eventHandler = async function (e) {
                     element.data.label;
                   document.getElementById("radio-value").value =
                     element.data.value;
-                  document.getElementById("radio-background-color").value =
+
+                  document.getElementById("radio-background-colorpicker").value =
+                    element.textBackgroundColor;
+                  document.getElementById("radio-background-colorpicker_autocomplete").style.backgroundColor =
                     element.textBackgroundColor;
 
                   isOptionPane = true;
@@ -4113,6 +4199,25 @@ const eventHandler = async function (e) {
 
       current_text_id = textId;
 
+      const backgroundColorElement = document.getElementById("text-background-colorpicker");
+      const borderColorElement = document.getElementById("text-border-colorpicker");
+      const textColorElement = document.getElementById("text-font-colorpicker");
+      // new GridColorPicker(backgroundColorElement, {
+      //   callback: (selectedColor) => {
+      //     textBackgroundColor = selectedColor;
+      //   },
+      // });
+      // new GridColorPicker(borderColorElement, {
+      //   callback: (selectedColor) => {
+      //     borderColor = selectedColor;
+      //   },
+      // });
+      // new GridColorPicker(textColorElement, {
+      //   callback: (selectedColor) => {
+      //     textColor = selectedColor;
+      //   },
+      // });
+
       textDiv.addEventListener("dblclick", () => {
         if (!isEditing) {
           current_text_id = textId;
@@ -4144,14 +4249,14 @@ const eventHandler = async function (e) {
                     element.fontStyle;
                   document.getElementById("text-font-size").value =
                     element.fontSize;
-                  document.getElementById("text-font-color").value =
-                    element.textColor;
-                  document.getElementById("text-font-background-color").value =
-                    element.textBackgroundColor;
-                  document.getElementById("text-border-color").value =
-                    element.borderColor;
                   document.getElementById("text-border-width").value =
-                    element.borderWidth;
+                    element.borderWidth;                    
+                  document.getElementById("text-font-colorpicker").value =
+                    element.textColor;
+                  document.getElementById("text-background-colorpicker").value =
+                    element.textBackgroundColor;
+                  document.getElementById("text-border-colorpicker").value =
+                    element.borderColor;
 
                   let selected = element.align;
                   if (selected == ALIGN_LEFT)
@@ -6594,22 +6699,4 @@ const parseArrayColors = (input) => {
   } catch (error) {
     return null;
   }
-};
-
-const updateColorPicker = (id) => {
-  if (gridColorPicker) {
-    gridColorPicker = null;
-    document.querySelector(".gcp-autocomplete-wrapper").remove();
-  }
-
-  const colorPickerElement = document.getElementById(id);
-  gridColorPicker = new GridColorPicker(colorPickerElement, {
-    callback: (color) => {
-      selectedColor = color;
-    },
-  });
-};
-
-const getSelectedColor = () => {
-  return selectedColor;
 };

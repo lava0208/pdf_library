@@ -171,7 +171,7 @@ const removeBoldItalicEvent = function () {
 const saveTextContent = function () {
   fontStyle = generateFontName("text-content-font-style");
   fontSize = document.getElementById("text-content-font-size") && parseInt(document.getElementById("text-content-font-size").value);
-  textColor = document.getElementById("text-content-color") && document.getElementById("text-content-color").value;
+  textColor = document.getElementById("text-field-font-colorpicker") && document.getElementById("text-field-font-colorpicker").value;
   const regularFont = document.getElementById("text-content-font-style") && document.getElementById("text-content-font-style").value;
   let text, lines;
   const resultArray = [];
@@ -434,6 +434,7 @@ viewer.addEventListener("click", (evt) => {
     newText.spellcheck = "false";
     newText.textContent = "Your text is here!";
     newText.style.position = "relative";
+    // newText.style.padding = "10px";
     newText.classList.add("textcontent");
     newText.oninput = function () {
       current_text_num_id = textContentId;
@@ -484,9 +485,23 @@ viewer.addEventListener("click", (evt) => {
       "text-content"
     );
 
+    if (!textFieldFontColorPickerInitialized) {
+      const textColorElement = document.getElementById("text-field-font-colorpicker");
+      if (textColorElement) {
+        new GridColorPicker(textColorElement, {
+          callback: (selectedColor) => {
+            textColor = selectedColor;
+            newText.style.color = selectedColor;
+          },
+        });
+        textFieldFontColorPickerInitialized = true;
+        textColor = "";
+      }
+    }
+
     newText.style.fontFamily = $("#text-content-font-style").val();
     newText.style.fontSize = $("#text-content-font-size").val() + "px";
-    newText.style.color = $("#text-content-color").val();    
+    newText.style.color = $("#text-field-font-colorpicker").val();
 
     $("#text-bold").click(function(){
       handleBold();
@@ -510,20 +525,11 @@ viewer.addEventListener("click", (evt) => {
       adjustZIndex($(this));
     })
 
-    $(document).on('change', '#text-content-color', function() {
-      $('#' + current_text_content_id).css('color', $(this).val());
-      adjustZIndex($(this));
-    })
-
     $(document).on('focus', '#text-content-font-style', function() {
       adjustZIndex($(this));
     })
 
     $(document).on('focus', '#text-content-font-size', function() {
-      adjustZIndex($(this));
-    })
-
-    $(document).on('focus', '#text-content-color', function() {
       adjustZIndex($(this));
     })
 
@@ -611,9 +617,8 @@ viewer.addEventListener("click", (evt) => {
                 if(document.getElementById("text-content-font-size")){
                   document.getElementById("text-content-font-size").value = element.fontSize;
                 }
-                if(document.getElementById("text-content-color")){
-                  document.getElementById("text-content-color").value = element.textColor;
-                }
+                document.getElementById("text-field-font-colorpicker").value = element.textColor;
+                document.getElementById("text-field-font-colorpicker_autocomplete").style.backgroundColor = element.textColor;
 
                 $(document).on("click", "#" + TEXT_CONTENT_OPTION, function(){
                   document.getElementById(container.id).style.zIndex = selectedZIndex;

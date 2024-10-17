@@ -2041,8 +2041,8 @@ select.form-field-input{
 }
 
 .textfield-content {
-  border: 1px solid #3c97fe80;
-  padding: 10px;
+  /* border: 1px solid #3c97fe80;
+  padding: 10px; */
   outline: none;
 }
 
@@ -2057,7 +2057,9 @@ select.form-field-input{
 }
 
 .textcontent {
-  border: none;
+  /* border: none; */
+  border: 1px solid #3c97fe80;
+  padding: 10px;
   outline: none;
   background-color: transparent;
 }
@@ -2323,10 +2325,10 @@ select.form-field-input{
 
 .checkmark-radio {
   position: absolute;
-  top: 10%;
-  left: 10%;
-  height: 80%;
-  width: 80%;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
   border-radius: 50%;
 }
 

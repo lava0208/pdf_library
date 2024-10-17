@@ -1,6 +1,7 @@
 const wrapper = document.getElementById("signature-pad");
 const clearButton = wrapper.querySelector("[data-action=clear]");
 const changeColorButton = wrapper.querySelector("[data-action=change-color]");
+const drawColorButton = document.getElementById("signature-draw-colorpicker");
 const changeWidthButton = wrapper.querySelector("[data-action=change-width]");
 const undoButton = wrapper.querySelector("[data-action=undo]");
 const savePNGButton = wrapper.querySelector("[data-action=save-png]");
@@ -17,7 +18,7 @@ PROFILE = "signature-profile";
 const signatureFonts = ["MrDafoe", "SCRIPTIN", "DrSugiyama"];
 const signatureTypeFont = document.getElementById("signature-type-font");
 const signatureTypeText = document.getElementById("signature-type-text");
-const signatureTypeColor = document.getElementById("signature-type-color");
+const signatureTypeColor = document.getElementById("signature-type-colorpicker");
 const dropArea = document.getElementById("drop-area");
 const fileInput = document.getElementById("signature-image-input");
 const photoInput = document.getElementById("photo-input");
@@ -406,8 +407,10 @@ undoButton.addEventListener("click", () => {
   }
 });
 
-changeColorButton.addEventListener("change", () => {
-  signaturePad.penColor = document.getElementById("signature-draw-color").value;
+drawColorButton.addEventListener("change", () => {
+  console.log("----------" + document.getElementById("signature-draw-colorpicker").value);
+  
+  signaturePad.penColor = document.getElementById("signature-draw-colorpicker").value;
 });
 
 changeWidthButton.addEventListener("click", () => {

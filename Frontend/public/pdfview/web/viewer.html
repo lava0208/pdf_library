@@ -2258,8 +2258,14 @@ See https://github.com/adobe-type-tools/cmap-resources
     </div>
     <div class="right-sidebar">
       <div class="tab">
-        <button class="tablinks active" onclick="openTab(event, 'insert')">Insert</button>
-        <button class="tablinks" onclick="openTab(event, 'annotate')">Annotate</button>
+        <button class="tablinks active" onclick="openTab(event, 'insert')">
+          <span>Insert</span>
+          <img src="./images/form-creater.svg" alt="form">
+        </button>
+        <button class="tablinks" onclick="openTab(event, 'annotate')">
+          <span>Annotate</span>
+          <img src="./images/annotate.svg" alt="annotate">
+        </button>
       </div>
       
       <div id="insert" class="tabcontent" style="display: grid;">        
@@ -2383,7 +2389,7 @@ See https://github.com/adobe-type-tools/cmap-resources
           <i class="fa-regular fa-save"></i>
         </button>
         <button class="form-action-container" id="add_form_download" onclick="flatten()" title="download">
-          <img src="./images/download.svg" alt="download">
+          <i class="fa-solid fa-download"></i>
         </button>
         <button class="form-action-container" id="shareDocument" onclick="shareLink()" title="share with email">
           <i class="fa-solid fa-share-nodes"></i>
@@ -2392,8 +2398,10 @@ See https://github.com/adobe-type-tools/cmap-resources
           <i class="fa-regular fa-trash-can"></i>
         </button>
       </div>
-
-      <button type="button" class="btn btn-large" id="secondaryOpenFile">Open Document</button>
+      <button type="button" class="btn btn-large" id="secondaryOpenFile">
+        <span>Open Document</span>
+        <i class="fa-solid fa-cloud-arrow-up"></i>
+      </button>
       <div id="toggle-rightbar" onclick="openToolbar()" title="Right Bar">
         <img src="./images/arrow-back-light.svg" alt="toggle show" />
       </div>

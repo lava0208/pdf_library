@@ -270,7 +270,7 @@ small{
   inset-inline-start: calc(-1 * var(--sidebar-width));
   width: var(--sidebar-width);
   visibility: hidden;
-  z-index: 100;
+  z-index: 1000;
   font: message-box;
   border-inline-end: var(--doorhanger-border-color-whcm);
   transition-property: inset-inline-start;
@@ -2986,6 +2986,7 @@ input[type=number]::-webkit-outer-spin-button {
   line-height: 1;
   cursor: pointer;
   border: 1px solid var(--body-bg-color);
+  width: 100%;
 }
 
 .tabitem:hover, .tabitem.active{
@@ -3022,6 +3023,18 @@ input[type=number]::-webkit-outer-spin-button {
   justify-content: center;
   border-right: 1px solid var(--body-bg-color);
   text-align: center;
+}
+
+.tablinks img{
+  display: none;
+}
+
+#secondaryOpenFile span{
+  font-size: 18px;
+}
+
+#secondaryOpenFile i{
+  display: none;
 }
 
 .form-actions{
@@ -3121,4 +3134,77 @@ input[type=number]::-webkit-outer-spin-button {
 
 .zoomContainer .zoomButton:hover{
   background-color: #d9d9d9;
+}
+
+@media screen and (max-width: 500px) {
+  .textLayer{
+    width: 98vw!important;
+    height: 100%!important;
+  }
+  .pdfViewer .page{
+    margin: 0;
+    border: 0;
+    width: calc(100vw - 8px)!important;
+  }
+  .right-sidebar{
+    width: 100px;
+  }
+  .tab button{
+    font-size: 12px;
+    padding: 12px;
+  }
+  .tabitem{
+    border-right: none;
+  }
+  .tabitem .img-container{
+    border-right: none;
+    width: 100%;
+    height: 40px;
+  }
+  .tabitem img{
+    width: 16px !important;
+  }
+  .tabitem i{
+    font-size: 15px;
+  }
+  .tabitem h6{
+    display: none;
+  }
+  .tablinks span{
+    display: none;
+  }  
+  .tablinks img{
+    width: 18px;
+    display: block;
+    margin: auto;    
+  }
+  .form-actions{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin: 10px 0;
+    padding: 5px;
+  }
+  .form-action-container{
+    padding: 10px;
+    margin: 5px 0;
+    width: 40px;
+    height: 40px;
+  }
+  .form-action-container i{
+    font-size: 18px;
+  }
+  #secondaryOpenFile{
+    padding: 15px;
+  }
+  #secondaryOpenFile span{
+    display: none;
+  }
+  #secondaryOpenFile i{
+    display: block;
+    margin: auto;
+    font-size: 24px;    
+  }
+  #toggle-rightbar{
+    right: 120px;
+  }
 }

@@ -2266,7 +2266,26 @@ select.form-field-input{
 }
 
 .border-resizebar {
-  border: 1px solid #3c97fe;
+  outline: 1px solid #3c97fe;
+}
+
+.border-resizebar.dragging {
+  outline: none;
+}
+
+.form-fields:hover{
+  outline: 2px dashed #3c97fe;
+}
+
+.dragging {
+  outline: none;
+}
+
+.dragging input{
+  position: relative;
+  z-index: 200;
+  display: block!important;
+  background-color: rgba(120, 211, 255, 0.5);
 }
 
 .switch-edit-insert {
@@ -3137,7 +3156,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 @media screen and (max-width: 500px) {
-  .textLayer{
+  /* .textLayer{
     width: 98vw!important;
     height: 100%!important;
   }
@@ -3145,7 +3164,7 @@ input[type=number]::-webkit-outer-spin-button {
     margin: 0;
     border: 0;
     width: calc(100vw - 8px)!important;
-  }
+  } */
   .right-sidebar{
     width: 100px;
   }

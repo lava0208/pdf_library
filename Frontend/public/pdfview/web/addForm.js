@@ -3572,6 +3572,7 @@ const resizeCanvas = function (id, type, currentId, optionId) {
           // update the position attributes
           target.setAttribute("data-x", newX);
           target.setAttribute("data-y", newY);
+          target.classList.add("dragging");
 
           drawCrossLines(target);
         }
@@ -3582,6 +3583,7 @@ const resizeCanvas = function (id, type, currentId, optionId) {
           var x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
           var y = (parseFloat(target.getAttribute("data-y")) || 0) + event.dy;
           moveEventHandler(event, newX, newY, currentId);
+          target.classList.remove("dragging");
           $(".horizontal-line, .vertical-line").remove();
         }
       },

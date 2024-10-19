@@ -441,7 +441,7 @@ const Documents = () => {
             </Head>
             <Header text="My documents" />
             <div id="Services" className="content-section">
-                <div className="container-fluid px-5">
+                <div className="container-fluid px-md-5">
                     {isLoading && <div className="loading-icon-container">
                         <img src="images/loading-icon.gif" className="img-fluid bg-img" />
                     </div>}

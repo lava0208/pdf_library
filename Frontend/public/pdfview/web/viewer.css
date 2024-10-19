@@ -333,6 +333,17 @@ small{
   height: 40px;
   box-shadow: 0 1px 4px rgb(0 0 0 / 0.3);
   z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.menu-item{
+  font-weight: bold;
+  cursor: pointer;
+  color: #000;
+  text-decoration: none;
+  margin: 0 20px;
 }
 
 :is(.toolbar, .editorParamsToolbar, .findbar, #sidebarContainer) :is(input, button, select),
@@ -3357,5 +3368,17 @@ input[type=number]::-webkit-outer-spin-button {
   }
   #toggle-rightbar{
     right: 120px;
+  }
+  #topbar #logo{
+    height: 30px;
+  }
+  .view-mode{
+    left: calc(50% - 50px);
+  }
+  .view-mode .item{
+    width: 50px;
+  }
+  .view-mode .item span{
+    display: none;
   }
 }

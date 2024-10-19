@@ -7204,6 +7204,10 @@ const submitDocument = async function () {
   }
 }
 
+$(".menu-item").click(function(){
+  parent.window.location.href = "/documents";
+})
+
 //... Tracking
 const handleTrack = function (id, value) {
   $(".historyDiv").each(function () {

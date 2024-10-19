@@ -517,7 +517,7 @@ const saveDoc = async function () {
         })
             .then(response => response.json())
             .then(data => {
-                alert("It is saved successfully");
+                $("#modal-success").show();
             })
             .catch((error) => {
                 console.error('Error:', error);
@@ -532,7 +532,7 @@ const saveDoc = async function () {
         .then(data => {
             $("#pdfViewerButton").removeClass("hidden");
             $("#pdfViewerButton").attr("link", data.uniqueId);
-            alert("It is saved successfully");
+            $("#modal-success").show();
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -1096,18 +1096,31 @@ const getDocList = async function (id) {
 };
 
 //... Delete document
-const deleteDoc = async function () {
-    let username = localStorage.getItem("username");
-    if (confirm("Do you want to delete this document?") == true) {
-        fetch(`${BASE_URL}/history/${username}/${initialId}`, {
-            method: "Delete"
+const showModal = async function (type) {
+    if(type === "docDelete"){
+        $("#modal-danger").show();
+        $(".modal-delete").click(function(){
+            let username = localStorage.getItem("username");
+            fetch(`${BASE_URL}/history/${username}/${initialId}`, {
+                method: "Delete"
+            })
+            .then(response => response.json())
+            .then(() => {
+                parent.window.location.href = "/documents";
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
         })
-        .then(response => response.json())
-        .then(data => {
-            parent.window.location.href = "/documents";
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
+    }else if(type === "docSave"){
+        saveDoc();
     }
 }
+
+$(".modal-cancel").click(function(){
+    $(".modal").hide();
+})
+
+$(".modal-close").click(function(){
+    $(".modal").hide();
+})

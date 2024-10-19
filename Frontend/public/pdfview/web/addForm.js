@@ -2245,6 +2245,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (initialId) {
     $("body").addClass("loading");
+    $("#deleteDraftButton").prop("disabled", false);
     fetch(`${url}`)
       .then(response => {
         if (!response.ok) {

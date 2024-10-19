@@ -3155,6 +3155,138 @@ input[type=number]::-webkit-outer-spin-button {
   background-color: #d9d9d9;
 }
 
+.modal{
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transition: opacity .15s linear;
+  z-index: 9999;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-dialog{
+  max-width: 400px;
+  margin: 1.75rem auto;
+  position: relative;
+  width: auto;
+  min-height: calc(100% - (1.75rem* 2));
+  transition: transform .3s ease-out, -webkit-transform .3s ease-out;
+  display: flex;
+  align-items: center;
+  transform: translate(0, 0);
+}
+
+.modal-content{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  pointer-events: auto;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, .1);
+  border-radius: 10px;
+  outline: 0;
+  padding: 20px 30px;
+}
+
+.modal-header{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.modal-header h1{
+  font-size: 24px;
+}
+
+.modal-header-icon{
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  margin: auto;
+}
+
+.modal-close{
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  border: 1px solid #d9d9d9;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
+}
+
+.modal-body{
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.modal-body p{
+  font-size: 16px;
+}
+
+.modal-footer{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.modal-footer button{
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.modal-footer button.modal-delete{
+  background-color: #EF4444;
+  color: #fff;
+}
+
+.modal-footer button.modal-cancel{
+  border: 1px solid #d9d9d9;
+  color: #000000;
+}
+
+#modal-danger .modal-header-icon{
+  background-color: #FEE2E2;
+}
+
+#modal-danger .modal-header-icon i{
+  color: #d10000;
+  font-size: 20px;
+}
+
+#modal-success .modal-header-icon{
+  background-color: #DCFCE7;
+}
+
+#modal-success .modal-header-icon i{
+  color: green;
+  font-size: 20px;
+}
+
 @media screen and (max-width: 500px) {
   /* .textLayer{
     width: 98vw!important;

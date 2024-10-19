@@ -9,14 +9,9 @@
     right: 12px;
 }
 
-.gcp-autocomplete-wrapper {
-    /* position: relative;
-    display: contents; */
-}
-
 .gcp-autocomplete-wrapper>input {
     cursor: pointer;
-    max-width: 80px;
+    max-width: 20px;
 }
 
 .gcp-autocomplete-wrapper>input::selection {

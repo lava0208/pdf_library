@@ -489,6 +489,7 @@ viewer.addEventListener("click", (evt) => {
       const textColorElement = document.getElementById("text-field-font-colorpicker");
       if (textColorElement) {
         new GridColorPicker(textColorElement, {
+          defaultColor: "#000000",
           callback: (selectedColor) => {
             textColor = selectedColor;
             newText.style.color = selectedColor;

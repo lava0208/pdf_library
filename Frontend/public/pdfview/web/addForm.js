@@ -563,6 +563,7 @@ const drawFormElement = function () {
             const borderColorElement = document.getElementById("text-border-colorpicker");
             if(borderColorElement){
               new GridColorPicker(borderColorElement, {
+                defaultColor: "#000000",
                 callback: (selectedColor) => {
                   borderColor = selectedColor;
                 },
@@ -576,6 +577,7 @@ const drawFormElement = function () {
             const textColorElement = document.getElementById("text-font-colorpicker");
             if (textColorElement) {
               new GridColorPicker(textColorElement, {
+                defaultColor: "#000",
                 callback: (selectedColor) => {
                   textColor = selectedColor;
                 },
@@ -734,6 +736,7 @@ const drawFormElement = function () {
             const borderColorElement = document.getElementById("combo-border-colorpicker");
             if(borderColorElement){
               new GridColorPicker(borderColorElement, {
+                defaultColor: "#000000",
                 callback: (selectedColor) => {
                   borderColor = selectedColor;
                 },
@@ -747,6 +750,7 @@ const drawFormElement = function () {
             const textColorElement = document.getElementById("combo-font-colorpicker");
             if (textColorElement) {
               new GridColorPicker(textColorElement, {
+                defaultColor: "#000000",
                 callback: (selectedColor) => {
                   textColor = selectedColor;
                 },
@@ -938,6 +942,7 @@ const drawFormElement = function () {
             const borderColorElement = document.getElementById("list-border-colorpicker");
             if(borderColorElement){
               new GridColorPicker(borderColorElement, {
+                defaultColor: "#000000",
                 callback: (selectedColor) => {
                   borderColor = selectedColor;
                 },
@@ -951,6 +956,7 @@ const drawFormElement = function () {
             const textColorElement = document.getElementById("list-font-colorpicker");
             if (textColorElement) {
               new GridColorPicker(textColorElement, {
+                defaultColor: "#000000",
                 callback: (selectedColor) => {
                   textColor = selectedColor;
                 },
@@ -1169,6 +1175,7 @@ const drawFormElement = function () {
             const borderColorElement = document.getElementById("button-border-colorpicker");
             if(borderColorElement){
               new GridColorPicker(borderColorElement, {
+                defaultColor: "#000000",
                 callback: (selectedColor) => {
                   borderColor = selectedColor;
                 },
@@ -1182,6 +1189,7 @@ const drawFormElement = function () {
             const textColorElement = document.getElementById("button-font-colorpicker");
             if (textColorElement) {
               new GridColorPicker(textColorElement, {
+                defaultColor: "#000000",
                 callback: (selectedColor) => {
                   textColor = selectedColor;
                 },
@@ -1375,6 +1383,7 @@ const drawFormElement = function () {
             const borderColorElement = document.getElementById("date-border-colorpicker");
             if(borderColorElement){
               new GridColorPicker(borderColorElement, {
+                defaultColor: "#000000",
                 callback: (selectedColor) => {
                   borderColor = selectedColor;
                 },
@@ -1388,6 +1397,7 @@ const drawFormElement = function () {
             const textColorElement = document.getElementById("date-font-colorpicker");
             if (textColorElement) {
               new GridColorPicker(textColorElement, {
+                defaultColor: "#000000",
                 callback: (selectedColor) => {
                   textColor = selectedColor;
                 },
@@ -1517,6 +1527,7 @@ const drawFormElement = function () {
             const borderColorElement = document.getElementById("signature-border-colorpicker");
             if(borderColorElement){
               new GridColorPicker(borderColorElement, {
+                defaultColor: "#000000",
                 callback: (selectedColor) => {
                   borderColor = selectedColor;
                 },
@@ -1530,6 +1541,7 @@ const drawFormElement = function () {
             const drawColorElement = document.getElementById("signature-draw-colorpicker");
             if(drawColorElement){
               new GridColorPicker(drawColorElement, {
+                defaultColor: "#000000",
                 callback: (selectedColor) => {
                   textColor = selectedColor;
                 },
@@ -1607,6 +1619,7 @@ const drawFormElement = function () {
             const borderColorElement = document.getElementById("signature-border-colorpicker");
             if(borderColorElement){
               new GridColorPicker(borderColorElement, {
+                defaultColor: "#000000",
                 callback: (selectedColor) => {
                   borderColor = selectedColor;
                 },
@@ -1859,6 +1872,7 @@ const drawFormElement = function () {
             const borderColorElement = document.getElementById("photo-border-colorpicker");
             if(borderColorElement){
               new GridColorPicker(borderColorElement, {
+                defaultColor: "#000000",
                 callback: (selectedColor) => {
                   borderColor = selectedColor;
                 },
@@ -4544,6 +4558,7 @@ const eventHandler = async function (e) {
         const borderColorElement = document.getElementById("text-border-colorpicker");
         if(borderColorElement){
           new GridColorPicker(borderColorElement, {
+            defaultColor: "#000000",
             callback: (selectedColor) => {
               borderColor = selectedColor;
             },
@@ -4557,6 +4572,7 @@ const eventHandler = async function (e) {
         const textColorElement = document.getElementById("text-font-colorpicker");
         if (textColorElement) {
           new GridColorPicker(textColorElement, {
+            defaultColor: "#000000",
             callback: (selectedColor) => {
               textColor = selectedColor;
             },
@@ -4739,6 +4755,7 @@ const eventHandler = async function (e) {
         const textColorElement = document.getElementById("combo-font-colorpicker");
         if (textColorElement) {
           new GridColorPicker(textColorElement, {
+            defaultColor: "#000000",
             callback: (selectedColor) => {
               textColor = selectedColor;
             },
@@ -4953,6 +4970,7 @@ const eventHandler = async function (e) {
         const borderColorElement = document.getElementById("list-border-colorpicker");
         if(borderColorElement){
           new GridColorPicker(borderColorElement, {
+            defaultColor: "#000000",
             callback: (selectedColor) => {
               borderColor = selectedColor;
             },
@@ -4966,6 +4984,7 @@ const eventHandler = async function (e) {
         const textColorElement = document.getElementById("list-font-colorpicker");
         if (textColorElement) {
           new GridColorPicker(textColorElement, {
+            defaultColor: "#000000",
             callback: (selectedColor) => {
               textColor = selectedColor;
             },
@@ -5221,6 +5240,7 @@ const eventHandler = async function (e) {
         const textColorElement = document.getElementById("button-font-colorpicker");
         if (textColorElement) {
           new GridColorPicker(textColorElement, {
+            defaultColor: "#000000",
             callback: (selectedColor) => {
               textColor = selectedColor;
             },
@@ -5397,6 +5417,7 @@ const eventHandler = async function (e) {
         const borderColorElement = document.getElementById("date-border-colorpicker");
         if(borderColorElement){
           new GridColorPicker(borderColorElement, {
+            defaultColor: "#000000",
             callback: (selectedColor) => {
               borderColor = selectedColor;
             },
@@ -5410,6 +5431,7 @@ const eventHandler = async function (e) {
         const textColorElement = document.getElementById("date-font-colorpicker");
         if (textColorElement) {
           new GridColorPicker(textColorElement, {
+            defaultColor: "#000000",
             callback: (selectedColor) => {
               textColor = selectedColor;
             },
@@ -5596,6 +5618,7 @@ const eventHandler = async function (e) {
         const borderColorElement = document.getElementById("signature-border-colorpicker");
         if(borderColorElement){
           new GridColorPicker(borderColorElement, {
+            defaultColor: "#000000",
             callback: (selectedColor) => {
               borderColor = selectedColor;
             },
@@ -5609,6 +5632,7 @@ const eventHandler = async function (e) {
         const drawColorElement = document.getElementById("signature-draw-colorpicker");
         if(drawColorElement){
           new GridColorPicker(drawColorElement, {
+            defaultColor: "#000000",
             callback: (selectedColor) => {
               textColor = selectedColor;
             },
@@ -5827,6 +5851,7 @@ const eventHandler = async function (e) {
         const borderColorElement = document.getElementById("photo-border-colorpicker");
         if(borderColorElement){
           new GridColorPicker(borderColorElement, {
+            defaultColor: "#000000",
             callback: (selectedColor) => {
               borderColor = selectedColor;
             },

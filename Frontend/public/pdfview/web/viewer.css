@@ -2266,7 +2266,7 @@ select.form-field-input{
 }
 
 .border-resizebar {
-  outline: 1px solid #3c97fe;
+  outline: 2px solid #3c97fe;
 }
 
 .border-resizebar.dragging {

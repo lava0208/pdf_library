@@ -56,7 +56,7 @@ const saveHistory = function (username, date, page, reply, type, currentid) {
 }
 
 //... save adding components
-const addHistory = function (id, type, username, date, page, typeString) {
+const addHistory = function (id, type, username, date, page, typeString, formFieldName) {
     if (id !== 0) {
         if (!showHistoryBar.querySelector(`#history${id}`)) {
             // Upper Parent Element
@@ -156,6 +156,7 @@ const addHistory = function (id, type, username, date, page, typeString) {
             userDiv.style.display = 'flex';
             userDiv.style.flexDirection = "column";
             userDiv.style.width = "60%";
+            userDiv.style.textTransform = "capitalize";
             // child
             const usernameDiv = document.createElement("span");
             usernameDiv.className = "usernameDiv";
@@ -429,9 +430,10 @@ const addHistory = function (id, type, username, date, page, typeString) {
             textHistory.style.alignItems = "center";
             textHistory.style.width = "60%";
             textHistory.style.justifyContent = "start";
-            textHistory.textContent = "Your text is here";
+            textHistory.textContent = formFieldName;
             textHistory.style.fontSize = "11px";
             textHistory.style.color = "red";
+            textHistory.style.textTransform = "capitalize";
 
             history.append(annotationType, userDiv, optionDiv);
 
@@ -636,28 +638,34 @@ const getDocList = async function (id) {
                             annotationType.innerHTML = `<i class="fa fa-font"></i>`;
                             break;
                         case "4":
-                            annotationType.innerHTML = `<i class="fa-regular fa-calendar-days"></i>`;
-                            break;
-                        case "5":
                             annotationType.innerHTML = `<i class="fa fa-caret-down"></i>`;
                             break;
-                        case "6":
+                        case "5":
                             annotationType.innerHTML = `<i class="fa fa-list"></i>`;
                             break;
-                        case "7":
-                            annotationType.innerHTML = `<i class="fa-solid fa-stamp"></i>`;
-                            break;
-                        case "8":
+                        case "6":
                             annotationType.innerHTML = `<i class="fa fa-toggle-off"></i>`;
                             break;
-                        case "9":
+                        case "7":
                             annotationType.innerHTML = `<i class="fa-solid fa-font"></i>`;
+                            break;
+                        case "8":
+                            annotationType.innerHTML = `<i class="fa-regular fa-calendar-days"></i>`;
+                            break;
+                        case "9":
+                            annotationType.innerHTML = `<i class="fa-solid fa-comment-dots"></i>`;
                             break;
                         case "10":
                             annotationType.innerHTML = `<i class="fa-solid fa-shapes"></i>`;
                             break;
                         case "11":
-                            annotationType.innerHTML = `<i class="fa-solid fa-comment-dots"></i>`;
+                            annotationType.innerHTML = `<i class="fa-solid fa-shapes"></i>`;
+                            break;
+                        case "12":
+                            annotationType.innerHTML = `<i class="fa-solid fa-image"></i>`;
+                            break;
+                        case "13":
+                            annotationType.innerHTML = `<i class="fa-solid fa-5"></i>`;
                             break;
                         default:
                             break;
@@ -669,6 +677,7 @@ const getDocList = async function (id) {
                     userDiv.style.display = 'flex';
                     userDiv.style.flexDirection = "column";
                     userDiv.style.width = "60%";
+                    userDiv.style.textTransform = "capitalize";
                     // child
                     const usernameDiv = document.createElement("span");
                     usernameDiv.className = "usernameDiv";
@@ -1065,6 +1074,7 @@ const getDocList = async function (id) {
                     textHistory.textContent = item.actiontext;
                     textHistory.style.fontSize = "11px";
                     textHistory.style.color = "red";
+                    textHistory.style.textTransform = "capitalize";
     
                     history.append(annotationType, userDiv, optionDiv);
     
@@ -1113,7 +1123,11 @@ const showModal = async function (type) {
             });
         })
     }else if(type === "docSave"){
-        saveDoc();
+        $("#modal-confirm").show();
+        $(".modal-save").click(function(){
+            $("#modal-confirm").hide();
+            saveDoc();
+        })
     }
 }
 

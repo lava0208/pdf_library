@@ -2302,7 +2302,7 @@ select.form-field-input{
   outline: none;
 }
 
-.dragging input{
+.dragging>input:not(.date-field-input){
   position: relative;
   z-index: 200;
   display: block!important;
@@ -3285,6 +3285,11 @@ input[type=number]::-webkit-outer-spin-button {
   color: #fff;
 }
 
+.modal-footer button.modal-save{
+  background-color: #0f9515;
+  color: #fff;
+}
+
 .modal-footer button.modal-cancel{
   border: 1px solid #d9d9d9;
   color: #000000;
@@ -3296,6 +3301,15 @@ input[type=number]::-webkit-outer-spin-button {
 
 #modal-danger .modal-header-icon i{
   color: #d10000;
+  font-size: 20px;
+}
+
+#modal-confirm .modal-header-icon{
+  background-color: #c7ffd1;
+}
+
+#modal-confirm .modal-header-icon i{
+  color: #0f9515;
   font-size: 20px;
 }
 

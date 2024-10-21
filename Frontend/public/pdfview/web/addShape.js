@@ -5,7 +5,7 @@ let startY = 0;
 let rectElement;
 let shapeType = "shape";
 
-let selectedShapeFillColor = 'rgb(255, 255, 255)';
+let selectedShapeFillColor = 'rgb(187, 233, 255)';
 let selectedShapeOutlineColor = 'rgb(0, 0, 0)';
 let selectedTextColor = 'rgb(0, 0, 0)';
 let selectedBorderRadius = '0px';
@@ -571,7 +571,7 @@ function initialShapeStyle(){
   $("#shape-text-italic").removeClass("active");
   $("#shape-text-underline").removeClass("active");
 
-  selectedShapeFillColor = 'rgb(255, 255, 255)';
+  selectedShapeFillColor = 'rgb(187, 233, 255)';
   selectedShapeOutlineColor = 'rgb(0, 0, 0)';
   selectedTextColor = 'rgb(0, 0, 0)';
   selectedBorderRadius = '0px';
@@ -647,7 +647,7 @@ function handleShape(shapeFillColor, borderColor, textColor, borderRadius, borde
   }
   const date = new Date(Date.now());
   
-  addHistory(baseId, SHAPE, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "shape");
+  addHistory(baseId, SHAPE, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "shape",  shapeType + " " + shapefieldCount);
 };
 
 function enableInteractJS(elementId, type, currentId) {
@@ -891,9 +891,9 @@ function drawTextAlign(selectedTextAlign) {
   shapeText.style.left = "";
   shapeText.style.transform = "";
 
-  const alignments = selectedTextAlign.split(",").map(align => align.trim());
-  const verticalAlign = alignments[0];
-  const horizontalAlign = alignments[1];
+  const alignments = selectedTextAlign && selectedTextAlign.split(",").map(align => align.trim());
+  const verticalAlign = alignments && alignments[0];
+  const horizontalAlign = alignments && alignments[1];
 
   shapeText.style.textAlign = horizontalAlign;
 

@@ -11,7 +11,12 @@ let checkboxCount = 1,
   comboCount = 1,
   listCount = 1,
   buttonCount = 1,
+  textContentCount = 1;
   datefieldCount = 1,
+  commentCount = 1;
+  signaturefieldCount = 1,
+  shapefieldCount = 1,
+  photofieldCount = 1,
   numberfieldCount = 1;
 
 let comboboxOptionCount = 0;
@@ -202,7 +207,12 @@ const drawFormElement = function () {
     let tmpComboCount = 1;
     let tmpListCount = 1;
     let tmpButtonCount = 1;
+    let tmpTextContentCount = 1;
     let tmpDatefieldCount = 1;
+    let tmpCommentCount = 1;
+    let tmpSignaturefieldCount = 1;
+    let tmpShapefieldCount = 1;
+    let tmpPhotofieldCount = 1;
     let tmpNumberfieldCount = 1;
 
     form_storage.forEach((item) => {
@@ -221,8 +231,18 @@ const drawFormElement = function () {
         tmpListCount++;
       } else if (item.form_type === 6) {
         tmpButtonCount++;
+      } else if (item.form_type === 7) {
+        tmpTextContentCount++;
       } else if (item.form_type === 8) {
         tmpDatefieldCount++;
+      } else if (item.form_type === 9) {
+        tmpCommentCount++;
+      } else if (item.form_type === 10) {
+        tmpSignaturefieldCount++;
+      } else if (item.form_type === 11) {
+        tmpShapefieldCount++;
+      } else if (item.form_type === 12) {
+        tmpPhotofieldCount++;
       } else if (item.form_type === 13) {
         tmpNumberfieldCount++;
       }
@@ -2200,7 +2220,12 @@ const drawFormElement = function () {
     comboCount = tmpComboCount;
     listCount = tmpListCount;
     datefieldCount = tmpDatefieldCount;
+    textContentCount = tmpTextContentCount;
     buttonCount = tmpButtonCount;
+    commentCount = tmpCommentCount;
+    signaturefieldCount = tmpSignaturefieldCount;
+    shapefieldCount = tmpShapefieldCount;
+    photofieldCount = tmpPhotofieldCount;
     numberfieldCount = tmpNumberfieldCount;
   }
 
@@ -2426,6 +2451,9 @@ const handleCheckbox = function (e) {
   const label = document.getElementById("checkbox-label").value;
   const value = document.getElementById("checkbox-value").value;
 
+  console.log("formFieldName " + formFieldName);
+  
+
   for (let i = 0; i < form_storage.length; i++) {
     if (form_storage[i].id == current_form_id) {
       if(!isEditing){        
@@ -2476,7 +2504,7 @@ const handleCheckbox = function (e) {
     checkboxBackgroundColor = "#BBE9FF";
 
     const date = new Date(Date.now());
-    addHistory(baseId, CHECKBOX, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, 'checkbox');
+    addHistory(baseId, CHECKBOX, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, 'checkbox', formFieldName);
   }
 
   console.log("%%%%%%%%%% check box %%%%%%%%%");
@@ -2554,7 +2582,7 @@ const handleRadio = function (e) {
 
     radioBackgroundColor = "#BBE9FF";
     const date = new Date(Date.now());
-    addHistory(baseId, RADIO, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "radio");
+    addHistory(baseId, RADIO, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "radio", formFieldName);
   }
 
   console.log("%%%%%%%%%% radio %%%%%%%%%");
@@ -2672,7 +2700,7 @@ const handleText = function (e) {
     textFontColor = "";
 
     const date = new Date(Date.now());
-    addHistory(baseId, TEXTFIELD, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "text");
+    addHistory(baseId, TEXTFIELD, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "text", formFieldName);
   }
 
   console.log("=========== text =-==========");
@@ -2781,7 +2809,7 @@ const handleCombo = function (e) {
     
     comboboxOptionArray = [];
     const date = new Date(Date.now());
-    addHistory(baseId, COMBOBOX, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "combo");
+    addHistory(baseId, COMBOBOX, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "combo", formFieldName);
   }
 
   console.log("&$$$$$$$$$$$$$$$$$$$$$$$");
@@ -2886,7 +2914,7 @@ const handleList = function (e) {
 
     listboxOptionArray = [];
     const date = new Date(Date.now());
-    addHistory(baseId, LIST, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "list");
+    addHistory(baseId, LIST, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "list", formFieldName);
   }
 
   console.log("^^^^^^^^ list ^^^^^^^^^^");
@@ -3096,7 +3124,7 @@ const handleButton = function (e) {
 
     form_action = 0;
     const date = new Date(Date.now());
-    addHistory(baseId, BUTTON, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "button");
+    addHistory(baseId, BUTTON, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "button", formFieldName);
   }
 
   if (document.getElementById("button-save-button")) document.getElementById("button-save-button").removeEventListener("click", handleButton);
@@ -3115,9 +3143,9 @@ const handleDate = function (e) {
 
   const regularFont = document.getElementById("date-font-style") && document.getElementById("date-font-style").value;
 
-  // if (window.getComputedStyle(document.getElementById(DATE_OPTION)).getPropertyValue('display') !== "none") {
-  //   document.getElementById(DATE_OPTION).style.display = "none";
-  // }
+  if (window.getComputedStyle(document.getElementById(DATE_OPTION)).getPropertyValue('display') !== "none") {
+    document.getElementById(DATE_OPTION).style.display = "none";
+  }
 
   for (let i = 0; i < form_storage.length; i++) {
     if (form_storage[i].id == current_form_id) {
@@ -3184,7 +3212,7 @@ const handleDate = function (e) {
     dateBorderColor = "";
     dateFontColor = "";
     const date = new Date(Date.now());
-    addHistory(baseId, DATE, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "date");
+    addHistory(baseId, DATE, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "date", formFieldName);
   }
   document
     .getElementById("date-save-button")
@@ -3260,7 +3288,7 @@ const handleSignature = function () {
     signatureBackgroundColor = "#BBE9FF";
     signatureBorderColor = "";
     const date = new Date(Date.now());
-    addHistory(baseId, SIGNATURE, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "signature");
+    addHistory(baseId, SIGNATURE, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "signature", "Signature " + signaturefieldCount);
   }
 };
 
@@ -3329,7 +3357,7 @@ const handlePhoto = function () {
     photoBackgroundColor = "#BBE9FF";
     photoBorderColor = "";
     const date = new Date(Date.now());
-    addHistory(baseId, PHOTO, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "photo");
+    addHistory(baseId, PHOTO, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "photo", "Photo " + photofieldCount);
   }
 };
 
@@ -3450,7 +3478,7 @@ const handleNumber = function (e) {
     numberFontColor = "";
 
     const date = new Date(Date.now());
-    addHistory(baseId, NUMBERFIELD, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "number");
+    addHistory(baseId, NUMBERFIELD, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "number", formFieldName);
   }
 
   document
@@ -7297,6 +7325,8 @@ $(".menu-item").click(function(){
 
 //... Tracking
 const handleTrack = function (id, value) {
+  console.log("history " + value);
+  
   $(".historyDiv").each(function () {
     var index = $(this).index();
     if (id === index) {
@@ -7323,9 +7353,9 @@ function shapeTextAlign(shapeText, selectedTextAlign) {
   shapeText.style.left = "";
   shapeText.style.transform = "";
 
-  const alignments = selectedTextAlign.split(",").map(align => align.trim());
-  const verticalAlign = alignments[0];
-  const horizontalAlign = alignments[1];
+  const alignments = selectedTextAlign && selectedTextAlign.split(",").map(align => align.trim());
+  const verticalAlign = alignments && alignments[0];
+  const horizontalAlign = alignments && alignments[1];
 
   shapeText.style.textAlign = horizontalAlign;
 

@@ -238,7 +238,7 @@ const saveTextContent = function () {
     fontSize = 12;
     textColor = "";
     const date = new Date(Date.now());
-    addHistory(baseId, TEXT_CONTENT, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "text-content");
+    addHistory(baseId, TEXT_CONTENT, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "text-content", "text content " + textContentCount);
   }
 }
 
@@ -290,7 +290,7 @@ document.getElementById("add_comment").addEventListener("click", (e) => {
   });
 
   const date = new Date(Date.now());
-  addHistory(baseId, COMMENT, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "comment");
+  addHistory(baseId, COMMENT, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "comment", "comment " + commentCount);
 
   let pageId = String(PDFViewerApplication.page);
   let pg = document.getElementById(pageId);

@@ -660,7 +660,7 @@ See https://github.com/adobe-type-tools/cmap-resources
             <div class="menu-items">
               <a class="menu-item">
                 <i class="fa-regular fa-file-pdf"></i>
-                <span>Document</span>
+                <span>My Documents</span>
               </a>
               <a class="menu-item" onClick="localStorage.clear();window.location.assign('/');">
                 <i class="fa-solid fa-arrow-right-from-bracket"></i>
@@ -870,7 +870,7 @@ See https://github.com/adobe-type-tools/cmap-resources
                       <input
                         type="color"
                         name="colorPicker"
-                        value="#FFFFFF"
+                        value="#BBE9FF"
                         class="shape-colorpicker"
                       />
                       <i class="fa fa-save" class="shape-save"></i>
@@ -2810,6 +2810,30 @@ See https://github.com/adobe-type-tools/cmap-resources
       </div>
     </div>
 
+    <div class="modal" id="modal-confirm">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="modal-header-icon">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h1>Are you sure?</h1>
+            <span class="modal-close">
+              <i class="fa fa-close"></i>
+            </span>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure you want to save this?</p>
+            <p>This action can't be undone</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="modal-save">Yes, save it!</button>
+            <button class="modal-cancel" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="modal" id="modal-danger">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -2827,7 +2851,7 @@ See https://github.com/adobe-type-tools/cmap-resources
             <p>This action can't be undone</p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="modal-delete">Yes, delete</button>
+            <button type="button" class="modal-delete">Yes, delete it!</button>
             <button class="modal-cancel" data-dismiss="modal">Cancel</button>
           </div>
         </div>

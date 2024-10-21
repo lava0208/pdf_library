@@ -614,12 +614,6 @@ class FreeTextEditor extends AnnotationEditor {
       .get("pdfjs-free-text-default-content")
       .then(msg => this.editorDiv?.setAttribute("default-content", "Your text is here!"));
 
-    const date = new Date(Date.now());
-
-    //... save history    
-    addHistory(baseId, TEXT_CONTENT, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "text-content");
-    baseId++;
-
     this.editorDiv.contentEditable = true;
 
     const { style } = this.editorDiv;

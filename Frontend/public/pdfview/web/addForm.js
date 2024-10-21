@@ -3938,6 +3938,20 @@ const hexToRgbNew = function (hex) {
   return PDFLib.rgb(r / 255, g / 255, b / 255);
 }
 
+function hexOrRgbToRgb(color) {
+  if (color.startsWith('rgb')) {
+    const rgbValues = color.match(/\d+/g);
+    const r = parseInt(rgbValues[0], 10);
+    const g = parseInt(rgbValues[1], 10);
+    const b = parseInt(rgbValues[2], 10);
+    return PDFLib.rgb(r / 255, g / 255, b / 255);
+  } else if (color.startsWith('#')) {
+    return hexToRgbNew(color);
+  } else {
+    return PDFLib.rgb(0, 0, 0);
+  }
+}
+
 async function imageUrlToBase64(imageUrl) {
   const response = await fetch(imageUrl);
   if (!response.ok) {
@@ -6721,7 +6735,9 @@ async function addFormElements() {
           }
           break;
         case SHAPE:
-          const fillColor = hexToRgbNew(form_item.shapeFillColor || '#FFFFFF');
+          const fillColor = hexOrRgbToRgb(form_item.shapeFillColor || '#FFFFFF');
+          console.log("fillColor " + form_item.shapeFillColor);
+          
           const borderColor = hexToRgbNew(form_item.borderColor || '#000000');
           const bordersWidth = parseFloat(form_item.borderWidth) || 1;
           const borderRadius = parseFloat(form_item.borderRadius) || 0;

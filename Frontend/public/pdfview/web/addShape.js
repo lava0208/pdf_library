@@ -5,7 +5,7 @@ let startY = 0;
 let rectElement;
 let shapeType = "shape";
 
-let selectedShapeFillColor = 'rgb(187, 233, 255)';
+let selectedShapeFillColor = '#BBE9FF';
 let selectedShapeOutlineColor = 'rgb(0, 0, 0)';
 let selectedTextColor = 'rgb(0, 0, 0)';
 let selectedBorderRadius = '0px';
@@ -571,7 +571,7 @@ function initialShapeStyle(){
   $("#shape-text-italic").removeClass("active");
   $("#shape-text-underline").removeClass("active");
 
-  selectedShapeFillColor = 'rgb(187, 233, 255)';
+  selectedShapeFillColor = '#BBE9FF';
   selectedShapeOutlineColor = 'rgb(0, 0, 0)';
   selectedTextColor = 'rgb(0, 0, 0)';
   selectedBorderRadius = '0px';

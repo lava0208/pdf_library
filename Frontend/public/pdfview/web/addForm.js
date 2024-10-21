@@ -25,9 +25,6 @@ let pos_x_page = 0,
   pos_y_page = 0;
 let fontStyle = "",
   fontSize = 0,
-  textColor = "",
-  textBackgroundColor = "",
-  borderColor = "",
   borderWidth = "";
 
 const SUBMIT = 1,
@@ -306,12 +303,13 @@ const drawFormElement = function () {
             const checkboxBackgroundColorElement = document.getElementById("checkbox-background-colorpicker");
             if (checkboxBackgroundColorElement) {
               new GridColorPicker(checkboxBackgroundColorElement, {
+                defaultColor: "#BBE9FF",
                 callback: (selectedColor) => {
-                  textBackgroundColor = selectedColor;
+                  checkboxBackgroundColor = selectedColor;
                 },
               });
               checkboxBackgroundColorPickerInitialized = true;
-              textBackgroundColor = "";
+              checkboxBackgroundColor = "#BBE9FF";
             }
           }
 
@@ -430,11 +428,11 @@ const drawFormElement = function () {
             if (radioBackgroundColorElement) {
               new GridColorPicker(radioBackgroundColorElement, {
                 callback: (selectedColor) => {
-                  textBackgroundColor = selectedColor;
+                  radioBackgroundColor = selectedColor;
                 },
               });
               radioBackgroundColorPickerInitialized = true;
-              textBackgroundColor = "";
+              radioBackgroundColor = "#BBE9FF";
             }
           }
 
@@ -555,7 +553,7 @@ const drawFormElement = function () {
                 },
               });
               textBackgroundColorPickerInitialized = true;
-              textBackgroundColor = "";
+              textBackgroundColor = "#BBE9FF";
             }
           }
 
@@ -565,11 +563,11 @@ const drawFormElement = function () {
               new GridColorPicker(borderColorElement, {
                 defaultColor: "#000000",
                 callback: (selectedColor) => {
-                  borderColor = selectedColor;
+                  textBorderColor = selectedColor;
                 },
               });
               textBorderColorPickerInitialized = true;
-              borderColor = "";
+              textBorderColor = "";
             }
           }
 
@@ -579,11 +577,11 @@ const drawFormElement = function () {
               new GridColorPicker(textColorElement, {
                 defaultColor: "#000",
                 callback: (selectedColor) => {
-                  textColor = selectedColor;
+                  textFontColor = selectedColor;
                 },
               });
               textFontColorPickerInitialized = true;
-              textColor = "";
+              textFontColor = "";
             }
           }
 
@@ -724,11 +722,11 @@ const drawFormElement = function () {
             if(backgroundColorElement){
               new GridColorPicker(backgroundColorElement, {
                 callback: (selectedColor) => {
-                  textBackgroundColor = selectedColor;
+                  comboBackgroundColor = selectedColor;
                 },
               });
               comboBackgroundColorPickerInitialized = true;
-              textBackgroundColor = "";
+              comboBackgroundColor = "#BBE9FF";
             }
           }
 
@@ -738,11 +736,11 @@ const drawFormElement = function () {
               new GridColorPicker(borderColorElement, {
                 defaultColor: "#000000",
                 callback: (selectedColor) => {
-                  borderColor = selectedColor;
+                  comboBorderColor = selectedColor;
                 },
               });
               comboBorderColorPickerInitialized = true;
-              borderColor = "";
+              comboBorderColor = "";
             }
           }
 
@@ -752,11 +750,11 @@ const drawFormElement = function () {
               new GridColorPicker(textColorElement, {
                 defaultColor: "#000000",
                 callback: (selectedColor) => {
-                  textColor = selectedColor;
+                  comboFontColor = selectedColor;
                 },
               });
               comboFontColorPickerInitialized = true;
-              textColor = "";
+              comboFontColor = "";
             }
           }
 
@@ -930,11 +928,11 @@ const drawFormElement = function () {
             if(backgroundColorElement){
               new GridColorPicker(backgroundColorElement, {
                 callback: (selectedColor) => {
-                  textBackgroundColor = selectedColor;
+                  listBackgroundColor = selectedColor;
                 },
               });
               listBackgroundColorPickerInitialized = true;
-              textBackgroundColor = "";
+              listBackgroundColor = "#BBE9FF";
             }
           }
 
@@ -944,11 +942,11 @@ const drawFormElement = function () {
               new GridColorPicker(borderColorElement, {
                 defaultColor: "#000000",
                 callback: (selectedColor) => {
-                  borderColor = selectedColor;
+                  listBorderColor = selectedColor;
                 },
               });
               listBorderColorPickerInitialized = true;
-              borderColor = "";
+              listBorderColor = "";
             }
           }
 
@@ -958,11 +956,11 @@ const drawFormElement = function () {
               new GridColorPicker(textColorElement, {
                 defaultColor: "#000000",
                 callback: (selectedColor) => {
-                  textColor = selectedColor;
+                  listFontColor = selectedColor;
                 },
               });
               listFontColorPickerInitialized = true;
-              textColor = "";
+              listFontColor = "";
             }
           }
 
@@ -1163,11 +1161,11 @@ const drawFormElement = function () {
             if(backgroundColorElement){
               new GridColorPicker(backgroundColorElement, {
                 callback: (selectedColor) => {
-                  textBackgroundColor = selectedColor;
+                  buttonBackgroundColor = selectedColor;
                 },
               });
               buttonBackgroundColorPickerInitialized = true;
-              textBackgroundColor = "";
+              buttonBackgroundColor = "#BBE9FF";
             }
           }
 
@@ -1177,11 +1175,11 @@ const drawFormElement = function () {
               new GridColorPicker(borderColorElement, {
                 defaultColor: "#000000",
                 callback: (selectedColor) => {
-                  borderColor = selectedColor;
+                  buttonBorderColor = selectedColor;
                 },
               });
               buttonBorderColorPickerInitialized = true;
-              borderColor = "";
+              buttonBorderColor = "";
             }
           }
 
@@ -1191,11 +1189,11 @@ const drawFormElement = function () {
               new GridColorPicker(textColorElement, {
                 defaultColor: "#000000",
                 callback: (selectedColor) => {
-                  textColor = selectedColor;
+                  buttonFontColor = selectedColor;
                 },
               });
               buttonFontColorPickerInitialized = true;
-              textColor = "";
+              buttonFontColor = "";
             }
           }
 
@@ -1350,18 +1348,6 @@ const drawFormElement = function () {
               document.getElementById(current_date_content_id).style.fontSize =
                 document.getElementById("date-font-size").value + "px";
             });
-          document
-            .getElementById("date-font-color")
-            .addEventListener("change", () => {
-              document.getElementById(current_date_content_id).style.color =
-                document.getElementById("date-font-color").value;
-            });
-          document
-            .getElementById("date-font-background-color")
-            .addEventListener("change", () => {
-              document.getElementById(current_date_content_id).style.backgroundColor =
-                document.getElementById("date-font-background-color").value;
-            });
 
           current_date_id = id;
           current_date_content_id = newDate.id;
@@ -1371,11 +1357,11 @@ const drawFormElement = function () {
             if(backgroundColorElement){
               new GridColorPicker(backgroundColorElement, {
                 callback: (selectedColor) => {
-                  textBackgroundColor = selectedColor;
+                  dateBackgroundColor = selectedColor;
                 },
               });
               dateBackgroundColorPickerInitialized = true;
-              textBackgroundColor = "";
+              dateBackgroundColor = "#BBE9FF";
             }
           }
 
@@ -1385,11 +1371,11 @@ const drawFormElement = function () {
               new GridColorPicker(borderColorElement, {
                 defaultColor: "#000000",
                 callback: (selectedColor) => {
-                  borderColor = selectedColor;
+                  dateBorderColor = selectedColor;
                 },
               });
               dateBorderColorPickerInitialized = true;
-              borderColor = "";
+              dateBorderColor = "";
             }
           }
 
@@ -1399,11 +1385,11 @@ const drawFormElement = function () {
               new GridColorPicker(textColorElement, {
                 defaultColor: "#000000",
                 callback: (selectedColor) => {
-                  textColor = selectedColor;
+                  dateFontColor = selectedColor;
                 },
               });
               dateFontColorPickerInitialized = true;
-              textColor = "";
+              dateFontColor = "";
             }
           }
 
@@ -1515,11 +1501,11 @@ const drawFormElement = function () {
             if(backgroundColorElement){
               new GridColorPicker(backgroundColorElement, {
                 callback: (selectedColor) => {
-                  textBackgroundColor = selectedColor;
+                  signatureBackgroundColor = selectedColor;
                 },
               });
               signatureBackgroundColorPickerInitialized = true;
-              textBackgroundColor = "";
+              signatureBackgroundColor = "#BBE9FF";
             }
           }
 
@@ -1529,11 +1515,11 @@ const drawFormElement = function () {
               new GridColorPicker(borderColorElement, {
                 defaultColor: "#000000",
                 callback: (selectedColor) => {
-                  borderColor = selectedColor;
+                  signatureBorderColor = selectedColor;
                 },
               });
               signatureBorderColorPickerInitialized = true;
-              borderColor = "";
+              signatureBorderColor = "";
             }
           }
 
@@ -1543,11 +1529,11 @@ const drawFormElement = function () {
               new GridColorPicker(drawColorElement, {
                 defaultColor: "#000000",
                 callback: (selectedColor) => {
-                  textColor = selectedColor;
+                  signatureDrawColor = selectedColor;
                 },
               });
               signaturedrawColorPickerInitialized = true;
-              textColor = "";
+              signatureDrawColor = "";
             }
           }
 
@@ -1557,11 +1543,11 @@ const drawFormElement = function () {
               new GridColorPicker(textColorElement, {
                 defaultColor: "#000000",
                 callback: (selectedColor) => {
-                  textColor = selectedColor;
+                  signatureTypeingColor = selectedColor;
                 },
               });
               signatureTypeColorPickerInitialized = true;
-              textColor = "";
+              signatureTypeingColor = "";
             }
           }
 
@@ -1607,11 +1593,11 @@ const drawFormElement = function () {
             if(backgroundColorElement){
               new GridColorPicker(backgroundColorElement, {
                 callback: (selectedColor) => {
-                  textBackgroundColor = selectedColor;
+                  signatureBackgroundColor = selectedColor;
                 },
               });
               signatureBackgroundColorPickerInitialized = true;
-              textBackgroundColor = "";
+              signatureBackgroundColor = "#BBE9FF";
             }
           }
 
@@ -1621,11 +1607,11 @@ const drawFormElement = function () {
               new GridColorPicker(borderColorElement, {
                 defaultColor: "#000000",
                 callback: (selectedColor) => {
-                  borderColor = selectedColor;
+                  signatureBorderColor = selectedColor;
                 },
               });
               signatureBorderColorPickerInitialized = true;
-              borderColor = "";
+              signatureBorderColor = "";
             }
           }
           
@@ -1860,11 +1846,11 @@ const drawFormElement = function () {
             if(backgroundColorElement){
               new GridColorPicker(backgroundColorElement, {
                 callback: (selectedColor) => {
-                  textBackgroundColor = selectedColor;
+                  photoBackgroundColor = selectedColor;
                 },
               });
               photoBackgroundColorPickerInitialized = true;
-              textBackgroundColor = "";
+              photoBackgroundColor = "#BBE9FF";
             }
           }
 
@@ -1874,11 +1860,11 @@ const drawFormElement = function () {
               new GridColorPicker(borderColorElement, {
                 defaultColor: "#000000",
                 callback: (selectedColor) => {
-                  borderColor = selectedColor;
+                  photoBorderColor = selectedColor;
                 },
               });
               photoBorderColorPickerInitialized = true;
-              borderColor = "";
+              photoBorderColor = "";
             }
           }
 
@@ -2026,6 +2012,48 @@ const drawFormElement = function () {
           numberfieldAlign.forEach(function (radio) {
             radio.addEventListener("change", handleRadioSelection);
           });
+
+          if (!numberBackgroundColorPickerInitialized) {
+            const backgroundColorElement = document.getElementById("number-background-colorpicker");
+            if(backgroundColorElement){
+              new GridColorPicker(backgroundColorElement, {
+                callback: (selectedColor) => {
+                  numberBackgroundColor = selectedColor;
+                },
+              });
+              numberBackgroundColorPickerInitialized = true;
+              numberBackgroundColor = "#BBE9FF";
+            }
+          }
+
+          if (!numberBorderColorPickerInitialized) {
+            const borderColorElement = document.getElementById("number-border-colorpicker");
+            if(borderColorElement){
+              new GridColorPicker(borderColorElement, {
+                defaultColor: "#000000",
+                callback: (selectedColor) => {
+                  numberBorderColor = selectedColor;
+                },
+              });
+              numberBorderColorPickerInitialized = true;
+              numberBorderColor = "";
+            }
+          }
+
+          if (!numberFontColorPickerInitialized) {
+            const textColorElement = document.getElementById("number-font-colorpicker");
+            if (textColorElement) {
+              new GridColorPicker(textColorElement, {
+                defaultColor: "#000",
+                callback: (selectedColor) => {
+                  numberFontColor = selectedColor;
+                },
+              });
+              numberFontColorPickerInitialized = true;
+              numberFontColor = "";
+            }
+          }
+
           numberDiv.addEventListener("dblclick", () => {
             if (!isEditing) {
               current_number_id = id;
@@ -2057,14 +2085,21 @@ const drawFormElement = function () {
                         element.fontStyle;
                       document.getElementById("number-font-size").value =
                         element.fontSize;
-                      document.getElementById("number-font-color").value =
-                        element.textColor;
-                      document.getElementById("number-font-background-color").value =
-                        element.textBackgroundColor;
-                      document.getElementById("number-border-color").value =
-                        element.borderColor;
                       document.getElementById("number-border-width").value =
                         element.borderWidth;
+
+                      document.getElementById("number-background-colorpicker").value =
+                        element.textBackgroundColor;
+                      document.getElementById("number-background-colorpicker_autocomplete").style.backgroundColor =
+                        element.textBackgroundColor;
+                      document.getElementById("number-border-colorpicker").value =
+                        element.borderColor;
+                      document.getElementById("number-border-colorpicker_autocomplete").style.backgroundColor =
+                        element.borderColor;
+                      document.getElementById("number-font-colorpicker").value =
+                        element.textColor;
+                      document.getElementById("number-font-colorpicker_autocomplete").style.backgroundColor =
+                        element.textColor;                        
                       
                       document.getElementById("count").value = element.count;
 
@@ -2245,6 +2280,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (initialId) {
     $("body").addClass("loading");
+    $("#addFormDownload").prop("disabled", false);
     $("#deleteDraftButton").prop("disabled", false);
     fetch(`${url}`)
       .then(response => {
@@ -2393,7 +2429,7 @@ const handleCheckbox = function (e) {
   for (let i = 0; i < form_storage.length; i++) {
     if (form_storage[i].id == current_form_id) {
       if(!isEditing){        
-        form_storage[i].textBackgroundColor = textBackgroundColor;
+        form_storage[i].textBackgroundColor = checkboxBackgroundColor;
         form_storage[i].form_field_name = formFieldName;
       }
 
@@ -2434,10 +2470,10 @@ const handleCheckbox = function (e) {
       isReadOnly: false,
       label: label,
       value: value,
-      textBackgroundColor: textBackgroundColor,
+      textBackgroundColor: checkboxBackgroundColor,
     });
 
-    textBackgroundColor = "";
+    checkboxBackgroundColor = "#BBE9FF";
 
     const date = new Date(Date.now());
     addHistory(baseId, CHECKBOX, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, 'checkbox');
@@ -2481,7 +2517,7 @@ const handleRadio = function (e) {
 
         if (form_storage[i].id == current_form_id) {
           form_storage[i].form_field_name = formFieldName;
-          form_storage[i].data.textBackgroundColor = textBackgroundColor;
+          form_storage[i].data.textBackgroundColor = radioBackgroundColor;
 
           //... handle track
           handleTrack(form_storage[i].id, formFieldName);
@@ -2512,11 +2548,11 @@ const handleRadio = function (e) {
         isReadOnly: false,
         label: label,
         value: value,
-        textBackgroundColor: textBackgroundColor,
+        textBackgroundColor: radioBackgroundColor,
       },
     });
 
-    textBackgroundColor = "";
+    radioBackgroundColor = "#BBE9FF";
     const date = new Date(Date.now());
     addHistory(baseId, RADIO, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "radio");
   }
@@ -2561,15 +2597,15 @@ const handleText = function (e) {
         if (!isOpenEmailPdf) {
           form_storage[i].fontStyle = fontStyle;
           form_storage[i].fontSize = fontSize;
-          form_storage[i].textColor = textColor;
           form_storage[i].align = alignValue;
           form_storage[i].isBold = isBold;
           form_storage[i].isItalic = isItalic;
           form_storage[i].isUnderline = isUnderline;
           form_storage[i].regularFontStyle = regularFont;
-          
+
           form_storage[i].textBackgroundColor = textBackgroundColor;
-          form_storage[i].borderColor = borderColor;
+          form_storage[i].borderColor = textBorderColor;
+          form_storage[i].textColor = textFontColor;
           form_storage[i].borderWidth = borderWidth;
           form_storage[i].form_field_name = formFieldName;
   
@@ -2617,9 +2653,9 @@ const handleText = function (e) {
       isUnderline: isUnderline,
       fontSize: fontSize,
       borderWidth: borderWidth,
-      textColor: textColor,
       textBackgroundColor: textBackgroundColor,
-      borderColor: borderColor,
+      borderColor: textBorderColor,
+      textColor: textFontColor,
       align: alignValue,
       xPage: formWidth,
       yPage: formHeight,
@@ -2631,9 +2667,9 @@ const handleText = function (e) {
     borderWidth = "";
     alignValue = 0;
 
-    textBackgroundColor = "";
-    borderColor = "";
-    textColor = "";
+    textBackgroundColor = "#BBE9FF";
+    textBorderColor = "";
+    textFontColor = "";
 
     const date = new Date(Date.now());
     addHistory(baseId, TEXTFIELD, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "text");
@@ -2676,10 +2712,10 @@ const handleCombo = function (e) {
             form_storage[i].optionArray.concat(comboboxOptionArray);
           form_storage[i].fontStyle = fontStyle;
           form_storage[i].fontSize = fontSize;
-          form_storage[i].textColor = textColor;
           form_storage[i].regularFontStyle = regularFont;
-          form_storage[i].textBackgroundColor = textBackgroundColor;
-          form_storage[i].borderColor = borderColor;
+          form_storage[i].textBackgroundColor = comboBackgroundColor;
+          form_storage[i].borderColor = comboBorderColor;
+          form_storage[i].textColor = comboFontColor;
           form_storage[i].borderWidth = borderWidth;
           form_storage[i].form_field_name = formFieldName;
 
@@ -2725,26 +2761,24 @@ const handleCombo = function (e) {
       height: formHeight * 0.75 * 0.8,
       fontStyle: fontStyle,
       fontSize: fontSize,
-      textColor: textColor,
-      textBackgroundColor: textBackgroundColor,
-      borderColor: borderColor,
       borderWidth: borderWidth,
-
       align: alignValue,
       xPage: formWidth,
       yPage: formHeight,
       isReadOnly: false,
+      textBackgroundColor: comboBackgroundColor,
+      borderColor: comboBorderColor,
+      textColor: comboFontColor,
     });
     fontStyle = "";
-    fontSize = 12;
-    textColor = "";
-    textBackgroundColor = "";
-    borderColor = "";
+    fontSize = 12;    
     borderWidth = "";
-
-    
-
     alignValue = 0;
+
+    comboBackgroundColor = "#BBE9FF";
+    comboBorderColor = "";
+    comboFontColor = "";
+    
     comboboxOptionArray = [];
     const date = new Date(Date.now());
     addHistory(baseId, COMBOBOX, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "combo");
@@ -2783,10 +2817,10 @@ const handleList = function (e) {
             form_storage[i].optionArray.concat(listboxOptionArray);
           form_storage[i].fontStyle = fontStyle;
           form_storage[i].fontSize = fontSize;
-          form_storage[i].textColor = textColor;
           form_storage[i].regularFontStyle = regularFont;
-          form_storage[i].textBackgroundColor = textBackgroundColor;
-          form_storage[i].borderColor = borderColor;
+          form_storage[i].textBackgroundColor = listBackgroundColor;
+          form_storage[i].borderColor = listBorderColor;
+          form_storage[i].textColor = listFontColor;
           form_storage[i].borderWidth = borderWidth;
           form_storage[i].form_field_name = formFieldName;
 
@@ -2837,18 +2871,19 @@ const handleList = function (e) {
       xPage: formWidth,
       yPage: formHeight,
       isReadOnly: false,
-      textColor: textColor,
-      textBackgroundColor: textBackgroundColor,
-      borderColor: borderColor,
+      textBackgroundColor: listBackgroundColor,
+      borderColor: listBorderColor,
+      textColor: listFontColor,
     });
     fontStyle = "";
     fontSize = 12;
-    textColor = "";
-    textBackgroundColor = "";
-    borderColor = "";
     borderWidth = "";
-
     alignValue = 0;
+
+    listBackgroundColor = "#BBE9FF";
+    listBorderColor = "";
+    listFontColor = "";
+
     listboxOptionArray = [];
     const date = new Date(Date.now());
     addHistory(baseId, LIST, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "list");
@@ -2993,11 +3028,11 @@ const handleButton = function (e) {
           form_storage[i].action = form_action;
           form_storage[i].fontStyle = fontStyle;
           form_storage[i].fontSize = fontSize;
-          form_storage[i].textColor = textColor;
           form_storage[i].text = initialValue;
           form_storage[i].align = alignValue;
-          form_storage[i].textBackgroundColor = textBackgroundColor;
-          form_storage[i].borderColor = borderColor;
+          form_storage[i].textBackgroundColor = buttonBackgroundColor;
+          form_storage[i].borderColor = buttonBorderColor;
+          form_storage[i].textColor = buttonFontColor;
           form_storage[i].borderWidth = borderWidth;
           form_storage[i].form_field_name = formFieldName;
 
@@ -3041,24 +3076,24 @@ const handleButton = function (e) {
       height: formHeight * 0.75 * 0.8,
       fontStyle: fontStyle,
       fontSize: fontSize,
-      textColor: textColor,
-      textBackgroundColor: textBackgroundColor,
-      borderColor: borderColor,
       borderWidth: borderWidth,
-
       align: alignValue,
       xPage: formWidth,
       yPage: formHeight,
       isReadOnly: false,
+      textBackgroundColor: buttonBackgroundColor,
+      borderColor: buttonBorderColor,
+      textColor: buttonFontColor,
     });
     fontStyle = "";
     fontSize = 12;
-    textColor = "";
-    textBackgroundColor = "";
-    borderColor = "";
     borderWidth = "";
-
     alignValue = 0;
+
+    buttonBackgroundColor = "#BBE9FF";
+    buttonBorderColor = "";
+    buttonFontColor = "";
+
     form_action = 0;
     const date = new Date(Date.now());
     addHistory(baseId, BUTTON, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "button");
@@ -3080,9 +3115,9 @@ const handleDate = function (e) {
 
   const regularFont = document.getElementById("date-font-style") && document.getElementById("date-font-style").value;
 
-  if (window.getComputedStyle(document.getElementById(DATE_OPTION)).getPropertyValue('display') !== "none") {
-    document.getElementById(DATE_OPTION).style.display = "none";
-  }
+  // if (window.getComputedStyle(document.getElementById(DATE_OPTION)).getPropertyValue('display') !== "none") {
+  //   document.getElementById(DATE_OPTION).style.display = "none";
+  // }
 
   for (let i = 0; i < form_storage.length; i++) {
     if (form_storage[i].id == current_form_id) {
@@ -3090,10 +3125,10 @@ const handleDate = function (e) {
         if (!isOpenEmailPdf) {
           form_storage[i].fontStyle = fontStyle;
           form_storage[i].fontSize = fontSize;
-          form_storage[i].textColor = textColor;
           form_storage[i].text = text;
-          form_storage[i].textBackgroundColor = textBackgroundColor;
-          form_storage[i].borderColor = borderColor;
+          form_storage[i].textBackgroundColor = dateBackgroundColor;
+          form_storage[i].borderColor = dateBorderColor;
+          form_storage[i].textColor = dateFontColor;
           form_storage[i].borderWidth = borderWidth;
           form_storage[i].form_field_name = formFieldName;
 
@@ -3131,23 +3166,23 @@ const handleDate = function (e) {
       regularFontStyle: regularFont,
       fontSize: fontSize,
       baseFontSize: fontSize,
-      textColor: textColor,
-      textBackgroundColor: textBackgroundColor,
-      borderColor: borderColor,
       borderWidth: borderWidth,
-
       width: formWidth * 0.75 * 0.8,
       height: formHeight * 0.75 * 0.8,
       xPage: formWidth,
       yPage: formHeight,
+
+      textBackgroundColor: dateBackgroundColor,
+      borderColor: dateBorderColor,
+      textColor: dateFontColor,
     });
     fontStyle = "";
     fontSize = 12;
-    textColor = "";
-    textBackgroundColor = "";
-    borderColor = "";
     borderWidth = "";
 
+    dateBackgroundColor = "#BBE9FF";
+    dateBorderColor = "";
+    dateFontColor = "";
     const date = new Date(Date.now());
     addHistory(baseId, DATE, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "date");
   }
@@ -3162,8 +3197,8 @@ const handleSignature = function () {
     if (
       form_storage[i].id == current_form_id
     ) {
-      form_storage[i].textBackgroundColor = textBackgroundColor;
-      form_storage[i].borderColor = borderColor;
+      form_storage[i].textBackgroundColor = signatureBackgroundColor;
+      form_storage[i].borderColor = signatureBorderColor;
       form_storage[i].borderWidth = borderWidth;
       form_storage[i].imgData = signatureImgData;
 
@@ -3190,8 +3225,8 @@ const handleSignature = function () {
   // if (isDraft == "true" && isOpenEmailPdf) {
   for (let i = 0; i < form_storage.length; i++) {
     if (form_storage[i].id == current_form_id) {
-      form_storage[i].textBackgroundColor = textBackgroundColor;
-      form_storage[i].borderColor = borderColor;
+      form_storage[i].textBackgroundColor = signatureBackgroundColor;
+      form_storage[i].borderColor = signatureBorderColor;
       form_storage[i].borderWidth = borderWidth;
 
       let sign_type = $(".signature-option .tablink-active").text();
@@ -3217,13 +3252,13 @@ const handleSignature = function () {
       xPage: formWidth,
       yPage: formHeight,
       imgData: signatureImgData,
-      textBackgroundColor: textBackgroundColor,
-      borderColor: borderColor,
       borderWidth: borderWidth,
+      textBackgroundColor: signatureBackgroundColor,
+      borderColor: signatureBorderColor,
     });
 
-    textBackgroundColor = "";
-    borderColor = "";
+    signatureBackgroundColor = "#BBE9FF";
+    signatureBorderColor = "";
     const date = new Date(Date.now());
     addHistory(baseId, SIGNATURE, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "signature");
   }
@@ -3235,8 +3270,8 @@ const handlePhoto = function () {
     if (
       form_storage[i].id == current_form_id
     ) {
-      form_storage[i].textBackgroundColor = textBackgroundColor;
-      form_storage[i].borderColor = borderColor;
+      form_storage[i].textBackgroundColor = photoBackgroundColor;
+      form_storage[i].borderColor = photoBorderColor;
       form_storage[i].borderWidth = borderWidth;
       form_storage[i].photoData = photoData;
 
@@ -3263,8 +3298,8 @@ const handlePhoto = function () {
 
   for (let i = 0; i < form_storage.length; i++) {
     if (form_storage[i].id == current_form_id) {
-      form_storage[i].textBackgroundColor = textBackgroundColor;
-      form_storage[i].borderColor = borderColor;
+      form_storage[i].textBackgroundColor = photoBackgroundColor;
+      form_storage[i].borderColor = photoBorderColor;
       form_storage[i].borderWidth = borderWidth;
       handleTrack(form_storage[i].id, " photo");
       break;
@@ -3286,13 +3321,13 @@ const handlePhoto = function () {
       xPage: formWidth,
       yPage: formHeight,
       photoData: photoData,
-      textBackgroundColor: textBackgroundColor,
-      borderColor: borderColor,
       borderWidth: borderWidth,
+      textBackgroundColor: photoBackgroundColor,
+      borderColor: photoBorderColor,
     });
 
-    textBackgroundColor = "";
-    borderColor = "";
+    photoBackgroundColor = "#BBE9FF";
+    photoBorderColor = "";
     const date = new Date(Date.now());
     addHistory(baseId, PHOTO, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "photo");
   }
@@ -3339,19 +3374,20 @@ const handleNumber = function (e) {
         if (!isOpenEmailPdf) {
           form_storage[i].fontStyle = fontStyle;
           form_storage[i].fontSize = fontSize;
-          form_storage[i].textColor = textColor;
           form_storage[i].align = alignValue;
           form_storage[i].isBold = isBold;
           form_storage[i].isItalic = isItalic;
           form_storage[i].isUnderline = isUnderline;
           form_storage[i].regularFontStyle = regularFont;
-          form_storage[i].textBackgroundColor = textBackgroundColor;
-          form_storage[i].borderColor = borderColor;
           form_storage[i].borderWidth = borderWidth;
           form_storage[i].form_field_name = formFieldName;
           form_storage[i].count = numberCount;
           form_storage[i].initialValue = initialValue;
-  
+
+          form_storage[i].textColor = numberFontColor;
+          form_storage[i].textBackgroundColor = numberBackgroundColor;
+          form_storage[i].borderColor = numberBorderColor;
+
           //... handle track
           handleTrack(form_storage[i].id, formFieldName);
           break;
@@ -3395,24 +3431,23 @@ const handleNumber = function (e) {
       isItalic: isItalic,
       isUnderline: isUnderline,
       fontSize: fontSize,
-      textColor: textColor,
-      textBackgroundColor: textBackgroundColor,
-      borderColor: borderColor,
       borderWidth: borderWidth,
       count: numberCount,
-
       align: alignValue,
       xPage: formWidth,
       yPage: formHeight,
       isReadOnly: false,
+      textBackgroundColor: numberBackgroundColor,
+      borderColor: numberBorderColor,
+      textColor: numberFontColor,
     });
-
     fontStyle = "";
     fontSize = 12;
-    textColor = "";
-    textBackgroundColor = "";
-    borderColor = "";
     borderWidth = "";
+
+    numberBackgroundColor = "#BBE9FF";
+    numberBorderColor = "";
+    numberFontColor = "";
 
     const date = new Date(Date.now());
     addHistory(baseId, NUMBERFIELD, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "number");
@@ -3749,9 +3784,6 @@ viewer.addEventListener("mousedown", function (event) {
         $(this).css("z-index", standardZIndex)
       })
 
-      console.log(cId);
-      
-
       if(document.getElementById(cId)){
         document.getElementById(cId).style.zIndex = standardZIndex;
       }      
@@ -4087,7 +4119,7 @@ const addFormElementStyle = function (object, top, left, width, height, borderRa
   object.style.left = left + "px";
   object.style.width = width + "px";
   object.style.height = height + "px";
-  object.style.background = "#78d3ff80";
+  object.style.background = "#BBE9FF";
   // object.style.border = "1px solid #3c97fe80";
   object.style.zIndex = standardZIndex;
   object.tabIndex = 0;
@@ -4102,7 +4134,7 @@ const addSignatureElementStyle = function (object, top, left, width, height) {
   object.style.left = left + "px";
   object.style.width = width + "px";
   object.style.height = height + "px";
-  object.style.background = "#78d3ff80";
+  object.style.background = "#BBE9FF";
   // object.style.zIndex = standardZIndex;
   object.tabIndex = 0;
   object.style.borderRadius = "3px";
@@ -4115,7 +4147,7 @@ const addPhotoElementStyle = function (object, top, left, width, minHeight) {
   object.style.left = left + "px";
   object.style.width = width + "px";
   object.style.height = minHeight + "px";
-  object.style.background = "#78d3ff80";
+  object.style.background = "#BBE9FF";
   // object.style.zIndex = standardZIndex;
   object.tabIndex = 0;
   object.style.borderRadius = "3px";
@@ -4269,12 +4301,13 @@ const eventHandler = async function (e) {
         const checkboxBackgroundColorElement = document.getElementById("checkbox-background-colorpicker");
         if (checkboxBackgroundColorElement) {
           new GridColorPicker(checkboxBackgroundColorElement, {
+            defaultColor: "#BBE9FF",
             callback: (selectedColor) => {
-              textBackgroundColor = selectedColor;
+              checkboxBackgroundColor = selectedColor;
             },
           });
           checkboxBackgroundColorPickerInitialized = true;
-          textBackgroundColor = "";
+          checkboxBackgroundColor = "#BBE9FF";
         }
       }
 
@@ -4407,11 +4440,11 @@ const eventHandler = async function (e) {
         if (radioBackgroundColorElement) {
           new GridColorPicker(radioBackgroundColorElement, {
             callback: (selectedColor) => {
-              textBackgroundColor = selectedColor;
+              radioBackgroundColor = selectedColor;
             },
           });
           radioBackgroundColorPickerInitialized = true;
-          textBackgroundColor = "";
+          radioBackgroundColor = "#BBE9FF";
         }
       }
 
@@ -4551,7 +4584,7 @@ const eventHandler = async function (e) {
             },
           });
           textBackgroundColorPickerInitialized = true;
-          textBackgroundColor = "";
+          textBackgroundColor = "#BBE9FF";
         }
       }
 
@@ -4561,11 +4594,11 @@ const eventHandler = async function (e) {
           new GridColorPicker(borderColorElement, {
             defaultColor: "#000000",
             callback: (selectedColor) => {
-              borderColor = selectedColor;
+              textBorderColor = selectedColor;
             },
           });
           textBorderColorPickerInitialized = true;
-          borderColor = "";
+          textBorderColor = "";
         }
       }
 
@@ -4575,11 +4608,11 @@ const eventHandler = async function (e) {
           new GridColorPicker(textColorElement, {
             defaultColor: "#000000",
             callback: (selectedColor) => {
-              textColor = selectedColor;
+              textFontColor = selectedColor;
             },
           });
           textFontColorPickerInitialized = true;
-          textColor = "";
+          textFontColor = "";
         }
       }
 
@@ -4731,11 +4764,11 @@ const eventHandler = async function (e) {
         if(backgroundColorElement){
           new GridColorPicker(backgroundColorElement, {
             callback: (selectedColor) => {
-              textBackgroundColor = selectedColor;
+              comboBackgroundColor = selectedColor;
             },
           });
           comboBackgroundColorPickerInitialized = true;
-          textBackgroundColor = "";
+          comboBackgroundColor = "#BBE9FF";
         }
       }
 
@@ -4744,11 +4777,11 @@ const eventHandler = async function (e) {
         if(borderColorElement){
           new GridColorPicker(borderColorElement, {
             callback: (selectedColor) => {
-              borderColor = selectedColor;
+              comboBorderColor = selectedColor;
             },
           });
           comboBorderColorPickerInitialized = true;
-          borderColor = "";
+          comboBorderColor = "";
         }
       }
 
@@ -4758,11 +4791,11 @@ const eventHandler = async function (e) {
           new GridColorPicker(textColorElement, {
             defaultColor: "#000000",
             callback: (selectedColor) => {
-              textColor = selectedColor;
+              comboFontColor = selectedColor;
             },
           });
           comboFontColorPickerInitialized = true;
-          textColor = "";
+          comboFontColor = "";
         }
       }
 
@@ -4959,11 +4992,11 @@ const eventHandler = async function (e) {
         if(backgroundColorElement){
           new GridColorPicker(backgroundColorElement, {
             callback: (selectedColor) => {
-              textBackgroundColor = selectedColor;
+              listBackgroundColor = selectedColor;
             },
           });
           listBackgroundColorPickerInitialized = true;
-          textBackgroundColor = "";
+          listBackgroundColor = "#BBE9FF";
         }
       }
 
@@ -4973,11 +5006,11 @@ const eventHandler = async function (e) {
           new GridColorPicker(borderColorElement, {
             defaultColor: "#000000",
             callback: (selectedColor) => {
-              borderColor = selectedColor;
+              listBorderColor = selectedColor;
             },
           });
           listBorderColorPickerInitialized = true;
-          borderColor = "";
+          listBorderColor = "";
         }
       }
 
@@ -4987,11 +5020,11 @@ const eventHandler = async function (e) {
           new GridColorPicker(textColorElement, {
             defaultColor: "#000000",
             callback: (selectedColor) => {
-              textColor = selectedColor;
+              listFontColor = selectedColor;
             },
           });
           listFontColorPickerInitialized = true;
-          textColor = "";
+          listFontColor = "";
         }
       }
 
@@ -5216,11 +5249,11 @@ const eventHandler = async function (e) {
         if(backgroundColorElement){
           new GridColorPicker(backgroundColorElement, {
             callback: (selectedColor) => {
-              textBackgroundColor = selectedColor;
+              buttonBackgroundColor = selectedColor;
             },
           });
           buttonBackgroundColorPickerInitialized = true;
-          textBackgroundColor = "";
+          buttonBackgroundColor = "#BBE9FF";
         }
       }
 
@@ -5229,11 +5262,11 @@ const eventHandler = async function (e) {
         if(borderColorElement){
           new GridColorPicker(borderColorElement, {
             callback: (selectedColor) => {
-              borderColor = selectedColor;
+              buttonBorderColor = selectedColor;
             },
           });
           buttonBorderColorPickerInitialized = true;
-          borderColor = "";
+          buttonBorderColor = "";
         }
       }
 
@@ -5243,11 +5276,11 @@ const eventHandler = async function (e) {
           new GridColorPicker(textColorElement, {
             defaultColor: "#000000",
             callback: (selectedColor) => {
-              textColor = selectedColor;
+              buttonFontColor = selectedColor;
             },
           });
           buttonFontColorPickerInitialized = true;
-          textColor = "";
+          buttonFontColor = "";
         }
       }
 
@@ -5406,11 +5439,11 @@ const eventHandler = async function (e) {
         if(backgroundColorElement){
           new GridColorPicker(backgroundColorElement, {
             callback: (selectedColor) => {
-              textBackgroundColor = selectedColor;
+              dateBackgroundColor = selectedColor;
             },
           });
           dateBackgroundColorPickerInitialized = true;
-          textBackgroundColor = "";
+          dateBackgroundColor = "#BBE9FF";
         }
       }
 
@@ -5420,11 +5453,11 @@ const eventHandler = async function (e) {
           new GridColorPicker(borderColorElement, {
             defaultColor: "#000000",
             callback: (selectedColor) => {
-              borderColor = selectedColor;
+              dateBorderColor = selectedColor;
             },
           });
           dateBorderColorPickerInitialized = true;
-          borderColor = "";
+          dateBorderColor = "";
         }
       }
 
@@ -5434,11 +5467,11 @@ const eventHandler = async function (e) {
           new GridColorPicker(textColorElement, {
             defaultColor: "#000000",
             callback: (selectedColor) => {
-              textColor = selectedColor;
+              dateFontColor = selectedColor;
             },
           });
           dateFontColorPickerInitialized = true;
-          textColor = "";
+          dateFontColor = "";
         }
       }
 
@@ -5606,12 +5639,13 @@ const eventHandler = async function (e) {
         const backgroundColorElement = document.getElementById("signature-background-colorpicker");
         if(backgroundColorElement){
           new GridColorPicker(backgroundColorElement, {
+            defaultColor: "#BBE9FF",
             callback: (selectedColor) => {
-              textBackgroundColor = selectedColor;
+              signatureBackgroundColor = selectedColor;
             },
           });
           signatureBackgroundColorPickerInitialized = true;
-          textBackgroundColor = "";
+          signatureBackgroundColor = "#BBE9FF";
         }
       }
 
@@ -5621,11 +5655,11 @@ const eventHandler = async function (e) {
           new GridColorPicker(borderColorElement, {
             defaultColor: "#000000",
             callback: (selectedColor) => {
-              borderColor = selectedColor;
+              signatureBorderColor = selectedColor;
             },
           });
           signatureBorderColorPickerInitialized = true;
-          borderColor = "";
+          signatureBorderColor = "";
         }
       }
 
@@ -5635,11 +5669,11 @@ const eventHandler = async function (e) {
           new GridColorPicker(drawColorElement, {
             defaultColor: "#000000",
             callback: (selectedColor) => {
-              textColor = selectedColor;
+              signatureDrawColor = selectedColor;
             },
           });
           signaturedrawColorPickerInitialized = true;
-          textColor = "";
+          signatureDrawColor = "";
         }
       }
 
@@ -5649,11 +5683,11 @@ const eventHandler = async function (e) {
           new GridColorPicker(textColorElement, {
             defaultColor: "#000000",
             callback: (selectedColor) => {
-              textColor = selectedColor;
+              signatureTypeingColor = selectedColor;
             },
           });
           signatureTypeColorPickerInitialized = true;
-          textColor = "";
+          signatureTypeingColor = "";
         }
       }
 
@@ -5840,11 +5874,11 @@ const eventHandler = async function (e) {
         if(backgroundColorElement){
           new GridColorPicker(backgroundColorElement, {
             callback: (selectedColor) => {
-              textBackgroundColor = selectedColor;
+              photoBackgroundColor = selectedColor;
             },
           });
           photoBackgroundColorPickerInitialized = true;
-          textBackgroundColor = "";
+          photoBackgroundColor = "#BBE9FF";
         }
       }
 
@@ -5854,11 +5888,11 @@ const eventHandler = async function (e) {
           new GridColorPicker(borderColorElement, {
             defaultColor: "#000000",
             callback: (selectedColor) => {
-              borderColor = selectedColor;
+              photoBorderColor = selectedColor;
             },
           });
           photoBorderColorPickerInitialized = true;
-          borderColor = "";
+          photoBorderColor = "";
         }
       }
 
@@ -5936,6 +5970,47 @@ const eventHandler = async function (e) {
 
       current_number_id = numberId;
 
+      if (!numberBackgroundColorPickerInitialized) {
+        const backgroundColorElement = document.getElementById("number-background-colorpicker");
+        if(backgroundColorElement){
+          new GridColorPicker(backgroundColorElement, {
+            callback: (selectedColor) => {
+              numberBackgroundColor = selectedColor;
+            },
+          });
+          numberBackgroundColorPickerInitialized = true;
+          numberBackgroundColor = "#BBE9FF";
+        }
+      }
+
+      if (!numberBorderColorPickerInitialized) {
+        const borderColorElement = document.getElementById("number-border-colorpicker");
+        if(borderColorElement){
+          new GridColorPicker(borderColorElement, {
+            defaultColor: "#000000",
+            callback: (selectedColor) => {
+              numberBorderColor = selectedColor;
+            },
+          });
+          numberBorderColorPickerInitialized = true;
+          numberBorderColor = "";
+        }
+      }
+
+      if (!numberFontColorPickerInitialized) {
+        const textColorElement = document.getElementById("number-font-colorpicker");
+        if (textColorElement) {
+          new GridColorPicker(textColorElement, {
+            defaultColor: "#000",
+            callback: (selectedColor) => {
+              numberFontColor = selectedColor;
+            },
+          });
+          numberFontColorPickerInitialized = true;
+          numberFontColor = "";
+        }
+      }
+
       numberDiv.addEventListener("dblclick", () => {
         if (!isEditing) {
           current_number_id = numberId;
@@ -5967,14 +6042,21 @@ const eventHandler = async function (e) {
                     element.fontStyle;
                   document.getElementById("number-font-size").value =
                     element.fontSize;
-                  document.getElementById("number-font-color").value =
-                    element.textColor;
-                  document.getElementById("number-font-background-color").value =
-                    element.textBackgroundColor;
-                  document.getElementById("number-border-color").value =
-                    element.borderColor;
                   document.getElementById("number-border-width").value =
                     element.borderWidth;
+
+                  document.getElementById("number-background-colorpicker").value =
+                    element.textBackgroundColor;
+                  document.getElementById("number-background-colorpicker_autocomplete").style.backgroundColor =
+                    element.textBackgroundColor;
+                  document.getElementById("number-border-colorpicker").value =
+                    element.borderColor;
+                  document.getElementById("number-border-colorpicker_autocomplete").style.backgroundColor =
+                    element.borderColor;
+                  document.getElementById("number-font-colorpicker").value =
+                    element.textColor;
+                  document.getElementById("number-font-colorpicker_autocomplete").style.backgroundColor =
+                    element.textColor;                       
 
                   document.getElementById("count").value = element.count;
 
@@ -6650,7 +6732,7 @@ async function addFormElements() {
               y: form_item.y - form_item.yPage * 0.75,
               width: form_item.xPage * 0.75,
               height: form_item.yPage * 0.75,
-              backgroundColor: hexToRgbNew(form_item.textBackgroundColor),
+              color: hexToRgbNew(form_item.textBackgroundColor),
               borderColor: hexToRgbNew(form_item.borderColor),
               borderWidth: parseInt(form_item.borderWidth),
             });
@@ -6808,6 +6890,11 @@ const changeMode = (type) => {
     isEditing = false;
     sidebar.querySelectorAll("button").forEach((item) => {
       item.disabled = false;
+      if(!isDraft){
+        if(item.id === "deleteDraftButton" || item.id === "addFormDownload"){
+          item.disabled = true;
+        }
+      }
     });
 
     formfields.forEach((item) => {
@@ -6838,14 +6925,14 @@ const changeMode = (type) => {
 
     signatureFields.forEach((item) => {
       item.style.border = "none";
-      item.style.background = "#78d3ff80";
+      item.style.background = "#BBE9FF";
     });
 
     shapeFields.forEach((item) => { item.contentEditable = "true" });
 
     photoFields.forEach((item) => {
       item.style.border = "none";
-      item.style.background = "#78d3ff80";
+      item.style.background = "#BBE9FF";
     });
 
     numberfields.forEach((item) => (item.style.display = "none"));

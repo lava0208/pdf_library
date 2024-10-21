@@ -466,7 +466,7 @@ const colorsPalette = {
     "#ffcc99",
     "#ffffcc",
     "#ccffcc",
-    "#ccffff",
+    "#BBE9FF",
     "#ccccff",
     "#ffccff",
     "#f8f9fa",

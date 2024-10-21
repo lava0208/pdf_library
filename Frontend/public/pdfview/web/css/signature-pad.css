@@ -108,7 +108,7 @@
 }
 
 .signature-pad--actions .button {
-  border: 1px solid #78d3ff80;
+  border: 1px solid #BBE9FF;
   border-radius: 4px;
   color: #000;
   padding: 15px 32px;
@@ -132,11 +132,11 @@
 .signature-pad--actions .button {
   padding: 10px;
   transition-duration: 0.4s;
-  background-color: #78d3ff80;
+  background-color: #94ceea;
 }
 
 .signature-pad--actions .button:hover {
-  background-color: #78d3ff80;
+  background-color: #BBE9FF;
 }
 .signature-hr {
   border: 0;
@@ -172,15 +172,15 @@
   right: -8px;
 }
 .signature-color-picker > div:not(:last-child) {
-  background-color: #78d3ff80;
-  border: 1px solid #78d3ff80;
+  background-color: #94ceea;
+  border: 1px solid #94ceea;
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
   color: #000;
 }
 .signature-color-picker > div:last-child {
-  background-color: #78d3ff80;
-  border: 1px solid #78d3ff80;
+  background-color: #BBE9FF;
+  border: 1px solid #BBE9FF;
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
 }

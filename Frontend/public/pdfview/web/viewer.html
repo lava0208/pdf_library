@@ -657,7 +657,16 @@ See https://github.com/adobe-type-tools/cmap-resources
               <div class="item" type="view"><img src="./images/eye.svg" alt="view" /> <span>View</span></div>
               <div class="item active" type="edit"><img src="./images/edit.svg" alt="edit" /> <span>Edit</span></div>
             </div>
-            <a class="menu-item">Document</a>
+            <div class="menu-items">
+              <a class="menu-item">
+                <i class="fa-regular fa-file-pdf"></i>
+                <span>Document</span>
+              </a>
+              <a class="menu-item" onClick="localStorage.clear();window.location.assign('/');">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                <span>Log out</span>
+              </a>
+            </div>
           </div>
           <div id="toolbarContainer">
             <div id="toolbarViewer">
@@ -2146,26 +2155,18 @@ See https://github.com/adobe-type-tools/cmap-resources
                   <img src="./images/fill-color.svg" alt="color" />
                   <span>Fill Color</span>
                 </div>
-                <input
-                  type="color"
-                  id="number-font-background-color"
-                  name="colorPicker"
-                  value="#FFFFFF"
-                  class="form-field-input"
-                />
+                <div class="color-picker-container">
+                  <input type="text" id="number-background-colorpicker" class="form-control" />
+                </div>
               </div>
               <div class="form-style-container">
                 <div class="form-style-name">
                   <img src="./images/border-color.svg" alt="color" />
                   <span>Border Color</span>
                 </div>
-                <input
-                  type="color"
-                  id="number-border-color"
-                  name="colorPicker"
-                  value="#000000"
-                  class="form-field-input"
-                />
+                <div class="color-picker-container">
+                  <input type="text" id="number-border-colorpicker" class="form-control" />
+                </div>
               </div>
               <div class="form-style-container">
                 <div class="form-style-name">
@@ -2196,12 +2197,9 @@ See https://github.com/adobe-type-tools/cmap-resources
                   <img src="./images/fill-color.svg" alt="color" />
                   <span>Color</span>
                 </div>
-                <input
-                  type="color"
-                  id="number-font-color"
-                  name="colorPicker"
-                  class="form-field-input"
-                />
+                <div class="color-picker-container">
+                  <input type="text" id="number-font-colorpicker" class="form-control" />
+                </div>
               </div>
               <div class="form-style-container">
                 <div class="form-style-name">
@@ -2390,11 +2388,11 @@ See https://github.com/adobe-type-tools/cmap-resources
         <button class="form-action-container" id="saveDraftButton" onclick="showModal('docSave')" title="save">
           <i class="fa-regular fa-save"></i>
         </button>
-        <button class="form-action-container" id="add_form_download" onclick="flatten()" title="download">
-          <i class="fa-solid fa-download"></i>
-        </button>
         <button class="form-action-container" id="shareDocument" onclick="shareLink()" title="share with email">
           <i class="fa-solid fa-share-nodes"></i>
+        </button>
+        <button class="form-action-container" id="addFormDownload" onclick="flatten()" title="download" disabled>
+          <i class="fa-solid fa-download"></i>
         </button>
         <button class="form-action-container" id="deleteDraftButton" onclick="showModal('docDelete')" title="delete" disabled>
           <i class="fa-regular fa-trash-can"></i>

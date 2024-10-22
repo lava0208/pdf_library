@@ -2062,32 +2062,31 @@ select.form-field-input{
 }
 
 .textfield-content {
-  /* border: 1px solid #3c97fe80;
-  padding: 10px; */
-  outline: none;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: start;
 }
 
-.dblclicked.textfield-content{
-  border: none;
+.inputcontent{
+  padding: 8px 0;
+  outline: 2px dashed #3c97fe;
+  width: auto;
 }
 
 .inputcontent:focus{
-  border: 1px solid #3c97fe80;
   outline: none;
-  padding: 10px;
 }
 
-.textcontent {
-  /* border: none; */
-  border: 1px solid #3c97fe80;
-  padding: 10px;
-  outline: none;
+.textcontent{
+  padding: 8px 0;
   background-color: transparent;
+  min-width: 20px;
+  width: fit-content;
 }
 
-.textcontent:focus {
-  border: none;
-  outline: none;
+.textfield-content .textcontent {
+  outline: 2px dashed #3c97fe;
 }
 
 .controller-hide {
@@ -2613,10 +2612,6 @@ body.loading .loading-container{
   align-items: center;
 }
 
-div[contenteditable="true"]:focus{
-  outline: none;
-}
-
 .range-value {
   display: block;
   text-align: center;
@@ -2717,6 +2712,7 @@ div[contenteditable="true"]:focus{
 
 .shapeText{
   word-break: break-word;
+  outline: none;
 }
 
 .shape-colorpicker-container{

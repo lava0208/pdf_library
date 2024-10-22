@@ -132,7 +132,7 @@ const addHistory = async function (id, type, username, date, page, typeString, f
                     annotationType.innerHTML = `<i class="fa fa-toggle-off"></i>`;
                     break;
                 case TEXT_CONTENT:
-                    annotationType.innerHTML = `<i class="fa-solid fa-font"></i>`;
+                    annotationType.innerHTML = `<i class="fa-solid fa-heading"></i>`;
                     break;
                 case SHAPE:
                     annotationType.innerHTML = `<i class="fa-solid fa-shapes"></i>`;
@@ -663,7 +663,7 @@ const drawHistory = function(data) {
                 annotationType.innerHTML = `<i class="fa fa-toggle-off"></i>`;
                 break;
             case "7":
-                annotationType.innerHTML = `<i class="fa-solid fa-font"></i>`;
+                annotationType.innerHTML = `<i class="fa-solid fa-heading"></i>`;
                 break;
             case "8":
                 annotationType.innerHTML = `<i class="fa-regular fa-calendar-days"></i>`;

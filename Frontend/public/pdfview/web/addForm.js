@@ -2221,8 +2221,8 @@ const drawFormElement = function () {
     textfieldCount = tmpTextfieldCount;
     comboCount = tmpComboCount;
     listCount = tmpListCount;
-    datefieldCount = tmpDatefieldCount;
     textContentCount = tmpTextContentCount;
+    datefieldCount = tmpDatefieldCount;
     buttonCount = tmpButtonCount;
     commentCount = tmpCommentCount;
     signaturefieldCount = tmpSignaturefieldCount;
@@ -2355,7 +2355,7 @@ document.addEventListener("DOMContentLoaded", function () {
           console.log(draw_form_storage);
           
           const checkViewerInterval = setInterval(() => {
-            if (PDFViewerApplication.pdfDocument && PDFViewerApplication.pdfDocument.numPages > 0) {
+            if (PDFViewerApplication.pdfDocument && PDFViewerApplication.pdfDocument.numPages > 0 && draw_form_storage) {
               clearInterval(checkViewerInterval);
               drawFormElement();
             }
@@ -3599,79 +3599,87 @@ const resizeCanvas = function (id, type, currentId, optionId) {
           var x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
           var y = (parseFloat(target.getAttribute("data-y")) || 0) + event.dy;
           if (DrawType === RADIO) {
-            form_storage.map(function (item) {
-              if (item.id === parseInt(currentId)) {
-                if (item.data.baseX && item.data.baseY) {
-                  let posXpdf = item.data.baseX + x * 0.75 * 0.8;
-                  let posYpdf =
-                    item.data.baseY - y * 0.75 * 0.8 - item.data.height;
+            if(form_storage){
+              form_storage.map(function (item) {
+                if (item.id === parseInt(currentId)) {
+                  if (item.data.baseX && item.data.baseY) {
+                    let posXpdf = item.data.baseX + x * 0.75 * 0.8;
+                    let posYpdf =
+                      item.data.baseY - y * 0.75 * 0.8 - item.data.height;
+                    if (posXpdf < 0) {
+                      newX = 0 - item.data.baseX / 0.75 / 0.8;
+                    } else if (posXpdf + item.data.width >= pageWidth) {
+                      newX =
+                        (pageWidth - item.data.width - item.data.baseX) /
+                        0.75 /
+                        0.8;
+                    } else newX = x;
+                    if (posYpdf < 0) {
+                      newY = (item.data.baseY - item.data.height) / 0.75 / 0.8;
+                    } else if (posYpdf + item.data.height >= pageHeight) {
+                      newY = (item.data.baseY - pageHeight) / 0.75 / 0.8;
+                    } else newY = y;
+                  }
+                }
+              });
+            }
+          } else if (DrawType === TEXT_CONTENT) {
+            if(text_storage){
+              text_storage.map(function (item) {
+                if (item.id === parseInt(currentId)) {
+                  let posXpdf = item.baseX + x * 0.75 * 0.8;
+                  let posYpdf = item.baseY - y * 0.75 * 0.8 - item.height;
                   if (posXpdf < 0) {
-                    newX = 0 - item.data.baseX / 0.75 / 0.8;
-                  } else if (posXpdf + item.data.width >= pageWidth) {
-                    newX =
-                      (pageWidth - item.data.width - item.data.baseX) /
-                      0.75 /
-                      0.8;
+                    newX = 0 - item.baseX / 0.75 / 0.8;
+                  } else if (posXpdf + item.width >= pageWidth) {
+                    newX = (pageWidth - item.width - item.baseX) / 0.75 / 0.8;
                   } else newX = x;
                   if (posYpdf < 0) {
-                    newY = (item.data.baseY - item.data.height) / 0.75 / 0.8;
-                  } else if (posYpdf + item.data.height >= pageHeight) {
-                    newY = (item.data.baseY - pageHeight) / 0.75 / 0.8;
+                    newY = (item.baseY - item.height) / 0.75 / 0.8;
+                  } else if (posYpdf + item.height >= pageHeight) {
+                    newY = (item.baseY - pageHeight) / 0.75 / 0.8;
                   } else newY = y;
                 }
-              }
-            });
-          } else if (DrawType === TEXT_CONTENT) {
-            text_storage.map(function (item) {
-              if (item.id === parseInt(currentId)) {
-                let posXpdf = item.baseX + x * 0.75 * 0.8;
-                let posYpdf = item.baseY - y * 0.75 * 0.8 - item.height;
-                if (posXpdf < 0) {
-                  newX = 0 - item.baseX / 0.75 / 0.8;
-                } else if (posXpdf + item.width >= pageWidth) {
-                  newX = (pageWidth - item.width - item.baseX) / 0.75 / 0.8;
-                } else newX = x;
-                if (posYpdf < 0) {
-                  newY = (item.baseY - item.height) / 0.75 / 0.8;
-                } else if (posYpdf + item.height >= pageHeight) {
-                  newY = (item.baseY - pageHeight) / 0.75 / 0.8;
-                } else newY = y;
-              }
-            });
+              });
+            }
           } else if (DrawType === COMMENT) {
-            comment_storage.map(function (item) {
-              if (item.id === parseInt(currentId)) {
-                let posXpdf = item.baseX + x * 0.75 * 0.8;
-                let posYpdf = item.baseY - y * 0.75 * 0.8 - item.height;
-                if (posXpdf < 0) {
-                  newX = 0 - item.baseX / 0.75 / 0.8;
-                } else if (posXpdf + item.width >= pageWidth) {
-                  newX = (pageWidth - item.width - item.baseX) / 0.75 / 0.8;
-                } else newX = x;
-                if (posYpdf < 0) {
-                  newY = (item.baseY - item.height) / 0.75 / 0.8;
-                } else if (posYpdf + item.height >= pageHeight) {
-                  newY = (item.baseY - pageHeight) / 0.75 / 0.8;
-                } else newY = y;
-              }
-            });
+            if(comment_storage){
+              comment_storage.map(function (item) {
+                if (item.id === parseInt(currentId)) {
+                  let posXpdf = item.baseX + x * 0.75 * 0.8;
+                  let posYpdf = item.baseY - y * 0.75 * 0.8 - item.height;
+                  if (posXpdf < 0) {
+                    newX = 0 - item.baseX / 0.75 / 0.8;
+                  } else if (posXpdf + item.width >= pageWidth) {
+                    newX = (pageWidth - item.width - item.baseX) / 0.75 / 0.8;
+                  } else newX = x;
+                  if (posYpdf < 0) {
+                    newY = (item.baseY - item.height) / 0.75 / 0.8;
+                  } else if (posYpdf + item.height >= pageHeight) {
+                    newY = (item.baseY - pageHeight) / 0.75 / 0.8;
+                  } else newY = y;
+                }
+              });
+            }
           } else {
-            form_storage.map(function (item) {
-              if (item.id === parseInt(currentId)) {
-                let posXpdf = item.baseX + x * 0.75 * 0.8;
-                let posYpdf = item.baseY - y * 0.75 * 0.8 - item.height;
-                if (posXpdf < 0) {
-                  newX = 0 - item.baseX / 0.75 / 0.8;
-                } else if (posXpdf + item.width >= pageWidth) {
-                  newX = (pageWidth - item.width - item.baseX) / 0.75 / 0.8;
-                } else newX = x;
-                if (posYpdf < 0) {
-                  newY = (item.baseY - item.height) / 0.75 / 0.8;
-                } else if (posYpdf + item.height >= pageHeight) {
-                  newY = (item.baseY - pageHeight) / 0.75 / 0.8;
-                } else newY = y;
-              }
-            });
+            if(form_storage){
+              form_storage.map(function (item) {
+                if (item.id === parseInt(currentId)) {
+                  let posXpdf = item.baseX + x * 0.75 * 0.8;
+                  let posYpdf = item.baseY - y * 0.75 * 0.8 - item.height;
+                  if (posXpdf < 0) {
+                    newX = 0 - item.baseX / 0.75 / 0.8;
+                  } else if (posXpdf + item.width >= pageWidth) {
+                    newX = (pageWidth - item.width - item.baseX) / 0.75 / 0.8;
+                  } else newX = x;
+                  if (posYpdf < 0) {
+                    newY = (item.baseY - item.height) / 0.75 / 0.8;
+                  } else if (posYpdf + item.height >= pageHeight) {
+                    newY = (item.baseY - pageHeight) / 0.75 / 0.8;
+                  } else newY = y;
+                }
+              });
+            }
           }
           // translate the element
           target.style.transform = "translate(" + newX + "px, " + newY + "px)";
@@ -3906,23 +3914,28 @@ viewer.addEventListener("mousedown", function (event) {
 
 const resizeHandler = function (width, height, currentId) {
   if (DrawType == RADIO) {
-    form_storage.map(function (item) {
-      if (item.id === parseInt(currentId)) {
-        item.data.width = width * 0.75 * 0.8;
-        item.data.height = height * 0.75 * 0.8;
-        item.data.xPage = width;
-        item.data.yPage = height;
-      }
-    });
+    if(form_storage){
+      form_storage.map(function (item) {
+        if (item.id === parseInt(currentId)) {
+          item.data.width = width * 0.75 * 0.8;
+          item.data.height = height * 0.75 * 0.8;
+          item.data.xPage = width;
+          item.data.yPage = height;
+        }
+      });
+    }
   } else if (DrawType == TEXT_CONTENT) {
-    text_storage.map(function (item) {
-      if (item.id === currentId) {
-        item.width = width * 0.75 * 0.8;
-        item.height = height * 0.75 * 0.8;
-        item.xPage = width;
-        item.yPage = height;
-      }
-    });
+    if(text_storage){
+      text_storage.map(function (item) {
+        if (item.id === currentId) {
+          item.width = width * 0.75 * 0.8;
+          item.height = height * 0.75 * 0.8;
+          item.xPage = width;
+          item.yPage = height;
+        }
+      });
+    }
+    
   } else {
     switch (DrawType) {
       case CHECKBOX:
@@ -3936,14 +3949,16 @@ const resizeHandler = function (width, height, currentId) {
       default:
         break;
     }
-    form_storage.map(function (item) {
-      if (item.id === parseInt(currentId)) {
-        item.width = width * 0.75 * 0.8;
-        item.height = height * 0.75 * 0.8;
-        item.xPage = width;
-        item.yPage = height;
-      }
-    });
+    if(form_storage){
+      form_storage.map(function (item) {
+        if (item.id === parseInt(currentId)) {
+          item.width = width * 0.75 * 0.8;
+          item.height = height * 0.75 * 0.8;
+          item.xPage = width;
+          item.yPage = height;
+        }
+      });
+    }
   }
 };
 

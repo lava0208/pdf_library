@@ -188,65 +188,73 @@ const saveTextContent = function () {
     }
   }
 
-  for (let i = 0; i < text_storage.length; i++) {
-    if (text_storage[i].id == current_text_num_id) {
-      text_storage[i].fontStyle = fontStyle;
-      text_storage[i].regularFontStyle = regularFont;
-      text_storage[i].fontSize = fontSize;
-      text_storage[i].textColor = textColor;
-      text_storage[i].text = resultArray;
-      text_storage[i].isBold = isBold;
-      text_storage[i].isItalic = isItalic;
-      text_storage[i].isUnderline = isUnderline;
-      text_storage[i].width = textContentSize.x * 0.75 * 0.75;
-      text_storage[i].height = textContentSize.y * 0.75 * 0.75;
-      text_storage[i].xPage = textContentSize.x;
-      text_storage[i].yPage = textContentSize.y;
-      break;
-    }
-  }
   let count = 0;
-  for (let j = 0; j < text_storage.length; j++) {
-    if (text_storage[j].id != current_text_num_id) count++;
-  }
-  if (baseId !== 0 && (count == text_storage.length || text_storage == null)) {
-    text_storage.push({
-      id: baseId,
-      containerId: "text-content" + baseId,
-      textContentId: "textcontent" + baseId,
-      form_type: TEXT_CONTENT,
-      page_number: PDFViewerApplication.page,
-      text: resultArray,
-      x: pos_x_pdf,
-      y: pos_y_pdf,
-      baseX: pos_x_pdf,
-      baseY: pos_y_pdf,
-      fontStyle: fontStyle,
-      regularFontStyle: regularFont,
-      isBold: isBold,
-      isItalic: isItalic,
-      isUnderline: isUnderline,
-      fontSize: fontSize,
-      baseFontSize: fontSize,
-      textColor: textColor,
-      width: textContentSize.x * 0.75 * 0.75,
-      height: textContentSize.y * 0.75 * 0.75,
-      xPage: textContentSize.x,
-      yPage: textContentSize.y,
-    });
-    fontStyle = "";
-    fontSize = 12;
-    textColor = "";
-    const date = new Date(Date.now());
-    addHistory(baseId, TEXT_CONTENT, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "text-content", "text content " + textContentCount);
+
+  if(text_storage){
+    for (let i = 0; i < text_storage.length; i++) {
+      if (text_storage[i].id == current_text_num_id) {
+        text_storage[i].fontStyle = fontStyle;
+        text_storage[i].regularFontStyle = regularFont;
+        text_storage[i].fontSize = fontSize;
+        text_storage[i].textColor = textColor;
+        text_storage[i].text = resultArray;
+        text_storage[i].isBold = isBold;
+        text_storage[i].isItalic = isItalic;
+        text_storage[i].isUnderline = isUnderline;
+        text_storage[i].width = textContentSize.x * 0.75 * 0.75;
+        text_storage[i].height = textContentSize.y * 0.75 * 0.75;
+        text_storage[i].xPage = textContentSize.x;
+        text_storage[i].yPage = textContentSize.y;
+        break;
+      } else {
+        count++;
+      }
+    }
+
+    if (baseId !== 0 && (count == text_storage.length || text_storage == null) && isDelete === false) {
+      text_storage.push({
+        id: baseId,
+        containerId: "text-content" + baseId,
+        textContentId: "textcontent" + baseId,
+        historyId: "historyDiv" + baseId,
+        form_type: TEXT_CONTENT,
+        page_number: PDFViewerApplication.page,
+        text: resultArray,
+        x: pos_x_pdf,
+        y: pos_y_pdf,
+        baseX: pos_x_pdf,
+        baseY: pos_y_pdf,
+        fontStyle: fontStyle,
+        regularFontStyle: regularFont,
+        isBold: isBold,
+        isItalic: isItalic,
+        isUnderline: isUnderline,
+        fontSize: fontSize,
+        baseFontSize: fontSize,
+        textColor: textColor,
+        width: textContentSize.x * 0.75 * 0.75,
+        height: textContentSize.y * 0.75 * 0.75,
+        xPage: textContentSize.x,
+        yPage: textContentSize.y,
+      });
+      fontStyle = "";
+      fontSize = 12;
+      textColor = "";
+      const date = new Date(Date.now());
+      addHistory(baseId, TEXT_CONTENT, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "text-content", "text content");
+    }
+
+    isDelete = false;
   }
 }
 
 const handleTextContent = (e) => {
   isOptionPane = false;
-  document.getElementById(TEXT_CONTENT_OPTION).style.display = "none";
+  if (document.getElementById(TEXT_CONTENT_OPTION)) document.getElementById(TEXT_CONTENT_OPTION).style.display = "none";
   if (e) e.stopPropagation();
+  
   saveTextContent();
+
   document
     .getElementById("text-content-save-button")
     .removeEventListener("click", handleTextContent);
@@ -273,8 +281,6 @@ document.getElementById("add_comment").addEventListener("click", (e) => {
   baseId++;
   let commentId = baseId;
 
-
-
   comment_storage.push({
     id: commentId,
     containerId: "comment" + commentId,
@@ -290,7 +296,7 @@ document.getElementById("add_comment").addEventListener("click", (e) => {
   });
 
   const date = new Date(Date.now());
-  addHistory(baseId, COMMENT, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "comment", "comment " + commentCount);
+  addHistory(baseId, COMMENT, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "comment", "comment");
 
   let pageId = String(PDFViewerApplication.page);
   let pg = document.getElementById(pageId);
@@ -347,36 +353,43 @@ document.getElementById("add_comment").addEventListener("click", (e) => {
 
 const moveEventHandler = (event, offsetX, offsetY, currentId) => {
   if (DrawType === COMMENT) {
-
-    comment_storage.map(function (comment) {
-      if (comment.id === parseInt(currentId)) {
-        comment.x = comment.baseX + offsetX * 0.75;
-        comment.y = comment.baseY - offsetY * 0.75;
-      }
-    });
+    if(comment_storage){
+      comment_storage.map(function (comment) {
+        if (comment.id === parseInt(currentId)) {
+          comment.x = comment.baseX + offsetX * 0.75;
+          comment.y = comment.baseY - offsetY * 0.75;
+        }
+      });
+    }
   }
   if (offsetX != 0 || offsetY != 0) {
     if (DrawType === RADIO) {
-      form_storage.map(function (item) {
-        if (item.id === parseInt(currentId)) {
-          item.data.x = item.data.baseX + offsetX * 0.75;
-          item.data.y = item.data.baseY - offsetY * 0.75;
-        }
-      });
+      if(form_storage){      
+        form_storage.map(function (item) {
+          if (item.id === parseInt(currentId)) {
+            item.data.x = item.data.baseX + offsetX * 0.75;
+            item.data.y = item.data.baseY - offsetY * 0.75;
+          }
+        });
+      }
     } else if (DrawType === TEXT_CONTENT) {
-      text_storage.map(function (item) {
-        if (item.id === parseInt(currentId)) {
-          item.x = item.baseX + offsetX * 0.75;
-          item.y = item.baseY - offsetY * 0.75;
-        }
-      });
+      if(text_storage){
+        text_storage.map(function (item) {
+          if (item.id === parseInt(currentId)) {
+            item.x = item.baseX + offsetX * 0.75;
+            item.y = item.baseY - offsetY * 0.75;
+          }
+        });
+      }
     } else {
-      form_storage.map(function (item) {
-        if (item.id === parseInt(currentId)) {
-          item.x = item.baseX + offsetX * 0.75;
-          item.y = item.baseY - offsetY * 0.75;
-        }
-      });
+      if(form_storage){
+        form_storage.map(function (item) {
+          if (item.id === parseInt(currentId)) {
+            item.x = item.baseX + offsetX * 0.75;
+            item.y = item.baseY - offsetY * 0.75;
+          }
+        });
+      }
     }
   }
 };
@@ -394,24 +407,6 @@ viewer.addEventListener("click", (evt) => {
   ].viewport.convertToPdfPoint(comment_x, comment_y);
   comment_x = x_y[0];
   comment_y = x_y[1];
-
-  document.querySelectorAll('.textfield-content').forEach((div, index) => {
-    div.addEventListener('click', function() {
-      this.classList.remove("clicked");
-    });
-    div.addEventListener('dblclick', function() {
-      if (isDraft && !isEditing) {
-        const textContent = this.querySelector('.textcontent');
-        if (textContent.classList.contains('oldtextcontent') && textContent) {
-          var divId = $(this).attr("id");
-          if(!divId.includes("date")){
-            textContent.setAttribute("contentEditable", "true");
-          }
-        }
-      }
-      div.style.zIndex = selectedZIndex;
-    });
-  });
 
   if (isAddCommentModeOn) {
     comment_control.style.left = evt.x + "px";
@@ -432,9 +427,8 @@ viewer.addEventListener("click", (evt) => {
     newText.id = "textcontent" + textContentId;
     newText.contentEditable = "true";
     newText.spellcheck = "false";
-    newText.textContent = "Your text is here!";
+    newText.textContent = "";
     newText.style.position = "relative";
-    // newText.style.padding = "10px";
     newText.classList.add("textcontent");
     newText.oninput = function () {
       current_text_num_id = textContentId;
@@ -464,7 +458,7 @@ viewer.addEventListener("click", (evt) => {
       for (let entry of entries) {
         const { width, height } = entry.contentRect;
         container.style.width = "fit-content";
-        container.style.height = height + "px";
+        container.style.height = "fit-content";
         textContentSize.x = width;
         textContentSize.y = height;
         // saveTextContent();
@@ -474,16 +468,11 @@ viewer.addEventListener("click", (evt) => {
     observer.observe(newText);
 
     pg.append(container);
+
+    newText.focus();
     current_text_content_id = newText.id;
     current_text_container_id = container.id;
     current_text_num_id = textContentId;
-    showOptionAndResizebar(
-      TEXT_CONTENT_OPTION,
-      container,
-      textContentSize.x,
-      15,
-      "text-content"
-    );
 
     if (!textFieldFontColorPickerInitialized) {
       const textColorElement = document.getElementById("text-field-font-colorpicker");
@@ -491,14 +480,20 @@ viewer.addEventListener("click", (evt) => {
         new GridColorPicker(textColorElement, {
           defaultColor: "#000000",
           callback: (selectedColor) => {
-            textColor = selectedColor;
-            newText.style.color = selectedColor;
+            newText.style.color = selectedColor;  // Apply selected text color
           },
         });
         textFieldFontColorPickerInitialized = true;
-        textColor = "";
       }
     }
+
+    showOptionAndResizebar(
+      TEXT_CONTENT_OPTION,
+      container,
+      textContentSize.x,
+      15,
+      "text-content"
+    );
 
     newText.style.fontFamily = $("#text-content-font-style").val();
     newText.style.fontSize = $("#text-content-font-size").val() + "px";
@@ -526,11 +521,20 @@ viewer.addEventListener("click", (evt) => {
       adjustZIndex($(this));
     })
 
+    $(document).on('change', '#text-field-font-colorpicker', function() {
+      $('#' + current_text_content_id).css('color', $(this).val());
+      adjustZIndex($(this));
+    })
+
     $(document).on('focus', '#text-content-font-style', function() {
       adjustZIndex($(this));
     })
 
     $(document).on('focus', '#text-content-font-size', function() {
+      adjustZIndex($(this));
+    })
+
+    $(document).on('focus', '#text-content-color', function() {
       adjustZIndex($(this));
     })
 
@@ -545,11 +549,13 @@ viewer.addEventListener("click", (evt) => {
           value: text,
           class: 'inputcontent ' + classes,
           css: {
-            width: '100%',
+            width: 'auto',
             height: 'fit-content',
             fontFamily: $this.css('font-family'),
             fontSize: $this.css('font-size'),
             color: $this.css('color'),
+            outline: '2px dashed #3c97fe',
+            border: 'none',
             cursor: 'move'
           }
         });
@@ -618,8 +624,9 @@ viewer.addEventListener("click", (evt) => {
                 if(document.getElementById("text-content-font-size")){
                   document.getElementById("text-content-font-size").value = element.fontSize;
                 }
-                document.getElementById("text-field-font-colorpicker").value = element.textColor;
-                document.getElementById("text-field-font-colorpicker_autocomplete").style.backgroundColor = element.textColor;
+                if(document.getElementById("text-content-color")){
+                  document.getElementById("text-content-color").value = element.textColor;
+                }
 
                 $(document).on("click", "#" + TEXT_CONTENT_OPTION, function(){
                   document.getElementById(container.id).style.zIndex = selectedZIndex;

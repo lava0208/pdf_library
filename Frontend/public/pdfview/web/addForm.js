@@ -587,7 +587,7 @@ const drawFormElement = function () {
                 },
               });
               textBorderColorPickerInitialized = true;
-              textBorderColor = "";
+              textBorderColor = "#FFFFFF";
             }
           }
 
@@ -760,7 +760,7 @@ const drawFormElement = function () {
                 },
               });
               comboBorderColorPickerInitialized = true;
-              comboBorderColor = "";
+              comboBorderColor = "#FFFFFF";
             }
           }
 
@@ -968,7 +968,7 @@ const drawFormElement = function () {
                 },
               });
               listBorderColorPickerInitialized = true;
-              listBorderColor = "";
+              listBorderColor = "#FFFFFF";
             }
           }
 
@@ -1201,7 +1201,7 @@ const drawFormElement = function () {
                 },
               });
               buttonBorderColorPickerInitialized = true;
-              buttonBorderColor = "";
+              buttonBorderColor = "#FFFFFF";
             }
           }
 
@@ -1397,7 +1397,7 @@ const drawFormElement = function () {
                 },
               });
               dateBorderColorPickerInitialized = true;
-              dateBorderColor = "";
+              dateBorderColor = "#FFFFFF";
             }
           }
 
@@ -1541,7 +1541,7 @@ const drawFormElement = function () {
                 },
               });
               signatureBorderColorPickerInitialized = true;
-              signatureBorderColor = "";
+              signatureBorderColor = "#FFFFFF";
             }
           }
 
@@ -1633,7 +1633,7 @@ const drawFormElement = function () {
                 },
               });
               signatureBorderColorPickerInitialized = true;
-              signatureBorderColor = "";
+              signatureBorderColor = "#FFFFFF";
             }
           }
           
@@ -1867,6 +1867,7 @@ const drawFormElement = function () {
             const backgroundColorElement = document.getElementById("photo-background-colorpicker");
             if(backgroundColorElement){
               new GridColorPicker(backgroundColorElement, {
+                defaultColor: "#BBE9FF",
                 callback: (selectedColor) => {
                   photoBackgroundColor = selectedColor;
                 },
@@ -1880,13 +1881,13 @@ const drawFormElement = function () {
             const borderColorElement = document.getElementById("photo-border-colorpicker");
             if(borderColorElement){
               new GridColorPicker(borderColorElement, {
-                defaultColor: "#000000",
+                defaultColor: "#FFFFFF",
                 callback: (selectedColor) => {
                   photoBorderColor = selectedColor;
                 },
               });
               photoBorderColorPickerInitialized = true;
-              photoBorderColor = "";
+              photoBorderColor = "#FFFFFF";
             }
           }
 
@@ -2058,7 +2059,7 @@ const drawFormElement = function () {
                 },
               });
               numberBorderColorPickerInitialized = true;
-              numberBorderColor = "";
+              numberBorderColor = "#FFFFFF";
             }
           }
 
@@ -2702,7 +2703,7 @@ const handleText = function (e) {
     alignValue = 0;
 
     textBackgroundColor = "#BBE9FF";
-    textBorderColor = "";
+    textBorderColor = "#FFFFFF";
     textFontColor = "";
 
     const date = new Date(Date.now());
@@ -2813,7 +2814,7 @@ const handleCombo = function (e) {
     alignValue = 0;
 
     comboBackgroundColor = "#BBE9FF";
-    comboBorderColor = "";
+    comboBorderColor = "#FFFFFF";
     comboFontColor = "";
     
     comboboxOptionArray = [];
@@ -2922,7 +2923,7 @@ const handleList = function (e) {
     alignValue = 0;
 
     listBackgroundColor = "#BBE9FF";
-    listBorderColor = "";
+    listBorderColor = "#FFFFFF";
     listFontColor = "";
 
     listboxOptionArray = [];
@@ -3135,7 +3136,7 @@ const handleButton = function (e) {
     alignValue = 0;
 
     buttonBackgroundColor = "#BBE9FF";
-    buttonBorderColor = "";
+    buttonBorderColor = "#FFFFFF";
     buttonFontColor = "";
 
     form_action = 0;
@@ -3228,7 +3229,7 @@ const handleDate = function (e) {
     borderWidth = "";
 
     dateBackgroundColor = "#BBE9FF";
-    dateBorderColor = "";
+    dateBorderColor = "#FFFFFF";
     dateFontColor = "";
     const date = new Date(Date.now());
     addHistory(baseId, DATE, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "date", formFieldName);
@@ -3309,7 +3310,7 @@ const handleSignature = function () {
     });
 
     signatureBackgroundColor = "#BBE9FF";
-    signatureBorderColor = "";
+    signatureBorderColor = "#FFFFFF";
     const date = new Date(Date.now());
     addHistory(baseId, SIGNATURE, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "signature", "Signature " + signaturefieldCount);
   }
@@ -3381,7 +3382,7 @@ const handlePhoto = function () {
     });
 
     photoBackgroundColor = "#BBE9FF";
-    photoBorderColor = "";
+    photoBorderColor = "#FFFFFF";
     const date = new Date(Date.now());
     addHistory(baseId, PHOTO, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "photo", "Photo " + photofieldCount);
   }
@@ -3503,7 +3504,7 @@ const handleNumber = function (e) {
     borderWidth = "";
 
     numberBackgroundColor = "#BBE9FF";
-    numberBorderColor = "";
+    numberBorderColor = "#FFFFFF";
     numberFontColor = "";
 
     const date = new Date(Date.now());
@@ -4688,7 +4689,7 @@ const eventHandler = async function (e) {
             },
           });
           textBorderColorPickerInitialized = true;
-          textBorderColor = "";
+          textBorderColor = "#FFFFFF";
         }
       }
 
@@ -4871,7 +4872,7 @@ const eventHandler = async function (e) {
             },
           });
           comboBorderColorPickerInitialized = true;
-          comboBorderColor = "";
+          comboBorderColor = "#FFFFFF";
         }
       }
 
@@ -5100,7 +5101,7 @@ const eventHandler = async function (e) {
             },
           });
           listBorderColorPickerInitialized = true;
-          listBorderColor = "";
+          listBorderColor = "#FFFFFF";
         }
       }
 
@@ -5356,7 +5357,7 @@ const eventHandler = async function (e) {
             },
           });
           buttonBorderColorPickerInitialized = true;
-          buttonBorderColor = "";
+          buttonBorderColor = "#FFFFFF";
         }
       }
 
@@ -5547,7 +5548,7 @@ const eventHandler = async function (e) {
             },
           });
           dateBorderColorPickerInitialized = true;
-          dateBorderColor = "";
+          dateBorderColor = "#FFFFFF";
         }
       }
 
@@ -5749,7 +5750,7 @@ const eventHandler = async function (e) {
             },
           });
           signatureBorderColorPickerInitialized = true;
-          signatureBorderColor = "";
+          signatureBorderColor = "#FFFFFF";
         }
       }
 
@@ -5963,6 +5964,7 @@ const eventHandler = async function (e) {
         const backgroundColorElement = document.getElementById("photo-background-colorpicker");
         if(backgroundColorElement){
           new GridColorPicker(backgroundColorElement, {
+            defaultColor: "#BBE9FF",
             callback: (selectedColor) => {
               photoBackgroundColor = selectedColor;
             },
@@ -5976,13 +5978,13 @@ const eventHandler = async function (e) {
         const borderColorElement = document.getElementById("photo-border-colorpicker");
         if(borderColorElement){
           new GridColorPicker(borderColorElement, {
-            defaultColor: "#000000",
+            defaultColor: "#FFFFFF",
             callback: (selectedColor) => {
               photoBorderColor = selectedColor;
             },
           });
           photoBorderColorPickerInitialized = true;
-          photoBorderColor = "";
+          photoBorderColor = "#FFFFFF";
         }
       }
 
@@ -6083,7 +6085,7 @@ const eventHandler = async function (e) {
             },
           });
           numberBorderColorPickerInitialized = true;
-          numberBorderColor = "";
+          numberBorderColor = "#FFFFFF";
         }
       }
 

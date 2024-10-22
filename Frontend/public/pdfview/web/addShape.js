@@ -6,7 +6,7 @@ let rectElement;
 let shapeType = "shape";
 
 let selectedShapeFillColor = '#BBE9FF';
-let selectedShapeOutlineColor = 'rgb(0, 0, 0)';
+let selectedShapeOutlineColor = 'rgb(255, 255, 255)';
 let selectedTextColor = 'rgb(0, 0, 0)';
 let selectedBorderRadius = '0px';
 let selectedBorderWeight = '1px';
@@ -562,7 +562,7 @@ function handleChange() {
 
 function initialShapeStyle(){
   $("#shape-fill-dropdown").find("input").val("#FFFFFF");
-  $("#shape-outline-dropdown").find("input").val("#000000");
+  $("#shape-outline-dropdown").find("input").val("#FFFFFF");
   $("#text-color-dropdown").find("input").val("#000000");
   $("#border-radius-dropdown input").val(0);
   $("#border-weight-dropdown input").val(1);
@@ -572,7 +572,7 @@ function initialShapeStyle(){
   $("#shape-text-underline").removeClass("active");
 
   selectedShapeFillColor = '#BBE9FF';
-  selectedShapeOutlineColor = 'rgb(0, 0, 0)';
+  selectedShapeOutlineColor = 'rgb(255, 255, 255)';
   selectedTextColor = 'rgb(0, 0, 0)';
   selectedBorderRadius = '0px';
   selectedBorderWeight = '1px';

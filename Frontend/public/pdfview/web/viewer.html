@@ -2827,7 +2827,7 @@ See https://github.com/adobe-type-tools/cmap-resources
             <p>This action can't be undone</p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="modal-save">Yes, save it!</button>
+            <button type="button" class="modal-save" id="document-save">Yes, save it!</button>
             <button class="modal-cancel" data-dismiss="modal">Cancel</button>
           </div>
         </div>
@@ -2874,6 +2874,8 @@ See https://github.com/adobe-type-tools/cmap-resources
             <p>Saved successfully</p>
           </div>
           <div class="modal-footer">
+            <button type="button" class="modal-refresh hidden" id="refresh-page">New document</button>
+            <button type="button" class="modal-save hidden" id="open-documents">My documents</button>
             <button class="modal-cancel">Close</button>
           </div>
         </div>

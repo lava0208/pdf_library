@@ -32,6 +32,15 @@ const historySchema = new mongoose.Schema({
     },
 });
 
+// Add a virtual to return historyId as the same as id
+historySchema.virtual('historyId').get(function() {
+    return this.id;  // Simply return the `id` field as `historyId`
+});
+
+// Ensure virtuals are included in toJSON and toObject output
+historySchema.set('toJSON', { virtuals: true });
+historySchema.set('toObject', { virtuals: true });
+
 const documentSchema = new Schema({
     uniqueId: {
         type: String,
@@ -59,7 +68,7 @@ const documentSchema = new Schema({
     uniqueLink: {
         type: String
     },
-    history: [historySchema],
+    history: [historySchema], // Embed historySchema
     folderId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Folder',
@@ -73,6 +82,9 @@ const documentSchema = new Schema({
         type: Date,
         default: Date.now
     }
+}, {
+    toJSON: { virtuals: true }, // Ensure virtuals are included in JSON
+    toObject: { virtuals: true } // Ensure virtuals are included in Objects
 });
 
 const Doc = mongoose.model("Document", documentSchema);

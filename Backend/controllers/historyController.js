@@ -77,18 +77,30 @@ const createDocument = async (req, res) => {
         const uniqueId = uuid.v4();
         let newDataSet = [];
 
-        const formData = req.body.pdfFormData;
+        let formData = JSON.parse(req.body.pdfFormData); // Parse formData as an array
         const textData = req.body.pdfTextData;
+
+        // Create the history
+        const history = JSON.parse(req.body.history);
+
+        // Map through formData and add the corresponding historyId
+        formData = formData.map((formItem, index) => {
+            if (history[index]) {
+                formItem.historyId = history[index].id;  // Add historyId to formItem
+            }
+            return formItem;
+        });
+
+        // Convert formData back to a string for saving
+        const updatedFormData = JSON.stringify(formData);
 
         newDataSet.push({
             pdfData: dataUri,
-            formData: formData,
+            formData: updatedFormData,
             textData: textData,
         });
 
         formDataMap.set(uniqueId, newDataSet);
-
-        const history = JSON.parse(req.body.history); // Parse the history JSON string
 
         const uniqueLink = `https://${process.env.DOMAIN}/pdfviewer/?id=${uniqueId}&draft=true`;
 
@@ -97,7 +109,7 @@ const createDocument = async (req, res) => {
             uniqueId,
             username,
             pdfData: dataUri,
-            formData,
+            formData: updatedFormData,  // Save the updated formData with historyId
             textData,
             history,
             uniqueLink,
@@ -128,7 +140,21 @@ const updateDocument = async (req, res) => {
         }
 
         if (req.body.pdfFormData) {
-            updateData.formData = req.body.pdfFormData;
+            let formData = JSON.parse(req.body.pdfFormData); // Parse formData as an array
+
+            // Get the document to fetch its history
+            const document = await Doc.findOne({ uniqueId, username });
+
+            // Map through formData and add the corresponding historyId
+            formData = formData.map((formItem, index) => {
+                if (document.history[index]) {
+                    formItem.historyId = document.history[index].id;  // Add historyId to formItem
+                }
+                return formItem;
+            });
+
+            // Convert formData back to a string for saving
+            updateData.formData = JSON.stringify(formData);
         }
 
         if (req.body.pdfTextData) {
@@ -140,11 +166,11 @@ const updateDocument = async (req, res) => {
             updateData.history = history;
         }
 
-        if (req.body.formDataMap) {
-            updateData.formDataMap = req.body.formDataMap;
-        }        
-
-        const updatedDocument = await Doc.findOneAndUpdate({ uniqueId, username }, { $set: updateData }, { new: true });
+        const updatedDocument = await Doc.findOneAndUpdate(
+            { uniqueId, username },
+            { $set: updateData },
+            { new: true }
+        );
 
         if (!updatedDocument) {
             return res.status(404).json({ message: 'Document not found' });
@@ -156,6 +182,7 @@ const updateDocument = async (req, res) => {
         res.status(500).send('Error occurred: ' + error.message);
     }
 };
+
 
 const updateDocumentName = async (req, res) => {
     try {
@@ -244,6 +271,39 @@ const moveDocument = async (req, res) => {
     }
 };
 
+const deleteHistoryById = async (req, res) => {
+    try {
+        const { uniqueId, historyId } = req.params;
+
+        const document = await Doc.findOne({ uniqueId });
+
+        if (!document) {
+            return res.status(404).json({ message: 'Document not found' });
+        }
+
+        console.log("historyId " + historyId);
+        
+
+        const updatedHistory = document.history.filter((item) => item.id !== historyId);
+
+        let formData = JSON.parse(document.formData);
+        formData = formData.filter((formItem) => formItem.historyId !== historyId);
+
+        const updatedFormData = JSON.stringify(formData);
+
+        document.history = updatedHistory;
+        document.formData = updatedFormData;
+
+        await document.save();
+
+        res.status(200).json({ message: 'History is deleted successfully', document });
+    } catch (error) {
+        console.error('Error deleting history item:', error);
+        res.status(500).json({ message: 'Error deleting history item', error: error.message });
+    }
+};
+
+
 module.exports = {
     getAllDocuments,
     getAllFolderDocuments,
@@ -254,5 +314,6 @@ module.exports = {
     updateDocumentName,
     updateDocumentFormMap,
     deleteDocument,
-    moveDocument
+    moveDocument,
+    deleteHistoryById
 };

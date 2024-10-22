@@ -824,25 +824,27 @@ const drawFormElement = function () {
                       document.getElementById("combo-font-colorpicker_autocomplete").style.backgroundColor =
                         element.textColor;
 
-                      element.optionArray.forEach((elementItem, index) => {
-                        const optionContent = document.createElement("div");
-                        const deleteDivId = `delete-span-${comboboxOptionCount}`;
-                        optionContent.id = `comboOption${deleteDivId}`;
-                        optionContent.className = "combobox-options-content";
-                        const contentSpan = document.createElement("span");
-                        contentSpan.textContent = elementItem;
-                        const deleteSpan = document.createElement("span");
-                        deleteSpan.className = "option-delete";
-                        deleteSpan.innerHTML = '<i class="fa fa-xmark"></i>';
-                        deleteSpan.addEventListener("click", function () {
-                          // Remove the corresponding div when the delete span is clicked
-                          element.optionArray = element.optionArray.filter((item, i) => i !== index);
-                          optionContent.remove();
+                      if(element.optionArray && element.optionArray.length > 0){
+                        element.optionArray.forEach((elementItem, index) => {
+                          const optionContent = document.createElement("div");
+                          const deleteDivId = `delete-span-${comboboxOptionCount}`;
+                          optionContent.id = `comboOption${deleteDivId}`;
+                          optionContent.className = "combobox-options-content";
+                          const contentSpan = document.createElement("span");
+                          contentSpan.textContent = elementItem;
+                          const deleteSpan = document.createElement("span");
+                          deleteSpan.className = "option-delete";
+                          deleteSpan.innerHTML = '<i class="fa fa-xmark"></i>';
+                          deleteSpan.addEventListener("click", function () {
+                            // Remove the corresponding div when the delete span is clicked
+                            element.optionArray = element.optionArray.filter((item, i) => i !== index);
+                            optionContent.remove();
+                          });
+                          optionContent.append(contentSpan, deleteSpan);
+                          document.getElementById("option-content").append(optionContent);
+                          comboboxOptionCount++;
                         });
-                        optionContent.append(contentSpan, deleteSpan);
-                        document.getElementById("option-content").append(optionContent);
-                        comboboxOptionCount++;
-                      });
+                      }
 
                       $(document).on("click", "#" + COMBOBOX_OPTION, function(){
                         document.getElementById(comboDiv.id).style.zIndex = selectedZIndex;
@@ -2451,9 +2453,6 @@ const handleCheckbox = function (e) {
   const label = document.getElementById("checkbox-label").value;
   const value = document.getElementById("checkbox-value").value;
 
-  console.log("formFieldName " + formFieldName);
-  
-
   for (let i = 0; i < form_storage.length; i++) {
     if (form_storage[i].id == current_form_id) {
       if(!isEditing){        
@@ -2479,10 +2478,11 @@ const handleCheckbox = function (e) {
   }
 
   // if (baseId !== 0 && (count == form_storage.length || form_storage == null)) {
-  if (baseId !== 0 && count == form_storage.length) {
+  if (baseId !== 0 && count == form_storage.length && isDelete === false) {
     form_storage.push({
       id: baseId,
       containerId: "checkbox" + baseId,
+      historyId: "historyDiv" + baseId,
       form_type: CHECKBOX,
       form_field_name: formFieldName,
       page_number: PDFViewerApplication.page,
@@ -2507,8 +2507,7 @@ const handleCheckbox = function (e) {
     addHistory(baseId, CHECKBOX, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, 'checkbox', formFieldName);
   }
 
-  console.log("%%%%%%%%%% check box %%%%%%%%%");
-  console.log(form_storage);
+  isDelete = false;
 
   document
     .getElementById("checkbox-save-button")
@@ -2556,10 +2555,11 @@ const handleRadio = function (e) {
   }
 
   // if (baseId !== 0 && (count == form_storage.length || form_storage == null)) {
-  if (baseId !== 0 && count == form_storage.length) {
+  if (baseId !== 0 && count == form_storage.length && isDelete === false) {
     form_storage.push({
       id: baseId,
       containerId: "radio" + baseId,
+      historyId: "historyDiv" + baseId,
       form_type: RADIO,
       page_number: PDFViewerApplication.page,
       data: {
@@ -2583,10 +2583,13 @@ const handleRadio = function (e) {
     radioBackgroundColor = "#BBE9FF";
     const date = new Date(Date.now());
     addHistory(baseId, RADIO, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "radio", formFieldName);
+
+    console.log("%%%%%%%%%% radio %%%%%%%%%");
+    console.log(form_storage);
   }
 
-  console.log("%%%%%%%%%% radio %%%%%%%%%");
-  console.log(form_storage);
+  isDelete = false;
+  
   document
     .getElementById("radio-save-button")
     .removeEventListener("click", handleRadio);
@@ -2660,10 +2663,11 @@ const handleText = function (e) {
   }
 
   // if (baseId !== 0 && (count == form_storage.length || form_storage == null)) {
-  if (baseId !== 0 && count == form_storage.length) {
+  if (baseId !== 0 && count == form_storage.length && isDelete === false) {
     form_storage.push({
       id: baseId,
       containerId: "text" + baseId,
+      historyId: "historyDiv" + baseId,
       form_type: TEXTFIELD,
       form_field_name: formFieldName,
       initialValue: initialValue,
@@ -2702,6 +2706,8 @@ const handleText = function (e) {
     const date = new Date(Date.now());
     addHistory(baseId, TEXTFIELD, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "text", formFieldName);
   }
+
+  isDelete = false;
 
   console.log("=========== text =-==========");
   console.log(form_storage);
@@ -2772,10 +2778,11 @@ const handleCombo = function (e) {
   }
 
   // if (baseId !== 0 && (count == form_storage.length || form_storage == null)) {
-  if (baseId !== 0 && count == form_storage.length) {
+  if (baseId !== 0 && count == form_storage.length && isDelete === false) {
     form_storage.push({
       id: baseId,
       containerId: "combo" + baseId,
+      historyId: "historyDiv" + baseId,
       form_type: COMBOBOX,
       form_field_name: formFieldName,
       initialValue: initialValue,
@@ -2810,10 +2817,13 @@ const handleCombo = function (e) {
     comboboxOptionArray = [];
     const date = new Date(Date.now());
     addHistory(baseId, COMBOBOX, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "combo", formFieldName);
+
+    console.log("================ history =================");
+    console.log(form_storage);
   }
 
-  console.log("&$$$$$$$$$$$$$$$$$$$$$$$");
-  console.log(form_storage);
+  isDelete = false;
+
   document
     .getElementById("combo-save-button")
     .removeEventListener("click", handleCombo);
@@ -2877,10 +2887,11 @@ const handleList = function (e) {
   }
 
   // if (baseId !== 0 && (count == form_storage.length || form_storage == null)) {
-  if (baseId !== 0 && count == form_storage.length) {
+  if (baseId !== 0 && count == form_storage.length && isDelete === false) {
     form_storage.push({
       id: baseId,
       containerId: "list" + baseId,
+      historyId: "historyDiv" + baseId,
       form_type: LIST,
       form_field_name: formFieldName,
       page_number: PDFViewerApplication.page,
@@ -2916,6 +2927,8 @@ const handleList = function (e) {
     const date = new Date(Date.now());
     addHistory(baseId, LIST, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "list", formFieldName);
   }
+
+  isDelete = false;
 
   console.log("^^^^^^^^ list ^^^^^^^^^^");
   console.log(form_storage);
@@ -3087,10 +3100,11 @@ const handleButton = function (e) {
   }
 
   // if (baseId !== 0 && (count == form_storage.length || form_storage == null)) {
-  if (baseId !== 0 && count == form_storage.length) {
+  if (baseId !== 0 && count == form_storage.length && isDelete === false) {
     form_storage.push({
       id: baseId,
       containerId: "button" + baseId,
+      historyId: "historyDiv" + baseId,
       form_type: BUTTON,
       form_field_name: formFieldName,
       text: initialValue,
@@ -3126,6 +3140,8 @@ const handleButton = function (e) {
     const date = new Date(Date.now());
     addHistory(baseId, BUTTON, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "button", formFieldName);
   }
+
+  isDelete = false;
 
   if (document.getElementById("button-save-button")) document.getElementById("button-save-button").removeEventListener("click", handleButton);
 };
@@ -3178,10 +3194,11 @@ const handleDate = function (e) {
   }
 
   // if (baseId !== 0 && (count == form_storage.length || form_storage == null)) {
-  if (baseId !== 0 && count == form_storage.length) {
+  if (baseId !== 0 && count == form_storage.length && isDelete === false) {
     form_storage.push({
       id: baseId,
       containerId: "datecontent" + baseId,
+      historyId: "historyDiv" + baseId,
       form_type: DATE,
       form_field_name: formFieldName,
       page_number: PDFViewerApplication.page,
@@ -3214,6 +3231,9 @@ const handleDate = function (e) {
     const date = new Date(Date.now());
     addHistory(baseId, DATE, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "date", formFieldName);
   }
+
+  isDelete = false;
+
   document
     .getElementById("date-save-button")
     .removeEventListener("click", handleDate);
@@ -3265,10 +3285,11 @@ const handleSignature = function () {
     }
   }
 
-  if (baseId !== 0 && (count == signStorage.length || signStorage == null)) {
+  if (baseId !== 0 && (count == signStorage.length || signStorage == null) && isDelete === false) {
     form_storage.push({
       id: baseId,
       containerId: "signature" + baseId,
+      historyId: "historyDiv" + baseId,
       form_type: SIGNATURE,
       page_number: PDFViewerApplication.page,
       x: pos_x_pdf,
@@ -3290,6 +3311,8 @@ const handleSignature = function () {
     const date = new Date(Date.now());
     addHistory(baseId, SIGNATURE, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "signature", "Signature " + signaturefieldCount);
   }
+
+  isDelete = false;
 };
 
 const handlePhoto = function () {
@@ -3334,10 +3357,11 @@ const handlePhoto = function () {
     }
   }
 
-  if (baseId !== 0 && (count == imageStorage.length || imageStorage == null)) {
+  if (baseId !== 0 && (count == imageStorage.length || imageStorage == null) && isDelete === false) {
     form_storage.push({
       id: baseId,
       containerId: "photo" + baseId,
+      historyId: "historyDiv" + baseId,
       form_type: PHOTO,
       page_number: PDFViewerApplication.page,
       x: pos_x_pdf,
@@ -3359,6 +3383,8 @@ const handlePhoto = function () {
     const date = new Date(Date.now());
     addHistory(baseId, PHOTO, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "photo", "Photo " + photofieldCount);
   }
+
+  isDelete = false;
 };
 
 const handleNumber = function (e) {
@@ -3439,10 +3465,11 @@ const handleNumber = function (e) {
   }
 
   // if (baseId !== 0 && (count == form_storage.length || form_storage == null)) {
-  if (baseId !== 0 && count == form_storage.length) {    
+  if (baseId !== 0 && count == form_storage.length && isDelete === false) {    
     form_storage.push({
       id: baseId,
       containerId: "number" + baseId,
+      historyId: "historyDiv" + baseId,
       form_type: NUMBERFIELD,
       form_field_name: formFieldName,
       initialValue: initialValue,
@@ -3480,6 +3507,8 @@ const handleNumber = function (e) {
     const date = new Date(Date.now());
     addHistory(baseId, NUMBERFIELD, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "number", formFieldName);
   }
+
+  isDelete = false;
 
   document
     .getElementById("number-save-button")
@@ -4083,9 +4112,10 @@ const addDeleteButton = function (currentId, container, object, type) {
   deleteBtn.style.padding = "5px";
   deleteBtn.innerHTML = `<i class="fas fa-trash-can"></i>`;
 
-  deleteBtn.addEventListener("click", (e) => {
+  deleteBtn.addEventListener("click", async (e) => {
     e.stopPropagation();
     e.preventDefault();
+    isDelete = true;
 
     let currentObject;
 
@@ -4117,14 +4147,41 @@ const addDeleteButton = function (currentId, container, object, type) {
         return item.id != currentId;
       });
       form_storage = form_storage.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i);
+
+      console.log("=== form storage ===");
+      console.log(form_storage);
+      console.log(currentObject);
+      
+      console.log(currentObject.historyId);
+      console.log("currentId " +  currentId);
+      
     }
     if (currentObject) {
       const commentPageDiv = document.getElementById(`page${currentObject.page_number}`);
-      const currentHistoryDiv = document.getElementById(`historyDiv${currentId}`);
+      const currentHistoryDiv = document.getElementById(currentObject.historyId);
       if (commentPageDiv && commentPageDiv.contains(currentHistoryDiv)) {
         commentPageDiv.removeChild(currentHistoryDiv);
       }
     }
+
+    // try {
+    //   const response = await fetch(`${BASE_URL}/history/item/${initialId}/${currentObject.historyId}`, {
+    //     method: "DELETE",
+    //     headers: {
+    //       "Content-Type": "application/json"
+    //     }
+    //   });
+    //   const data = await response.json();
+
+    //   if (response.ok) {
+    //     console.log('History item deleted successfully', data);
+    //     drawHistory(data.document.history);
+    //   } else {
+    //     console.error('Failed to delete history item:', data.message);
+    //   }
+    // } catch (error) {
+    //   console.error('Error:', error);
+    // }
   });
 
   // Keyboard delete functionality
@@ -4139,6 +4196,11 @@ const addDeleteButton = function (currentId, container, object, type) {
         return item.id !== parseInt(currentId);
       });
       form_storage = form_storage.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i);
+      draw_form_storage = form_storage;
+      drawFormElement();
+      console.log("^^^^^^^^^^ form storage ^^^^^^^^^^^^^");
+      console.log(form_storage);
+      
     }
   });
   container.appendChild(deleteBtn);
@@ -4169,7 +4231,6 @@ const addFormElementStyle = function (object, top, left, width, height, borderRa
   object.classList.add("form-fields");
 };
 
-//...
 const addSignatureElementStyle = function (object, top, left, width, height) {
   object.style.position = "absolute";
   object.style.top = top + "px";
@@ -7339,10 +7400,16 @@ $(".menu-item").click(function(){
   parent.window.location.href = "/documents";
 })
 
+$("#open-documents").click(function(){
+  parent.window.location.href = "/documents";
+})
+
+$("#refresh-page").click(function(){
+  parent.window.location.reload();
+})
+
 //... Tracking
 const handleTrack = function (id, value) {
-  console.log("history " + value);
-  
   $(".historyDiv").each(function () {
     var index = $(this).index();
     if (id === index) {

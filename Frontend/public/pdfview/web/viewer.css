@@ -3290,6 +3290,11 @@ input[type=number]::-webkit-outer-spin-button {
   color: #fff;
 }
 
+.modal-footer button.modal-refresh{
+  background-color: #0f9195;
+  color: #fff;
+}
+
 .modal-footer button.modal-cancel{
   border: 1px solid #d9d9d9;
   color: #000000;

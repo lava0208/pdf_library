@@ -2353,6 +2353,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
           console.log("*******");
           console.log(draw_form_storage);
+          console.log(text_storage);
+          
           
           const checkViewerInterval = setInterval(() => {
             if (PDFViewerApplication.pdfDocument && PDFViewerApplication.pdfDocument.numPages > 0 && draw_form_storage) {
@@ -4161,15 +4163,7 @@ const addDeleteButton = function (currentId, container, object, type) {
       form_storage = form_storage.filter(function (item) {
         return item.id != currentId;
       });
-      form_storage = form_storage.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i);
-
-      console.log("=== form storage ===");
-      console.log(form_storage);
-      console.log(currentObject);
-      
-      console.log(currentObject.historyId);
-      console.log("currentId " +  currentId);
-      
+      form_storage = form_storage.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i);    
     }
     if (currentObject) {
       const commentPageDiv = document.getElementById(`page${currentObject.page_number}`);
@@ -4178,25 +4172,6 @@ const addDeleteButton = function (currentId, container, object, type) {
         commentPageDiv.removeChild(currentHistoryDiv);
       }
     }
-
-    // try {
-    //   const response = await fetch(`${BASE_URL}/history/item/${initialId}/${currentObject.historyId}`, {
-    //     method: "DELETE",
-    //     headers: {
-    //       "Content-Type": "application/json"
-    //     }
-    //   });
-    //   const data = await response.json();
-
-    //   if (response.ok) {
-    //     console.log('History item deleted successfully', data);
-    //     drawHistory(data.document.history);
-    //   } else {
-    //     console.error('Failed to delete history item:', data.message);
-    //   }
-    // } catch (error) {
-    //   console.error('Error:', error);
-    // }
   });
 
   // Keyboard delete functionality
@@ -4213,9 +4188,6 @@ const addDeleteButton = function (currentId, container, object, type) {
       form_storage = form_storage.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i);
       draw_form_storage = form_storage;
       drawFormElement();
-      console.log("^^^^^^^^^^ form storage ^^^^^^^^^^^^^");
-      console.log(form_storage);
-      
     }
   });
   container.appendChild(deleteBtn);

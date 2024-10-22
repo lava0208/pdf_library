@@ -78,7 +78,13 @@ const addHistory = async function (id, type, username, date, page, typeString, f
             }
             // historyDiv: Child Element of PageDiv
             const historyDiv = document.createElement("div");
-            historyDiv.className = "historyDiv";
+            if (type === TEXT_CONTENT) {
+                historyDiv.className = "historyDiv textDiv";
+            } else if (type === COMMENT) {
+                historyDiv.className = "historyDiv commentDiv";
+            } else {
+                historyDiv.className = "historyDiv formDiv";
+            }
             historyDiv.id = `historyDiv${id}`;
             // style
             historyDiv.style.display = "flex";
@@ -205,10 +211,12 @@ const addHistory = async function (id, type, username, date, page, typeString, f
                     text_storage = text_storage.filter(function (item) {
                         return item.id !== parseInt(id);
                     });
+                    text_storage = text_storage.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i);
                 } else if (typeString == "comment") {
                     comment_storage = comment_storage.filter(function (comment) {
                         return comment.id !== parseInt(id);
                     });
+                    comment_storage = comment_storage.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i);
                 } else {
                     form_storage = form_storage.filter(function (item) {
                         return item.id !== parseInt(id);
@@ -614,7 +622,13 @@ const drawHistory = function(data) {
         
         // historyDiv: Child Element of PageDiv
         const historyDiv = document.createElement("div");
-        historyDiv.className = "historyDiv";
+        if (type === "7") {
+            historyDiv.className = "historyDiv textDiv";
+        } else if (type === "9") {
+            historyDiv.className = "historyDiv commentDiv";
+        } else {
+            historyDiv.className = "historyDiv formDiv";
+        }
         historyDiv.id = item.historyId;
         historyDiv.setAttribute("actiontype", type);
         // style
@@ -729,23 +743,38 @@ const drawHistory = function(data) {
         DeleteBtn.style.cursor = "pointer";
         DeleteBtn.style.fontSize = "small";
         DeleteBtn.style.padding = "3px 8px";
+
         DeleteBtn.addEventListener("click", (e) => {
             e.stopPropagation();
             e.preventDefault();
             pageDiv.removeChild(historyDiv);
+        
+            let currentObject;
+        
+            if (type === "7") {
+                currentObject = text_storage.find((element) => element.historyId == item.id);
+                text_storage = text_storage.filter(function (element) {
+                    return element.historyId != item.id;
+                });
+                text_storage = text_storage.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i);
+            }
+             else if (type === "9") {
+                currentObject = comment_storage.find((element) => element.historyId == item.id);
+                comment_storage = comment_storage.filter(function (element) {
+                    return element.historyId != item.id;
+                });
+                comment_storage = comment_storage.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i);
+            } else {
+                currentObject = form_storage.find((element) => element.historyId == item.id);
+                form_storage = form_storage.filter(function (element) {
+                    return element.historyId != item.id;
+                });
+                form_storage = form_storage.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i);
+            }
 
-            form_storage = form_storage.filter(function (element, index) {
-                return element.historyId != item.id;
-            });
-            form_storage = form_storage.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i);
-
-            const historyIndex = item.id.replace("historyDiv", "");
-            $(".form-fields").each(function(){
-                if(historyIndex == $(this).index()){
-                    $(this).hide();
-                }
-            })
-        })
+            document.getElementById(currentObject.containerId).style.display = "none";
+        });
+        
         optionPan.append(DeleteBtn);
         optionDiv.addEventListener("click", () => {
             if (window.getComputedStyle(optionPan).getPropertyValue('display') !== "none") {

@@ -177,6 +177,8 @@ const saveTextContent = function () {
   const resultArray = [];
   let prevElement = null;
   const currentTextContent = document.getElementById(current_text_content_id);
+  
+  
   if(currentTextContent) {
     text = currentTextContent.innerText;
     lines = text.split("\n").map((line) => line.trim().replace(/\n/g, ""));
@@ -211,7 +213,7 @@ const saveTextContent = function () {
       }
     }
 
-    if (baseId !== 0 && (count == text_storage.length || text_storage == null) && isDelete === false) {
+    if (baseId !== 0 && (count == text_storage.length || text_storage == null) && isDelete === false) {      
       text_storage.push({
         id: baseId,
         containerId: "text-content" + baseId,
@@ -432,7 +434,7 @@ viewer.addEventListener("click", (evt) => {
     newText.classList.add("textcontent");
     newText.oninput = function () {
       current_text_num_id = textContentId;
-      // saveTextContent();
+      saveTextContent();
     }
     newText.addEventListener('keydown', function (e) {
       if (e.key === 'Enter') {
@@ -443,6 +445,7 @@ viewer.addEventListener("click", (evt) => {
 
     const container = document.createElement("div");
     container.id = "text-content" + textContentId;
+    container.className = "text-content";
     container.style.position = "absolute";
     container.style.top = mouse_y + "px";
     container.style.left = mouse_x + "px";
@@ -461,7 +464,7 @@ viewer.addEventListener("click", (evt) => {
         container.style.height = "fit-content";
         textContentSize.x = width;
         textContentSize.y = height;
-        // saveTextContent();
+        saveTextContent();
       }
     });
 

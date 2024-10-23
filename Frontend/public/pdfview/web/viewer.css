@@ -2317,6 +2317,10 @@ select.form-field-input{
   outline: 2px dashed #3c97fe;
 }
 
+#viewer[type="view"] .form-fields:hover{
+  outline: none;
+}
+
 .dragging {
   outline: none;
 }

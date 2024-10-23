@@ -283,6 +283,7 @@ const drawFormElement = function () {
           let checkbox = document.createElement("div");
           checkbox.id = "checkbox" + id;
           addFormElementStyle(checkbox, y, x, width, height);
+
           let checkmark = document.createElement("div");
           checkmark.style.display = 'none';
           checkmark.classList.add("checkmark", "form-container");
@@ -313,7 +314,10 @@ const drawFormElement = function () {
               updateFormStorage(form_storage, checkedCheckboxes);
             }
           };
+
           pg.append(checkbox);
+          showOptionAndResizebar(CHECKBOX_OPTION, checkbox, width, height, "checkbox");
+
           document.getElementById("checkbox-field-input-name").value = item.form_field_name;
           document.getElementById("checkbox-label").value = item.label;
           document.getElementById("checkbox-value").value = item.value;
@@ -336,6 +340,20 @@ const drawFormElement = function () {
               });
               checkboxBackgroundColorPickerInitialized = true;
               checkboxBackgroundColor = "#BBE9FF";
+            }
+          }
+
+          if (!checkboxBorderColorPickerInitialized) {
+            const borderColorElement = document.getElementById("checkbox-border-colorpicker");
+            if(borderColorElement){
+              new GridColorPicker(borderColorElement, {
+                defaultColor: "#FFFFFF",
+                callback: (selectedColor) => {
+                  checkboxBorderColor = selectedColor;
+                },
+              });
+              checkboxBorderColorPickerInitialized = true;
+              checkboxBorderColor = "#FFFFFF";
             }
           }
 
@@ -367,6 +385,10 @@ const drawFormElement = function () {
                         element.textBackgroundColor;
                       document.getElementById("checkbox-background-colorpicker_autocomplete").style.backgroundColor =
                         element.textBackgroundColor;
+                      document.getElementById("checkbox-border-colorpicker").value =
+                        element.borderColor;
+                      document.getElementById("checkbox-border-colorpicker_autocomplete").style.backgroundColor =
+                        element.borderColor;
 
                       isOptionPane = true;
                       option = showOption(
@@ -405,6 +427,8 @@ const drawFormElement = function () {
             }
           });
 
+          document.getElementById(CHECKBOX_OPTION).style.display = "none";
+
           document
             .getElementById("checkbox-save-button")
             .addEventListener("click", handleCheckbox);
@@ -441,6 +465,7 @@ const drawFormElement = function () {
           };
 
           pg.appendChild(radio);
+          showOptionAndResizebar(RADIO_OPTION, radio, width, height, "radio");
 
           current_radio_id = id;
 
@@ -460,6 +485,20 @@ const drawFormElement = function () {
               });
               radioBackgroundColorPickerInitialized = true;
               radioBackgroundColor = "#BBE9FF";
+            }
+          }
+
+          if (!radioBorderColorPickerInitialized) {
+            const borderColorElement = document.getElementById("radio-border-colorpicker");
+            if(borderColorElement){
+              new GridColorPicker(borderColorElement, {
+                defaultColor: "#FFFFFF",
+                callback: (selectedColor) => {
+                  radioBorderColor = selectedColor;
+                },
+              });
+              radioBorderColorPickerInitialized = true;
+              radioBorderColor = "#FFFFFF";
             }
           }
 
@@ -493,6 +532,10 @@ const drawFormElement = function () {
                         element.data.textBackgroundColor;
                       document.getElementById("radio-background-colorpicker_autocomplete").style.backgroundColor =
                         element.data.textBackgroundColor;
+                      document.getElementById("radio-border-colorpicker").value =
+                        element.borderColor;
+                      document.getElementById("radio-border-colorpicker_autocomplete").style.backgroundColor =
+                        element.borderColor;
 
                       isOptionPane = true;
                       option = showOption(
@@ -529,6 +572,9 @@ const drawFormElement = function () {
               displayFormProps();
             }
           });
+
+          document.getElementById(RADIO_OPTION).style.display = "none";
+
           document
             .getElementById("radio-save-button")
             .addEventListener("click", handleRadio);
@@ -2585,13 +2631,17 @@ const handleCheckbox = function (e) {
   const label = document.getElementById("checkbox-label").value;
   const value = document.getElementById("checkbox-value").value;
 
+  borderWidth = document.getElementById("checkbox-border-width").value;
   checkboxBackgroundColor = document.getElementById("checkbox-background-colorpicker").value;
+  checkboxBorderColor = document.getElementById("checkbox-border-colorpicker").value;
 
   for (let i = 0; i < form_storage.length; i++) {
     if (form_storage[i].id == current_form_id) {
-      if(!isEditing){        
-        form_storage[i].textBackgroundColor = checkboxBackgroundColor;
+      if(!isEditing){
         form_storage[i].form_field_name = formFieldName;
+        form_storage[i].textBackgroundColor = checkboxBackgroundColor;
+        form_storage[i].borderColor = checkboxBorderColor;
+        form_storage[i].borderWidth = borderWidth;
       }
 
       //... handle track
@@ -2632,8 +2682,12 @@ const handleCheckbox = function (e) {
       isReadOnly: false,
       label: label,
       value: value,
+      borderWidth: borderWidth,
       textBackgroundColor: checkboxBackgroundColor,
+      borderColor: checkboxBorderColor,
     });
+
+    borderWidth = "";
 
     const date = new Date(Date.now());
     addHistory(baseId, CHECKBOX, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, 'checkbox', formFieldName);
@@ -2652,7 +2706,9 @@ const handleRadio = function (e) {
   const label = document.getElementById("radio-label") && document.getElementById("radio-label").value;
   const value = document.getElementById("radio-value") && document.getElementById("radio-value").value;
 
+  borderWidth = document.getElementById("radio-border-width").value;
   radioBackgroundColor = document.getElementById("radio-background-colorpicker").value;
+  radioBorderColor = document.getElementById("radio-border-colorpicker").value;
 
   if (document.getElementById(RADIO_OPTION)) document.getElementById(RADIO_OPTION).style.display = "none";
   const formFieldName = document.getElementById("radio-field-input-name") && document.getElementById("radio-field-input-name").value;
@@ -2679,6 +2735,8 @@ const handleRadio = function (e) {
         if (form_storage[i].id == current_form_id) {
           form_storage[i].form_field_name = formFieldName;
           form_storage[i].data.textBackgroundColor = radioBackgroundColor;
+          form_storage[i].data.borderColor = radioBorderColor;
+          form_storage[i].data.borderWidth = borderWidth;
 
           //... handle track
           handleTrack(form_storage[i].id, formFieldName);
@@ -2710,7 +2768,9 @@ const handleRadio = function (e) {
         isReadOnly: false,
         label: label,
         value: value,
+        borderWidth: borderWidth,
         textBackgroundColor: radioBackgroundColor,
+        borderColor: radioBorderColor,
       },
     });
 
@@ -2733,8 +2793,8 @@ const handleText = function (e) {
   isOptionPane = false;
   if (document.getElementById(TEXTFIELD_OPTION)) document.getElementById(TEXTFIELD_OPTION).style.display = "none";
   if (e) e.stopPropagation();
-  const formFieldName = document.getElementById("text-field-input-name") && document.getElementById("text-field-input-name").value;
-  const regularFont = document.getElementById("text-font-style") && document.getElementById("text-font-style").value;
+  const formFieldName = document.getElementById("text-field-input-name").value;
+  const regularFont = document.getElementById("text-font-style").value;
 
   fontStyle = generateFontName("text-font-style");
   fontSize = parseInt(document.getElementById("text-font-size").value);
@@ -4539,6 +4599,20 @@ const eventHandler = async function (e) {
         }
       }
 
+      if (!checkboxBorderColorPickerInitialized) {
+        const borderColorElement = document.getElementById("checkbox-border-colorpicker");
+        if(borderColorElement){
+          new GridColorPicker(borderColorElement, {
+            defaultColor: "#FFFFFF",
+            callback: (selectedColor) => {
+              checkboxBorderColor = selectedColor;
+            },
+          });
+          checkboxBorderColorPickerInitialized = true;
+          checkboxBorderColor = "#FFFFFF";
+        }
+      }
+
       checkbox.addEventListener("dblclick", () => {
         if (!isEditing) {
           current_checkbox_id = checkboxId;          
@@ -4567,6 +4641,10 @@ const eventHandler = async function (e) {
                     element.textBackgroundColor;
                   document.getElementById("checkbox-background-colorpicker_autocomplete").style.backgroundColor =
                     element.textBackgroundColor;
+                  document.getElementById("checkbox-border-colorpicker").value =
+                    element.borderColor;
+                  document.getElementById("checkbox-border-colorpicker_autocomplete").style.backgroundColor =
+                    element.borderColor;
 
                   isOptionPane = true;
                   option = showOption(
@@ -4677,6 +4755,20 @@ const eventHandler = async function (e) {
         }
       }
 
+      if (!radioBorderColorPickerInitialized) {
+        const borderColorElement = document.getElementById("radio-border-colorpicker");
+        if(borderColorElement){
+          new GridColorPicker(borderColorElement, {
+            defaultColor: "#FFFFFF",
+            callback: (selectedColor) => {
+              radioBorderColor = selectedColor;
+            },
+          });
+          radioBorderColorPickerInitialized = true;
+          radioBorderColor = "#FFFFFF";
+        }
+      }
+
       radio.addEventListener("dblclick", () => {
         if (!isEditing) {
           current_radio_id = radioId;
@@ -4707,6 +4799,10 @@ const eventHandler = async function (e) {
                     element.data.textBackgroundColor;
                   document.getElementById("radio-background-colorpicker_autocomplete").style.backgroundColor =
                     element.data.textBackgroundColor;
+                  document.getElementById("radio-border-colorpicker").value =
+                    element.borderColor;
+                  document.getElementById("radio-border-colorpicker_autocomplete").style.backgroundColor =
+                    element.borderColor;
 
                   isOptionPane = true;
                   option = showOption(
@@ -7144,6 +7240,8 @@ const changeMode = (type) => {
   isEditing = type === "edit";
   if (isEditing) {
     isEditing = false;
+    document.getElementById("viewer").setAttribute("type", "edit");
+
     sidebar.querySelectorAll("button").forEach((item) => {
       item.disabled = false;
       if(!isDraft){
@@ -7197,6 +7295,8 @@ const changeMode = (type) => {
 
   } else {
     isEditing = true;
+    document.getElementById("viewer").setAttribute("type", "view");
+
     sidebar.querySelectorAll("button").forEach((item) => {
       item.disabled = true;
     });
@@ -7223,8 +7323,7 @@ const changeMode = (type) => {
           let formId = item.parentNode.id.replace("checkbox", "");
           if (formItem.id == formId) {
             item.style.backgroundColor = formItem.textBackgroundColor === "" ? "#fff" : formItem.textBackgroundColor;
-            // item.style.border = "none";
-            item.style.border = "1px solid #202020";
+            item.style.border = `${formItem.borderWidth}px solid ${formItem.borderColor}`;
           }
         })
       }
@@ -7241,8 +7340,7 @@ const changeMode = (type) => {
           let formId = item.parentNode.id.replace("radio", "");
           if (formItem.id == formId) {
             item.style.backgroundColor = formItem.data.textBackgroundColor === "" ? "#fff" : formItem.data.textBackgroundColor;;
-            // item.style.border = "none";
-            item.style.border = "1px solid #202020";
+            item.style.border = `${formItem.data.borderWidth}px solid ${formItem.data.borderColor}`;
           }
         })
       }

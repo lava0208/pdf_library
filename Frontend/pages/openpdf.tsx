@@ -49,17 +49,8 @@ const OpenPdf = () => {
                 <div
                     style={{
                         overflow: "hidden",
-                        backgroundColor: "#3C97FE",
-                        borderRadius: "10px",
-                        margin: "5px",
                     }}
                 >
-                    <div className='flex justify-end items-center h-[40px] mr-4'>
-                        <div className={`rounded-[50%] bg-white h-[25px] w-[25px] flex items-center justify-center cursor-pointer`} onClick={() => setShowProfile(!showProfile)}>
-                            <div className={`select-none rounded-[50%] h-[23px] w-[23px] font-sans text-white flex items-center justify-center text-lg`}
-                                style={{ backgroundColor: `${color}` }}>{username.charAt(0).toUpperCase()}</div>
-                        </div>
-                    </div>
                     {showProfile && <UserProfile username={username} top="45px" right="20px" />}
                     <div>
                         <iframe

@@ -81,11 +81,16 @@ const viewer = document.getElementById("viewer");
 const sidebar = document.querySelector(".right-sidebar");
 
 /* Elements for submitting document by link */
+const saveDraftDocument = document.getElementById("saveDraftDocument");
 const shareDocumentButton = document.getElementById("shareDocument");
 const submitDocumentButton = document.getElementById("submitDocument");
+const downloadDocumentButton = document.getElementById("downloadDocument");
+const deleteDocumentButton = document.getElementById("deleteDraftButton");
 const showHistoryButton = document.getElementById("showHistory");
 const addCommentButton = document.getElementById("add_comment_mode");
-const searchFormButton = document.getElementById("search-form");
+const searchFormNextButton = document.getElementById("nextBtn");
+const searchFormPrevButton = document.getElementById("prevBtn");
+
 
 let isClickOutForm = false;
 let gridColorPicker;
@@ -177,7 +182,6 @@ let isAddCommentModeOn = false;
 let isTextModeOn = false;
 let isDrawingShape = false;
 
-const saveDraftButton = document.getElementById("saveDraftButton");
 const urlParams = new URLSearchParams(window.location.search);
 const initialId = urlParams.get('id');
 const isDraft = urlParams.get('draft');

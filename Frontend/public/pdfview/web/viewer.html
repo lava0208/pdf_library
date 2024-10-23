@@ -789,18 +789,6 @@ See https://github.com/adobe-type-tools/cmap-resources
                     ></i>
                   </button>
                 </div>
-                <div id="search-form">
-                  Select Form 
-                  <div id="prevBtn">Prev</div>
-                  <div id="nextBtn">Next</div>
-                </div>
-                <div
-                  id="submitDocument"
-                  class="submit-document"
-                  onclick="submitDocument()"
-                >
-                  Submit Document
-                </div>                
                 <button
                   id="secondaryDownload"
                   class="toolbarButton visibleMediumView"
@@ -2385,17 +2373,26 @@ See https://github.com/adobe-type-tools/cmap-resources
         <!-- <div class="form-action-container">
           <img src="./images/print.svg" alt="print">
         </div> -->
-        <button class="form-action-container" id="saveDraftButton" onclick="showModal('docSave')" title="save">
+        <button class="form-action-container hidden" id="saveDraftDocument" onclick="showModal('docSave')" title="save">
           <i class="fa-regular fa-save"></i>
         </button>
-        <button class="form-action-container" id="shareDocument" onclick="shareLink()" title="share with email">
+        <button class="form-action-container hidden" id="shareDocument" onclick="shareLink()" title="share with email">
           <i class="fa-solid fa-share-nodes"></i>
         </button>
-        <button class="form-action-container" id="addFormDownload" onclick="flatten()" title="download" disabled>
+        <button class="form-action-container hidden" id="downloadDocument" onclick="flatten()" title="download" disabled>
           <i class="fa-solid fa-download"></i>
         </button>
-        <button class="form-action-container" id="deleteDraftButton" onclick="showModal('docDelete')" title="delete" disabled>
+        <button class="form-action-container hidden" id="deleteDraftButton" onclick="showModal('docDelete')" title="delete" disabled>
           <i class="fa-regular fa-trash-can"></i>
+        </button>
+        <button class="form-action-container hidden" id="prevBtn" title="prev">
+          <i class="fa-solid fa-left-long"></i>
+        </button>
+        <button class="form-action-container hidden" id="submitDocument" onclick="showModal('docSubmit')" title="submit">
+          <i class="fa-regular fa-paper-plane"></i>
+        </button>
+        <button class="form-action-container hidden" id="nextBtn" title="next">
+          <i class="fa-solid fa-right-long"></i>
         </button>
       </div>
       <button type="button" class="btn btn-large" id="secondaryOpenFile">
@@ -2768,44 +2765,43 @@ See https://github.com/adobe-type-tools/cmap-resources
       </div>
     </div>
 
-    <div id="share-document-container" class="share-document-container">
-      <div class="share-document-pad">
-        <div class="share-document-heading">
-          <h3>Share this document</h3>
-          <span id="share-document-close" class="share-document-close"
-            >&times;</span
-          >
-        </div>
-        <div class="share-document-content">
-          <div class="share-document-sender">
-            <p>Name *:</p>
-            <input id="share-document-sender-name" type="text" />
+    <div class="modal" id="modal-share">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="modal-header-icon">
+              <i class="fa-regular fa-share-from-square"></i>
+            </div>
+            <h1>Share this document</h1>
+            <span class="modal-close">
+              <i class="fa fa-close"></i>
+            </span>
           </div>
-          <div class="share-document-sender">
-            <p>Email *:</p>
-            <div>
-              <select
-                id="email-input"
-                multiple="multiple"
-                style="width: 100%"
-              ></select>
-              <small id="email-feedback"></small>
+          <div class="modal-body">
+            <label for="share-document-sender-name">Name</label>
+            <input class="form-field-input" id="share-document-sender-name" type="text" placeholder="Type name">
+            <label for="share-document-sender-description">Message</label>
+            <textarea class="form-field-input" rows="4" id="share-document-sender-description" placeholder="Type message"></textarea>
+            <label for="email-input">Email</label>
+            <select
+              class="form-field-input"
+              id="email-input"
+              multiple="multiple"
+              style="width: 100%"
+            ></select>
+            <small>Type email by pressing "Enter"</small>
+            <div class="share-document-sender" style="display: none">
+              <p>Email *:</p>
+              <div>
+                <input id="share-document-sender-email" type="email" />
+                <span id="share-document-sender-email-check"></span>
+              </div>
             </div>
           </div>
-          <div class="share-document-sender" style="display: none">
-            <p>Email *:</p>
-            <div>
-              <input id="share-document-sender-email" type="email" />
-              <span id="share-document-sender-email-check"></span>
-            </div>
+          <div class="modal-footer">
+            <button type="button" class="modal-save" id="share-document-send">Share</button>
+            <button class="modal-cancel" data-dismiss="modal">Cancel</button>
           </div>
-          <div class="share-document-sender">
-            <p>Description:</p>
-            <textarea id="share-document-sender-description"></textarea>
-          </div>
-        </div>
-        <div class="share-document-footer">
-          <div id="share-document-send" class="share-document-send">Send</div>
         </div>
       </div>
     </div>
@@ -2823,11 +2819,11 @@ See https://github.com/adobe-type-tools/cmap-resources
             </span>
           </div>
           <div class="modal-body">
-            <p>Are you sure you want to save this?</p>
+            <p>Are you sure you want to do this?</p>
             <p>This action can't be undone</p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="modal-save" id="document-save">Yes, save it!</button>
+            <button type="button" class="modal-save" id="document-save">Yes, confirm!</button>
             <button class="modal-cancel" data-dismiss="modal">Cancel</button>
           </div>
         </div>

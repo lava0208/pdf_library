@@ -1,14 +1,10 @@
-const shareDocumentContainer = document.getElementById("share-document-container");
-const shareDocumentClose = document.getElementById("share-document-close");
+const shareDocumentContainer = document.getElementById("modal-share");
 const shareDocumentSenderName = document.getElementById("share-document-sender-name");
 const shareDocumentSenderEmail = document.getElementById("share-document-sender-email");
 const shareDocumentSenderDescription = document.getElementById("share-document-sender-description");
 const shareDocumentSenderEmailChecker = document.getElementById("share-document-sender-email-check");
 const shareDocumentSendButton = document.getElementById("share-document-send");
 
-shareDocumentClose.onclick = function () {
-  shareDocumentContainer.style.display = "none";
-}
 shareDocumentSenderEmail.oninput = function () {
   shareDocumentSenderEmailChecker.style.display = "block";
   const email = shareDocumentSenderEmail.value.trim();
@@ -24,8 +20,7 @@ shareDocumentSenderEmail.oninput = function () {
   }
 }
 
-shareDocumentSendButton.onclick = async function () {
-  shareDocumentContainer.style.display = "none";
+shareDocumentSendButton.onclick = async function () {  
   let descriptionData = '';
 
   pdfBytes = await PDFViewerApplication.pdfDocument.saveDocument();
@@ -45,26 +40,29 @@ shareDocumentSendButton.onclick = async function () {
   const selectedEmails = $('#email-input').val();
 
   if (!selectedEmails || selectedEmails.length === 0) {
-    console.error('No recipient email addresses provided');
+    $("#email-input").addClass("error");
     return;
-  }
+  } else {
+    $("#email-input").removeClass("error");
+    $("body").addClass("loading");
 
-  // Append the selected email addresses to the form data
-  formData.append('emails', selectedEmails);
+    formData.append('emails', selectedEmails);
 
-  fetch(`${BASE_URL}/sendlink`, {
-    method: 'POST',
-    body: formData
-  })
-    .then(response => {
+    fetch(`${BASE_URL}/sendlink`, {
+      method: 'POST',
+      body: formData
+    }).then(response => {
       if (response.ok) {
-        alert("Successfully Sent!")
+        $("#modal-success p").text("Sent successfully");
+        $("#modal-success").show();
+        $("body").removeClass("loading");
+        shareDocumentContainer.style.display = "none";
       } else {
         console.error('Failed to upload PDF file');
       }
     })
     .catch(error => console.error('Error:', error));
-
+  }
 }
 
 const shareLink = function () {

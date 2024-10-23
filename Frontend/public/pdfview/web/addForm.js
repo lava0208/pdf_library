@@ -147,12 +147,17 @@ const generalUserMode = function () {
   if (initialId) {
     //... open draft document
     if (isDraft == null || isDraft == "") {
-      shareDocumentButton.style.display = "none";
-      addCommentButton.style.display = "none";
-      showHistoryButton.style.display = "none";
-      saveDraftButton.style.display = "none";
-      submitDocumentButton.style.display = "flex";
+      saveDraftDocument.classList.add("hidden");
+      shareDocumentButton.classList.add("hidden");
+      addCommentButton.classList.add("hidden");
+      showHistoryButton.classList.add("hidden");
+      downloadDocumentButton.classList.add("hidden");
+      deleteDocumentButton.classList.add("hidden");
+      submitDocumentButton.classList.remove("hidden");
       changeMode();
+      submitDocumentButton.removeAttribute("disabled");
+      searchFormNextButton.removeAttribute("disabled");
+      searchFormPrevButton.removeAttribute("disabled");
     } else {
     if (isDraft == "true" || isDraft == null) {
         const viewer = document.getElementById('viewer');
@@ -160,17 +165,18 @@ const generalUserMode = function () {
         viewer.dispatchEvent(new Event('click'));
       } else {
         //... open submitted document
-        shareDocumentButton.style.display = "none";
-        addCommentButton.style.display = "none";
-        showHistoryButton.style.display = "none";
-        saveDraftButton.style.display = "none";
-        submitDocumentButton.style.display = "none";
+        saveDraftDocument.classList.add("hidden");
+        shareDocumentButton.classList.add("hidden");
+        addCommentButton.classList.add("hidden");
+        showHistoryButton.classList.add("hidden");
+        downloadDocumentButton.classList.add("hidden");
+        deleteDocumentButton.classList.add("hidden");
         changeMode();
+        submitDocumentButton.classList.add("hidden");
+        searchFormNextButton.classList.add("hidden");
+        searchFormPrevButton.classList.add("hidden");
       }
     }
-  }
-  if(isOpenEmailPdf){
-    searchFormButton.style.display = "flex";
   }
 }
 
@@ -2306,9 +2312,21 @@ document.addEventListener("DOMContentLoaded", function () {
     url = `${BASE_URL}/getpdfform?uniqueId=${initialId}`;
   }
 
+  if(isOpenEmailPdf){
+    searchFormNextButton.classList.remove("hidden");
+    searchFormPrevButton.classList.remove("hidden");
+    submitDocumentButton.classList.remove("hidden");
+    $(".view-mode").hide();
+  }else{
+    saveDraftDocument.classList.remove("hidden");
+    shareDocumentButton.classList.remove("hidden");
+    downloadDocumentButton.classList.remove("hidden");
+    deleteDocumentButton.classList.remove("hidden");
+  }
+
   if (initialId) {
     $("body").addClass("loading");
-    $("#addFormDownload").prop("disabled", false);
+    $("#downloadDocument").prop("disabled", false);
     $("#deleteDraftButton").prop("disabled", false);
     fetch(`${url}`)
       .then(response => {
@@ -2361,10 +2379,10 @@ document.addEventListener("DOMContentLoaded", function () {
             if (PDFViewerApplication.pdfDocument && PDFViewerApplication.pdfDocument.numPages > 0 && draw_form_storage) {
               clearInterval(checkViewerInterval);
               drawFormElement();
+              $("body").removeClass("loading");
             }
           }, 100)
-        }
-        $("body").removeClass("loading");
+        }        
       })
       .catch(error => {
         console.error('Error fetching data from the backend:', error);
@@ -6985,7 +7003,7 @@ const changeMode = (type) => {
     sidebar.querySelectorAll("button").forEach((item) => {
       item.disabled = false;
       if(!isDraft){
-        if(item.id === "deleteDraftButton" || item.id === "addFormDownload"){
+        if(item.id === "deleteDraftButton" || item.id === "downloadDocument"){
           item.disabled = true;
         }
       }
@@ -7359,9 +7377,12 @@ const sendSubmitData = function () {
   })
     .then(response => {
       if (response.ok) {
-        searchFormButton.style.display = "none";
+        $("#modal-success p").text("Sent successfully");
+        $("#modal-success").show();
+        searchFormNextButton.setAttribute("disabled", true);
+        searchFormPrevButton.setAttribute("disabled", true);
+        submitDocumentButton.setAttribute("disabled", true);
         $("body").removeClass("loading");
-        alert("Thanks for your submitting your document!");        
       } else {
         console.error('Failed to upload PDF file');
       }
@@ -7370,18 +7391,16 @@ const sendSubmitData = function () {
 }
 
 const submitDocument = async function () {
-  if (window.confirm('Do you continue to submit now?')) {
-    submitAction();
-    pdfBytes = await PDFViewerApplication.pdfDocument.saveDocument();
-    const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
-    pdfBytes = await pdfDoc.save();
-    if (form_storage && form_storage.length != 0) {
-      addFormElements().then(() => {
-        sendSubmitData();
-      });
-    } else {
+  submitAction();
+  pdfBytes = await PDFViewerApplication.pdfDocument.saveDocument();
+  const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
+  pdfBytes = await pdfDoc.save();
+  if (form_storage && form_storage.length != 0) {
+    addFormElements().then(() => {
       sendSubmitData();
-    }
+    });
+  } else {
+    sendSubmitData();
   }
 }
 

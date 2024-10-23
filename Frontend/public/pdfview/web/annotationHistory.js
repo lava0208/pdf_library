@@ -1180,6 +1180,12 @@ const showModal = async function (type) {
             $("#modal-confirm").hide();
             saveDoc();
         })
+    }else if(type === "docSubmit"){
+        $("#modal-confirm").show();
+        $("#document-save").click(function(){
+            $("#modal-confirm").hide();
+            submitDocument();
+        })
     }
 }
 

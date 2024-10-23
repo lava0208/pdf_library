@@ -1940,13 +1940,13 @@ const drawFormElement = function () {
             const borderColorElement = document.getElementById("shape-border-colorpicker");
             if(borderColorElement){
               new GridColorPicker(borderColorElement, {
-                defaultColor: "#FFFFFF",
+                defaultColor: "#000000",
                 callback: (selectedColor) => {
                   shapeBorderColor = selectedColor;
                 },
               });
               shapeBorderColorPickerInitialized = true;
-              shapeBorderColor = "#FFFFFF";
+              shapeBorderColor = "#000000";
             }
           }
 
@@ -6716,14 +6716,15 @@ async function addFormElements() {
       }
       switch (form_item.form_type) {
         case CHECKBOX:
-          const color1 = form_item.textBackgroundColor === undefined ? '#ccc' : form_item.textBackgroundColor;
+          const checkboxBackground = form_item.textBackgroundColor === undefined ? '#ccc' : form_item.textBackgroundColor;
+          const checkboxBorder = form_item.borderColor === undefined ? '#ccc' : form_item.borderColor;
           page.drawRectangle({
             x: form_item.x,
             y: form_item.y - form_item.height,
             width: form_item.width,
             height: form_item.height,
-            color: hexToRgbNew(color1),
-            borderColor: hexToRgbNew(color1),
+            color: hexToRgbNew(checkboxBackground),
+            borderColor: hexToRgbNew(checkboxBorder),
           });
           checkboxForm = form.createCheckBox(form_item.form_field_name);
           checkboxForm.addToPage(page, {
@@ -6731,8 +6732,8 @@ async function addFormElements() {
             y: form_item.y - form_item.height,
             width: form_item.width,
             height: form_item.height,
-            backgroundColor: hexToRgbNew(color1),
-            borderColor: hexToRgbNew(color1),
+            backgroundColor: hexToRgbNew(checkboxBackground),
+            borderColor: hexToRgbNew(checkboxBorder),
           });
           if (form_item.isChecked) {
             checkboxForm.check();
@@ -6742,7 +6743,8 @@ async function addFormElements() {
           }
           break;
         case RADIO:
-          const color2 = form_item.textBackgroundColor === undefined ? '#ccc' : form_item.textBackgroundColor;
+          const radioBackground = form_item.data.textBackgroundColor === undefined ? '#ccc' : form_item.data.textBackgroundColor;
+          const radioBorder = form_item.data.borderColor === undefined ? '#ccc' : form_item.data.borderColor;
           if (typeof radioCount === 'undefined' || radioCount === null) {
             radioCount = 0;
           }
@@ -6755,8 +6757,8 @@ async function addFormElements() {
               y: form_item.data.y - form_item.data.height,
               width: form_item.data.width,
               height: form_item.data.height,
-              backgroundColor: hexToRgbNew(color2),
-              borderColor: hexToRgbNew(color2),
+              backgroundColor: hexToRgbNew(radioBackground),
+              borderColor: hexToRgbNew(radioBorder),
             });
             if (form_item.data.isChecked) {
               radioForm.select(fieldName);
@@ -6768,8 +6770,8 @@ async function addFormElements() {
               y: form_item.data.y - form_item.data.height,
               width: form_item.data.width,
               height: form_item.data.height,
-              backgroundColor: hexToRgbNew(color2),
-              borderColor: hexToRgbNew(color2),
+              backgroundColor: hexToRgbNew(radioBackground),
+              borderColor: hexToRgbNew(radioBorder),
             });
         
             if (form_item.data.isChecked) {
@@ -7045,35 +7047,92 @@ async function addFormElements() {
           }
           break;
         case SHAPE:
-          const fillColor = hexOrRgbToRgb(form_item.shapeFillColor || '#FFFFFF');
-          const borderColor = hexToRgbNew(form_item.borderColor || '#000000');
-          const bordersWidth = parseFloat(form_item.borderWidth) || 1;
-          const borderRadius = parseFloat(form_item.borderRadius) || 0;
-        
-          page.drawRectangle({
-            x: form_item.x,
-            y: form_item.y - form_item.height,
-            width: form_item.width,
-            height: form_item.height,
-            color: fillColor,
-            borderColor: borderColor,
-            borderWidth: bordersWidth,
-            borderRadius: borderRadius
-          });
-        
-          if (form_item.shapeText) {
-            const textY = form_item.y - form_item.height / 2;
-            const textSize = parseFloat(form_item.textSize) || 12;
-        
-            page.drawText(form_item.shapeText.replace(/<[^>]+>/g, ''), {
-              x: form_item.x + 5,
-              y: textY,
-              size: textSize,
-              color: hexToRgbNew(form_item.textColor || '#000000'),
-              font: await pdfDoc.embedFont(PDFLib.StandardFonts.Courier),
-              maxWidth: form_item.width - 10
+          if (form_item.shapeType === 'circle') {
+            // Draw a circle (use drawEllipse for circles in pdf-lib)
+            const radiusX = (form_item.xPage * 0.75) / 2;  // Horizontal radius
+            const radiusY = (form_item.yPage * 0.75) / 2;  // Vertical radius
+          
+            // Center the circle based on the x and y coordinates
+            const centerX = form_item.x + radiusX;
+            const centerY = form_item.y - radiusY;
+          
+            page.drawEllipse({
+              x: centerX,
+              y: centerY,
+              xScale: radiusX,  // Radius in x-direction
+              yScale: radiusY,  // Radius in y-direction (same for a perfect circle)
+              color: hexOrRgbToRgb(form_item.shapeFillColor || '#FFFFFF'),
+              borderColor: hexOrRgbToRgb(form_item.borderColor || '#000000'),
+              borderWidth: parseFloat(form_item.borderWidth) || 1,
             });
+          
+            // Handle text drawing for the circle
+            if (form_item.shapeText) {
+              const fontSize = form_item.textSize != "" ? parseInt(form_item.textSize) * 0.75 : 10;
+              const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+              const textWidth = font.widthOfTextAtSize(form_item.shapeText, fontSize);
+              let textX = centerX - textWidth / 2;
+              let textY = centerY - fontSize / 2;
+          
+              const [verticalAlign, horizontalAlign] = form_item.textAlign ? form_item.textAlign.split(',').map(s => s.trim()) : ['middle', 'center'];
+          
+              if (horizontalAlign === 'left') {
+                textX = centerX - radiusX + 5;
+              } else if (horizontalAlign === 'right') {
+                textX = centerX + radiusX - textWidth - 5;
+              }
+          
+              if (verticalAlign === 'top') {
+                textY = centerY + radiusY - fontSize - 5;
+              } else if (verticalAlign === 'bottom') {
+                textY = centerY - radiusY + 5;
+              }
+          
+              page.drawText(form_item.shapeText.replace(/<[^>]+>/g, ''), {
+                x: textX,
+                y: textY,
+                size: fontSize,
+                color: hexToRgbNew(form_item.textColor || '#000000'),
+                font: await pdfDoc.embedFont(PDFLib.StandardFonts.Courier),
+                maxWidth: radiusX * 2 - 10
+              });
+            }
+          } else {
+            // Existing rectangle drawing logic (for non-circle shapes)
+            const fillColor = hexOrRgbToRgb(form_item.shapeFillColor || '#FFFFFF');
+            const borderColor = hexOrRgbToRgb(form_item.borderColor || '#000000');
+            const bordersWidth = parseFloat(form_item.borderWidth) || 1;
+            const borderRadius = parseFloat(form_item.borderRadius) || 0;
+          
+            page.drawRectangle({
+              x: form_item.x,
+              y: form_item.y - form_item.yPage * 0.75,
+              width: form_item.xPage * 0.75,
+              height: form_item.yPage * 0.75,
+              color: fillColor,
+              borderColor: borderColor,
+              borderWidth: bordersWidth,
+              borderRadius: borderRadius
+            });
+          
+            if (form_item.shapeText) {
+              const fontSize = form_item.textSize != "" ? parseInt(form_item.textSize) * 0.75 : 10;
+              const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+              const textWidth = font.widthOfTextAtSize(form_item.shapeText, fontSize);
+              const textX = form_item.x + (form_item.xPage * 0.75 - textWidth) / 2;
+              const textY = form_item.y - form_item.yPage * 0.75 + (form_item.yPage * 0.75 - fontSize) / 2;
+          
+              page.drawText(form_item.shapeText.replace(/<[^>]+>/g, ''), {
+                x: textX,
+                y: textY,
+                size: fontSize,
+                color: hexToRgbNew(form_item.textColor || '#000000'),
+                font: await pdfDoc.embedFont(PDFLib.StandardFonts.Courier),
+                maxWidth: form_item.xPage * 0.75 - 10
+              });
+            }
           }
+          
           break;
         case PHOTO:
           if (form_item.photoData != undefined) {

@@ -6,7 +6,7 @@ let rectElement;
 let shapeType = "shape";
 
 let selectedShapeFillColor = '#BBE9FF';
-let selectedShapeOutlineColor = '#FFFFFF';
+let selectedShapeOutlineColor = '#000000';
 let selectedTextColor = '#000000';
 let selectedBorderRadius = '0px';
 let selectedBorderWeight = '1px';
@@ -15,7 +15,7 @@ let selectedTextBold = false;
 let selectedTextItalic = false;
 let selectedTextUnderline = false;
 let selectedTextFamily = 'Courier';
-let selectedTextAlign = shapeType === "circle" ? 'middle,center' : 'top,left';
+let selectedTextAlign = shapeType === "circle" ? 'middle,center' : 'middle,center';
 let selectedListType = 'numeric';
 let listCounter = 1;
 
@@ -32,7 +32,7 @@ $(".shape-item").on("click", function () {
     selectedTextAlign = 'middle,center';
   } else if(shapeType === "shape") {
     selectedBorderRadius = "0px";
-    selectedTextAlign = 'top,left';
+    selectedTextAlign = 'middle,center';
   }
 
   $(".tabitem").removeClass("active_menu");
@@ -213,7 +213,7 @@ viewer.addEventListener("mousedown", function (e) {
     const borderColorElement = document.getElementById("shape-border-colorpicker");
     if(borderColorElement){
       new GridColorPicker(borderColorElement, {
-        defaultColor: "#FFFFFF",
+        defaultColor: "#000000",
         callback: (selectedColor) => {
           shapeBorderColor = selectedShapeOutlineColor = selectedColor;
 
@@ -225,7 +225,7 @@ viewer.addEventListener("mousedown", function (e) {
         },
       });
       shapeBorderColorPickerInitialized = true;
-      shapeBorderColor = selectedShapeOutlineColor = "#FFFFFF";
+      shapeBorderColor = selectedShapeOutlineColor = "#000000";
     }
   }
   
@@ -619,10 +619,10 @@ function handleChange() {
 
 function initialShapeStyle(){
   $("#shape-background-colorpicker").val("#BBE9FF");
-  $("#shape-border-colorpicker").val("#FFFFFF");
+  $("#shape-border-colorpicker").val("#000000");
   $("#shape-font-colorpicker").val("#000000");
   $("#shape-background-colorpicker_autocomplete").css("background-color", "#BBE9FF");
-  $("#shape-border-colorpicker_autocomplete").css("background-color", "#FFFFFF");
+  $("#shape-border-colorpicker_autocomplete").css("background-color", "#000000");
   $("#shape-font-colorpicker_autocomplete").css("background-color", "#000000");
 
   $("#border-radius-dropdown input").val(0);
@@ -633,7 +633,7 @@ function initialShapeStyle(){
   $("#shape-text-underline").removeClass("active");
 
   selectedShapeFillColor = '#BBE9FF';
-  selectedShapeOutlineColor = '#FFFFFF';
+  selectedShapeOutlineColor = '#000000';
   selectedTextColor = '#000000';
   selectedBorderRadius = '0px';
   selectedBorderWeight = '1px';
@@ -642,7 +642,7 @@ function initialShapeStyle(){
   selectedTextItalic = false;
   selectedTextUnderline = false;
   selectedTextFamily = 'Courier';
-  selectedTextAlign = shapeType === "circle" ? 'middle,center' : 'top,left';
+  selectedTextAlign = shapeType === "circle" ? 'middle,center' : 'middle,center';
 }
 
 function handleShape(shapeFillColor, borderColor, textColor, borderRadius, borderWidth, textSize, textBold, textItalic, textUnderline, textFamily, textAlign, shapeText, shapeType, w, h, canvasWidth, canvasHeight) {

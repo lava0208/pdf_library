@@ -2363,10 +2363,6 @@ select.form-field-input{
   justify-content: center;
 }
 
-.checkbox.checked .checkmark {
-  border-radius: 3px;
-}
-
 .checkbox.checked .checkmark:after {
   content: "\2713";
   color: black;

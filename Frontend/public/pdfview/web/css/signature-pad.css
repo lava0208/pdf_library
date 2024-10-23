@@ -132,7 +132,7 @@
 .signature-pad--actions .button {
   padding: 10px;
   transition-duration: 0.4s;
-  background-color: #94ceea;
+  background-color: #9adeff;
 }
 
 .signature-pad--actions .button:hover {
@@ -172,15 +172,15 @@
   right: -8px;
 }
 .signature-color-picker > div:not(:last-child) {
-  background-color: #94ceea;
-  border: 1px solid #94ceea;
+  background-color: #9adeff;
+  border: 1px solid #9adeff;
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
   color: #000;
 }
 .signature-color-picker > div:last-child {
-  background-color: #BBE9FF;
-  border: 1px solid #BBE9FF;
+  background-color: #9adeff;
+  border: 1px solid #9adeff;
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
 }

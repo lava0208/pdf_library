@@ -408,8 +408,6 @@ undoButton.addEventListener("click", () => {
 });
 
 drawColorButton.addEventListener("change", () => {
-  console.log("----------" + document.getElementById("signature-draw-colorpicker").value);
-  
   signaturePad.penColor = document.getElementById("signature-draw-colorpicker").value;
 });
 

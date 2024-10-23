@@ -6,8 +6,8 @@ let rectElement;
 let shapeType = "shape";
 
 let selectedShapeFillColor = '#BBE9FF';
-let selectedShapeOutlineColor = 'rgb(255, 255, 255)';
-let selectedTextColor = 'rgb(0, 0, 0)';
+let selectedShapeOutlineColor = '#FFFFFF';
+let selectedTextColor = '#000000';
 let selectedBorderRadius = '0px';
 let selectedBorderWeight = '1px';
 let selectedTextSize = '16px';
@@ -192,6 +192,58 @@ viewer.addEventListener("mousedown", function (e) {
   rectElement.style.position = "absolute";
   rectElement.style.left = `${startX}px`;
   rectElement.style.top = `${startY}px`;
+
+  if (!shapeBackgroundColorPickerInitialized) {
+    const backgroundColorElement = document.getElementById("shape-background-colorpicker");
+    if(backgroundColorElement){
+      new GridColorPicker(backgroundColorElement, {
+        defaultColor: "#BBE9FF",
+        callback: (selectedColor) => {
+          shapeBackgroundColor = selectedShapeFillColor = selectedColor;
+
+          rectElement.style.backgroundColor = selectedColor;
+        },
+      });
+      shapeBackgroundColorPickerInitialized = true;
+      shapeBackgroundColor = selectedShapeFillColor = "#BBE9FF";
+    }
+  }
+  
+  if (!shapeBorderColorPickerInitialized) {
+    const borderColorElement = document.getElementById("shape-border-colorpicker");
+    if(borderColorElement){
+      new GridColorPicker(borderColorElement, {
+        defaultColor: "#FFFFFF",
+        callback: (selectedColor) => {
+          shapeBorderColor = selectedShapeOutlineColor = selectedColor;
+
+          if (shapeType === "line") {
+            rectElement.style.borderBottom = `${selectedBorderWeight} solid ${selectedShapeOutlineColor}`;
+          } else {
+            rectElement.style.border = `${selectedBorderWeight} solid ${selectedShapeOutlineColor}`;
+          }
+        },
+      });
+      shapeBorderColorPickerInitialized = true;
+      shapeBorderColor = selectedShapeOutlineColor = "#FFFFFF";
+    }
+  }
+  
+  if (!shapeFontColorPickerInitialized) {
+    const textColorElement = document.getElementById("shape-font-colorpicker");
+    if (textColorElement) {
+      new GridColorPicker(textColorElement, {
+        defaultColor: "#000000",
+        callback: (selectedColor) => {
+          shapeFontColor = selectedTextColor = selectedColor;
+
+          rectElement.style.color = selectedTextColor;
+        },
+      });
+      shapeFontColorPickerInitialized = true;
+      shapeFontColor = selectedTextColor = "#000000";
+    }
+  }
 
   if (shapeType === "line") {
     rectElement.style.borderBottom = `${selectedBorderWeight} solid ${selectedShapeOutlineColor}`;
@@ -442,13 +494,18 @@ viewer.addEventListener("dblclick", function (e) {
         showTextInput(e, shapeText);
         $("#list-style-dropdown .dropdown-menu").removeClass("show");
   
-        $("#shape-fill-dropdown").find("input").val(rgbToHex(shapeContainer.style.backgroundColor));
-        $("#shape-outline-dropdown").find("input").val(rgbToHex(shapeContainer.style.borderColor));
-        $("#text-color-dropdown").find("input").val(rgbToHex(shapeText.style.color));
+        $("#shape-background-colorpicker").val(shapeContainer.style.backgroundColor);
+        $("#shape-border-colorpicker").val(shapeContainer.style.borderColor);
+        $("#shape-font-colorpicker").val(shapeText.style.color);
+        $("#shape-background-colorpicker_autocomplete").css("background-color", shapeContainer.style.backgroundColor);
+        $("#shape-border-colorpicker_autocomplete").css("background-color", shapeContainer.style.borderColor);
+        $("#shape-font-colorpicker_autocomplete").css("background-color", shapeText.style.color);
 
-        $("#border-weight-dropdown input").val(parseInt(shapeContainer.style.borderWidth));      
+        const borderWidth = shapeContainer.style.borderWidth === "initial" ? 0 : parseInt(shapeContainer.style.borderWidth);
+        
+        $("#border-weight-dropdown input").val(borderWidth);
         $("#text-size-dropdown input").val(parseInt(shapeText.style.fontSize));
-        $("#border-weight-dropdown .range-value").text(shapeContainer.style.borderWidth);
+        $("#border-weight-dropdown .range-value").text(borderWidth + "px");
         $("#text-size-dropdown .range-value").text(shapeText.style.fontSize);
 
         if(shapeType === "shape"){
@@ -561,9 +618,13 @@ function handleChange() {
 };
 
 function initialShapeStyle(){
-  $("#shape-fill-dropdown").find("input").val("#FFFFFF");
-  $("#shape-outline-dropdown").find("input").val("#FFFFFF");
-  $("#text-color-dropdown").find("input").val("#000000");
+  $("#shape-background-colorpicker").val("#BBE9FF");
+  $("#shape-border-colorpicker").val("#FFFFFF");
+  $("#shape-font-colorpicker").val("#000000");
+  $("#shape-background-colorpicker_autocomplete").css("background-color", "#BBE9FF");
+  $("#shape-border-colorpicker_autocomplete").css("background-color", "#FFFFFF");
+  $("#shape-font-colorpicker_autocomplete").css("background-color", "#000000");
+
   $("#border-radius-dropdown input").val(0);
   $("#border-weight-dropdown input").val(1);
   $("#text-size-dropdown input").val(16);
@@ -572,8 +633,8 @@ function initialShapeStyle(){
   $("#shape-text-underline").removeClass("active");
 
   selectedShapeFillColor = '#BBE9FF';
-  selectedShapeOutlineColor = 'rgb(255, 255, 255)';
-  selectedTextColor = 'rgb(0, 0, 0)';
+  selectedShapeOutlineColor = '#FFFFFF';
+  selectedTextColor = '#000000';
   selectedBorderRadius = '0px';
   selectedBorderWeight = '1px';
   selectedTextSize = '16px';

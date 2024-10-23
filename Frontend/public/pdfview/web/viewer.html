@@ -854,14 +854,8 @@ See https://github.com/adobe-type-tools/cmap-resources
                     <img src="./images/fill-color.svg" alt="color" />
                   </button>
                   <div class="dropdown-menu">
-                    <div class="shape-colorpicker-container" type="background">
-                      <input
-                        type="color"
-                        name="colorPicker"
-                        value="#BBE9FF"
-                        class="shape-colorpicker"
-                      />
-                      <i class="fa fa-save" class="shape-save"></i>
+                    <div class="color-picker-container">
+                      <input type="text" id="shape-background-colorpicker" class="form-control" />
                     </div>
                   </div>
                 </div>
@@ -875,14 +869,8 @@ See https://github.com/adobe-type-tools/cmap-resources
                     <i class="fa fa-regular fa-square"></i>
                   </button>
                   <div class="dropdown-menu">
-                    <div class="shape-colorpicker-container" type="border">
-                      <input
-                        type="color"
-                        name="colorPicker"
-                        value="#000000"
-                        class="shape-colorpicker"
-                      />
-                      <i class="fa fa-save" class="shape-save"></i>
+                    <div class="color-picker-container">
+                      <input type="text" id="shape-border-colorpicker" class="form-control" />
                     </div>
                   </div>
                 </div>
@@ -949,14 +937,8 @@ See https://github.com/adobe-type-tools/cmap-resources
                     <img src="./images/fill-color.svg" alt="color" />
                   </button>
                   <div class="dropdown-menu">
-                    <div class="shape-colorpicker-container" type="text">
-                      <input
-                        type="color"
-                        name="colorPicker"
-                        value="#000000"
-                        class="shape-colorpicker"
-                      />
-                      <i class="fa fa-save" class="shape-save"></i>
+                    <div class="color-picker-container">
+                      <input type="text" id="shape-font-colorpicker" class="form-control" />
                     </div>
                   </div>
                 </div>
@@ -1716,7 +1698,7 @@ See https://github.com/adobe-type-tools/cmap-resources
                   <span>Fill Color</span>
                 </div>
                 <div class="color-picker-container">
-                  <input type="text" id="combo-background-colorpicker" class="form-control" value="#FFFFFF" />
+                  <input type="text" id="combo-background-colorpicker" class="form-control" />
                 </div>
               </div>
               <div class="form-style-container">

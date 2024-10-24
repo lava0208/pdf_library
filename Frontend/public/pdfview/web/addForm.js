@@ -2677,6 +2677,8 @@ document.addEventListener("DOMContentLoaded", function () {
               clearInterval(checkViewerInterval);
               drawFormElement();
               $("body").removeClass("loading");
+            } else {
+              $("body").removeClass("loading");
             }
           }, 100)
         }        
@@ -7874,8 +7876,12 @@ const submitDocument = async function () {
   }
 }
 
-$(".menu-item").click(function(){
+$(".document-menu").click(function(){
   parent.window.location.href = "/documents";
+})
+
+$(".sign-menu").click(function(){
+  parent.window.location.href = "/signature";
 })
 
 $("#open-documents").click(function(){

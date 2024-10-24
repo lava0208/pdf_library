@@ -65,6 +65,9 @@ const documentSchema = new Schema({
     textData: {
         type: String
     },
+    commentData: {
+        type: String
+    },
     uniqueLink: {
         type: String
     },

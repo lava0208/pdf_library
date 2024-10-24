@@ -233,6 +233,7 @@ app.post('/sendlink', upload.single('pdfFile'), async (req, res) => {
         pdfData: dataUri,
         formData: pdfFormData,
         textData: pdfTextData,
+        commentData: pdfCommentData,
         name: name,
         email: email,
         description: description,

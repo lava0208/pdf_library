@@ -517,6 +517,7 @@ const saveDoc = async function () {
     formData.append('pdfFile', pdfBlob, "uploaded.pdf");
     formData.append('pdfFormData', JSON.stringify(form_storage));
     formData.append('pdfTextData', JSON.stringify(text_storage));
+    formData.append('pdfCommentData', JSON.stringify(comment_storage));
     formData.append("history", JSON.stringify(historyArr));
     formData.append("username", localStorage.getItem("username"));
     formData.append("folderId", localStorage.getItem("currentFolderId"));    

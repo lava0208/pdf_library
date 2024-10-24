@@ -276,82 +276,164 @@ let computePageOffset = function () {
   };
 };
 
-document.getElementById("add_comment").addEventListener("click", (e) => {
-  let comment_title = document.getElementById("comment_title").value;
-  let comment_text = document.getElementById("comment_text").value;
+const addCommentButtons = document.getElementsByClassName("add_comment");
+Array.from(addCommentButtons).forEach((button) => {
+  button.addEventListener("click", (e) => {
+    let comment_text = document.getElementById("comment_text").value;
+    
+    baseId++;
+    let commentId = baseId;
 
-  baseId++;
-  let commentId = baseId;
+    let existingComment = comment_storage.find(comment => comment.containerId === "comment" + commentId);
 
-  comment_storage.push({
-    id: commentId,
-    containerId: "comment" + commentId,
-    x: comment_x,
-    y: comment_y,
-    baseX: comment_x,
-    baseY: comment_y,
-    width: 30 * 0.75 * 0.8,
-    height: 30 * 0.75 * 0.8,
-    title: comment_title,
-    text: comment_text,
-    page_number: PDFViewerApplication.page
-  });
-
-  const date = new Date(Date.now());
-  addHistory(baseId, COMMENT, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "comment", "comment");
-
-  let pageId = String(PDFViewerApplication.page);
-  let pg = document.getElementById(pageId);
-
-  let comment_icon = document.createElement("div");
-  comment_icon.style.height = "30px";
-  comment_icon.style.width = "30px";
-  comment_icon.id = "comment" + commentId;
-  comment_icon.style.position = "absolute";
-  // comment_icon.style.zIndex = 100;
-  comment_icon.style.top = mouse_y + "px";
-  comment_icon.style.left = mouse_x + "px";
-  comment_icon.style.backgroundSize = "100% 100%";
-  comment_icon.style.backgroundImage =
-    "url('./images/comment-svgrepo-com.svg')";
-
-  comment_icon.addEventListener("dblclick", (e) => {
-    current_comment_id = commentId;
-    let istooltipshow = false;
-    if (document.getElementById("comment_tooltipbar" + current_comment_id)) {
-      istooltipshow = true;
-    }
-
-    if (isDragging) {
-      isDragging = false;
+    if (existingComment) {
+      existingComment.text = comment_text;
     } else {
-      if (!istooltipshow) {
-        let tooltipbar = document.createElement("div");
-        addDeleteButton(
-          current_comment_id,
-          tooltipbar,
-          comment_icon,
-          "comment"
-        );
-      } else {
-        document
-          .getElementById("comment_tooltipbar" + current_comment_id)
-          .remove();
-      }
+      comment_storage.push({
+        id: commentId,
+        containerId: "comment" + commentId,
+        historyId: "historyDiv" + baseId,
+        x: comment_x,
+        y: comment_y,
+        baseX: comment_x,
+        baseY: comment_y,
+        width: 30 * 0.75 * 0.8,
+        height: 30 * 0.75 * 0.8,
+        text: comment_text,
+        page_number: PDFViewerApplication.page
+      });
     }
-  });
 
-  pg.appendChild(comment_icon);
+    const date = new Date(Date.now());
+    addHistory(baseId, COMMENT, USERNAME, convertStandardDateType(date), PDFViewerApplication.page, "comment", "comment");
 
-  document.getElementById("comment_title").value = "";
-  document.getElementById("comment_text").value = "";
-  // document.getElementById("comment_control_panel").style.display = "none";
-  // document.getElementById("add_comment_mode").innerHTML =
-  //   '<i class="far fa-comment"></i><p class="menu-button-item">Add Comment</p>';
-  resizeCanvas(comment_icon.id, COMMENT, commentId);
-  isAddCommentModeOn = false;
-  handleChange();
+    let pageId = String(PDFViewerApplication.page);
+    let pg = document.getElementById(pageId);
+
+    const commentContainer = document.createElement("div");
+    commentContainer.id = "commentContainer" + commentId;
+    commentContainer.style.position = "absolute";
+    commentContainer.style.zIndex = 120;
+    commentContainer.style.top = (mouse_y - 9) + "px";
+    commentContainer.style.left = (mouse_x - 9) + "px";
+
+    const stickyNoteImage = document.createElement("img");
+    stickyNoteImage.src = "./images/comment-svgrepo-com.svg";
+    stickyNoteImage.classList.add("comment-icon");
+
+    stickyNoteImage.addEventListener("dblclick", () => {
+      if (commentControlPanel.style.display === "none") {
+        commentControlPanel.style.display = "block";
+      } else {
+        commentControlPanel.style.display = "none";
+      }
+    });
+
+    // Comment control panel
+    const commentControlPanel = document.createElement("div");
+    commentControlPanel.classList.add("comment-control-panel");
+    commentControlPanel.style.position = "relative";
+    commentControlPanel.style.display = "none";
+    commentControlPanel.id = `comment_panel_${commentId}`;
+
+    const commentHeader = document.createElement("div");
+    commentHeader.classList.add("comment-control-header");
+    
+    const title = document.createElement("strong");
+    title.innerText = "Note";
+
+    const closeButton = document.createElement("span");
+    closeButton.classList.add("comment-close");
+
+    const closeIcon = document.createElement("i");
+    closeIcon.classList.add("fa", "fa-close");
+
+    closeButton.appendChild(closeIcon);
+
+    closeButton.addEventListener("click", () => {
+      commentControlPanel.style.display = "none";
+    });
+
+    commentHeader.appendChild(title);
+    commentHeader.appendChild(closeButton);
+
+    const commentContent = document.createElement("div");
+    commentContent.classList.add("comment-control-content");
+
+    const commentTextArea = document.createElement("textarea");
+    commentTextArea.id = `comment_text_${commentId}`;
+    commentTextArea.classList.add("comment-textarea");
+    commentTextArea.rows = 4;
+    commentTextArea.placeholder = "Contents...";
+    commentTextArea.value = comment_text;
+
+    const commentInput = document.createElement("input");
+    commentInput.id = `comment_reply_${commentId}`;
+    commentInput.classList.add("comment-input", "hidden", "w-100");
+    commentInput.placeholder = "Add reply...";
+
+    commentContent.appendChild(commentTextArea);
+    commentContent.appendChild(commentInput);
+
+    const postButton = document.createElement("button");
+    postButton.type = "button";
+    postButton.classList.add("btn", "btn-info", "add_comment");
+    postButton.id = `add_${commentId}`;
+    postButton.innerText = "Post";
+
+    postButton.addEventListener("click", () => {
+      const updatedText = document.getElementById(`comment_text_${commentId}`).value;
+      if (updatedText) {
+        const existingComment = comment_storage.find(comment => comment.containerId === "comment" + commentId);
+        if (existingComment) {
+          existingComment.text = updatedText;
+        }
+        commentControlPanel.style.display = "none";
+      }
+    });
+
+    let currentObject;
+
+    const deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.classList.add("btn", "btn-danger", "delete_comment");
+    deleteButton.innerText = "Delete";
+
+    deleteButton.addEventListener("click", () => {
+      currentObject = comment_storage.find((comment) => comment.containerId == "comment" + commentId);
+      comment_storage = comment_storage.filter(comment => comment.containerId !== "comment" + commentId);
+      comment_storage = comment_storage.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i);
+      
+      stickyNoteImage.remove();
+      commentControlPanel.remove();
+
+      if (currentObject) {
+        const commentPageDiv = document.getElementById(`page${currentObject.page_number}`);
+        const currentHistoryDiv = document.getElementById(currentObject.historyId);
+        if (commentPageDiv && commentPageDiv.contains(currentHistoryDiv)) {
+          commentPageDiv.removeChild(currentHistoryDiv);
+        }
+      }
+    });
+
+    commentControlPanel.appendChild(commentHeader);
+    commentControlPanel.appendChild(commentContent);
+    commentControlPanel.appendChild(postButton);
+    commentControlPanel.appendChild(deleteButton);
+
+    commentContainer.appendChild(stickyNoteImage);
+    commentContainer.appendChild(commentControlPanel);
+
+    // Append the container to the page
+    pg.appendChild(commentContainer);
+
+    document.getElementById("comment_text").value = "";
+    resizeCanvas(commentContainer.id, COMMENT, commentId);
+    isAddCommentModeOn = false;
+    handleChange();
+  })
 });
+
 
 const moveEventHandler = (event, offsetX, offsetY, currentId) => {
   if (DrawType === COMMENT) {
@@ -691,7 +773,6 @@ function add_txt_comment() {
           comment_item.x + comment_item.width,
           comment_item.y,
         ],
-        comment_item.title,
         comment_item.text
       );
     });
@@ -724,7 +805,7 @@ const setDocumentAsPDF = async function () {
   pdfBytes = await PDFViewerApplication.pdfDocument.saveDocument();
   const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
   pdfBytes = await pdfDoc.save();
-  if (form_storage.length != 0 || text_storage.length != 0)
+  if (form_storage.length != 0 || text_storage.length != 0 || comment_storage.length != 0)
     addFormElements().then(() => {
       add_txt_comment();
     });

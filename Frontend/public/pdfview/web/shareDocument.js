@@ -34,6 +34,7 @@ shareDocumentSendButton.onclick = async function () {
   // formData.append("email", shareDocumentSenderEmail.value);
   if (shareDocumentSenderDescription.value) descriptionData = shareDocumentSenderDescription.value;
   formData.append('pdfTextData', JSON.stringify(text_storage));
+  formData.append('pdfCommentData', JSON.stringify(comment_storage));
   formData.append("description", descriptionData);
 
   // Get an array of selected email addresses

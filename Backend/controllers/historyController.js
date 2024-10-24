@@ -79,6 +79,7 @@ const createDocument = async (req, res) => {
 
         let formData = JSON.parse(req.body.pdfFormData); // Parse formData as an array
         const textData = req.body.pdfTextData;
+        const commentData = req.body.pdfCommentData;
 
         // Create the history
         const history = JSON.parse(req.body.history);
@@ -98,6 +99,7 @@ const createDocument = async (req, res) => {
             pdfData: dataUri,
             formData: updatedFormData,
             textData: textData,
+            commentData: commentData
         });
 
         formDataMap.set(uniqueId, newDataSet);
@@ -111,6 +113,7 @@ const createDocument = async (req, res) => {
             pdfData: dataUri,
             formData: updatedFormData,  // Save the updated formData with historyId
             textData,
+            commentData,
             history,
             uniqueLink,
             folderId: folderId && folderId !== 'null' ? new mongoose.Types.ObjectId(folderId) : null
@@ -159,6 +162,10 @@ const updateDocument = async (req, res) => {
 
         if (req.body.pdfTextData) {
             updateData.textData = req.body.pdfTextData;
+        }
+
+        if (req.body.pdfCommentData) {
+            updateData.commentData = req.body.pdfCommentData;
         }
 
         if (req.body.history) {

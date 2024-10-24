@@ -200,7 +200,11 @@ const drawFormElement = function () {
 
   if(text_storage == undefined){
     text_storage = [];
-  }
+  };
+
+  if(comment_storage == undefined){
+    comment_storage = [];
+  };
 
   let checkedCheckboxes = [];
 
@@ -2441,6 +2445,141 @@ const drawFormElement = function () {
       newText.style.color = item.textColor;
     })
   }
+
+  if (comment_storage && comment_storage !== null) {
+    comment_storage.forEach((item) => {
+      let new_x_y, x, y;
+      x = item.x;
+      y = item.y;
+      item.baseX = item.x;
+      item.baseY = item.y;
+      new_x_y = PDFViewerApplication.pdfViewer._pages[
+        PDFViewerApplication.page - 1
+      ].viewport.convertToViewportPoint(x, y);
+      x = new_x_y[0];
+      y = new_x_y[1];
+  
+      let pg = document.getElementById(String(item.page_number));
+
+      const commentContainer = document.createElement("div");
+      commentContainer.id = "commentContainer" + item.id;
+      commentContainer.style.position = "absolute";
+      commentContainer.style.zIndex = 120;
+      commentContainer.style.top = y + "px";
+      commentContainer.style.left = x + "px";
+  
+      const stickyNoteImage = document.createElement("img");
+      stickyNoteImage.src = "./images/comment-svgrepo-com.svg";
+      stickyNoteImage.classList.add("comment-icon");
+  
+      stickyNoteImage.addEventListener("dblclick", () => {
+        if (commentControlPanel.style.display === "none") {
+          commentControlPanel.style.display = "block";
+        } else {
+          commentControlPanel.style.display = "none";
+        }
+      });
+
+      const commentControlPanel = document.createElement("div");
+      commentControlPanel.classList.add("comment-control-panel");
+      commentControlPanel.style.position = "relative";
+      commentControlPanel.style.display = "none";
+      commentControlPanel.id = `comment_panel_${item.id}`;
+  
+      const commentHeader = document.createElement("div");
+      commentHeader.classList.add("comment-control-header");
+      
+      const title = document.createElement("strong");
+      title.innerText = "Note";
+
+      const closeButton = document.createElement("span");
+      closeButton.classList.add("comment-close");
+
+      const closeIcon = document.createElement("i");
+      closeIcon.classList.add("fa", "fa-close");
+
+      closeButton.appendChild(closeIcon);
+
+      closeButton.addEventListener("click", () => {
+        commentControlPanel.style.display = "none";
+      });
+
+      commentHeader.appendChild(title);
+      commentHeader.appendChild(closeButton);
+
+      const commentContent = document.createElement("div");
+      commentContent.classList.add("comment-control-content");
+  
+      const commentTextArea = document.createElement("textarea");
+      commentTextArea.id = `comment_text_${item.id}`;
+      commentTextArea.classList.add("comment-textarea");
+      commentTextArea.rows = 4;
+      commentTextArea.placeholder = "Contents...";
+      commentTextArea.value = item.text || '';
+
+      const commentInput = document.createElement("input");
+      commentInput.id = `comment_reply_${item.id}`;
+      commentInput.classList.add("comment-input", "w-100");
+      commentInput.placeholder = "Add reply...";
+      commentInput.value = item.reply || '';
+  
+      commentContent.appendChild(commentTextArea);
+      commentContent.appendChild(commentInput);
+  
+      const postButton = document.createElement("button");
+      postButton.type = "button";
+      postButton.classList.add("btn", "btn-info", "add_comment");
+      postButton.id = `add_${item.id}`;
+      postButton.innerText = "Post";
+  
+      postButton.addEventListener("click", () => {
+        const commentText = document.getElementById(`comment_text_${item.id}`).value;
+        const commentReply = document.getElementById(`comment_reply_${item.id}`).value;
+        if (commentText) {
+          const existingComment = comment_storage.find(comment => comment.containerId === item.containerId);
+          if (existingComment) {
+            existingComment.text = commentText;
+            existingComment.reply = commentReply;
+          }
+          commentControlPanel.style.display = "none";
+        }
+      });
+  
+      let currentObject;
+
+      const deleteButton = document.createElement("button");
+      deleteButton.innerText = "Delete";
+      deleteButton.classList.add("btn", "btn-danger", "delete_comment");
+
+      deleteButton.addEventListener("click", () => {
+        currentObject = comment_storage.find((comment) => comment.containerId == item.containerId);
+        comment_storage = comment_storage.filter((comment) => comment.containerId !== item.containerId);
+        comment_storage = comment_storage.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i);
+        
+        stickyNoteImage.remove();
+        commentControlPanel.remove();
+
+        if (currentObject) {
+          const commentPageDiv = document.getElementById(`page${currentObject.page_number}`);
+          const currentHistoryDiv = document.getElementById(currentObject.historyId);
+          if (commentPageDiv && commentPageDiv.contains(currentHistoryDiv)) {
+            commentPageDiv.removeChild(currentHistoryDiv);
+          }
+        }
+      });
+  
+      commentControlPanel.appendChild(commentHeader);
+      commentControlPanel.appendChild(commentContent);
+      commentControlPanel.appendChild(postButton);
+      commentControlPanel.appendChild(deleteButton);
+
+      commentContainer.appendChild(stickyNoteImage);
+      commentContainer.appendChild(commentControlPanel);
+
+      pg.append(commentContainer);
+    });
+  }
+
   generalUserMode();
   if(!isSubmit && isOpenEmailPdf){
     searchForm();
@@ -2522,6 +2661,7 @@ document.addEventListener("DOMContentLoaded", function () {
           }
 
           text_storage = isDraft ? data.textData && JSON.parse(data.textData) : data[0].textData && JSON.parse(data[0].textData);
+          comment_storage = isDraft ? data.commentData && JSON.parse(data.commentData) : data[0].commentData && JSON.parse(data[0].commentData);
           PDFViewerApplication.open({
             url: URL.createObjectURL(pdfFile),
             originalUrl: pdfFile.name,
@@ -2530,7 +2670,7 @@ document.addEventListener("DOMContentLoaded", function () {
           console.log("*******");
           console.log(draw_form_storage);
           console.log(text_storage);
-          
+          console.log(comment_storage);
           
           const checkViewerInterval = setInterval(() => {
             if (PDFViewerApplication.pdfDocument && PDFViewerApplication.pdfDocument.numPages > 0 && draw_form_storage) {
@@ -4127,6 +4267,18 @@ const resizeHandler = function (width, height, currentId) {
   } else if (DrawType == TEXT_CONTENT) {
     if(text_storage){
       text_storage.map(function (item) {
+        if (item.id === currentId) {
+          item.width = width * 0.75 * 0.8;
+          item.height = height * 0.75 * 0.8;
+          item.xPage = width;
+          item.yPage = height;
+        }
+      });
+    }
+    
+  }else if (DrawType == COMMENT) {
+    if(comment_storage){
+      comment_storage.map(function (item) {
         if (item.id === currentId) {
           item.width = width * 0.75 * 0.8;
           item.height = height * 0.75 * 0.8;

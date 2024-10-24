@@ -1409,22 +1409,18 @@ See https://github.com/adobe-type-tools/cmap-resources
     <!-- outerContainer -->
     <div id="printContainer"></div>
 
-    <div id="comment_control_panel" class="comment-control-panel">
-      <div class="comment-control-header">
-        <div class="comment-control-header-text">
-          <p id="panel_title">Add Comment</p>
+    <div class="comment-container" id="comment_control_panel">
+      <img src="./images/comment-svgrepo-com.svg" alt="comment" class="comment-icon" />
+      <div class="comment-control-panel">
+        <strong>Note</strong>
+        <div class="comment-control-content">
+          <textarea class="comment-textarea" id="comment_text" rows="4" placeholder="Contents..."></textarea>
+          <input class="comment-input hidden w-100" id="comment_reply" placeholder="Add reply...">
         </div>
+        <button type="button" class="btn btn-info add_comment">Post</button>
       </div>
-      <div class="comment-control-content">
-        <div class="comment-input-container">
-          Title: <input id="comment_title" class="comment-input" type="text" />
-        </div>
-        <div class="comment-input-container">
-          Text: <input id="comment_text" class="comment-input" type="text" />
-        </div>
-      </div>
-      <div id="add_comment" class="add-comment">OK</div>
     </div>
+
 
     <div id="id_form_options">
       <!-- Checkbox Option -->
@@ -2381,7 +2377,7 @@ See https://github.com/adobe-type-tools/cmap-resources
           </div>
           <h6>Draw</h6>
         </button>
-        <button class="tabitem shape-item" type="line">
+        <button class="tabitem shape-item" type="line" disabled>
           <div class="img-container">
             <img src="./images/form-line.svg" alt="line">
           </div>

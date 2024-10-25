@@ -67,6 +67,9 @@ export default function Landing() {
           <li className="sidebar-nav-item">
             <a href="#" onClick={() => { handleClick('/documents') }}>Documents</a>
           </li>
+          <li className="sidebar-nav-item">
+            <a href="#" onClick={() => { handleClick('/signature') }}>E-Sign</a>
+          </li>
         </ul>
       </nav >
       {/* < !--Header Starts-- > */}

@@ -178,6 +178,22 @@ const generalUserMode = function () {
       }
     }
   }
+
+  if(isOpenEmailPdf){
+    searchFormNextButton.classList.remove("hidden");
+    searchFormPrevButton.classList.remove("hidden");
+    submitDocumentButton.classList.remove("hidden");
+    searchFormNextButton.setAttribute("disabled", true);
+    searchFormPrevButton.setAttribute("disabled", true);
+    submitDocumentButton.setAttribute("disabled", true);
+    $(".view-mode").addClass("hidden");
+  }else{
+    saveDraftDocument && saveDraftDocument.classList.remove("hidden");
+    shareDocumentButton && shareDocumentButton.classList.remove("hidden");
+    downloadDocumentButton && downloadDocumentButton.classList.remove("hidden");
+    deleteDocumentButton && deleteDocumentButton.classList.remove("hidden");
+    $(".view-mode").removeClass("hidden");
+  }
 }
 
 const drawFormElement = function () {
@@ -2529,14 +2545,15 @@ const drawFormElement = function () {
       const postButton = document.createElement("button");
       postButton.type = "button";
       postButton.classList.add("btn", "btn-info", "add_comment");
-      postButton.id = `add_${item.id}`;
+      postButton.id = `add_${item.id}`; 
+      
       postButton.innerText = "Post";
   
       postButton.addEventListener("click", () => {
         const commentText = document.getElementById(`comment_text_${item.id}`).value;
         const commentReply = document.getElementById(`comment_reply_${item.id}`).value;
         if (commentText) {
-          const existingComment = comment_storage.find(comment => comment.containerId === item.containerId);
+          const existingComment = comment_storage && comment_storage.find(comment => comment.containerId === item.containerId);
           if (existingComment) {
             existingComment.text = commentText;
             existingComment.reply = commentReply;
@@ -2595,6 +2612,46 @@ $(document).on("click", ".text-weight-button", function () {
   }
 })
 
+$(document).on("click", ".signature-result-btn", function () {
+  parent.window.location.href = "/";
+})
+
+$(document).on("click", "#send-signature", async function () {
+  $(".progress-container").removeClass("hidden");
+
+  pdfBytes = await PDFViewerApplication.pdfDocument.saveDocument();
+  const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
+
+  const formData = new FormData();
+  formData.append('pdfFile', pdfBlob, "uploaded.pdf");
+  formData.append('pdfFormData', JSON.stringify(form_storage));
+  formData.append('pdfTextData', JSON.stringify(text_storage));
+  formData.append('pdfCommentData', JSON.stringify(comment_storage));
+  formData.append("name", localStorage.getItem("username"));
+  formData.append("description", localStorage.getItem("message"));
+
+  const recipients = JSON.parse(localStorage.getItem("recipients"));
+  const selectedEmails = recipients.map(item => item.value).join(',');
+
+  formData.append('emails', selectedEmails);
+  
+
+  fetch(`${BASE_URL}/sendlink`, {
+    method: 'POST',
+    body: formData
+  }).then(response => {
+    if (response.ok) {
+      $(".progress-container").addClass("hidden");
+      shareDocumentContainer.style.display = "none";
+      $("#viewer").hide();
+      $(".right-sidebar").hide();
+      $(".status-circle").removeClass("progress").addClass("complete");
+      $("#signature-result").css("display", "flex");
+    }
+  })
+})
+
+
 document.addEventListener("DOMContentLoaded", function () {
   loadFontFiles();
   requestId = getIdFromUrl();
@@ -2612,12 +2669,13 @@ document.addEventListener("DOMContentLoaded", function () {
     searchFormNextButton.classList.remove("hidden");
     searchFormPrevButton.classList.remove("hidden");
     submitDocumentButton.classList.remove("hidden");
-    $(".view-mode").hide();
+    $(".view-mode").addClass("hidden");
   }else{
-    saveDraftDocument.classList.remove("hidden");
-    shareDocumentButton.classList.remove("hidden");
-    downloadDocumentButton.classList.remove("hidden");
-    deleteDocumentButton.classList.remove("hidden");
+    saveDraftDocument && saveDraftDocument.classList.remove("hidden");
+    shareDocumentButton && shareDocumentButton.classList.remove("hidden");
+    downloadDocumentButton && downloadDocumentButton.classList.remove("hidden");
+    deleteDocumentButton && deleteDocumentButton.classList.remove("hidden");
+    $(".view-mode").removeClass("hidden");
   }
 
   if (initialId) {
@@ -2654,14 +2712,16 @@ document.addEventListener("DOMContentLoaded", function () {
             if (data.formData) {
               draw_form_storage = JSON.parse(data.formData);
             }
+            text_storage = data.textData != undefined && data.textData != "undefined" ? JSON.parse(data.textData) : [];
+            comment_storage = data.commentData != undefined && data.commentData != "undefined" ? JSON.parse(data.commentData) : [];
           }else{
             if(data[0].formData){
               draw_form_storage = JSON.parse(data[0].formData);
             }
+            text_storage = data[0].textData != undefined && data[0].textData != "undefined" ? JSON.parse(data[0].textData) : [];
+            comment_storage = data[0].commentData != undefined && data[0].commentData != "undefined" ? JSON.parse(data[0].commentData) : [];
           }
 
-          text_storage = isDraft ? data.textData && JSON.parse(data.textData) : data[0].textData && JSON.parse(data[0].textData);
-          comment_storage = isDraft ? data.commentData && JSON.parse(data.commentData) : data[0].commentData && JSON.parse(data[0].commentData);
           PDFViewerApplication.open({
             url: URL.createObjectURL(pdfFile),
             originalUrl: pdfFile.name,
@@ -4126,7 +4186,7 @@ const saveFormElementByClick = function () {
 }
 
 const removeAllResizeBar = function () {
-  if (form_storage  && form_storage !== null) {
+  if (form_storage && form_storage !== null) {
     form_storage.forEach((item) => {
       let currentItem;
       if (item.form_type === DATE) currentItem = document.getElementById(item.containerId) && document.getElementById(item.containerId).parentElement;
@@ -4136,13 +4196,13 @@ const removeAllResizeBar = function () {
       }
     })
   }
-  if (text_storage  && text_storage !== null) {
+  if (text_storage && text_storage !== null) {
     text_storage.forEach((item) => {
       const currentItem = document.getElementById(item.containerId);
       if (currentItem && currentItem.querySelector("#topLeft")) removeResizebar(currentItem.id);
     })
   }
-  if (comment_storage !== null) {
+  if (comment_storage && comment_storage !== null) {
     comment_storage.forEach((item) => {
       const currentItem = document.getElementById(item.containerId);
       if (currentItem && currentItem.querySelector("#topLeft")) removeResizebar(currentItem.id);
@@ -7985,8 +8045,6 @@ function searchForm() {
       }
     });
 
-  } else {
-    console.error("No form fields found");
   }
 }
 

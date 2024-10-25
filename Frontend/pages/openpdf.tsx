@@ -1,23 +1,13 @@
 'use client';
 import { BASE_URL } from '@/Config';
 import { useRouter } from 'next/router';
-import UserProfile from '@/components/UserProfile';
 import { useState, useEffect } from 'react';
 
 const OpenPdf = () => {
-
     const router = useRouter();
-
-    const [color, setColor] = useState('');
-    const [username, setUsername] = useState('');
-
-    const [showProfile, setShowProfile] = useState(false);
-
     const [id, setId] = useState('');
 
     useEffect(() => {
-        setColor(localStorage.getItem('color') || '');
-        setUsername(localStorage.getItem('username') || '');
         const urlParams = new URLSearchParams(window.location.search);
         const initialId = urlParams.get('id');
         if (initialId) {
@@ -51,7 +41,6 @@ const OpenPdf = () => {
                         overflow: "hidden",
                     }}
                 >
-                    {showProfile && <UserProfile username={username} top="45px" right="20px" />}
                     <div>
                         <iframe
                             id="pdfIframe"

@@ -284,7 +284,7 @@ Array.from(addCommentButtons).forEach((button) => {
     baseId++;
     let commentId = baseId;
 
-    let existingComment = comment_storage.find(comment => comment.containerId === "comment" + commentId);
+    let existingComment = comment_storage && comment_storage.find(comment => comment.containerId === "comment" + commentId);
 
     if (existingComment) {
       existingComment.text = comment_text;
@@ -384,7 +384,7 @@ Array.from(addCommentButtons).forEach((button) => {
     postButton.addEventListener("click", () => {
       const updatedText = document.getElementById(`comment_text_${commentId}`).value;
       if (updatedText) {
-        const existingComment = comment_storage.find(comment => comment.containerId === "comment" + commentId);
+        const existingComment = comment_storage && comment_storage.find(comment => comment.containerId === "comment" + commentId);
         if (existingComment) {
           existingComment.text = updatedText;
         }

@@ -4,8 +4,9 @@ import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import withAuth from "@/components/withAuth";
 
-const PDFViewer = () => {
+const SignViewer = () => {
   const router = useRouter();
+
   const [id, setId] = useState('');
   const [isDraft, setIsDraft] = useState('');
 
@@ -65,9 +66,9 @@ const PDFViewer = () => {
       const iframe = document.getElementById('pdfIframe') as HTMLIFrameElement | null;
       if (iframe) {
         if(isDraft != null){
-          iframe.src = `./pdfview/web/viewer.html?id=${id}&draft=${isDraft}`;
+          iframe.src = `./pdfview/web/signature.html?id=${id}&draft=${isDraft}`;
         }else{
-          iframe.src = `./pdfview/web/viewer.html?id=${id}`;
+          iframe.src = `./pdfview/web/signature.html?id=${id}`;
         }
       }
     }
@@ -84,7 +85,7 @@ const PDFViewer = () => {
           <div>
             <iframe
               id="pdfIframe"
-              src={`./pdfview/web/viewer.html?id=${id}`}
+              src={`./pdfview/web/signature.html?id=${id}`}
               style={{
                 width: "100%",
                 height: "100vh",
@@ -100,4 +101,4 @@ const PDFViewer = () => {
   );
 }
 
-export default withAuth(PDFViewer);
+export default withAuth(SignViewer);

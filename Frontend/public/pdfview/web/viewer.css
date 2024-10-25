@@ -213,6 +213,7 @@
   margin: 0;
   font-family: tahoma;
   font-size: 14px;
+  box-sizing: border-box;
 }
 
 html,
@@ -224,6 +225,30 @@ body {
 body {
   background-color: var(--body-bg-color);
   scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+}
+
+.d-flex{
+  display: flex;
+}
+
+.align-items-center{
+  align-items: center;
+}
+
+.gap-2{
+  gap: 8px;
+}
+
+.pl-2, .px-2 {
+  padding-left: 8px;
+}
+
+.ml-2, .mx-2 {
+  margin-left: 8px;
+}
+
+.border-left {
+  border-left: 1px solid #dee2e6;
 }
 
 .hidden,
@@ -334,7 +359,6 @@ small{
 #topbar{
   position: relative;
   padding: 10px;
-  height: 40px;
   box-shadow: 0 1px 4px rgb(0 0 0 / 0.3);
   z-index: 100;
   display: flex;
@@ -3093,11 +3117,11 @@ input[type=number]::-webkit-outer-spin-button {
   display: none;
 }
 
-#secondaryOpenFile span{
+.large-btn span{
   font-size: 18px;
 }
 
-#secondaryOpenFile i{
+.large-btn i{
   display: none;
 }
 
@@ -3147,7 +3171,7 @@ input[type=number]::-webkit-outer-spin-button {
   font-size: 18px;
 }
 
-#secondaryOpenFile{
+.btn.btn-large.large-btn{
   width: 90%;
   margin: auto;
   display: block;
@@ -3159,7 +3183,7 @@ input[type=number]::-webkit-outer-spin-button {
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
   position: fixed;
-  right: 320px;
+  right: 310px;
   top: 50%;
   z-index: 200;
   background-color: white;
@@ -3377,6 +3401,145 @@ input[type=number]::-webkit-outer-spin-button {
   width: 100%;
 }
 
+.signature-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
+  width: 100%;
+  padding: 16px 25px 16px 20px;
+  background-color: #fff;
+  z-index: 150;
+  position: relative;
+}
+
+.signature-header h2{
+  font-size: 20px;
+  line-height: 19px;
+  font-weight: 700;
+}
+
+.signature-header h3{
+  font-size: 18px;
+  line-height: 16px;
+}
+
+.signature-body #viewerContainer{
+  inset: 60px 0 0;
+}
+
+.signature-body .right-sidebar{
+  margin-top: 60px;
+  height: calc(100vh - 60px);
+}
+
+.signature-body #toggle-rightbar{
+  right: 310px;
+}
+
+#signature-result{
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  padding: 100px 0 200px;
+  background-image: url(../web/images/signature-background.jpg);
+  background-size: cover;
+  background-position: top;
+  height: calc(100vh - 60px);
+}
+
+#signature-result h1{
+  font-size: 27px;
+}
+
+.signature-status-bar{
+  width: 300px;
+  display: flex;
+}
+
+.signature-status-item{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.signature-status-item small{
+  font-size: 10px;
+}
+
+.signature-line{
+  height: 1px;
+  width: 100%;
+  border: 1px dashed #666;
+  margin-top: 7px;
+}
+
+.status-circle{
+  width: 15px;
+  min-width: 15px;
+  height: 15px;
+  border: 3px solid #333;
+  background-color: #fff;
+  border-radius: 50%;
+}
+
+.status-circle.progress{
+  border: 3px solid #17a2b8;
+}
+
+.status-circle.complete{
+  border: 3px solid #17a2b8;
+  background-color: #17a2b8;
+}
+
+.progress-container{
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: white;
+}
+
+.progress-container .container{
+  width: 50vw;
+  margin-top: -50px;
+}
+
+.progress-container h2{
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.progress-bar {
+  height: 18px;
+  border-radius: 4px;
+  transition: 0.4s linear;
+  transition-property: width, background-color;
+}
+.progress-striped .progress-bar {
+  background-color: #78d3ff;
+  width: 100%;
+  background-image: linear-gradient(45deg, #9ffc11 25%, transparent 25%, transparent 50%, #3fff3a 50%, #6cfc11 75%, transparent 75%, transparent);
+  animation: progressAnimationStrike 10s;
+}
+@keyframes progressAnimationStrike {
+  from {
+    width: 0;
+ }
+  to {
+    width: 100%;
+ }
+}
+
 @media screen and (max-width: 500px) {
   /* .textLayer{
     width: 98vw!important;
@@ -3435,13 +3598,13 @@ input[type=number]::-webkit-outer-spin-button {
   .form-action-container i{
     font-size: 18px;
   }
-  #secondaryOpenFile{
+  .large-btn{
     padding: 15px;
   }
-  #secondaryOpenFile span{
+  .large-btn span{
     display: none;
   }
-  #secondaryOpenFile i{
+  .large-btn i{
     display: block;
     margin: auto;
     font-size: 24px;    

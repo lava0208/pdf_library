@@ -217,7 +217,7 @@ app.post('/sendlink', upload.single('pdfFile'), async (req, res) => {
     const base64Data = pdfFileData.toString('base64');
     const dataUri = `data:application/pdf;base64,${base64Data}`;
 
-    const { pdfFormData, pdfTextData, name, description, emails, username } = req.body;
+    const { pdfFormData, pdfTextData, pdfCommentData, name, description, emails, username } = req.body;
 
     if (!emails || emails.length === 0) {
       return res.status(400).send('No recipient email addresses provided.');
@@ -284,7 +284,10 @@ app.post('/sendlink', upload.single('pdfFile'), async (req, res) => {
       }
     }
 
-    res.send('Emails sent with the PDF form link');
+    res.status(200).json({
+      status: 1,
+      message: 'Emails sent with the PDF form link'
+    });
   } catch (error) {
     console.error('Error processing request: ', error);
     res.status(500).send('Internal Server Error: ' + error.message);
@@ -338,8 +341,10 @@ app.post('/savedocument', upload.single('pdfFile'), (req, res) => {
       console.log(error);
       res.status(500).send('Failed to send email');
     } else {
-      console.log('Email sent: ' + info.response);
-      res.send('Email sent with the PDF Agreement');
+      res.status(200).json({
+        status: 1,
+        message: 'Email sent with the PDF Agreement'
+      });
     }
   });
 })
@@ -382,6 +387,41 @@ app.post('/upload', upload.single('pdf'), async (req, res) => {
   }
 });
 
+app.post('/upload-signature', upload.single('pdf'), async (req, res) => {
+  try {
+    const { username, folderId, docname } = req.body;
+    const file = req.file;
+
+    if (!file) {
+      return res.status(400).send('No PDF file uploaded.');
+    }
+
+    const pdfFilePath = file.path;
+    const pdfFileData = fs.readFileSync(pdfFilePath);
+    const base64Data = pdfFileData.toString('base64');
+    const dataUri = `data:application/pdf;base64,${base64Data}`;
+
+    const uniqueId = uuid.v4();
+    const uniqueLink = `https://${process.env.DOMAIN}/signviewer/?id=${uniqueId}&draft=true`;
+
+    const newDocument = new Doc({
+      uniqueId,
+      name: docname,
+      username,
+      pdfData: dataUri,
+      folderId: folderId || null,
+      uniqueLink,
+      history: []
+    });
+
+    await newDocument.save();
+
+    res.status(201).json({ message: 'Document saved successfully', uniqueLink, uniqueId });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send('Error occurred: ' + error.message);
+  }
+});
 
 app.use(userRouter);
 app.use(historyRouter);

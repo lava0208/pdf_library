@@ -307,7 +307,7 @@ input[type=time] {
 
 textarea {
   overflow: auto;
-  resize: vertical
+  resize: none;
 }
 
 fieldset {
@@ -383,7 +383,7 @@ h4,
 h5,
 h6 {
   margin-bottom: .5rem;
-  font-family: inherit;
+  font-family: tahoma;
   font-weight: 500;
   line-height: 1.2;
   color: inherit
@@ -11866,6 +11866,58 @@ footer.footer p.small a.focus {
 
 .view-mode .item.active{
   background-color: #78d3ff;
+}
+
+.signature-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
+  width: 100%;
+  padding: 10px 20px;
+}
+
+.signature-status-bar{
+  width: 300px;
+  display: flex;
+}
+
+.signature-status-item{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.signature-status-item small{
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.signature-line{
+  height: 1px;
+  width: 100%;
+  border: 1px dashed #666;
+  margin-top: 7px;
+}
+
+.status-circle{
+  width: 15px;
+  min-width: 15px;
+  height: 15px;
+  border: 3px solid #333;
+  background-color: #fff;
+  border-radius: 50%;
+}
+
+.status-circle.progress{
+  border: 3px solid #17a2b8;
+}
+
+.status-circle.complete{
+  border: 3px solid #17a2b8;
+  background-color: #17a2b8;
 }
 
 /* Styles Begins */

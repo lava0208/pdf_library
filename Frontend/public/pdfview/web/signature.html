@@ -1,25 +1,4 @@
 <!DOCTYPE html>
-<!--
-Copyright 2012 Mozilla Foundation
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-Adobe CMap resources are covered by their own copyright but the same license:
-
-    Copyright 1990-2015 Adobe Systems Incorporated.
-
-See https://github.com/adobe-type-tools/cmap-resources
--->
 <html dir="ltr" mozdisallowselectionprint>
   <head>
     <meta charset="utf-8" />
@@ -28,18 +7,6 @@ See https://github.com/adobe-type-tools/cmap-resources
     <!--#endif-->
     <title>PDF.js viewer</title>
 
-    <!--#if MOZCENTRAL-->
-    <!--#include viewer-snippet-firefox-extension.html-->
-    <!--#elif CHROME-->
-    <!--#include viewer-snippet-chrome-extension.html-->
-    <!--#else-->
-    <!--#include viewer-snippet.html-->
-    <!--#endif-->
-
-    <!--#if MOZCENTRAL-->
-    <!--<link rel="stylesheet" href="resource://pdf.js/web/viewer.css">-->
-    <!--<link rel="localization" href="toolkit/pdfviewer/viewer.ftl"/>-->
-    <!--#else-->
     <link rel="stylesheet" href="viewer.css" />
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
     <link
@@ -59,15 +26,6 @@ See https://github.com/adobe-type-tools/cmap-resources
       href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"
     />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script> -->
-    <!--#endif-->
-
-    <!--#if MOZCENTRAL-->
-    <!--<script src="resource://pdf.js/web/viewer.mjs" type="module"></script>-->
-    <!--#elif !MOZCENTRAL-->
-    <!--<script src="viewer.mjs" type="module"></script>-->
-    <!--#elif /* Development mode. */-->
 
     <script type="importmap">
       {
@@ -108,7 +66,7 @@ See https://github.com/adobe-type-tools/cmap-resources
     <!--#endif-->
   </head>
 
-  <body tabindex="1">
+  <body tabindex="1" class="signature-body">
     <div id="outerContainer">
       <div id="show-history" class="show-history"></div>
       <div id="sidebarContainer">
@@ -624,7 +582,7 @@ See https://github.com/adobe-type-tools/cmap-resources
           </div>
         </div>
         <!-- secondaryToolbar -->
-        <div id="main-menu1" class="hidden">
+        <div id="main-menu" class="hidden">
           <button class="menu-button" id="pdfEditorButton" title="PDF Editor">
             <i class="far fa-file"></i>
             <p class="menu-button-item">Pdf Editor</p>
@@ -648,483 +606,491 @@ See https://github.com/adobe-type-tools/cmap-resources
           </button>
         </div>
 
-        <div class="toolbar">
-          <div id="topbar">
-            <a href="/" style="display: block; max-width: fit-content;">
-              <img src="/images/logo-black.png" alt="logo" height="40" id="logo" />
+        <div class="signature-header">
+          <div class="d-flex align-items-center">
+            <a href="/documents" style="line-height: 1;">
+              <img src="./images/home.svg" alt="home" width="20" />
             </a>
-            <div class="view-mode hidden">
-              <div class="item" type="view"><img src="./images/eye.svg" alt="view" /> <span>View</span></div>
-              <div class="item active" type="edit"><img src="./images/edit.svg" alt="edit" /> <span>Edit</span></div>
-            </div>
-            <div class="menu-items">
-              <a class="menu-item sign-menu">
-                <i class="fa-solid fa-signature"></i>
-                <span>E-Sign</span>
-              </a>
-              <a class="menu-item document-menu">
-                <i class="fa-regular fa-file-pdf"></i>
-                <span>My Documents</span>
-              </a>
-              <a class="menu-item" onClick="localStorage.clear();window.location.assign('/');">
-                <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                <span>Log out</span>
-              </a>
+            <div class="d-flex align-items-center gap-2 border-left pl-2 ml-2">
+              <Image src="./images/signature.svg" alt="signature" class="cursor-pointer" width={24} height={24}></Image>
+              <h2 class="m-0">Request Signature</h2>
             </div>
           </div>
-          <div id="toolbarContainer">
-            <div id="toolbarViewer">
-              <div id="toolbarViewerLeft">
-                <button
-                  id="sidebarToggle"
-                  class="toolbarButton"
-                  title="Toggle Sidebar"
-                  tabindex="11"
-                  data-l10n-id="pdfjs-toggle-sidebar-button"
-                  aria-expanded="false"
-                  aria-controls="sidebarContainer"
-                >
-                  <span data-l10n-id="pdfjs-toggle-sidebar-button-label"
-                    >Toggle Sidebar</span
-                  >
-                </button>
-                <div class="toolbarButtonSpacer"></div>
-                <button
-                  class="second_toolbar_button"
-                  title="Show History"
-                  onclick="showHistory()"
-                  id="showHistory"
-                >
-                  <i class="fa-solid fa-clock-rotate-left" style="color: #535353"></i>
-                </button>
-                <div class="toolbarButtonSpacer"></div>
-                <button
-                  id="secondaryToolbarToggle"
-                  class="toolbarButton"
-                  title="Tools"
-                  tabindex="43"
-                  data-l10n-id="pdfjs-tools-button"
-                  aria-expanded="false"
-                  aria-controls="secondaryToolbar"
-                >
-                  <span data-l10n-id="pdfjs-tools-button-label">Tools</span>
-                </button>
-                <div class="toolbarButtonSpacer"></div>
-                <button
-                  id="viewFind"
-                  class="toolbarButton"
-                  title="Find in Document"
-                  tabindex="12"
-                  data-l10n-id="pdfjs-findbar-button"
-                  aria-expanded="false"
-                  aria-controls="findbar"
-                >
-                  <span data-l10n-id="pdfjs-findbar-button-label">Find</span>
-                </button>
-                <span
-                  id="numPages"
-                  class="toolbarLabel"
-                  style="display: none"
-                ></span>
-                
-              </div>
+          <div class="signature-status-bar">
+            <div class="signature-status-item">
+              <div class="status-circle complete"></div>
+              <small>Add</small>
+            </div>        
+            <div class="signature-line"></div>
+            <div class="signature-status-item">
+              <div class="status-circle progress"></div>
+              <small>Prepare</small>
+            </div>
+            <div class="signature-line"></div>
+            <div class="signature-status-item">
+              <div class="status-circle"></div>
+              <small>Send</small>
+            </div>
+          </div>
+          <h3 class="m-0">Close</h3>
+        </div>
 
-              <div id="toolbarViewerMiddle">
-                <button
-                  class="toolbarButton hiddenSmallView"
-                  title="Previous Page"
-                  id="previous"
-                  tabindex="13"
-                  data-l10n-id="pdfjs-previous-button"
+        <div id="toolbarContainer" class="hidden">
+          <div id="toolbarViewer">
+            <div id="toolbarViewerLeft">
+              <button
+                id="sidebarToggle"
+                class="toolbarButton"
+                title="Toggle Sidebar"
+                tabindex="11"
+                data-l10n-id="pdfjs-toggle-sidebar-button"
+                aria-expanded="false"
+                aria-controls="sidebarContainer"
+              >
+                <span data-l10n-id="pdfjs-toggle-sidebar-button-label"
+                  >Toggle Sidebar</span
                 >
-                  <span data-l10n-id="pdfjs-previous-button-label"
-                    >Previous</span
-                  >
-                </button>
-                <span class="loadingInput start">
-                  <input
-                    type="number"
-                    id="pageNumber"
-                    class="toolbarField"
-                    title="Page"
-                    value="1"
-                    min="1"
-                    tabindex="15"
-                    data-l10n-id="pdfjs-page-input"
-                    autocomplete="off"
-                  />
-                </span>
-                <button
-                  class="toolbarButton hiddenSmallView "
-                  title="Next Page"
-                  id="next"
-                  tabindex="14"
-                  data-l10n-id="pdfjs-next-button"
+              </button>
+              <div class="toolbarButtonSpacer"></div>
+              <button
+                class="second_toolbar_button"
+                title="Show History"
+                onclick="showHistory()"
+                id="showHistory"
+              >
+                <i class="fa-solid fa-clock-rotate-left" style="color: #535353"></i>
+              </button>
+              <div class="toolbarButtonSpacer"></div>
+              <button
+                id="secondaryToolbarToggle"
+                class="toolbarButton"
+                title="Tools"
+                tabindex="43"
+                data-l10n-id="pdfjs-tools-button"
+                aria-expanded="false"
+                aria-controls="secondaryToolbar"
+              >
+                <span data-l10n-id="pdfjs-tools-button-label">Tools</span>
+              </button>
+              <div class="toolbarButtonSpacer"></div>
+              <button
+                id="viewFind"
+                class="toolbarButton"
+                title="Find in Document"
+                tabindex="12"
+                data-l10n-id="pdfjs-findbar-button"
+                aria-expanded="false"
+                aria-controls="findbar"
+              >
+                <span data-l10n-id="pdfjs-findbar-button-label">Find</span>
+              </button>
+              <span
+                id="numPages"
+                class="toolbarLabel"
+                style="display: none"
+              ></span>
+              
+            </div>
+
+            <div id="toolbarViewerMiddle">
+              <button
+                class="toolbarButton hiddenSmallView"
+                title="Previous Page"
+                id="previous"
+                tabindex="13"
+                data-l10n-id="pdfjs-previous-button"
+              >
+                <span data-l10n-id="pdfjs-previous-button-label"
+                  >Previous</span
                 >
-                  <span data-l10n-id="pdfjs-next-button-label">Next</span>
+              </button>
+              <span class="loadingInput start">
+                <input
+                  type="number"
+                  id="pageNumber"
+                  class="toolbarField"
+                  title="Page"
+                  value="1"
+                  min="1"
+                  tabindex="15"
+                  data-l10n-id="pdfjs-page-input"
+                  autocomplete="off"
+                />
+              </span>
+              <button
+                class="toolbarButton hiddenSmallView "
+                title="Next Page"
+                id="next"
+                tabindex="14"
+                data-l10n-id="pdfjs-next-button"
+              >
+                <span data-l10n-id="pdfjs-next-button-label">Next</span>
+              </button>
+              <div class="toolbarButtonSpacer"></div>
+              <div class="splitToolbarButton zoomContainer">
+                <div id="zoomOut" class="zoomButton">
+                  <img src="./images/zoomOut.svg" alt="zoomOut" width="20" />
+                </div>
+                <div id="zoomIn" class="zoomButton">
+                  <img src="./images/zoomIn.svg" alt="zoomIn" width="20" />
+                </div>
+              </div>
+            </div>
+            
+            <div id="toolbarViewerRight">
+              <div
+                id="editorModeButtons"
+                class="splitToolbarButton toggled annotationToolsContainer"
+                role="radiogroup"
+              >
+              </div>
+              <div class="formToolsContainer">
+                <button
+                  class="second_toolbar_button hidden"
+                  id="editorFreeText"
+                  title="Add Text"
+                >
+                  <i
+                    class="fa-solid far fa-i"
+                    style="font-size: 18px; color: #535353"
+                  ></i>
                 </button>
-                <div class="toolbarButtonSpacer"></div>
-                <div class="splitToolbarButton zoomContainer">
-                  <div id="zoomOut" class="zoomButton">
-                    <img src="./images/zoomOut.svg" alt="zoomOut" width="20" />
+              </div>
+              <button
+                id="secondaryDownload"
+                class="toolbarButton visibleMediumView"
+                title="Save"
+                tabindex="53"
+                data-l10n-id="pdfjs-save-button"
+                style="display: none"
+              >
+                <span data-l10n-id="pdfjs-save-button-label">Save</span>
+              </button>
+
+              <button
+                id="print"
+                class="toolbarButton hiddenMediumView"
+                title="Print"
+                tabindex="41"
+                style="display: none"
+                data-l10n-id="pdfjs-print-button"
+              >
+                <span data-l10n-id="pdfjs-print-button-label">Print</span>
+              </button>
+
+              <button
+                id="download"
+                style="display: none"
+                class="toolbarButton hiddenMediumView"
+                title="Save"
+                tabindex="42"
+                data-l10n-id="pdfjs-save-button"
+              >
+                <span data-l10n-id="pdfjs-save-button-label">Save</span>
+              </button>
+            </div>
+          </div>
+          <div id="shapeTypeToolbar" class="hidden">
+            <i
+              class="fa fa-regular fa-square shape-item"
+              style="font-size: 20px"
+              title="shape annotation"
+              type="shape"
+            ></i>
+            <i
+              class="fa fa-regular fa-circle shape-item"
+              style="font-size: 19px"
+              title="circle annotation"
+              type="circle"
+            ></i>
+            <img class="shape-item" src="./images/line.png" alt="line" width="20" type="line" />
+            <button class="btn" type="button" id="closeShapeTypeToolbar">
+              <i class="fa fa-close"></i>
+            </button>
+          </div>
+          <div id="shapeToolbar" class="hidden">
+            <div id="shapeIcons">
+              <h5>Shape</h5>
+              <div class="dropdown" id="shape-fill-dropdown">
+                <button
+                  class="btn dropdown-toggle d-flex align-items-center"
+                  type="button"
+                  data-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <img src="./images/fill-color.svg" alt="color" />
+                </button>
+                <div class="dropdown-menu">
+                  <div class="color-picker-container">
+                    <input type="text" id="shape-background-colorpicker" class="form-control" />
                   </div>
-                  <div id="zoomIn" class="zoomButton">
-                    <img src="./images/zoomIn.svg" alt="zoomIn" width="20" />
+                </div>
+              </div>
+              <div class="dropdown" id="shape-outline-dropdown">
+                <button
+                  class="btn dropdown-toggle d-flex align-items-center"
+                  type="button"
+                  data-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i class="fa fa-regular fa-square"></i>
+                </button>
+                <div class="dropdown-menu">
+                  <div class="color-picker-container">
+                    <input type="text" id="shape-border-colorpicker" class="form-control" />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="dropdown size-dropdown"
+                id="border-radius-dropdown"
+                type="1"
+              >
+                <button
+                  class="btn dropdown-toggle d-flex align-items-center"
+                  type="button"
+                  data-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i class="fa-solid fa-arrow-up-9-1"></i>
+                </button>
+                <div class="dropdown-menu">
+                  <input
+                    type="range"
+                    class="editorParamsSlider"
+                    value="0"
+                    min="0"
+                    max="30"
+                    step="1"
+                  />
+                  <span class="range-value"></span>
+                </div>
+              </div>
+              <div
+                class="dropdown size-dropdown"
+                id="border-weight-dropdown"
+                type="2"
+              >
+                <button
+                  class="btn dropdown-toggle d-flex align-items-center"
+                  type="button"
+                  data-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <img src="./images/border-width.svg" alt="border width" />
+                </button>
+                <div class="dropdown-menu">
+                  <input
+                    type="range"
+                    class="editorParamsSlider"
+                    value="1"
+                    min="0"
+                    max="10"
+                    step="1"
+                  />
+                  <span class="range-value"></span>
+                </div>
+              </div>
+            </div>
+            <div id="annotationIcons">
+              <h5>Annotation</h5>
+              <div class="dropdown" id="text-color-dropdown">
+                <button
+                  class="btn dropdown-toggle d-flex align-items-center"
+                  type="button"
+                  data-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <img src="./images/fill-color.svg" alt="color" />
+                </button>
+                <div class="dropdown-menu">
+                  <div class="color-picker-container">
+                    <input type="text" id="shape-font-colorpicker" class="form-control" />
+                  </div>
+                </div>
+              </div>
+              <div class="dropdown size-dropdown" id="text-family-dropdown">
+                <button
+                  class="btn dropdown-toggle d-flex align-items-center"
+                  type="button"
+                  data-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <img src="./images/font.svg" alt="font" />
+                </button>
+                <div class="dropdown-menu">
+                  <div class="font-family-container" family="Courier">
+                    <small>Courier</small>
+                    <div style="font-family: Courier">Hello</div>
+                  </div>
+                  <div class="font-family-container" family="Helvetica">
+                    <small>Helvetica</small>
+                    <div style="font-family: Helvetica">Hello</div>
+                  </div>
+                  <div class="font-family-container" family="TimesRoman">
+                    <small>TimesRoman</small>
+                    <div style="font-family: TimesRoman">Hello</div>
+                  </div>
+                  <div class="font-family-container" family="Arial">
+                    <small>Arial</small>
+                    <div style="font-family: Arial">Hello</div>
+                  </div>
+                  <div class="font-family-container" family="Calibri">
+                    <small>Calibri</small>
+                    <div style="font-family: Calibri">Hello</div>
+                  </div>
+                  <div class="font-family-container" family="Consolas">
+                    <small>Consolas</small>
+                    <div style="font-family: Consolas">Hello</div>
+                  </div>
+                  <div class="font-family-container" family="Georgia">
+                    <small>Georgia</small>
+                    <div style="font-family: Georgia">Hello</div>
+                  </div>
+                  <div class="font-family-container" family="Tahoma">
+                    <small>Tahoma</small>
+                    <div style="font-family: Tahoma">Hello</div>
+                  </div>
+                  <div class="font-family-container" family="Verdana">
+                    <small>Verdana</small>
+                    <div style="font-family: Verdana">Hello</div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="dropdown size-dropdown"
+                id="text-size-dropdown"
+                type="3"
+              >
+                <button
+                  class="btn dropdown-toggle d-flex align-items-center"
+                  type="button"
+                  data-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <img src="./images/font-size.svg" alt="font size" />
+                </button>
+                <div class="dropdown-menu">
+                  <input
+                    type="range"
+                    class="editorParamsSlider"
+                    value="0"
+                    min="0"
+                    max="60"
+                    step="2"
+                  />
+                  <span class="range-value"></span>
+                </div>
+              </div>                
+              <div class="dropdown" id="text-align-dropdown">
+                <button
+                  class="btn dropdown-toggle d-flex align-items-center"
+                  type="button"
+                  data-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <img src="./images/align.svg" alt="align" />
+                </button>
+                <div class="dropdown-menu">
+                  <div class="flex-container" direction="left" type="horizontal">
+                    <small>Left</small>
+                    <i class="fa fa-solid fa-align-left"></i>
+                  </div>
+                  <div class="flex-container" direction="right" type="horizontal">
+                    <small>Right</small>
+                    <i class="fa fa-solid fa-align-right"></i>
+                  </div>
+                  <div class="flex-container active" direction="center" type="horizontal">
+                    <small>Center</small>
+                    <i class="fa fa-solid fa-align-center"></i>
+                  </div>
+                  <div class="flex-container" direction="justify" type="horizontal">
+                    <small>Justify</small>
+                    <i class="fa fa-solid fa-align-justify"></i>
+                  </div>
+                  <div class="flex-container" direction="top" type="vertical">
+                    <small>Top</small>
+                    <i class="fa fa-solid fa-arrow-up"></i>
+                  </div>
+                  <div class="flex-container active" direction="middle" type="vertical">
+                    <small>Middle</small>
+                    <i class="fa fa-solid fa-arrows-up-down"></i>
+                  </div>
+                  <div class="flex-container" direction="bottom" type="vertical">
+                    <small>Bottom</small>
+                    <i class="fa fa-solid fa-arrow-down"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="dropdown" id="list-style-dropdown">
+                <button
+                  class="btn dropdown-toggle d-flex align-items-center"
+                  type="button"
+                >
+                  <i class="fa fa-solid fa-list"></i>
+                </button>
+                <div class="dropdown-menu">
+                  <div id="list-styles">
+                    <div class="flex-container active" list-type="numeric">
+                      <small>1, 2, 3...</small>
+                      <i class="fa fa-solid fa-list-ol"></i>
+                    </div>
+                    <div class="flex-container" list-type="roman">
+                      <small>I, II, III...</small>
+                      <i class="fa fa-solid fa-list-ul"></i>
+                    </div>
+                    <div class="flex-container" list-type="alpha-lower">
+                      <small>a, b, c...</small>
+                      <i class="fa fa-solid fa-list-ul"></i>
+                    </div>
+                    <div class="flex-container" list-type="alpha-upper">
+                      <small>A, B, C...</small>
+                      <i class="fa fa-solid fa-list-ul"></i>
+                    </div>
+                    <div class="flex-container" list-type="dash">
+                      <small>-, -, -</small>
+                      <i class="fa fa-solid fa-minus"></i>
+                    </div>
+                    <div class="flex-container" list-type="dot">
+                      <small>•, •, •</small>
+                      <i class="fa fa-solid fa-circle"></i>
+                    </div>
+                  </div>
+                  <div id="list-form">
+                    <input type="text" id="list-input" placeholder="Enter item" />
+                    <div class="flex-container">
+                      <button id="list-add-btn">Add</button>
+                      <button id="list-save-btn">Save</button>
+                    </div>                      
+                    <div id="list-preview-container">
+                      <h5>Preview</h5>
+                      <div id="list-container"></div>
+                    </div>
                   </div>
                 </div>
               </div>
               
-              <div id="toolbarViewerRight">
-                <div
-                  id="editorModeButtons"
-                  class="splitToolbarButton toggled annotationToolsContainer"
-                  role="radiogroup"
-                >
-                </div>
-                <div class="formToolsContainer">
-                  <button
-                    class="second_toolbar_button hidden"
-                    id="editorFreeText"
-                    title="Add Text"
-                  >
-                    <i
-                      class="fa-solid far fa-i"
-                      style="font-size: 18px; color: #535353"
-                    ></i>
-                  </button>
-                </div>
-                <button
-                  id="secondaryDownload"
-                  class="toolbarButton visibleMediumView"
-                  title="Save"
-                  tabindex="53"
-                  data-l10n-id="pdfjs-save-button"
-                  style="display: none"
-                >
-                  <span data-l10n-id="pdfjs-save-button-label">Save</span>
-                </button>
-
-                <button
-                  id="print"
-                  class="toolbarButton hiddenMediumView"
-                  title="Print"
-                  tabindex="41"
-                  style="display: none"
-                  data-l10n-id="pdfjs-print-button"
-                >
-                  <span data-l10n-id="pdfjs-print-button-label">Print</span>
-                </button>
-
-                <button
-                  id="download"
-                  style="display: none"
-                  class="toolbarButton hiddenMediumView"
-                  title="Save"
-                  tabindex="42"
-                  data-l10n-id="pdfjs-save-button"
-                >
-                  <span data-l10n-id="pdfjs-save-button-label">Save</span>
-                </button>
+              <div id="extra-shape-icons">
+                <i class="fa-solid fa-bold" id="shape-text-bold"></i>
+                <i class="fa-solid fa-italic" id="shape-text-italic"></i>
+                <i
+                  class="fa-solid fa-underline"
+                  id="shape-text-underline"
+                ></i>
               </div>
             </div>
-            <div id="shapeTypeToolbar" class="hidden">
-              <i
-                class="fa fa-regular fa-square shape-item"
-                style="font-size: 20px"
-                title="shape annotation"
-                type="shape"
-              ></i>
-              <i
-                class="fa fa-regular fa-circle shape-item"
-                style="font-size: 19px"
-                title="circle annotation"
-                type="circle"
-              ></i>
-              <img class="shape-item" src="./images/line.png" alt="line" width="20" type="line" />
-              <button class="btn" type="button" id="closeShapeTypeToolbar">
-                <i class="fa fa-close"></i>
-              </button>
-            </div>
-            <div id="shapeToolbar" class="hidden">
-              <div id="shapeIcons">
-                <h5>Shape</h5>
-                <div class="dropdown" id="shape-fill-dropdown">
-                  <button
-                    class="btn dropdown-toggle d-flex align-items-center"
-                    type="button"
-                    data-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <img src="./images/fill-color.svg" alt="color" />
-                  </button>
-                  <div class="dropdown-menu">
-                    <div class="color-picker-container">
-                      <input type="text" id="shape-background-colorpicker" class="form-control" />
-                    </div>
-                  </div>
-                </div>
-                <div class="dropdown" id="shape-outline-dropdown">
-                  <button
-                    class="btn dropdown-toggle d-flex align-items-center"
-                    type="button"
-                    data-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <i class="fa fa-regular fa-square"></i>
-                  </button>
-                  <div class="dropdown-menu">
-                    <div class="color-picker-container">
-                      <input type="text" id="shape-border-colorpicker" class="form-control" />
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="dropdown size-dropdown"
-                  id="border-radius-dropdown"
-                  type="1"
-                >
-                  <button
-                    class="btn dropdown-toggle d-flex align-items-center"
-                    type="button"
-                    data-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <i class="fa-solid fa-arrow-up-9-1"></i>
-                  </button>
-                  <div class="dropdown-menu">
-                    <input
-                      type="range"
-                      class="editorParamsSlider"
-                      value="0"
-                      min="0"
-                      max="30"
-                      step="1"
-                    />
-                    <span class="range-value"></span>
-                  </div>
-                </div>
-                <div
-                  class="dropdown size-dropdown"
-                  id="border-weight-dropdown"
-                  type="2"
-                >
-                  <button
-                    class="btn dropdown-toggle d-flex align-items-center"
-                    type="button"
-                    data-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <img src="./images/border-width.svg" alt="border width" />
-                  </button>
-                  <div class="dropdown-menu">
-                    <input
-                      type="range"
-                      class="editorParamsSlider"
-                      value="1"
-                      min="0"
-                      max="10"
-                      step="1"
-                    />
-                    <span class="range-value"></span>
-                  </div>
-                </div>
-              </div>
-              <div id="annotationIcons">
-                <h5>Annotation</h5>
-                <div class="dropdown" id="text-color-dropdown">
-                  <button
-                    class="btn dropdown-toggle d-flex align-items-center"
-                    type="button"
-                    data-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <img src="./images/fill-color.svg" alt="color" />
-                  </button>
-                  <div class="dropdown-menu">
-                    <div class="color-picker-container">
-                      <input type="text" id="shape-font-colorpicker" class="form-control" />
-                    </div>
-                  </div>
-                </div>
-                <div class="dropdown size-dropdown" id="text-family-dropdown">
-                  <button
-                    class="btn dropdown-toggle d-flex align-items-center"
-                    type="button"
-                    data-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <img src="./images/font.svg" alt="font" />
-                  </button>
-                  <div class="dropdown-menu">
-                    <div class="font-family-container" family="Courier">
-                      <small>Courier</small>
-                      <div style="font-family: Courier">Hello</div>
-                    </div>
-                    <div class="font-family-container" family="Helvetica">
-                      <small>Helvetica</small>
-                      <div style="font-family: Helvetica">Hello</div>
-                    </div>
-                    <div class="font-family-container" family="TimesRoman">
-                      <small>TimesRoman</small>
-                      <div style="font-family: TimesRoman">Hello</div>
-                    </div>
-                    <div class="font-family-container" family="Arial">
-                      <small>Arial</small>
-                      <div style="font-family: Arial">Hello</div>
-                    </div>
-                    <div class="font-family-container" family="Calibri">
-                      <small>Calibri</small>
-                      <div style="font-family: Calibri">Hello</div>
-                    </div>
-                    <div class="font-family-container" family="Consolas">
-                      <small>Consolas</small>
-                      <div style="font-family: Consolas">Hello</div>
-                    </div>
-                    <div class="font-family-container" family="Georgia">
-                      <small>Georgia</small>
-                      <div style="font-family: Georgia">Hello</div>
-                    </div>
-                    <div class="font-family-container" family="Tahoma">
-                      <small>Tahoma</small>
-                      <div style="font-family: Tahoma">Hello</div>
-                    </div>
-                    <div class="font-family-container" family="Verdana">
-                      <small>Verdana</small>
-                      <div style="font-family: Verdana">Hello</div>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="dropdown size-dropdown"
-                  id="text-size-dropdown"
-                  type="3"
-                >
-                  <button
-                    class="btn dropdown-toggle d-flex align-items-center"
-                    type="button"
-                    data-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <img src="./images/font-size.svg" alt="font size" />
-                  </button>
-                  <div class="dropdown-menu">
-                    <input
-                      type="range"
-                      class="editorParamsSlider"
-                      value="0"
-                      min="0"
-                      max="60"
-                      step="2"
-                    />
-                    <span class="range-value"></span>
-                  </div>
-                </div>                
-                <div class="dropdown" id="text-align-dropdown">
-                  <button
-                    class="btn dropdown-toggle d-flex align-items-center"
-                    type="button"
-                    data-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <img src="./images/align.svg" alt="align" />
-                  </button>
-                  <div class="dropdown-menu">
-                    <div class="flex-container" direction="left" type="horizontal">
-                      <small>Left</small>
-                      <i class="fa fa-solid fa-align-left"></i>
-                    </div>
-                    <div class="flex-container" direction="right" type="horizontal">
-                      <small>Right</small>
-                      <i class="fa fa-solid fa-align-right"></i>
-                    </div>
-                    <div class="flex-container active" direction="center" type="horizontal">
-                      <small>Center</small>
-                      <i class="fa fa-solid fa-align-center"></i>
-                    </div>
-                    <div class="flex-container" direction="justify" type="horizontal">
-                      <small>Justify</small>
-                      <i class="fa fa-solid fa-align-justify"></i>
-                    </div>
-                    <div class="flex-container" direction="top" type="vertical">
-                      <small>Top</small>
-                      <i class="fa fa-solid fa-arrow-up"></i>
-                    </div>
-                    <div class="flex-container active" direction="middle" type="vertical">
-                      <small>Middle</small>
-                      <i class="fa fa-solid fa-arrows-up-down"></i>
-                    </div>
-                    <div class="flex-container" direction="bottom" type="vertical">
-                      <small>Bottom</small>
-                      <i class="fa fa-solid fa-arrow-down"></i>
-                    </div>
-                  </div>
-                </div>
-                <div class="dropdown" id="list-style-dropdown">
-                  <button
-                    class="btn dropdown-toggle d-flex align-items-center"
-                    type="button"
-                  >
-                    <i class="fa fa-solid fa-list"></i>
-                  </button>
-                  <div class="dropdown-menu">
-                    <div id="list-styles">
-                      <div class="flex-container active" list-type="numeric">
-                        <small>1, 2, 3...</small>
-                        <i class="fa fa-solid fa-list-ol"></i>
-                      </div>
-                      <div class="flex-container" list-type="roman">
-                        <small>I, II, III...</small>
-                        <i class="fa fa-solid fa-list-ul"></i>
-                      </div>
-                      <div class="flex-container" list-type="alpha-lower">
-                        <small>a, b, c...</small>
-                        <i class="fa fa-solid fa-list-ul"></i>
-                      </div>
-                      <div class="flex-container" list-type="alpha-upper">
-                        <small>A, B, C...</small>
-                        <i class="fa fa-solid fa-list-ul"></i>
-                      </div>
-                      <div class="flex-container" list-type="dash">
-                        <small>-, -, -</small>
-                        <i class="fa fa-solid fa-minus"></i>
-                      </div>
-                      <div class="flex-container" list-type="dot">
-                        <small>•, •, •</small>
-                        <i class="fa fa-solid fa-circle"></i>
-                      </div>
-                    </div>
-                    <div id="list-form">
-                      <input type="text" id="list-input" placeholder="Enter item" />
-                      <div class="flex-container">
-                        <button id="list-add-btn">Add</button>
-                        <button id="list-save-btn">Save</button>
-                      </div>                      
-                      <div id="list-preview-container">
-                        <h5>Preview</h5>
-                        <div id="list-container"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div id="extra-shape-icons">
-                  <i class="fa-solid fa-bold" id="shape-text-bold"></i>
-                  <i class="fa-solid fa-italic" id="shape-text-italic"></i>
-                  <i
-                    class="fa-solid fa-underline"
-                    id="shape-text-underline"
-                  ></i>
-                </div>
-              </div>
-              <button class="btn" type="button" id="closeShapeToolbar">
-                <i class="fa fa-close"></i>
-              </button>
-            </div>
+            <button class="btn" type="button" id="closeShapeToolbar">
+              <i class="fa fa-close"></i>
+            </button>
           </div>
         </div>
 
         <div id="viewerContainer" tabindex="0">
           <div id="viewer" class="pdfViewer"></div>
+          <div id="signature-result">
+            <h1>It was successfully sent for signature</h1>
+            <button class="btn btn-info signature-result-btn">Done</button>
+          </div>
           <div id="drawing-shape-board">
             <canvas class="shape-canvas"></canvas>
           </div>
@@ -2389,39 +2355,13 @@ See https://github.com/adobe-type-tools/cmap-resources
         </button>
       </div>
 
-      <div class="form-actions">
-        <!-- <div class="form-action-container">
-          <img src="./images/print.svg" alt="print">
-        </div> -->
-        <button class="form-action-container hidden" id="saveDraftDocument" onclick="showModal('docSave')" title="save">
-          <i class="fa-regular fa-save"></i>
-        </button>
-        <button class="form-action-container hidden" id="shareDocument" onclick="shareLink()" title="share with email">
-          <i class="fa-solid fa-share-nodes"></i>
-        </button>
-        <button class="form-action-container hidden" id="downloadDocument" onclick="flatten()" title="download" disabled>
-          <i class="fa-solid fa-download"></i>
-        </button>
-        <button class="form-action-container hidden" id="deleteDraftButton" onclick="showModal('docDelete')" title="delete" disabled>
-          <i class="fa-regular fa-trash-can"></i>
-        </button>
-        <button class="form-action-container hidden" id="prevBtn" title="prev">
-          <i class="fa-solid fa-left-long"></i>
-        </button>
-        <button class="form-action-container hidden" id="submitDocument" onclick="showModal('docSubmit')" title="submit">
-          <i class="fa-regular fa-paper-plane"></i>
-        </button>
-        <button class="form-action-container hidden" id="nextBtn" title="next">
-          <i class="fa-solid fa-right-long"></i>
-        </button>
-      </div>
-      <button type="button" class="btn btn-large large-btn" id="secondaryOpenFile">
-        <span>Open Document</span>
-        <i class="fa-solid fa-cloud-arrow-up"></i>
+      <button type="button" class="btn btn-large large-btn" id="send-signature" style="margin-top: 20px;">
+        <span>Send</span>
       </button>
       <div id="toggle-rightbar" onclick="openToolbar()" title="Right Bar">
         <img src="./images/arrow-back-light.svg" alt="toggle show" />
       </div>
+      <span id="secondaryOpenFile" class="hidden"></span>
     </div>
 
     <div
@@ -2903,6 +2843,16 @@ See https://github.com/adobe-type-tools/cmap-resources
       <div id="loadingBar">
         <div class="progress">
           <div class="glimmer"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="progress-container hidden">      
+      <div class="container">
+        <h2>Sending...</h2>
+        <div class="progress progress-striped">
+          <div class="progress-bar">
+          </div>
         </div>
       </div>
     </div>

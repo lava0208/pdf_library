@@ -106,45 +106,41 @@ export default function SignUp() {
             </Head>
             <div className="auth auth-form signup">
                 <div className="auth auth-form-content">
-                    <header className="auth auth-header">Signup</header>
+                    <header className="auth auth-header">Register</header>
                     <form action="#">
 
                         <div className="auth auth-field">
+                            <label htmlFor="username">Username</label>
                             <input type="text" name="username" placeholder="Username" onChange={handleChange} value={formData.username}></input>
                         </div>
 
                         <div className="auth auth-field">
+                            <label htmlFor="email">Email</label>
                             <input type="email" name="email" placeholder="Email" onChange={handleChange} value={formData.email}></input>
                         </div>
 
                         <div className="auth auth-field">
+                            <label htmlFor="password">Password</label>
                             <input type="password" name="password" placeholder="Create password" className="auth auth-password" onChange={handleChange} value={formData.password}></input>
                         </div>
 
                         <div className="auth auth-field">
+                            <label htmlFor="password">Repeat Password</label>
                             <input type="password" name="confirmPassword" placeholder="Confirm password" className="auth auth-password" onChange={handleChange} value={formData.confirmPassword}></input>
                             <i className='bx bx-hide eye-icon'></i>
                         </div>
 
                         <div className="auth auth-field">
-                            <button onClick={handleSubmit}>Signup</button>
+                            <button onClick={handleSubmit}>Register</button>
                         </div>
                     </form>
-
-                    <div className="auth auth-form-link">
-                        <span>Already have an account? <Link href="/signin" className="auth auth-link">Login</Link></span>
-                    </div>
                 </div>
 
-                <div className="auth auth-line"></div>
-
-                <div className="auth media-options">
-                    <a href="#" className="auth auth-field google">
-                        <Image src="./images/google.png" alt="" className="auth google-img" width={'100'} height={'100'} />
-                        <p className="auth">Signup with Google</p>
-                    </a>
+                <div className="auth auth-welcome">
+                    <h3>Welcome to register</h3>
+                    <p>Already have an account?</p>
+                    <Link href="/signin" className="auth auth-link">Login</Link>
                 </div>
-
             </div>
             <ToastContainer />
         </div>

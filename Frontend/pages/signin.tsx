@@ -108,16 +108,18 @@ export default function SignIn() {
         <div className="auth auth-container auth-forms">
             <Head>
                 <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet' />
-            </Head>            
+            </Head>
             <div className="auth auth-form login">
                 <div className="auth auth-form-content">
                     <header className="auth auth-header">Login</header>
                     <form action="#">
                         <div className="auth auth-field">
-                            <input type="email" name="email" placeholder="Email" onChange={handleChange} value={formData.email}></input>
+                            <label htmlFor="email">Email</label>
+                            <input type="email" name="email" placeholder="Email" onChange={handleChange} value={formData.email} autoComplete="false"></input>
                         </div>
 
                         <div className="auth auth-field">
+                            <label htmlFor="password">Password</label>
                             <input type="password" name="password" placeholder="Password" className="auth auth-password" onChange={handleChange} value={formData.password}></input>
                             <i className='bx bx-hide eye-icon'></i>
                         </div>
@@ -126,21 +128,12 @@ export default function SignIn() {
                             <button onClick={handleSubmit}>Login</button>
                         </div>
                     </form>
-
-                    <div className="auth auth-form-link">
-                        <span className="auth">Don&apost have an account? <Link href="/signup" className="auth auth-link">Signup</Link></span>
-                    </div>
                 </div>
-
-                <div className="auth auth-line"></div>
-
-                <div className="auth media-options">
-                    <a href="#" className="auth auth-field google">
-                        <Image src="./images/google.png" alt="" className="auth google-img" width={'100'} height={'100'} />
-                        <p className="auth">Login with Google</p>
-                    </a>
+                <div className="auth auth-welcome">
+                    <h3>Welcome to login</h3>
+                    <p>Doesn't have an account?</p>
+                    <Link href="/signup" className="auth auth-link">Signup</Link>
                 </div>
-
             </div>
             <ToastContainer />
         </div>

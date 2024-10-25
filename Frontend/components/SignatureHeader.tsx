@@ -10,7 +10,7 @@ export default function SignatureHeader() {
   return (
     <div className="signature-header">
       <div className="d-flex">
-        <img src="images/home.svg" alt="home" width={20} onClick={linkToDocuments} />
+        <img src="images/home.svg" className="cursor-pointer" alt="home" width={20} onClick={linkToDocuments} />
         <div className="flex items-center gap-2 border-left pl-2 ml-2">
           <Image src="images/signature.svg" alt="signature" className="cursor-pointer" width={24} height={24}></Image>
           <h2 className="text-xl sm:text-xl m-0">Request Signature</h2>

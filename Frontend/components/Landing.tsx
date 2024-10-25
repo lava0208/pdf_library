@@ -1,37 +1,18 @@
 import Head from "next/head";
-import Script from "next/script";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState, useEffect } from 'react';
-export default function Landing() {
+import Navbar from '@/components/Navbar';
 
+export default function Landing() {
   const router = useRouter();
 
   useEffect(() => {
-    // Save the original destination in localStorage
     localStorage.setItem('originalDestination', router.asPath);
 
-    // Load scripts in order
-    const loadScripts = async () => {
-      await loadScript("/all-plugins.js");
-      await loadScript("/plugins-activate.js");
-    };
-
-    loadScripts();
   }, [router.asPath]);
 
-  const loadScript = (src: string) => {
-    return new Promise<void>((resolve, reject) => {
-      const script = document.createElement('script');
-      script.src = src;
-      script.onload = () => resolve();
-      script.onerror = () => reject(new Error(`Script load error for ${src}`));
-      document.head.appendChild(script);
-    });
-  };
-
   const handleClick = function (url: any) {
-
     router.push(url);
   }
 
@@ -40,38 +21,7 @@ export default function Landing() {
       <Head>
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
       </Head>
-      {/* <!-- Navigation --> */}
-      <div className="logo">
-        <Image src="/images/logo.png" alt="logo" width={200} height={200} />
-      </div>
-      <a className="menu-toggle rounded" href="#">
-        <i className="fa fa-bars"></i>
-      </a>
-      <nav id="sidebar-wrapper">
-        <ul className="sidebar-nav">
-          <li className="sidebar-brand">
-            <a className="smooth-scroll" href="#Header"></a>
-          </li>
-          <li className="sidebar-nav-item">
-            <a className="smooth-scroll" href="#page-top">Home</a>
-          </li>
-          <li className="sidebar-nav-item">
-            <a className="smooth-scroll" href="#About">About</a>
-          </li>
-          <li className="sidebar-nav-item">
-            <a className="smooth-scroll" href="#Services">Services</a>
-          </li>
-          <li className="sidebar-nav-item">
-            <a className="smooth-scroll" href="#Contact">Contact</a>
-          </li>
-          <li className="sidebar-nav-item">
-            <a href="#" onClick={() => { handleClick('/documents') }}>Documents</a>
-          </li>
-          <li className="sidebar-nav-item">
-            <a href="#" onClick={() => { handleClick('/signature') }}>E-Sign</a>
-          </li>
-        </ul>
-      </nav >
+      <Navbar />
       {/* < !--Header Starts-- > */}
       <section id="Banner" className="content-section">
         <div className="container content-wrap text-center">
@@ -79,7 +29,12 @@ export default function Landing() {
           <h3>
             <em>Tools to start editing PDF documents</em>
           </h3>
-          <a className="btn btn-primary btn-xl smooth-scroll" href="#About">Find Out More</a>
+          <button
+            className="btn btn-primary btn-xl smooth-scroll"
+            onClick={() => handleClick('/pdfviewer')}
+          >
+            Start Pdf Editor
+          </button>
         </div>
         <div className="overlay"></div>
       </section>
@@ -90,9 +45,11 @@ export default function Landing() {
           <div className="row">
             <div className="col-lg-12">
               <div className="block-heading">
-                <h2>About Us</h2>
+                <h2>Hello, we're PdfVision.</h2>
               </div>
-              <p className="lead">This editor supports useful features</p>
+              <p className="lead">PdfVision makes it super easy to edit PDF documents.</p>
+              <p className="lead">PdfVision helps people around the world with their tasks.</p>
+              <p className="lead mt-4">PdfVision was started as an open source project, and we've been improving our PDF tools ever since.</p>
             </div>
           </div>
         </div>
@@ -102,7 +59,7 @@ export default function Landing() {
         <div className="container">
           <div className="block-heading">
             <h2>What We Offer</h2>
-            <p>You can choose one.</p>
+            <p className="lead">You can choose one.</p>
           </div>
           <div className="row">
             <div className="col-md-3 col-sm-6">
@@ -224,42 +181,50 @@ export default function Landing() {
       </section>
 
       <section id="Contact" className="content-section">
-        <div className="container">
-          <div className="block-heading">
+        <div className="row">
+          <div className="col-lg-6 col-md-12 mt-md-5">
             <h2>Contact Us</h2>
-            <p>Please contact with us</p>
-          </div>
-          <div className="row">
-            <div className="col-sm-12 col-md-6 col-lg-6">
-              <div className="contact-wrapper">
-                <div className="address-block border-bottom">
-                  <h3 className="add-title">Headquaters</h3>
-                  <div className="c-detail">
-                    <span className="c-icon"><i className="fa fa-map-marker" aria-hidden="true"></i></span><span className="c-info">&nbsp;35 Street - Cheyenne, CO 80810</span>
-                  </div>
-                  <div className="c-detail">
-                    <span className="c-icon"><i className="fa fa-phone" aria-hidden="true"></i></span><span className="c-info">+123 4567 898</span>
-                  </div>
-                  <div className="c-detail">
-                    <span className="c-icon"><i className="fa fa-envelope" aria-hidden="true"></i></span><span className="c-info">email@yourdomain.com</span>
-                  </div>
+            <div className="contact-wrapper">
+              <div className="address-block">
+                <div className="c-detail">
+                  <span className="c-icon"><i className="fa fa-map-marker" aria-hidden="true"></i></span><span className="c-info">&nbsp;35 Street - Cheyenne, CO 80810</span>
                 </div>
-                <div className="address-block">
-                  <h3 className="add-title">Branch</h3>
-                  <div className="c-detail">
-                    <span className="c-icon"><i className="fa fa-map-marker" aria-hidden="true"></i></span><span className="c-info">&nbsp;98 Berry - Cheyenne, CO 80810</span>
-                  </div>
-                  <div className="c-detail">
-                    <span className="c-icon"><i className="fa fa-phone" aria-hidden="true"></i></span><span className="c-info">+123 4567 8987</span>
-                  </div>
-                  <div className="c-detail">
-                    <span className="c-icon"><i className="fa fa-envelope" aria-hidden="true"></i></span><span className="c-info">email@yourdomain.com</span>
-                  </div>
+                <div className="c-detail">
+                  <span className="c-icon"><i className="fa fa-phone" aria-hidden="true"></i></span><span className="c-info">+123 4567 898</span>
+                </div>
+                <div className="c-detail">
+                  <span className="c-icon"><i className="fa fa-envelope" aria-hidden="true"></i></span><span className="c-info">email@yourdomain.com</span>
                 </div>
               </div>
             </div>
           </div>
-        </div >
+          <div className="col-lg-6 col-md-12">
+            <div className="contact-form">
+              <div className="row">
+                <div className="col-lg-6">
+                  <label htmlFor="firstname">First Name</label>
+                  <input type="text" name="firstname" className="form-control" autoComplete="false" />
+                </div>
+                <div className="col-lg-6">
+                  <label htmlFor="lastname">Last Name</label>
+                  <input type="text" name="lastname" className="form-control" autoComplete="false" />
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-lg-12">
+                  <label htmlFor="email">Email</label>
+                  <input type="email" name="email" className="form-control" autoComplete="false" />
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-lg-12">
+                  <label htmlFor="message">Message</label>
+                  <textarea name="message" className="form-control" autoComplete="false" rows={4} />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </section >
       <footer className="footer text-center">
         <div className="container">
@@ -280,7 +245,7 @@ export default function Landing() {
               </a>
             </li>
           </ul>
-          <p className="text-muted small mb-0">Copyright © PDF Editor 2024</p>
+          <p className="text-muted small mb-0">Copyright © PDF Vision 2024</p>
         </div>
       </footer>
     </div>

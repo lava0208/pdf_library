@@ -765,16 +765,16 @@ function add_txt_comment() {
   pdfFactory = new pdfAnnotate.AnnotationFactory(pdfBytes);
   if (comment_storage.length != 0) {
     comment_storage.forEach((comment_item) => {
-      pdfFactory.createTextAnnotation(
-        PDFViewerApplication.page - 1,
-        [
-          comment_item.x,
-          comment_item.y - comment_item.height,
-          comment_item.x + comment_item.width,
-          comment_item.y,
-        ],
-        comment_item.text
-      );
+      // pdfFactory.createTextAnnotation(
+      //   PDFViewerApplication.page - 1,
+      //   [
+      //     comment_item.x,
+      //     comment_item.y - comment_item.height,
+      //     comment_item.x + comment_item.width,
+      //     comment_item.y,
+      //   ],
+      //   comment_item.text
+      // );
     });
   }
   pdfFactory.download();

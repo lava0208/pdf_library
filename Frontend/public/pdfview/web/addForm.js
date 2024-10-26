@@ -1696,62 +1696,6 @@ const drawFormElement = function () {
           pg.appendChild(signatureContainer);
 
           current_signature_id = id;
-
-          if (!signatureBackgroundColorPickerInitialized) {
-            const backgroundColorElement = document.getElementById("signature-background-colorpicker");
-            if(backgroundColorElement){
-              new GridColorPicker(backgroundColorElement, {
-                defaultColor: "#BBE9FF",
-                callback: (selectedColor) => {
-                  signatureBackgroundColor = selectedColor;
-                },
-              });
-              signatureBackgroundColorPickerInitialized = true;
-              signatureBackgroundColor = "#BBE9FF";
-            }
-          }
-
-          if (!signatureBorderColorPickerInitialized) {
-            const borderColorElement = document.getElementById("signature-border-colorpicker");
-            if(borderColorElement){
-              new GridColorPicker(borderColorElement, {
-                defaultColor: "#FFFFFF",
-                callback: (selectedColor) => {
-                  signatureBorderColor = selectedColor;
-                },
-              });
-              signatureBorderColorPickerInitialized = true;
-              signatureBorderColor = "#FFFFFF";
-            }
-          }
-
-          if (!signaturedrawColorPickerInitialized) {
-            const drawColorElement = document.getElementById("signature-draw-colorpicker");
-            if(drawColorElement){
-              new GridColorPicker(drawColorElement, {
-                defaultColor: "#000000",
-                callback: (selectedColor) => {
-                  signatureDrawColor = selectedColor;
-                },
-              });
-              signaturedrawColorPickerInitialized = true;
-              signatureDrawColor = "#000000";
-            }
-          }
-    
-          if (!signatureTypeColorPickerInitialized) {
-            const textColorElement = document.getElementById("signature-type-colorpicker");
-            if(textColorElement){
-              new GridColorPicker(textColorElement, {
-                defaultColor: "#000000",
-                callback: (selectedColor) => {
-                  signatureTypeingColor = selectedColor;
-                },
-              });
-              signatureTypeColorPickerInitialized = true;
-              signatureTypeingColor = "#000000";
-            }
-          }
           
           signatureContainer.addEventListener("click", () => {
             if (!isEditing) {
@@ -7348,7 +7292,7 @@ async function addFormElements() {
           }
           
           break;
-        case PHOTO:
+        case PHOTO:          
           if (form_item.photoData != undefined) {
             await embedImage(form_item, pdfDoc, page);
           }else{
@@ -7357,7 +7301,7 @@ async function addFormElements() {
               y: form_item.y - form_item.yPage * 0.75,
               width: form_item.xPage * 0.75,
               height: form_item.yPage * 0.75,
-              color: hexToRgbNew(form_item.textBackgroundColor),
+              color: form_item.textBackgroundColor === "" ? hexToRgbNew("#ffffff") : hexToRgbNew(form_item.textBackgroundColor),
               borderColor: hexToRgbNew(form_item.borderColor),
               borderWidth: parseInt(form_item.borderWidth),
             });

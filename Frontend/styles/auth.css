@@ -8,7 +8,7 @@
     font-family: 'Poppins', sans-serif;
 }
 .auth-container{
-    height: 100vh;
+    min-height: 100vh;
     width: 100%;
     display: flex;
     align-items: center;
@@ -16,7 +16,7 @@
     background-image: url("../public/images/empty-room-with-gray-wall-tropical-leave-shadow.jpg");
 }
 .auth-form{
-    position: absolute;
+    position: relative;
     max-width: 50%;
     width: 100%;
     min-height: 500px;
@@ -153,8 +153,27 @@ a.google p{
     color: #232836;
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 769px) {
     .auth-form{
-        padding: 20px 10px;
+        max-width: 90%;
+        min-height: auto;
+        display: block;
+    }
+    .auth-form-content{
+        padding: 20px;
+    }
+    .auth-welcome{
+        gap: 0;
+        padding: 20px;
+    }
+    .auth-field input {
+        padding: 8px 10px;
+        font-size: 14px;
+    }
+    .auth-form .auth-field{
+        margin-top: 10px;
+    }
+    .eye-icon{
+        bottom: -10px;
     }
 }

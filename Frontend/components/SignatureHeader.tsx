@@ -32,7 +32,7 @@ export default function SignatureHeader() {
           <small>Send</small>
         </div>
       </div>
-      <div className='flex justify-end items-center h-[40px] mr-1 cursor-pointer'>
+      <div className='flex justify-end items-center h-[40px] mr-1 cursor-pointer close-button'>
         <h2 className="text-xl sm:text-lg m-0" onClick={linkToDocuments}>Close</h2>
       </div>
     </div>

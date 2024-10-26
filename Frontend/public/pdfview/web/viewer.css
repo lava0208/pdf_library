@@ -3419,9 +3419,13 @@ input[type=number]::-webkit-outer-spin-button {
   font-weight: 700;
 }
 
-.signature-header h3{
+.signature-header .close-link{
   font-size: 18px;
   line-height: 16px;
+  color: rgb(12 12 13);
+  text-decoration: none;
+  font-weight: 600;
+  font-family: sans-serif;
 }
 
 .signature-body #viewerContainer{
@@ -3610,25 +3614,56 @@ input[type=number]::-webkit-outer-spin-button {
     font-size: 24px;    
   }
   #toggle-rightbar{
-    right: 120px;
+    right: 110px;
   }
   #topbar #logo{
     height: 30px;
   }
   .view-mode{
-    left: calc(50% - 50px);
+    left: calc(50% - 40px);
   }
   .view-mode .item{
-    width: 50px;
+    width: 40px;
+    height: 30px;
+  }
+  .view-mode .item img{
+    width: 18px;
   }
   .view-mode .item span{
     display: none;
   }
   .menu-item i{
     display: block;
-    font-size: 24px;
+    font-size: 20px;
   }
   .menu-item span{
     display: none;
+  }
+  .signature-header{
+    flex-direction: column;
+    padding: 10px 0;
+  }
+  .signature-status-bar{
+    margin-top: 15px;
+  }
+  .w-50 {
+    width: 100% !important; 
+  }
+  .content-section{
+    padding-top: 50px;
+    padding-bottom: 50px;
+  }
+  .signature-header .close-link{
+    display: none;
+  }
+  .signature-body #viewerContainer {
+    inset: 88px 0 0;
+  }
+  .signature-body .right-sidebar {
+    margin-top: 88px;
+    height: calc(100vh - 88px);
+  }
+  .signature-body #toggle-rightbar {
+    right: 110px;
   }
 }

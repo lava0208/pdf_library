@@ -12040,6 +12040,41 @@ footer.footer p.small a.focus {
   .contact-form{
     padding: 10px;
   }
+  .signature-header{
+    flex-direction: column;
+  }
+  .signature-status-bar{
+    margin-top: 15px;
+  }
+  .w-50 {
+    width: 100% !important; 
+  }
+  .content-section{
+    padding-top: 50px;
+    padding-bottom: 50px;
+  }
+  .close-button{
+    display: none;
+  }
+  .all-menu-dropdown{
+    top: 60px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 20px;
+  }
+  .menu-sub-item{
+    min-width: fit-content;
+  }
+  .menu-sub-item i {
+    font-size: 16px;
+  }
+  .menu-sub-item .title {
+    font-size: 13px;
+    margin-bottom: 5px;
+  }
+  .menu-sub-item .description {
+    font-size: 10px;
+  }
 }
 
 /* Styles Begins */

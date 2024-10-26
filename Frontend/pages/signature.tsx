@@ -19,9 +19,6 @@ const Signature = () => {
     const [file, setFile] = useState<File | null>(null);
     const [message, setMessage] = useState<string>('');
 
-    localStorage.removeItem("recipients");
-    localStorage.removeItem("message");
-
     const handleChange = (newValue: any) => {
         const validEmails = newValue.filter((option: any) => isValidEmail(option.value));
         setSelectedEmails(validEmails);

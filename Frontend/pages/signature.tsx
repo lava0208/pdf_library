@@ -4,6 +4,7 @@ import Head from 'next/head';
 import { BASE_URL } from '@/Config';
 import SignatureHeader from '@/components/SignatureHeader';
 import withAuth from '@/components/withAuth';
+import { useRouter } from 'next/router';
 import CreatableSelect from "react-select/creatable";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -18,6 +19,29 @@ const Signature = () => {
     const [selectedEmails, setSelectedEmails] = useState<{ label: string, value: string }[]>([]);
     const [file, setFile] = useState<File | null>(null);
     const [message, setMessage] = useState<string>('');
+    const router = useRouter();
+
+    let token = localStorage.getItem("login-token");
+        if (token) {
+            fetch(`${BASE_URL}/signin`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `${token}`
+                }
+            }).then(response => {
+                if (response.ok) {
+                } else {
+                    localStorage.setItem("originDestination", router.asPath);
+                    router.push("/signin");
+                }
+        }).catch(error => {
+            console.error("Error fetching data:", error);
+        });
+    } else {
+        localStorage.setItem("originDestination", router.asPath);
+        router.push("/signin");
+    }
 
     const handleChange = (newValue: any) => {
         const validEmails = newValue.filter((option: any) => isValidEmail(option.value));
@@ -123,7 +147,7 @@ const Signature = () => {
                     <textarea
                         name="message"
                         id="message"
-                        rows={5}
+                        rows={4}
                         placeholder="Type Message"
                         className="form-control d-block w-100"
                         value={message}
@@ -132,14 +156,25 @@ const Signature = () => {
 
                     <label htmlFor="files" className="mt-4">Files</label>
                     <label
-                        htmlFor="add-document"
-                        className="h-40 w-100 border flex align-items-center justify-content-center rounded-lg"
+                        htmlFor="add-file"
+                        className="file-upload-container"
                     >
-                        {file ? file.name : "Drag & Drop Document Here"}
+                        <div className="file-upload-content">
+                            <img src="images/download.svg" className="img-fluid bg-img" />
+                            <div>
+                                {file ? (
+                                    file.name
+                                ) : (
+                                    <>
+                                        <strong className="mr-1">Choose a file</strong>or drag it here.
+                                    </>
+                                )}
+                            </div>
+                        </div>
                     </label>
 
                     <input
-                        id="add-document"
+                        id="add-file"
                         aria-label="Add files"
                         accept=".pdf"
                         onChange={handleFileChange}

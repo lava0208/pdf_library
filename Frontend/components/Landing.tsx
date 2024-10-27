@@ -45,11 +45,11 @@ export default function Landing() {
           <div className="row">
             <div className="col-lg-12">
               <div className="block-heading">
-                <h2>Hello, we're PdfVision.</h2>
+                <h2>Hello, we&apos;re PdfVision.</h2>
               </div>
               <p className="lead">PdfVision makes it super easy to edit PDF documents.</p>
               <p className="lead">PdfVision helps people around the world with their tasks.</p>
-              <p className="lead mt-4">PdfVision was started as an open source project, and we've been improving our PDF tools ever since.</p>
+              <p className="lead mt-4">PdfVision was started as an open source project, and we&apos;ve been improving our PDF tools ever since.</p>
             </div>
           </div>
         </div>

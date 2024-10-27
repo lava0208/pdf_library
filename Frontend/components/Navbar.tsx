@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
+import UserProfile from "./UserProfile";
 
 const menus = [
     {
@@ -62,79 +63,102 @@ const menus = [
 ];
 
 export default function Navbar() {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-  const router = useRouter();
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [color, setColor] = useState('');
+    const [username, setUsername] = useState('');
+    const [showProfile, setShowProfile] = useState(false);
+    const toggleDropdown = () => {
+        setIsDropdownOpen(!isDropdownOpen);
+    };
+    
+    const router = useRouter();
 
-  useEffect(() => {
-    localStorage.setItem("originalDestination", router.asPath);
-  }, [router.asPath]);
+    useEffect(() => {
+        localStorage.setItem("originalDestination", router.asPath);
+    }, [router.asPath]);
 
-  const handleClick = function (url: any) {
-    router.push(url);
-  };
+    const handleClick = function (url: any) {
+        router.push(url);
+    };
 
-  return (
-    <nav className="header-navbar">
-        <div className="header-left">
-            <Image
-                id="logo"
-                src="/images/logo.png"
-                alt="logo"
-                width={80}
-                height={80}
-            />
-            <div className="menu-item">
-                <div className="menu-title" onClick={toggleDropdown}>
-                    All Tools <i className="fa fa-solid fa-angle-down"></i>
-                </div>
-                {isDropdownOpen && (
-                    <div className="all-menu-dropdown">
-                        {menus.map((menu) => (
-                        <div
-                            key={menu.id}
-                            className="menu-sub-item"
-                            onClick={() => handleClick(menu.path)}
-                        >
-                            <i className={menu.icon} aria-hidden="true"></i>
-                            <div className="ml-3">
-                                <div className="title">{menu.title}</div>
-                                <div className="description">{menu.description}</div>
-                            </div>
-                        </div>
-                        ))}
+    useEffect(() => {
+        setColor(localStorage.getItem('color') || '');
+        setUsername(localStorage.getItem('username') || '');
+    }, []);
+
+    return (
+        <nav className="header-navbar">
+            <div className="header-left">
+                <Image
+                    id="logo"
+                    src="/images/logo.png"
+                    alt="logo"
+                    width={80}
+                    height={80}
+                />
+                <div className="menu-item">
+                    <div className="menu-title" onClick={toggleDropdown}>
+                        All Tools <i className="fa fa-solid fa-angle-down"></i>
                     </div>
-                )}
+                    {isDropdownOpen && (
+                        <div className="all-menu-dropdown">
+                            {menus.map((menu) => (
+                            <div
+                                key={menu.id}
+                                className="menu-sub-item"
+                                onClick={() => handleClick(menu.path)}
+                            >
+                                <i className={menu.icon} aria-hidden="true"></i>
+                                <div className="ml-3">
+                                    <div className="title">{menu.title}</div>
+                                    <div className="description">{menu.description}</div>
+                                </div>
+                            </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+                <div
+                    className="menu-title"
+                    onClick={() => { handleClick("/documents"); }}
+                >
+                    Documents
+                </div>
+                <div
+                    className="menu-title"
+                    onClick={() => { handleClick("/signature"); }}
+                >
+                    E-Sign
+                </div>
             </div>
-            <div
-                className="menu-title"
-                onClick={() => { handleClick("/documents"); }}
-            >
-                Documents
+            <div className="header-right">
+                {/* <div
+                    className="menu-title"
+                    onClick={() => { handleClick("/"); }}
+                >
+                    Pricing
+                </div> */}
+                {
+                    username ? (
+                        <div className="flex items-center justify-between">
+                            <div className='flex justify-end items-center h-[40px] mr-2 cursor-pointer'>
+                                <div className={`rounded-[50%] bg-white h-[40px] w-[40px] flex items-center justify-center`} onClick={() => setShowProfile(!showProfile)}>
+                                <div className={`select-none rounded-[50%] h-[38px] w-[38px] font-sans text-white flex items-center justify-center text-2xl`}
+                                    style={{ backgroundColor: `${color}` }}>{username.charAt(0).toUpperCase()}</div>
+                                </div>
+                            </div>
+                            {showProfile && <UserProfile username={username} top="80px" right="40px" />}
+                        </div>
+                    ) : (
+                        <div
+                            className="menu-title"
+                            onClick={() => { handleClick("/signin"); }}
+                        >
+                            Log in
+                        </div>
+                    )
+                }
             </div>
-            <div
-                className="menu-title"
-                onClick={() => { handleClick("/signature"); }}
-            >
-                E-Sign
-            </div>
-        </div>
-        <div className="header-right">
-            <div
-                className="menu-title"
-                onClick={() => { handleClick("/"); }}
-            >
-                Pricing
-            </div>
-            <div
-                className="menu-title"
-                onClick={() => { handleClick("/signin"); }}
-            >
-                Log in
-            </div>
-        </div>
-    </nav>
-  );
+        </nav>
+    );
 }

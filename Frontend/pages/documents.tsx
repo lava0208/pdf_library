@@ -292,7 +292,6 @@ const Documents = () => {
         const value = inputValues[id];
         if (value === undefined || value.trim() === '') {
             setRenamingFolderId(null);
-            setIsActiveId(null);
             return;
         }
         if (isFolder) {
@@ -301,7 +300,6 @@ const Documents = () => {
             await updateDocumentName(id, value);
         }
         setRenamingFolderId(null);
-        setIsActiveId(null);
     };
 
     const openMoveModal = (id: string, name: string, isFolder: boolean) => {
@@ -439,7 +437,7 @@ const Documents = () => {
             <Head>
                 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
             </Head>
-            <Header text="My documents" />
+            <Header text="My documents" icon="documents.svg" />
             <div id="Services" className="content-section">
                 <div className="container-fluid px-md-5">
                     {isLoading && <div className="loading-icon-container">

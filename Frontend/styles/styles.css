@@ -11973,7 +11973,7 @@ footer.footer p.small a.focus {
 .menu-sub-item{
   min-width: 200px;
   display: flex;
-  align-items: start;
+  align-items: flex-start;
   line-height: 1;
   cursor: pointer;
 }
@@ -12005,6 +12005,50 @@ footer.footer p.small a.focus {
 #About h2,
 #About .lead{
   color: #fff;
+}
+
+.file-upload-container{
+  width: 100%;
+  height: 12rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e5e5e5;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.file-upload-content{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+  outline: 2px dashed #a6a6a6;
+  border-radius: 5px;
+}
+
+.file-upload-content img{
+  width: 50px;
+}
+
+button:focus{
+  outline: none;
+}
+
+.button-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background-color: #78d3ff;
+  color: black;
+  padding: 12px 0;
+  width: 200px;
 }
 
 @media screen and (max-width: 500px) {

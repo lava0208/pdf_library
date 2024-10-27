@@ -71,7 +71,7 @@ export default function SignIn() {
                             draggable: true,
                             progress: undefined,
                             theme: "light",
-                            });;
+                            });
                         return response.json();
                     } else {
                         toast.error('Failed to login!', {
@@ -97,7 +97,9 @@ export default function SignIn() {
                     localStorage.setItem("username", username);
                     localStorage.setItem("login-token", token);
                     const originPath = localStorage.getItem("originDestination");
-                    if (originPath) router.push(originPath);
+                    if(originPath !== ""){
+                        router.push("/");
+                    }
                 })
                 .catch((error) => {
                     console.log(error);
@@ -131,7 +133,7 @@ export default function SignIn() {
                 </div>
                 <div className="auth auth-welcome">
                     <h3>Welcome to login</h3>
-                    <p>Doesn't have an account?</p>
+                    <p>Doesn&apos;t have an account?</p>
                     <Link href="/signup" className="auth auth-link">Signup</Link>
                 </div>
             </div>

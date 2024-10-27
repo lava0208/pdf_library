@@ -1,19 +1,15 @@
 import Image from "next/image";
 export default function SignatureHeader() {
   const linkToDocuments = () => {
-    if(window.location.pathname == "/"){
-      window.location.href = "/";
-    }else{
-      window.location.href = "/";
-    }
+    window.location.href = "/";
   }
   return (
     <div className="signature-header">
       <div className="d-flex">
         <img src="images/home.svg" className="cursor-pointer" alt="home" width={20} onClick={linkToDocuments} />
         <div className="flex items-center gap-2 border-left pl-2 ml-2">
-          <Image src="images/signature.svg" alt="signature" className="cursor-pointer" width={24} height={24}></Image>
-          <h2 className="text-xl sm:text-xl m-0">Request Signature</h2>
+          <Image src="images/signature.svg" alt="signature" width={24} height={24}></Image>
+          <h2 className="text-xl sm:text-xl m-0 ml-1">Request Signature</h2>
         </div>
       </div>
       <div className="signature-status-bar">
